@@ -15,8 +15,8 @@ export class ApiUtil implements ApiUtilInterface {
 
   constructor() {
     const axiosConfig = {
-      // baseURL: "http://139.59.143.82/api/",
-      baseURL: "http://localhost:8000/api/",
+      baseURL: "http://139.59.143.82/api/",
+      // baseURL: "http://localhost:8000/api/",
       timeout: 30000,
       // headers: {
       //   Authorization:
