@@ -13,6 +13,7 @@
     </nav>
     <div class="actions">
       <UiButtonDefault state="link">Log In</UiButtonDefault>
+
       <UiButtonDefault state="primary">Register</UiButtonDefault>
       <UiIconGlobe class="icon" />
       <UiIconMoon class="icon" />

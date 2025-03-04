@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid">
     <div class="page-wrapper">
-      <TheHeaderSideBar/>
+      <TheHeaderSideBar />
       <div class="page-content">
         <div class="page">
-          <slot/>
+          <slot />
         </div>
       </div>
     </div>
@@ -19,6 +19,7 @@ import TheFooter from "@/components/block/TheFooter.vue";
 <style lang="scss" scoped>
 .page {
   height: 100vh;
+  overflow-y: auto;
   //overflow: scroll;
 
   &-wrapper {
@@ -31,6 +32,4 @@ import TheFooter from "@/components/block/TheFooter.vue";
     height: 100vh;
   }
 }
-
 </style>
-

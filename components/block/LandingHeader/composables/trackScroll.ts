@@ -5,21 +5,15 @@ export default function useTrackScroll() {
 
   const checkScroll = () => {
     isBlurred.value = window.scrollY > 10;
-    console.log(
-      "🟢 Скролл: ",
-      window.scrollY,
-      " | isBlurred:",
-      isBlurred.value
-    );
   };
 
   onMounted(() => {
-    console.log("✅ useTrackScroll подключен!");
     window.addEventListener("scroll", checkScroll);
+
+    console.log(" window.scrollY", window.scrollY);
   });
 
   onBeforeUnmount(() => {
-    console.log("🔴 useTrackScroll отключен!");
     window.removeEventListener("scroll", checkScroll);
   });
 

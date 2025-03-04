@@ -1,30 +1,29 @@
 <template>
-  <header class="header" :class="{'is-open': isOpen}">
+  <header class="header" :class="{ 'is-open': isOpen }">
     <div class="header__top">
-
-      <div class="header__top-left" :class="{'is-not-open': !isOpen}">
+      <div class="header__top-left" :class="{ 'is-not-open': !isOpen }">
         <UiIconLogo />
       </div>
 
       <div class="header__top-right">
-        <UiIconArrowsLeft :rotateToRight="!isOpen" @click="handleClickOpenCloseSideBar" />
+        <UiIconArrowsLeft
+          :rotateToRight="!isOpen"
+          @click="handleClickOpenCloseSideBar"
+        />
       </div>
-
     </div>
 
     <TheHeaderSideBarMenu :sideBarIsOpen="isOpen" />
 
     <div class="header__bottom">
-
-      <div class="header__bottom-left" :class="{'is-not-open': !isOpen}">
-        <UiImageCircle  />
+      <div class="header__bottom-left" :class="{ 'is-not-open': !isOpen }">
+        <UiImageCircle />
       </div>
 
-      <div class="header__bottom-right" :class="{'is-not-open': !isOpen}">
+      <div class="header__bottom-right" :class="{ 'is-not-open': !isOpen }">
         <span>Logout</span>
         <UiIconLogout />
       </div>
-
     </div>
   </header>
 </template>
@@ -69,19 +68,19 @@ const currentRouteName = computed(() => route.name);
   height: 100vh;
   border-right: 1px solid #0c0c0c;
   min-width: 60px;
-  transition: .3s;
+  transition: 0.3s;
 
   &.is-open {
-    transition: .3s;
+    transition: 0.3s;
     min-width: 360px;
   }
 
   &__top {
-    color: #D8D8D8;
+    color: #d8d8d8;
 
     height: 70px;
     width: 100%;
-    background-color: #3E3939;
+    background-color: #3e3939;
 
     display: flex;
     align-items: center;
@@ -91,13 +90,13 @@ const currentRouteName = computed(() => route.name);
 
     &-left {
       svg {
-        transition: .3s;
+        transition: 0.3s;
       }
 
       &.is-not-open {
         svg {
           width: 0;
-          transition: .1s;
+          transition: 0.1s;
         }
       }
     }
@@ -111,11 +110,11 @@ const currentRouteName = computed(() => route.name);
   }
 
   &__bottom {
-    color: #D8D8D8;
+    color: #d8d8d8;
 
     height: 70px;
     width: 100%;
-    background-color: #3E3939;
+    background-color: #3e3939;
 
     display: flex;
     align-items: center;
@@ -125,13 +124,13 @@ const currentRouteName = computed(() => route.name);
 
     &-left {
       div {
-        transition: .3s;
+        transition: 0.3s;
       }
 
       &.is-not-open {
         div {
           width: 0;
-          transition: .1s;
+          transition: 0.1s;
           overflow: hidden;
         }
       }
@@ -146,7 +145,7 @@ const currentRouteName = computed(() => route.name);
         span {
           display: block;
           width: 0;
-          transition: .1s;
+          transition: 0.1s;
           overflow: hidden;
           margin-left: -16px;
         }
