@@ -9,6 +9,7 @@
       'btn--primary': props.state === 'primary',
       'btn--warning': props.state === 'warning',
       'btn--success': props.state === 'success',
+      'btn--success--outline': props.state === 'success--outline',
       'btn--secondary': props.state === 'secondary',
     }"
     :type="props.type"
@@ -99,8 +100,14 @@ const handleClick = (): void => emit("click");
   }
 
   &--success {
-    background-color: green;
+    background-color: var(--color-sticker-ui-success);
     color: white;
+
+    &--outline {
+      border: 1px solid var(--color-sticker-ui-success);
+      background-color: transparent;
+      color: var(--color-sticker-ui-success);
+    }
   }
 
   &--secondary {

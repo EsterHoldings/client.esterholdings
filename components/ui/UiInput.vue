@@ -83,14 +83,13 @@ const onBlur = (event: any): void => emit("blur", event);
 </script>
 
 <style lang="scss" scoped>
-@use "~/assets/styles/variables";
-
 input {
   width: 100%;
   height: 40px;
   border: none;
   outline: none;
   background-color: transparent;
+  color: wheat;
 }
 
 .input {
@@ -101,7 +100,7 @@ input {
   background-color: transparent;
   outline: none;
   // TODO :: Add disable color
-  color: var(--color-text);
+  color: var(--color-ui-primary-defalt);
   font-size: 14px;
   font-weight: 400;
   line-height: 17px;
@@ -135,7 +134,7 @@ input {
   }
 
   &>.border {
-    border: 1px solid var(--color-text);
+    border: 1px solid var(--color-stroke-ui-dark);
     border-radius: 5px;
   }
 

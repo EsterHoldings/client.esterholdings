@@ -2,7 +2,6 @@
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    fill="none"
     version="1.1"
     viewBox="0 0 20 20"
   >
@@ -29,6 +28,7 @@
 svg {
   height: 20px;
   width: 20px;
+  stroke: var(--color-ui-primary-defalt);
 }
 </style>
 <script setup lang="ts"></script>

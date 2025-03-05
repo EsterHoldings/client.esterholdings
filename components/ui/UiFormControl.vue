@@ -43,7 +43,7 @@ const props = defineProps({
 
 .ui-form-control {
   &__label {
-    //margin-bottom: calc($spacer / 2);
+    margin-bottom: calc($spacer / 2);
     .hide {
       display: none;
     }

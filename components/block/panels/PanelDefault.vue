@@ -26,7 +26,7 @@ const props = defineProps({
 <style lang="scss" scoped>
 .panel {
   &--default {
-    border: 1px solid gainsboro;
+    border: 1px solid var(--color-stroke-ui-dark);
     border-radius: 5px;
 
     &__title {

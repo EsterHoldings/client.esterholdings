@@ -1,24 +1,33 @@
 <template>
-  <header :class="{ blurred: isBlurred }" class="header">
-    <div class="logo">
-      <UiIconLogo />
-    </div>
-    <nav class="nav">
-      <HeaderLink
-        v-for="link in linksList"
-        :key="link"
-        :name="link.name"
-        :path="link.path"
-      />
-    </nav>
-    <div class="actions">
-      <UiButtonDefault state="link">Log In</UiButtonDefault>
+  <div
+      :class="{ blurred: isBlurred }"
+      class="header__wrapper"
+  >
+    <UiContainer>
+      <header class="header">
+        <div class="logo">
+          <UiIconLogo />
+        </div>
+        <nav class="nav">
+          <HeaderLink
+              v-for="link in linksList"
+              :key="link"
+              :name="link.name"
+              :path="link.path"
+          />
+        </nav>
+        <div class="actions-wrapper">
+          <div class="actions">
+            <UiButtonDefault state="link">Log In</UiButtonDefault>
 
-      <UiButtonDefault state="primary">Register</UiButtonDefault>
-      <UiIconGlobe class="icon" />
-      <UiIconMoon class="icon" />
-    </div>
-  </header>
+            <UiButtonDefault state="primary">Register</UiButtonDefault>
+            <UiIconGlobe class="icon" />
+            <UiIconMoon class="icon" />
+          </div>
+        </div>
+      </header>
+    </UiContainer>
+  </div>
 </template>
 
 <script setup>
@@ -29,6 +38,7 @@ import UiIconMoon from "~/components/ui/UiIconMoon.vue";
 import UiIconSun from "~/components/ui/UiIconSun.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import HeaderLink from "./components/HeaderLink.vue";
+import UiContainer from "~/components/ui/UiContainer.vue";
 
 const { isBlurred } = useTrackScroll();
 
@@ -50,17 +60,19 @@ const linksList = [
 
 <style lang="scss" scoped>
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 120px;
+  height: 80px;
   background: transparent;
   transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
-  z-index: 9999;
+  z-index: 9998;
+
+  &__wrapper {
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+  }
 }
 
 .blurred {
@@ -72,6 +84,7 @@ const linksList = [
   font-size: 20px;
   font-weight: bold;
   color: white;
+  margin-left: 10px;
 }
 
 .nav {
@@ -80,9 +93,12 @@ const linksList = [
 }
 
 .actions {
+  position: relative;
   display: flex;
+  width: auto;
   align-items: center;
   gap: 10px;
+  margin-right: 20px;
 
   .login {
     background: none;

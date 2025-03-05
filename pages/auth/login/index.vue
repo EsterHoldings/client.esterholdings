@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts" setup>
-import { formData } from "~/pages/auth/login/composables";
+import { formData } from "./composables";
 // @ts-ignore
 import LoginForm from "@/pages/auth/login/components/LoginForm.vue";
 // @ts-ignore
@@ -19,7 +19,7 @@ import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 // @ts-ignore
 definePageMeta({
   middleware: ["not-auth"],
-  layout: "main"
+  layout: "empty"
 });
 </script>
 
@@ -37,7 +37,7 @@ definePageMeta({
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 20vh;
+      height: 80px;
     }
   }
 }

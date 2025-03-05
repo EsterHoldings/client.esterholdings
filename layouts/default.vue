@@ -24,6 +24,8 @@ import TheFooter from "@/components/block/TheFooter.vue";
 
   &-wrapper {
     display: flex;
+    background-color: var(--color-ui-background);
+    color: #b0b0b0;
   }
 
   &-content {

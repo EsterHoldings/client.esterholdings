@@ -25,6 +25,7 @@
 svg {
   height: 20px;
   width: 20px;
+  stroke: var(--color-ui-primary-defalt);
 }
 </style>
 <script setup lang="ts">

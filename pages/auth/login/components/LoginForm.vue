@@ -1,98 +1,100 @@
 <template>
   <div class="login-form">
-    <UiTextH2 class="login-form__title">LOGIN</UiTextH2>
+    <UiTextH3 class="login-form__title">Login</UiTextH3>
 
     <UiFormControl
-      class="login-form__field"
-      label="Email"
-      :errors="validatorLoginForm?.errorsFormData?.email?.errors"
+        class="login-form__field"
+        label="Email"
+        :errors="validatorLoginForm?.errorsFormData?.email?.errors"
     >
       <UiInput
-        type="text"
-        placeholder="example@test.com"
-        @input="
+          type="text"
+          placeholder="example@test.com"
+          @input="
           validatorLoginForm?.doValidateField('email', $event.target.value)
         "
-        @blur="
+          @blur="
           validatorLoginForm?.doValidateField('email', $event.target.value)
         "
-        :value="props.formData?.email"
-        :isDirty="validatorLoginForm?.errorsFormData?.email?.isDirty"
-        :isInvalid="
+          :value="props.formData?.email"
+          :isDirty="validatorLoginForm?.errorsFormData?.email?.isDirty"
+          :isInvalid="
           validatorLoginForm?.errorsFormData?.email?.errors?.length > 0
         "
       />
     </UiFormControl>
 
     <UiFormControl
-      class="login-form__field"
-      label="Password"
-      :errors="validatorLoginForm?.errorsFormData?.password?.errors"
+        class="login-form__field"
+        label="Password"
+        :errors="validatorLoginForm?.errorsFormData?.password?.errors"
     >
       <UiInput
-        type="password"
-        placeholder="********"
-        @input="
+          type="password"
+          placeholder="********"
+          @input="
           validatorLoginForm?.doValidateField('password', $event.target.value)
         "
-        @blur="
+          @blur="
           validatorLoginForm?.doValidateField('password', $event.target.value)
         "
-        :value="props.formData?.password"
-        :isDirty="validatorLoginForm?.errorsFormData?.password?.isDirty"
-        :isInvalid="
+          :value="props.formData?.password"
+          :isDirty="validatorLoginForm?.errorsFormData?.password?.isDirty"
+          :isInvalid="
           validatorLoginForm?.errorsFormData?.password?.errors?.length > 0
         "
       />
     </UiFormControl>
 
     <UiButtonDefault
-      type="submit"
-      @click="validateLoginForm(doSendForm)"
-      :isLoading="isLoading"
-      state="dark"
-      >LOGIN
+        class="login-form__btn"
+        type="submit"
+        @click="validateLoginForm(doSendForm)"
+        :isLoading="isLoading"
+        state="primary"
+    >LOGIN
     </UiButtonDefault>
 
     <div class="login-form__oauth-buttons">
       <UiButtonDefault
-        state="info"
-        class="oauth-button oauth-button_google"
-        data-tooltip="Sign in with Google"
+          state="info"
+          class="oauth-button oauth-button_google"
+          data-tooltip="Sign in with Google"
       >
-        <UiIconGoogle />
+        <UiIconGoogle/>
       </UiButtonDefault>
 
       <UiButtonDefault
-        state="dark"
-        class="oauth-button oauth-button_apple"
-        data-tooltip="Sign in with Apple"
-        ><UiIconApple />
+          state="dark"
+          class="oauth-button oauth-button_apple"
+          data-tooltip="Sign in with Apple"
+      >
+        <UiIconApple/>
       </UiButtonDefault>
 
       <UiButtonDefault
-        state="warning"
-        class="oauth-button oauth-button_developer"
-        data-tooltip=" Sign in as a developer"
+          state="secondary"
+          class="oauth-button oauth-button_developer"
+          data-tooltip=" Sign in as a developer"
       >
-        <UiIconDeveloper />
+        <UiIconDeveloper/>
       </UiButtonDefault>
     </div>
 
     <div class="login-form__forgot-link">
-      <br />
+      <br/>
       <nuxt-link to="/auth/forgot">Forgot password?</nuxt-link>
-      <br />
+      <br/>
 
-      <br />
+      <br/>
       <nuxt-link to="/auth/registration">Registration</nuxt-link>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+import {ref} from "vue";
+import {useRouter} from "vue-router";
 
 import UiTextH2 from "~/components/ui/UiTextH2.vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
@@ -102,14 +104,15 @@ import UiIconGoogle from "~/components/ui/UiIconGoogle.vue";
 import UiIconApple from "~/components/ui/UiIconApple.vue";
 import UiIconDeveloper from "~/components/ui/UiIconDeveloper.vue";
 
-import { useAppCore } from "~/composables/useAppCore";
+import {useAppCore} from "~/composables/useAppCore";
 import {
   validatorLoginForm,
   validateLoginForm,
   resetValidationLoginForm,
 } from "@/pages/auth/login/composables/validation";
+import UiTextH3 from "~/components/ui/UiTextH3.vue";
 
-const props = defineProps({ formData: { type: Object, required: true } });
+const props = defineProps({formData: {type: Object, required: true}});
 
 const isLoading = ref(false);
 const appCore = useAppCore();
@@ -119,7 +122,7 @@ const doSendForm = async () => {
     isLoading.value = true;
     const response = await appCore.auth.doLogin(props.formData);
 
-    await useRouter().push({ path: "/" });
+    await useRouter().push({path: "/"});
   } catch (e: any) {
     console.log("LoginForm -> doSendForm -> catch", e.message);
   } finally {
@@ -139,13 +142,21 @@ onUnmounted(() => resetValidationLoginForm());
   display: flex;
   justify-content: center;
   flex-direction: column;
+  height: calc(100vh - 295px);
+  color: #c4c4c4;
 
   &__title {
     text-align: center;
+    margin-top: 150px;
   }
 
   &__field {
     margin-bottom: 20px;
+  }
+
+  &__btn {
+    margin-top: 30px;
+    margin-bottom: 40px;
   }
 
   &__submit {
@@ -199,6 +210,7 @@ onUnmounted(() => resetValidationLoginForm());
 
   &_apple {
     background: black !important;
+
     svg {
       filter: invert(1);
     }

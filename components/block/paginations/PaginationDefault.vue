@@ -124,8 +124,10 @@ const handleOnChangePerPage = (event: any) => {
 <style lang="scss" scoped>
 .custom-select {
   padding: 5px;
-  border: 1px solid gainsboro;
+  border: 1px solid var(--color-stroke-ui-dark);
   border-radius: 3px;
+  background-color: var(--color-ui-background);
+  color: #b0b0b0;
 }
 
 .pagination {
@@ -184,7 +186,7 @@ const handleOnChangePerPage = (event: any) => {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid gainsboro;
+    border: 1px solid var(--color-stroke-ui-dark);
     border-radius: 3px;
 
     height: 30px;
@@ -202,7 +204,7 @@ const handleOnChangePerPage = (event: any) => {
     }
 
     &.active {
-      background-color: lightblue;
+      background-color: var(--color-stroke-ui-dark);
       font-weight: bold;
     }
   }

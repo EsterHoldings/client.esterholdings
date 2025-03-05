@@ -1,14 +1,11 @@
 <template>
-  <div class="container-fluid">
-    <div class="page-wrapper">
-      <div class="page-content">
-        <LandingHeader />
-        <div class="page">
-          <slot />
-        </div>
-
-        <LandingFooter />
+  <div class="page-wrapper">
+    <div class="page-content">
+      <LandingHeader class="header"/>
+      <div class="page">
+        <slot />
       </div>
+      <LandingFooter/>
     </div>
   </div>
 </template>
@@ -19,8 +16,13 @@ import LandingFooter from "~/components/block/LandingFooter";
 </script>
 
 <style lang="scss" scoped>
+
+.header {
+  z-index: 1;
+}
+
 .page {
-  // height: calc(100vh - 150px);
+  min-height: 100vh;
   overflow: scroll;
 
   &-wrapper {

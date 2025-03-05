@@ -39,37 +39,37 @@ const props = defineProps({
 const menuItems = [
   {
     title: 'Dashboard',
-    to: '/',
+    to: '/admin/dashboard',
     icon: UiIconHome
   },
   {
     title: 'Clients',
-    to: '/clients',
+    to: '/admin/clients',
     icon: UiIconClients
   },
   {
     title: 'Accounts',
-    to: '/accounts',
+    to: '/admin/accounts',
     icon: UiIconUser
   },
   {
     title: 'Referral system',
-    to: '/referral',
+    to: '/admin/referral',
     icon: UiIconReferral
   },
   {
     title: 'Profile',
-    to: '/profile',
+    to: '/admin/profile',
     icon: UiIconProfile
   },
   {
     title: 'Settings',
-    to: '/settings',
+    to: '/admin/settings',
     icon: UiIconSetting
   },
   {
     title: 'Access',
-    to: '/access',
+    to: '/admin/access',
     icon: UiIconKeys
   },
 ];

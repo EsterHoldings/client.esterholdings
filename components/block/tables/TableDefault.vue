@@ -155,7 +155,7 @@ const props = defineProps({
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
+  background-color: var(--color-ui-background);
   font-family: Montserrat, sans-serif;
 }
 
@@ -170,10 +170,10 @@ const props = defineProps({
 }
 
 .table__header {
-  background-color: #c8c8c8;
-  color: #3e3939;
+  background-color: var(--color-ui-background);
+  color: #a2a2a2;
   font-weight: 500;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-stroke-ui-dark);
 }
 
 .table__body {
@@ -183,11 +183,11 @@ const props = defineProps({
 }
 
 .table__row:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: var(--color-stroke-ui-dark);
 }
 
 .table__row:hover {
-  background-color: #f1f1f1;
+  background-color: var(--color-ui-background);
 }
 
 .table__cell:last-child {

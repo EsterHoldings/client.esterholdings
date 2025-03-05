@@ -64,9 +64,9 @@ const currentRouteName = computed(() => route.name);
 }
 
 .header {
-  background-color: #f4f4f4;
+  background-color: var(--color-ui-background);
   height: 100vh;
-  border-right: 1px solid #0c0c0c;
+  border-right: 1px solid var(--color-stroke-ui-dark);
   min-width: 60px;
   transition: 0.3s;
 
@@ -80,7 +80,7 @@ const currentRouteName = computed(() => route.name);
 
     height: 70px;
     width: 100%;
-    background-color: #3e3939;
+    background-color: var(--color-stroke-ui-dark);
 
     display: flex;
     align-items: center;
@@ -110,11 +110,11 @@ const currentRouteName = computed(() => route.name);
   }
 
   &__bottom {
-    color: #d8d8d8;
+    color: #a4a4a4;
 
     height: 70px;
     width: 100%;
-    background-color: #3e3939;
+    background-color: var(--color-stroke-ui-dark);
 
     display: flex;
     align-items: center;

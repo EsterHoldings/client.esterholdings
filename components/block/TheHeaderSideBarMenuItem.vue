@@ -61,11 +61,11 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
 
   &:hover {
     transition: .3s;
-    background-color: #C8C8C8;
+    background-color: var(--color-stroke-ui-dark);
   }
 
   &.active {
-    background-color: #C8C8C8;
+    border-right: 1px solid var(--color-ui-primary);
   }
 
   &__indicator {
@@ -73,10 +73,10 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
     width: 8px;
     height: 100%;
 
-    background-color: #C8C8C8;
+    background-color: var(--color-stroke-ui-dark);
 
     &.active {
-      background-color: #3E3939;
+      background-color: var(--color-ui-primary);
     }
   }
 
@@ -96,12 +96,12 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
     display: flex;
     align-items: center;
 
-    color: #210e32;
+    color: #d8d8d8;
     font-size: 14px;
     font-weight: 500;
 
     &:hover {
-      color: #210e32;
+      color: #a9a9a9;
     }
 
     &.hide {

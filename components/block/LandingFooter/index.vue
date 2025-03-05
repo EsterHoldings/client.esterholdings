@@ -1,7 +1,5 @@
 <template>
   <footer>
-    <UiTextH3>Footer</UiTextH3>
-
     <div class="footer__content">
       <ul class="logo">
         <li>
