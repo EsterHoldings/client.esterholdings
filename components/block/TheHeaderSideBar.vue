@@ -76,8 +76,6 @@ const handleClickLogoutButton = async () => {
 </script>
 
 <style scoped lang="scss">
-//@import "@/assets/styles/variables";
-
 .router-link-exact-active {
   opacity: 0.5;
 }

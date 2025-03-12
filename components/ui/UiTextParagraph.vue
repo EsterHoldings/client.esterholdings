@@ -8,7 +8,6 @@ const handleClick = (): void => emit("click");
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/styles/variables";
 p {
   font-weight: 300;
   font-size: 14px;
