@@ -161,4 +161,28 @@ footer {
     text-align: center;
   }
 }
+
+@media (max-width: 991px) {
+  footer {
+    padding: 40px;
+    margin-top: 35px;
+  }
+}
+
+@media (max-width: 767px) {
+  footer {
+    margin-top: 0;
+  }
+  .footer__content {
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .logo {
+    width: 100%;
+    align-items: center;
+  }
+}
 </style>

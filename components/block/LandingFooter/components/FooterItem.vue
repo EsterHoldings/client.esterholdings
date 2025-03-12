@@ -36,4 +36,11 @@ const props = defineProps({
 .item {
   color: var(--color-ui-grey);
 }
+
+@media (max-width: 576px) {
+  .footer-list {
+    width: 100%;
+    align-items: center;
+  }
+}
 </style>

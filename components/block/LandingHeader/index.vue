@@ -135,13 +135,6 @@ const toggleMenu = () => {
   backdrop-filter: blur(10px);
 }
 
-// .logo {
-//   font-size: 20px;
-//   font-weight: bold;
-//   color: white;
-//   margin-left: 10px;
-// }
-
 .nav {
   display: flex;
   gap: 15px;
