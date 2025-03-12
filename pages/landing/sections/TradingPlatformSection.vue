@@ -10,7 +10,6 @@
       </div>
 
       <div class="devices">
-        <!-- Ноутбук -->
         <div class="device device-laptop">
           <img src="/static/Macbook.png" alt="Laptop Trading" />
 
@@ -21,7 +20,7 @@
             hasBorder
           />
         </div>
-        <!-- Основной экран -->
+
         <div class="device device-main">
           <img src="/static/iMac.png" alt="Trading Platform" />
 
@@ -33,7 +32,6 @@
           />
         </div>
 
-        <!-- Телефон -->
         <div class="device device-phone">
           <img src="/static/iPhone.png" alt="Mobile Trading" />
         </div>
@@ -111,49 +109,51 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
   position: relative;
   display: flex;
   justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-shrink: 0;
 
   .device-main {
     &_position {
       position: absolute;
-      right: 400px;
-      top: 0;
+      left: 68%;
+      top: 20%;
       z-index: 1;
     }
   }
 
   .device-laptop {
     position: absolute;
-    left: 275px;
-    bottom: -40px;
+    right: 50%;
+    top: 50%;
 
     &_position {
       position: absolute;
-      bottom: 75px;
-      left: -125px;
+      top: 30%;
+      right: 50%;
       z-index: 1;
     }
   }
 
   .device-ipad {
     position: absolute;
-    right: 400px;
-    bottom: -80px;
+    top: 50%;
+    left: 64%;
     z-index: 1;
 
     &_position {
       position: absolute;
-      bottom: -40px;
-      right: 200px;
+      top: 100%;
+      right: 50%;
       z-index: 1;
     }
   }
 
   .device-phone {
     position: absolute;
-
-    right: 345px;
+    top: 65%;
+    left: 83%;
     z-index: 10;
-    top: 310px;
   }
 }
 
@@ -171,9 +171,9 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
   filter: blur(200px);
   overflow: hidden;
   border-radius: 100%;
-  right: -350px;
-  top: 100px;
-  z-index: 1;
+  left: 100%;
+  top: 0;
+  z-index: 100000;
   animation: pulse 5s infinite ease-in-out;
 }
 
@@ -189,6 +189,97 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
   100% {
     transform: scale(1);
     opacity: 0.5;
+  }
+}
+
+@media (max-width: 1199px) {
+  .devices {
+    max-width: 991px;
+  }
+
+  .device-main {
+    &_position {
+      left: 65% !important;
+    }
+    img {
+      width: 75%;
+    }
+  }
+
+  .device-laptop {
+    img {
+      width: 75%;
+    }
+  }
+
+  .device-ipad {
+    left: 55% !important;
+
+    img {
+      width: 75%;
+    }
+  }
+
+  .device-phone {
+    left: 74% !important;
+    img {
+      width: 75%;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .devices {
+    max-width: 767px;
+  }
+
+  .platform-title {
+    margin-right: 500px;
+  }
+
+  .device-laptop {
+    right: 40% !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .devices {
+    max-width: 565px;
+  }
+
+  .blur-circle {
+    display: none;
+  }
+
+  .platform-title {
+    margin: 0;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+
+  .device-main {
+    &_position {
+      display: none;
+    }
+    img {
+      width: 100%;
+    }
+  }
+
+  .device-laptop {
+    display: none;
+  }
+
+  .device-ipad {
+    img {
+      width: 100%;
+    }
+  }
+
+  .device-phone {
+    img {
+      width: 100%;
+    }
   }
 }
 </style>

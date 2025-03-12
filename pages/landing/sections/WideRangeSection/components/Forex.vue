@@ -29,14 +29,15 @@ import UiContainer from "~/components/ui/UiContainer.vue";
 
 <style lang="scss" scoped>
 .forex {
+  padding: 10px;
   width: 100vw;
 
   &__img {
     position: absolute;
     right: 0;
-    bottom: 0;
+    bottom: -30px;
+    object-fit: contain;
     width: 648px;
-    height: 314px;
     z-index: 10;
   }
 
@@ -100,6 +101,49 @@ import UiContainer from "~/components/ui/UiContainer.vue";
   100% {
     transform: scale(1.2);
     opacity: 0.4;
+  }
+}
+
+@media (max-width: 1199px) {
+  .wrapper {
+    padding: 40px !important;
+  }
+  .forex__img {
+    width: 68%;
+    top: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  .forex__text {
+    br {
+      display: none;
+    }
+  }
+  .forex__content {
+    max-width: 300px;
+  }
+
+  .forex__img {
+    top: 10%;
+    width: 63%;
+  }
+}
+
+@media (max-width: 767px) {
+  .wrapper {
+    padding: 20px !important;
+  }
+
+  .forex__img {
+    top: 25%;
+    width: 50%;
+  }
+}
+
+@media (max-width: 575px) {
+  .forex__img {
+    display: none;
   }
 }
 </style>

@@ -8,8 +8,9 @@
     <WideRangeSection />
     <FourStepsSection />
     <BannerSection />
-
     <LatestUpdatesSection />
+
+    <CookieModal />
   </main>
 </template>
 
@@ -25,6 +26,7 @@ import FourStepsSection from "~/pages/landing/sections/FourStepsSection.vue";
 import BannerSection from "~/pages/landing/sections/BannerSection.vue";
 import TradingPlatformSection from "~/pages/landing/sections/TradingPlatformSection.vue";
 import LatestUpdatesSection from "~/pages/landing/sections/LatestUpdatesSection.vue";
+import CookieModal from "~/components/block/modals/CookieModal.vue";
 
 definePageMeta({
   middleware: ["not-auth"],
@@ -40,5 +42,11 @@ definePageMeta({
   display: flex;
   flex-direction: column;
   gap: 150px;
+}
+
+@media (max-width: 991px) {
+  .landing {
+    gap: 50px;
+  }
 }
 </style>

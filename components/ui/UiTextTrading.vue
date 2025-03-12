@@ -27,20 +27,6 @@ const props = defineProps({
   flex-direction: column;
   gap: 5px;
 
-  //   &:before {
-  //     content: "";
-  //     position: absolute;
-  //     inset: 0;
-  //     border-radius: 12px;
-  //     padding: 2px;
-  //     background: linear-gradient(to right, rgb(27, 99, 255), rgb(1, 22, 68));
-  //     -webkit-mask: linear-gradient(white, white) content-box,
-  //       linear-gradient(white, white);
-  //     -webkit-mask-composite: xor;
-  //     mask-composite: exclude;
-  //     pointer-events: none;
-  //   }
-
   &.with-border {
     border: 2px solid transparent;
     background-clip: padding-box;
@@ -71,6 +57,21 @@ const props = defineProps({
     color: var(--color-ui-grey);
     font-size: 14px;
     font-weight: 400;
+  }
+}
+
+@media (max-width: 1199px) {
+  .trading-wrapper {
+    width: 200px;
+    padding: 7px 12px;
+
+    h2 {
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 13px;
+    }
   }
 }
 </style>

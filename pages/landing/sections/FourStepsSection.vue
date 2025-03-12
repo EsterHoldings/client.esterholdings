@@ -141,4 +141,42 @@ const steps = ref([
 .four-steps__button {
   margin: 100px auto;
 }
+
+@media (max-width: 1023px) {
+  .four-steps__container {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 991px) {
+  .four-steps__container {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .four-steps__item {
+    min-width: 150px;
+  }
+
+  .four-steps__heading {
+    font-size: 20px;
+  }
+
+  .four-steps__description {
+    font-size: 13px;
+  }
+
+  .four-steps__button {
+    margin: 50px auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .four-steps__wrapper {
+    padding: 10px;
+  }
+  .four-steps__container {
+    flex-direction: column;
+  }
+}
 </style>

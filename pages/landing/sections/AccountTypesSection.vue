@@ -91,7 +91,6 @@ const setActive = (index: number) => {
 .account-card {
   flex: 1;
   height: 385px;
-  //background-color: #081850;
   border-radius: 15px;
   border: 1px solid #2a4af5;
   cursor: pointer;
@@ -171,5 +170,42 @@ const setActive = (index: number) => {
 
 .arrow {
   margin-top: 50px;
+}
+
+@media (max-width: 991px) {
+  .account-container {
+    flex-direction: column;
+  }
+
+  .account-content {
+    padding: 40px;
+  }
+
+  .account-mini {
+    &_title {
+      writing-mode: horizontal-tb;
+      text-orientation: initial;
+      transform: none;
+      height: auto;
+    }
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+  }
+
+  .account-card.active {
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 767px) {
+  .account-description {
+    min-width: 300px !important;
+  }
+
+  .account-content {
+    padding: 10px;
+  }
 }
 </style>

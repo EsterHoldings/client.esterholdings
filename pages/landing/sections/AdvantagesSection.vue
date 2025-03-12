@@ -68,4 +68,43 @@ import UiTextH6 from "~/components/ui/UiTextH6.vue";
   height: 50px;
   background-color: rgba(255, 255, 255, 0.3);
 }
+
+@media (max-width: 991px) {
+  .advantages_section {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 20px;
+  }
+
+  .advantage_item {
+    h3 {
+      font-size: 25px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .advantage_item {
+    h3 {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .advantages_section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .advantage_item {
+    h3 {
+      font-size: 16px;
+    }
+
+    h6 {
+      font-size: 13px;
+    }
+  }
+}
 </style>

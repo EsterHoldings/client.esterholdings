@@ -3,11 +3,11 @@
     <!-- Список вкладок -->
     <div class="tabs__list">
       <div
-          v-for="(tab, index) in props.tabs"
-          :key="tab.id || index"
-          class="tabs__item"
-          :class="{ 'tabs__item--active': activeTabIndex === index }"
-          @click="handleSetActiveTab(index)"
+        v-for="(tab, index) in props.tabs"
+        :key="tab.id || index"
+        class="tabs__item"
+        :class="{ 'tabs__item--active': activeTabIndex === index }"
+        @click="handleSetActiveTab(index)"
       >
         <UiTextH5>
           {{ tab.label }}
@@ -48,7 +48,9 @@ const handleSetActiveTab = (index: number) => {
 
 // Определение активного компонента вкладки
 const activeTabComponent = computed(() => {
-  return props.tabs.length > 0 ? props.tabs[activeTabIndex.value]?.component : null;
+  return props.tabs.length > 0
+    ? props.tabs[activeTabIndex.value]?.component
+    : null;
 });
 </script>
 

@@ -110,4 +110,16 @@ const theNews = ref([
     text-decoration: underline;
   }
 }
+
+@media (max-width: 767px) {
+  .lates_updates_cards {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .help-block {
+    margin-top: 50px;
+  }
+}
 </style>

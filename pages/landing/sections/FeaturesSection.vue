@@ -120,7 +120,6 @@ const items = ref([
 
 .features_container {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
   max-width: 1200px;
   width: 100%;
@@ -169,5 +168,21 @@ const items = ref([
   margin-top: 5px;
   font-size: 16px;
   color: var(--color-ui-grey);
+}
+
+@media (max-width: 1199px) {
+  .features_section {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 991px) {
+  .feature_title {
+    font-size: 16px;
+  }
+
+  .feature_description {
+    font-size: 13px;
+  }
 }
 </style>
