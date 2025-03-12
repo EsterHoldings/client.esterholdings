@@ -21,3 +21,5 @@ export const tabs:any = ref([
     component: Secure
   },
 ]);
+
+export default tabs;
