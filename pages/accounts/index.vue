@@ -7,7 +7,9 @@
       <div class="accounts__content">
         <div class="accounts__content__options">
           <div class="accounts__content__option">
-            <UiButtonDefault state="success">Open new account</UiButtonDefault>
+            <UiButtonDefault state="success"
+                             @click="handleClickCreateNewAccount"
+            >Open new account</UiButtonDefault>
           </div>
         </div>
 
@@ -108,8 +110,9 @@ import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiIconSort from "~/components/ui/UiIconSort.vue";
 import useAppCore from "~/composables/useAppCore";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, inject } from "vue";
 import {definePageMeta} from "~/.nuxt/imports";
+import AccountsCreateNew from "~/pages/accounts/components/AccountsCreateNew.vue";
 
 definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
 
@@ -207,6 +210,13 @@ const loadData = async () => {
   const accountsData = response.data.data.data.map(x => { x.isSpinning = false; return x; });
   accounts.splice(0, accounts.length, ...accountsData);
 };
+
+// --- --- ---
+
+const { openModal } = inject("modalControl") as { openModal: Function };
+// const { closeModal } = inject("modalControl") as { closeModal: Function };
+
+const handleClickCreateNewAccount = () => openModal(AccountsCreateNew, { title: "Open new account" });
 
 onMounted(async () => {
   await loadData();

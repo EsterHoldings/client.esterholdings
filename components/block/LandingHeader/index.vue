@@ -50,7 +50,8 @@
                       uiStore.headerScrolled &&
                       themeStore.currentTheme !== 'dark',
                   }"
-                  >Log In
+                  >
+                  <NuxtLink to="/auth/login">Log In</NuxtLink>
                 </UiButtonDefault>
               </NuxtLink>
 
@@ -59,13 +60,14 @@
                   state="primary"
                   class="register"
                   v-if="!isMenuOpen"
-                  >Register
+                  >
+                  <NuxtLink to="/auth/registration">Register</NuxtLink>
                 </UiButtonDefault>
               </NuxtLink>
 
+<!--                v-if="isMenuOpen"-->
               <div
                 class="actions-icons"
-                v-if="isMenuOpen"
                 :class="{ 'is-menu-open': isMenuOpen }"
               >
                 <UiIconGlobe

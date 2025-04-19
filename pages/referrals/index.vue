@@ -1,11 +1,55 @@
-<template>Referral system</template>
+<template>
+  <UiContainer>
+    <div class="referrals">
+      <div class="referrals__title">
+        <h3>Referral system</h3>
+      </div>
+      <div class="referrals__content">
+        <UiTextH1>Coming Soon</UiTextH1>
+        <UiTextParagraph>Our team is completing the system upgrade. This section will be available soon, we will notify
+          you by email and in the notifications section.
+        </UiTextParagraph>
+      </div>
+    </div>
+  </UiContainer>
+</template>
 
 <script lang="ts" setup>
 import {definePageMeta} from "~/.nuxt/imports";
+import UiTextH1 from "~/components/ui/UiTextH1.vue";
+import UiContainer from "~/components/ui/UiContainer.vue";
+import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 
-definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
+definePageMeta({
+  layout: "cabinet",
+  middleware: ["auth-client"]
+});
+
 </script>
 
 <style lang="scss" scoped>
+.referrals {
+  padding-bottom: 40px;
 
+  &__title {
+    margin-bottom: 20px;
+  }
+
+  &__content {
+    height: 80vh;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    p {
+      margin-top: 20px;
+      width: 300px;
+      text-align: center;
+    }
+  }
+}
 </style>

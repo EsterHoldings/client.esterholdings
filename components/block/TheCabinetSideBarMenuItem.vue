@@ -56,13 +56,16 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
   margin-top: 1px;
-  height: 50px;
+  height: 65px;
 
   background-color: transparent;
 
   transition: .3s;
+
 
   &:hover {
     transition: .3s;
@@ -75,6 +78,8 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
 
   &__indicator {
     position: absolute;
+    left: 0;
+    top: 0;
     width: 8px;
     height: 100%;
 
@@ -87,9 +92,11 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
 
   &__icon {
     padding-left: 20px;
+    padding-top: 10px;
   }
 
   &__title {
+    padding-bottom: 10px;
     padding-left: 20px;
     width: 100%;
     height: 100%;
@@ -101,6 +108,7 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
     z-index: 3;
     display: flex;
     align-items: center;
+    justify-content: center;
 
     color: #d8d8d8;
     font-size: 14px;
@@ -116,42 +124,7 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
       width: 0;
       overflow: hidden;
     }
-
-    //a {
-    //  z-index: 3;
-    //  display: flex;
-    //  align-items: center;
-    //
-    //  width: 100%;
-    //  height: 100%;
-    //
-    //  color: #210e32;
-    //  font-size: 14px;
-    //  font-weight: 500;
-    //
-    //  &:hover {
-    //    color: #210e32;
-    //  }
-    //}
   }
 }
-//.side-bar-cabinet {
-//  &__menu {
-//    &__item {
-//      width: 100%;
-//      height: 70px;
-//      display: flex;
-//      align-items: center;
-//      justify-content: center;
-//
-//      &:hover {
-//        background-color: var(--color-ui-primary);
-//      }
-//
-//      &.active {
-//        background-color: var(--color-stroke-ui-dark);
-//      }
-//    }
-//  }
-//}
+
 </style>

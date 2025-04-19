@@ -87,8 +87,9 @@ const handleOnChange = (option: any): void => {
   position: relative;
 
   &__body {
+    box-sizing: border-box;
     padding: 0 20px;
-    border: 1px solid #0f0f0f;
+    border: 1px solid var(--color-stroke-ui-dark);
     height: 40px;
     display: flex;
     justify-content: flex-start;
@@ -110,27 +111,31 @@ const handleOnChange = (option: any): void => {
     width: 100%;
     max-height: 250px;
     overflow-x: scroll;
-    border: 1px solid #0f0f0f;
+    //border: 1px solid #0f0f0f;
     border-radius: 0px 0px 5px 5px;
     box-shadow: 0px 27px 38px -9px rgba(0, 0, 0, 0.75);
   }
 
   &__option {
     padding: 0 20px;
-    border: 1px solid gainsboro;
+    border: 1px solid var(--color-stroke-ui-dark);
     height: 40px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    background-color: gainsboro;
-    border-top: 1px solid white;
+    background-color: var(--color-ui-background);
+    border-top: 1px solid var(--color-stroke-ui-dark);
     user-select: none;
 
     &--no-selected {
       border: none;
       font-size: 13px;
       font-weight: 600;
-      background-color: #a4a1a1;
+      background-color: var(--color-ui-background);
+      border-top: 1px solid var(--color-stroke-ui-dark);
+      border-left: 1px solid var(--color-stroke-ui-dark);
+      border-right: 1px solid var(--color-stroke-ui-dark);
+      color: var(--color-stroke-ui-dark)
     }
 
     &.is-active {

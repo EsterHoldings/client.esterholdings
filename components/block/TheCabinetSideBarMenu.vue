@@ -24,6 +24,8 @@ import UiIconKeys from "~/components/ui/UiIconKeys.vue";
 
 import {ref} from "vue";
 import {useRouter} from "vue-router";
+import UiIconSupport from "~/components/ui/UiIconSupport.vue";
+import UiIconPayment from "~/components/ui/UiIconPayment.vue";
 
 const router = useRouter();
 const sideBarIsOpen = ref(true)
@@ -49,14 +51,19 @@ const menuItems = [
     icon: UiIconReferral,
   },
   {
-    title: 'Payments',
+    title: 'Billing',
     to: '/payments',
-    icon: UiIconProfile,
+    icon: UiIconPayment,
   },
   {
     title: 'Settings',
     to: '/settings',
     icon: UiIconSetting,
+  },
+  {
+    title: 'Support',
+    to: '/support',
+    icon: UiIconSupport,
   }
 ];
 

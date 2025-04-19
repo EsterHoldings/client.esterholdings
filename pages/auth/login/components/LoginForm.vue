@@ -112,6 +112,8 @@ const doSendForm = async () => {
     authStore.setRefreshToken(refreshToken);
 
     navigateTo('/dashboard')
+
+    console.log('DO REDIRECT TO DASHBOARD')
   } catch (e: any) {
     console.log("LoginForm -> doSendForm -> catch", e.message);
   } finally {

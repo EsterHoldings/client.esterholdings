@@ -1,20 +1,35 @@
 <template>
   <header class="side-bar-cabinet">
     <div class="side-bar-cabinet__top">
-      <NuxtLink to="/">
-        <UiIconLogo />
-      </NuxtLink>
+      <div class="side-bar-cabinet__top__logo">
+        <NuxtLink to="/"><UiIconLogo /></NuxtLink>
+      </div>
+      <div class="side-bar-cabinet__top__profile">
+        <div class="side-bar-cabinet__top__profile__image">
+          <UiIconUser />
+        </div>
+        <div>...</div>
+      </div>
     </div>
     <div class="side-bar-cabinet__content">
       <TheCabinetSideBarMenu />
     </div>
-    <div class="side-bar-cabinet__bottom">Logout</div>
+    <div class="side-bar-cabinet__bottom">
+      <UiIconGlobe />
+      <UiIconMoon />
+      <UiIconLogout />
+    </div>
   </header>
 </template>
 
 <script lang="ts" setup>
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import TheCabinetSideBarMenu from "~/components/block/TheCabinetSideBarMenu.vue";
+import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+import UiIconLogout from "~/components/ui/UiIconLogout.vue";
+import UiIconGlobe from "~/components/ui/UiIconGlobe.vue";
+import UiIconMoon from "~/components/ui/UiIconMoon.vue";
+import UiIconUser from "~/components/ui/UiIconUser.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -42,11 +57,18 @@ import TheCabinetSideBarMenu from "~/components/block/TheCabinetSideBarMenu.vue"
 
   &__top {
     overflow: hidden;
-    height: 80px;
+    height: auto;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    flex-direction: column;
+
+    &__logo {}
+    &__profile {
+      margin-top: 20px;
+    }
   }
 
   &__content {
@@ -58,12 +80,15 @@ import TheCabinetSideBarMenu from "~/components/block/TheCabinetSideBarMenu.vue"
   }
 
   &__bottom {
-    height: 80px;
+    height: 72px;
     width: 100%;
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--color-stroke-ui-dark);
+
+    padding: 0 30px;
   }
 }
 

@@ -2,7 +2,7 @@
   <UiContainer>
     <div class="referrals">
       <div class="referrals__title">
-        <h3>Settings</h3>
+        <h3>Support</h3>
       </div>
       <div class="referrals__content">
         <UiTextH1>Coming Soon</UiTextH1>

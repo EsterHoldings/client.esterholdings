@@ -43,6 +43,11 @@ a {
   }
 }
 
+a:visited {
+  color: inherit; /* или тот же цвет, что и у обычной ссылки */
+  text-decoration: none; /* если не хочешь подчёркивания */
+}
+
 // ...
 
 // TODO :: Deprecated

@@ -2,12 +2,14 @@
   <UiContainer>
     <div class="payments">
       <div class="payments__title">
-        <h3>payments</h3>
+        <h3>Billing</h3>
       </div>
       <div class="payments__content">
         <div class="payments__content__options">
           <div class="payments__content__option">
-            <UiButtonDefault state="success">Create new payment</UiButtonDefault>
+            <UiButtonDefault state="success"
+                             @click="handleClickCreateNewAccount"
+            >Create new payment</UiButtonDefault>
           </div>
         </div>
 
@@ -26,7 +28,7 @@
           </div>
 
           <div class="payments__content__payment_item__data-wrapper--header__cell">
-            <span @click="handleOrderByAndDirection('payment_system')">Payment system</span>
+            <span @click="handleOrderByAndDirection('payment_system')">Paysystem</span>
             <UiIconSort :active="orderBy === 'payment_system'"
                         :direction="orderDirection"
                         @click="handleOrderByAndDirection('payment_system')"
@@ -65,6 +67,10 @@
             />
           </div>
 
+          <div class="payments__content__payment_item__data-wrapper--header__cell">
+            <span  @click="handleOrderByAndDirection('created_at')"></span>
+          </div>
+
         </div>
 
         <template v-if="payments.length === 0">
@@ -74,7 +80,10 @@
         </template>
 
         <template v-if="payments.length > 0">
-          <PanelDefault class="payments__content__payment_item" v-for="payment in payments" :key="payment.id">
+          <PanelDefault class="payments__content__payment_item"
+                        v-for="payment in payments"
+                        :key="payment.id"
+          >
             <div class="payments__content__payment_item__data-wrapper">
               <div @click="copyToClipboard(payment.id)"
                    style="display: flex;"
@@ -85,8 +94,8 @@
               <div>{{ payment.payment_system }}</div>
               <div>{{ payment.status }}</div>
               <div>{{ payment.currency }}</div>
-              <div>{{ payment.amount }}</div>
-              <div>{{ new Date(payment.created_at).toLocaleString() }}</div>
+              <div :class="[Math.random() < 0.5 ? 'withdrawal' : 'deposit']">{{ payment.amount }}</div>
+              <div class="date">{{ new Date(payment.created_at).toLocaleString() }}</div>
               <div>
                 <UiIconUpdate class="icon-update" ref="iconUpdate" :class="{ spinning: spinIcon }"
                               @click="handleIconClick(payment.id)" @animationend="onIconAnimationEnd" />
@@ -131,9 +140,10 @@ import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiIconSort from "~/components/ui/UiIconSort.vue";
 import useAppCore from "~/composables/useAppCore";
-import { computed, onMounted, reactive, ref } from "vue";
+import {computed, inject, onMounted, reactive, ref} from "vue";
 import {definePageMeta} from "~/.nuxt/imports";
 import UiIconCopy from "~/components/ui/UiIconCopy.vue";
+import AdminsPanelAddNew from "~/pages/admin/access/components/AdminsPanelAddNew.vue";
 
 definePageMeta({
   layout: "cabinet",
@@ -244,12 +254,36 @@ const copyToClipboard = (paymentId) => {
   navigator.clipboard.writeText(id)
 }
 
+// --- --- ---
+
+// const { closeModal } = inject("modalControl") as { closeModal: Function };
+const { openModal } = inject("modalControl") as { openModal: Function };
+
+const handleClickCreateNewAccount = () =>
+    openModal(AdminsPanelAddNew, { title: "Add new Admin" });
+
 onMounted(async () => {
   await loadData();
 });
 </script>
 
 <style lang="scss" scoped>
+
+.date {
+  width: 140px;
+  font-size: 14px;
+}
+
+.withdrawal {
+  font-weight: bold;
+  color: var(--color-success);
+}
+
+.deposit {
+  font-weight: bold;
+  color: var(--color-danger);
+}
+
 .icon-update {
   height: 14px;
   width: 14px;

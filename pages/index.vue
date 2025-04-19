@@ -37,7 +37,7 @@ import CookieModal from "~/components/block/modals/CookieModal.vue";
 
 
 definePageMeta({
-  middleware: ["not-auth-client"],
+  // middleware: ["not-auth-client"],
   layout: "main",
 });
 
