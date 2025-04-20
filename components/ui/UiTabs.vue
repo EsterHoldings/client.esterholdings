@@ -1,41 +1,36 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue';
+import UiTextH5 from "~/components/ui/UiTextH5.vue";
 
-import UiTextH5 from "./UiTextH5.vue";
+interface Tab { id: string; label: string; }
 
-interface Tab {
-  id: string;
-  label: string;
-}
+const props = withDefaults(
+    defineProps<{ tabs?: Tab[] }>(),
+    { tabs: [] as any }
+);
 
-const props = defineProps<{
-  tabs: Tab[];
+const activeTab = ref(props.tabs[0]?.id ?? '');
+
+const emit = defineEmits<{
+  (e: 'activeTab', tabId: string): void
 }>();
 
-const emit = defineEmits(["activeTab"]);
-
-const activeTab = ref(props.tabs[0].id);
-
-const setActiveTab = (tabId: string) => {
+function setActiveTab(tabId: string) {
   activeTab.value = tabId;
-
-  emit("activeTab", tabId);
-};
+  emit('activeTab', tabId);
+}
 </script>
-
 <template>
   <div class="tabs">
     <div class="tabs__wrapper">
       <div
-        v-for="tab in props.tabs"
-        :key="tab.id"
-        class="tabs__item"
-        :class="{ 'tabs__item--active': activeTab === tab.id }"
-        @click="setActiveTab(tab.id)"
+          v-for="tab in props.tabs"
+          :key="tab.id"
+          class="tabs__item"
+          :class="{ 'tabs__item--active': activeTab === tab.id }"
+          @click="setActiveTab(tab.id)"
       >
-        <UiTextH5>
-          {{ tab.label }}
-        </UiTextH5>
+        <UiTextH5>{{ tab.label }}</UiTextH5>
       </div>
     </div>
   </div>
@@ -51,7 +46,6 @@ const setActiveTab = (tabId: string) => {
   gap: 15px;
   align-items: center;
   justify-content: center;
-  // flex-wrap: wrap;
 }
 
 .tabs__item {

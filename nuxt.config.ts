@@ -1,3 +1,6 @@
+import { resolve } from 'path';
+import { defineNuxtConfig } from 'nuxt/config';
+
 // @ts-ignore
 export default defineNuxtConfig({
   typescript: {
@@ -12,10 +15,10 @@ export default defineNuxtConfig({
   imports: {
     dirs: ["stores"],
   },
-
+  // @ts-ignore
   i18n: {
     lazy: true,
-    langDir: resolve("./locales"),
+    langDir: resolve(__dirname, './locales'),
 
     strategy: "prefix",
     locales: [
@@ -49,7 +52,7 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    '/*/**': { ssr: false },
+    '/**': { ssr: false } as any,
     // '/': { ssr: true },
   }
 });
