@@ -29,6 +29,7 @@ import TabGeneral from "~/pages/profile/components/TabGeneral.vue";
 import TabUserPhoto from "~/pages/profile/components/TabUserPhoto.vue";
 import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
 import TabUserDocuments from "~/pages/profile/components/TabUserDocuments.vue";
+import TabChangePassword from "~/pages/profile/components/TabChangePassword.vue";
 
 definePageMeta({
   layout: "cabinet",
@@ -43,6 +44,7 @@ const tabsList = reactive([
   { label: "User photo", component: TabUserPhoto },
   { label: "Documents", component: TabUserDocuments },
   { label: "Verification", component: TabUserPhoto },
+  { label: "Change password", component: TabChangePassword },
 ]);
 
 onMounted(() => {

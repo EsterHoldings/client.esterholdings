@@ -2,43 +2,43 @@
   <div class="user-photo__wrapper">
     <div class="user-photo__left">
       <PanelDefault class="user-photo-uploader">
-<!--        <div class="uploader-body">-->
-<!--          <div v-if="previewUrl" class="avatar-preview">-->
-<!--            <img :src="previewUrl" alt="Preview"/>-->
-<!--            <div-->
-<!--                v-if="previewUrl && !loading"-->
-<!--                class="btn-delete"-->
-<!--                @click="remove"-->
-<!--            ></div>-->
-<!--          </div>-->
-<!--          <div v-else class="avatar-placeholder">-->
-<!--            <span class="icon">👤</span>-->
-<!--          </div>-->
-<!--          <div class="actions">-->
-<!--            <input-->
-<!--                id="fileSelectionBtn"-->
-<!--                type="file"-->
-<!--                accept="image/*"-->
-<!--                @change="onFileChange"-->
-<!--                hidden-->
-<!--            />-->
-<!--            <div class="btn-select" @click="clickSelectionFile">-->
-<!--              Choose file-->
-<!--            </div>-->
-<!--            <UiButtonDefault-->
-<!--                class="btn-upload"-->
-<!--                state="info&#45;&#45;outline"-->
-<!--                :disabled="!file || loading || !!error"-->
-<!--                @click="upload"-->
-<!--            >-->
-<!--              {{ loading ? uploadProgress + '%' : 'Upload' }}-->
-<!--            </UiButtonDefault>-->
-<!--          </div>-->
-<!--          <div v-if="loading" class="progress-bar">-->
-<!--            <div class="progress" :style="{ width: uploadProgress + '%' }"/>-->
-<!--          </div>-->
-<!--          <p v-if="error" class="error">{{ error }}</p>-->
-<!--        </div>-->
+        <div class="uploader-body">
+          <div v-if="previewUrl" class="avatar-preview">
+            <img :src="previewUrl" alt="Preview"/>
+            <div
+                v-if="previewUrl && !loading"
+                class="btn-delete"
+                @click="remove"
+            ></div>
+          </div>
+          <div v-else class="avatar-placeholder">
+            <span class="icon">👤</span>
+          </div>
+          <div class="actions">
+            <input
+                id="fileSelectionBtn"
+                type="file"
+                accept="image/*"
+                @change="onFileChange"
+                hidden
+            />
+            <div class="btn-select" @click="clickSelectionFile">
+              Choose file
+            </div>
+            <UiButtonDefault
+                class="btn-upload"
+                state="info--outline"
+                :disabled="!file || loading || !!error"
+                @click="upload"
+            >
+              {{ loading ? uploadProgress + '%' : 'Upload' }}
+            </UiButtonDefault>
+          </div>
+          <div v-if="loading" class="progress-bar">
+            <div class="progress" :style="{ width: uploadProgress + '%' }"/>
+          </div>
+          <p v-if="error" class="error">{{ error }}</p>
+        </div>
       </PanelDefault>
     </div>
     <div class="user-photo__right">

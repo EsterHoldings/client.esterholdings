@@ -225,15 +225,11 @@ const appCore = useAppCore();
 const isLoading = ref(false);
 
 const handleSubmit = async () => {
-  console.log(formData);
-
   try {
     isLoading.value = true;
     const authStore = useAuthStore();
-    const response = await appCore.users.patch(formData);
-
+    await appCore.users.patch(formData);
     resetValidationUserDataForm();
-
     toast.success('Данные пользователя успешно\nобновлены и отправлены на проверку!')
   } catch (e) {
     console.error(e);

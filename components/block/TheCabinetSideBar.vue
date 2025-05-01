@@ -6,8 +6,18 @@
       </div>
       <div class="side-bar-cabinet__top__profile">
         <NuxtLink to="/ru/profile">
-        <div class="side-bar-cabinet__top__profile__image">
-          <UiIconUser />
+          <div
+              :class="[
+                'side-bar-cabinet__top__profile__image',
+                { 'active': isProfileRoute }
+              ]"
+          >
+          <UiIconUser v-if="!authStore.photoUrl" />
+          <img
+              v-if="authStore.photoUrl"
+              :src="authStore.photoUrl"
+              alt="User Photo"
+          >
         </div>
         </NuxtLink>
 <!--        <div class="side-bar-cabinet__top__profile__name">-->
@@ -39,15 +49,27 @@ import UiIconUser from "~/components/ui/UiIconUser.vue";
 import {useAuthStore} from "~/stores/authStore";
 import {useRoute} from "vue-router";
 import {navigateTo} from "nuxt/app";
+import {computed} from "vue";
 
 const authStore = useAuthStore();
 const router = useRoute();
+
+if (!authStore.user) {
+  authStore.initAuth();
+}
 
 const handleClickLogout = () => {
   authStore.setAccessToken('');
   authStore.setRefreshToken('');
   navigateTo('/auth/login')
 }
+const route = useRoute();
+const isProfileRoute = computed(() => {
+  const segments = route.path.split('/')
+  const last = segments[segments.length - 1]
+  return last === 'profile'
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -91,16 +113,26 @@ const handleClickLogout = () => {
     }
 
     &__profile {
-
       &__image {
         margin: auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 60px;
-        width: 60px;
+        height: 62px;
+        width: 62px;
         border: 3px solid var(--color-stroke-ui-dark);
         border-radius: 25%;
+
+        img {
+          width: 60px;
+          height: 58px;
+          object-fit: cover;
+          border-radius: 23%;
+        }
+
+        &.active {
+          border-color: var(--color-primary);
+        }
       }
 
       &__name {

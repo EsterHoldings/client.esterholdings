@@ -44,13 +44,13 @@
               />
             </div>
 
-            <div class="payments-details__content__payment_item__data-wrapper--header__cell">
-              <span  @click="handleOrderByAndDirection('amount')">Amount</span>
-              <UiIconSort :active="orderBy === 'amount'"
-                          :direction="orderDirection"
-                          @click="handleOrderByAndDirection('amount')"
-              />
-            </div>
+<!--            <div class="payments-details__content__payment_item__data-wrapper&#45;&#45;header__cell">-->
+<!--              <span  @click="handleOrderByAndDirection('amount')">Amount</span>-->
+<!--              <UiIconSort :active="orderBy === 'amount'"-->
+<!--                          :direction="orderDirection"-->
+<!--                          @click="handleOrderByAndDirection('amount')"-->
+<!--              />-->
+<!--            </div>-->
 
             <div class="payments-details__content__payment_item__data-wrapper--header__cell">
               <span  @click="handleOrderByAndDirection('created_at')">CreatedAt</span>
@@ -86,7 +86,7 @@
                 <div>{{ payment.payment_system }}</div>
                 <div>{{ payment.status }}</div>
                 <div>{{ payment.currency }}</div>
-                <div :class="[Math.random() < 0.5 ? 'withdrawal' : 'deposit']">{{ payment.amount }}</div>
+<!--                <div :class="[Math.random() < 0.5 ? 'withdrawal' : 'deposit']">{{ payment.amount }}</div>-->
                 <div class="date">{{ new Date(payment.created_at).toLocaleString() }}</div>
                 <div>
                   <UiIconUpdate class="icon-update" ref="iconUpdate" :class="{ spinning: spinIcon }"
