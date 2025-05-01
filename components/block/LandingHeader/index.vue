@@ -13,7 +13,7 @@
           <div class="logo">
             <UiIconLogo
               :class="{
-                'svg-invert': isThemeLight,
+                'svg-invert': isThemeLight || isWithPicture,
               }"
             />
           </div>
@@ -22,7 +22,7 @@
             class="burger-menu"
             :class="{
               'burger-menu--open': isMobileMenuOpen,
-              'is-theme-light': isThemeLight,
+              'is-theme-light': isThemeLight || isWithPicture,
             }"
             @click="toggleMenu"
           >
@@ -39,6 +39,7 @@
               :path="link.path"
               :activeLink="activeLink"
               @click.stop="handleClick(link.name)"
+              :isInvertColor="isThemeLight || isWithPicture"
             />
           </nav>
 
@@ -51,7 +52,7 @@
                 state="link"
                 class="login"
                 :class="{
-                  'is-theme-light': isThemeLight,
+                  'is-theme-light': isThemeLight || isWithPicture,
                 }"
               >
                 {{ t("header.auth.login") }}
@@ -66,7 +67,10 @@
               </UiButtonDefault>
 
               <div class="actions-icons">
-                <LanguageSwitcher class="icon" :isInvert="isThemeLight" />
+                <LanguageSwitcher
+                  class="icon"
+                  :isInvert="isThemeLight || isWithPicture"
+                />
 
                 <transition name="fade" mode="out-in">
                   <span
@@ -77,13 +81,13 @@
                     <UiIconMoon
                       v-if="themeStore.currentTheme === 'dark'"
                       :class="{
-                        'svg-invert': isThemeLight,
+                        'svg-invert': isThemeLight || isWithPicture,
                       }"
                     />
 
                     <UiIconSun
                       :class="{
-                        'svg-invert': isThemeLight,
+                        'svg-invert': isThemeLight || isWithPicture,
                       }"
                       v-else
                     />
@@ -162,6 +166,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useUiStore } from "~/stores/uiStore";
 import { useThemeStore } from "~/stores/themeStore.js";
 import useTrackScroll from "./composables/trackScroll";
+import { isSlideWithoutPicture } from "./composables/trackScroll";
 
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconMoon from "~/components/ui/UiIconMoon.vue";
@@ -181,6 +186,7 @@ const themeStore = useThemeStore();
 const uiStore = useUiStore();
 
 const { isBlurred } = useTrackScroll();
+
 const { t } = useI18n();
 
 const activeLink = ref("");
@@ -201,6 +207,14 @@ const isThemeLight = computed(() => {
     (uiStore.headerScrolled && themeStore.currentTheme !== "dark") ||
     (themeStore.currentTheme !== "dark" && isMobileMenuOpen.value)
   );
+});
+
+const isWithPicture = computed(() => {
+  if (themeStore.currentTheme == "dark") {
+    return false;
+  } else {
+    return isSlideWithoutPicture.value;
+  }
 });
 
 const handleClick = (name) => {

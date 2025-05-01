@@ -3,14 +3,6 @@
     <SliderDefault class="welcome__slider" :autoPlayInterval="10000" />
     <UiContainer>
       <div class="welcome__content">
-        <!-- <UiTextH1>
-          Trade <span class="welcome__title--highlight">Smarter</span>, <br />
-          Trade Faster !
-          <span v-html="$t('welcome-title')" />
-
-          <img class="rocket" src="/static/rocket.png" alt="Rocket" />
-        </UiTextH1> -->
-
         <UiTextH1>
           {{ $t("welcome-title.before") }}
           <span class="welcome__title--highlight">{{
