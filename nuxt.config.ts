@@ -52,6 +52,6 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/**": { ssr: false } as any,
-    // '/': { ssr: true },
+    '/': { ssr: true },
   },
 });
