@@ -66,6 +66,8 @@ import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 
+import {useToast} from "vue-toastification";
+
 import {
   validatorLoginForm,
   validateLoginForm,
@@ -81,6 +83,7 @@ const props = defineProps({
 
 const isLoading = ref(false);
 const appCore = useAppCore();
+const toast = useToast();
 
 const doSendForm = async () => {
 
@@ -103,6 +106,7 @@ const doSendForm = async () => {
     console.log('DO REDIRECT TO DASHBOARD')
   } catch (e: any) {
     console.log("LoginForm -> doSendForm -> catch", e.message);
+    toast.error('Invalid credentials');
   } finally {
     resetValidationLoginForm();
     setTimeout(() => {
