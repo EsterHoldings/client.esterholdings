@@ -2,31 +2,24 @@
   <section class="slide-10">
     <div class="slide-10__content">
       <div class="slide-10__title">
-        <img src="/static/ten-slide.webp" alt="10" />
-
-        <!-- <UiTextH3 class="slide-10__years">Years</UiTextH3> -->
-
-        <UiTextH3 class="slide-10__years">
-          {{ $t("slide-10-title.highlight") }}
-        </UiTextH3>
+        <div class="slide-10__image-wrapper">
+          <img src="/static/ten-slide.webp" alt="10" class="slide-10__image" />
+          <UiTextH3 class="slide-10__years">
+            {{ $t("slider.ten_years_slide.title.highlight") }}
+          </UiTextH3>
+        </div>
       </div>
-      <!-- <UiTextH2 class="slide-10__subtitle">in Trading</UiTextH2> -->
+
       <UiTextH2 class="slide-10__subtitle">
-        {{ $t("slide-10-title.after") }}
+        {{ $t("slider.ten_years_slide.title.after") }}
       </UiTextH2>
-      <!-- <UiTextH6 class="slide-10__description">
-        Experience tested by time. Reliability confirmed by results.
-      </UiTextH6> -->
 
       <UiTextH6 class="slide-10__description">
-        {{ $t("slide-10-text") }}
+        {{ $t("slider.ten_years_slide.text") }}
       </UiTextH6>
-      <!-- <UiButtonDefault state="primary" class="slide-10__btn">
-        Join in Us
-      </UiButtonDefault> -->
 
       <UiButtonDefault state="primary" class="slide-10__btn">
-        {{ $t("slide-10-btn") }}
+        {{ $t("slider.ten_years_slide.btn") }}
       </UiButtonDefault>
     </div>
   </section>
@@ -59,15 +52,31 @@ import UiTextH6 from "~/components/ui/UiTextH6.vue";
   }
 
   &__title {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__image-wrapper {
     position: relative;
+    display: inline-block;
+    width: auto;
+  }
+
+  &__image {
+    display: block;
+    max-width: 100%;
+    height: auto;
   }
 
   &__years {
+    position: absolute;
+    top: 37%;
+    right: 4%;
+    transform: translate(50%, 50%);
     font-size: 30px;
     font-weight: 600;
-    position: absolute;
-    top: 82px;
-    right: 33px;
+    white-space: nowrap;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
   }
 
   &__subtitle {

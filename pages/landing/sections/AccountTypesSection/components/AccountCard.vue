@@ -111,18 +111,46 @@ const currentAccount = computed(() => accountsMap.value[currentTab.value]);
   &:before {
     content: attr(data-text);
     position: absolute;
-    bottom: -10px;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-
-    font-size: 200px !important;
+    left: 100%;
+    white-space: nowrap;
+    font-size: 150px;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.07);
     text-transform: uppercase;
     filter: blur(4px);
     z-index: 0;
-    white-space: nowrap;
     pointer-events: none;
+    animation: scroll-text 12s linear infinite;
+    transition: left 0.6s ease, bottom 0.6s ease, transform 0.6s ease,
+      filter 0.6s ease, font-size 0.6s ease, color 0.6s ease;
+  }
+
+  &:hover:before {
+    animation: pulse 1.5s ease-in-out infinite;
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(1px);
+    font-size: 150px;
+    color: rgba(255, 255, 255, 0.15);
+  }
+
+  @keyframes scroll-text {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: translateX(-50%) scale(1);
+    }
+    50% {
+      transform: translateX(-50%) scale(1.1);
+    }
   }
 
   .account-description {
@@ -216,6 +244,25 @@ const currentAccount = computed(() => accountsMap.value[currentTab.value]);
 
   .account-card.active {
     transform: scale(1);
+
+    &::before {
+      font-size: 100px !important;
+    }
+
+    &:hover:before {
+      left: 0;
+      transform: scale(1);
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
   }
 }
 

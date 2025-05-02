@@ -49,31 +49,36 @@
     }
   },
 
-  "welcome-title": {
-    "before": "Trade",
-    "highlight": "Smarter",
-    "after": "Trade Faster!"
+  "slider": {
+    "general-slide": {
+      "title": {
+        "before": "Trade",
+        "highlight": "Smarter",
+        "after": "Trade Faster!"
+      },
+      "text": "Access global markets, including Forex, Stocks, and CFDs, with \nfast execution, low spreads, and real-time market analysis.",
+      "btn": "Trade Now"
+    },
+
+    "top-trader-slide": {
+      "title": {
+        "before": "Copy Strategies",
+        "highlight": "Top Traders",
+        "after": ""
+      },
+      "text": "Gain access to real deals from professionals and improve your trading.",
+      "btn": "Start"
+    },
+
+    "ten_years_slide": {
+      "title": {
+        "highlight": "Years",
+        "after": "in Trading"
+      },
+      "text": "Experience tested by time. Reliability confirmed by results.",
+      "btn": "Join in Us"
+    }
   },
-
-  "welcome__text": "Access global markets, including Forex, Stocks, and CFDs, with \nfast execution, low spreads, and real-time market analysis.",
-
-  "welcome-btn": "Trade Now",
-
-  "slide-copy-title": {
-    "before": "Copy Strategies",
-    "highlight": "Top Traders",
-    "after": ""
-  },
-
-  "slide-copy-text": "Gain access to real deals from professionals and improve your trading.",
-  "slide-copy-btn": "Start",
-
-  "slide-10-title": {
-    "highlight": "Years",
-    "after": "in Trading"
-  },
-  "slide-10-text": "Experience tested by time. Reliability confirmed by results.",
-  "slide-10-btn": "Join in Us",
 
   "running-line-btn": "Trade",
 

@@ -105,10 +105,23 @@ onBeforeUnmount(() => {
       font-size: 14px;
       cursor: pointer;
 
-      &:hover,
+      &:hover {
+        background: rgba(0, 0, 40, 0.15);
+        color: var(--ui-primary-accent);
+
+        .label {
+          font-weight: 700;
+        }
+      }
+
       &.active {
         background: var(--ui-background-hover);
         color: var(--ui-primary-accent);
+
+        &:hover {
+          background: rgba(0, 0, 40, 0.15);
+          color: var(--ui-primary-accent);
+        }
       }
 
       .flag {

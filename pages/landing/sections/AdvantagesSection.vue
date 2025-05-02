@@ -7,9 +7,9 @@
         :key="index"
       >
         <div class="advantage_item">
-          <UiTextH3 class="bold">{{ item.value.body?.static }}</UiTextH3>
+          <UiTextH3 class="bold">{{ item.value.body.static }}</UiTextH3>
           <UiTextH6 class="advantage_item_subtitle">
-            {{ item.label.body?.static }}
+            {{ item.label.body.static }}
           </UiTextH6>
         </div>
 
@@ -20,12 +20,20 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH6 from "~/components/ui/UiTextH6.vue";
 
-const { tm } = useI18n();
-const advantages = tm("advantages");
+const { tm, t } = useI18n();
+// const advantages = tm("advantages");
+
+const { locale, getLocaleMessage } = useI18n();
+
+const advantages = computed(() => {
+  const messages = getLocaleMessage(locale.value);
+  return messages.advantages || [];
+});
 </script>
 
 <style lang="scss" scoped>

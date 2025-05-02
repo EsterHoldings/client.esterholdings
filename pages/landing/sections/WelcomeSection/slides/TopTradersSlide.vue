@@ -2,30 +2,19 @@
   <section class="slide-copy">
     <UiContainer class="slide-copy__container">
       <div class="slide-copy__text">
-        <!-- <UiTextH1 class="slide-copy__title">
-          Copy Strategies<br />
-          Of <span class="highlight">Top Traders</span>
-        </UiTextH1> -->
-
         <UiTextH1 class="slide-copy__title">
-          {{ $t("slide-copy-title.before") }}<br />
-          <span class="highlight">{{ $t("slide-copy-title.highlight") }}</span>
+          {{ $t("slider.top-trader-slide.title.before") }}<br />
+          <span class="highlight">
+            {{ $t("slider.top-trader-slide.title.highlight") }}
+          </span>
         </UiTextH1>
 
-        <!-- <UiTextH6 class="slide-copy__subtitle">
-          Gain access to real deals from professionals and improve your trading.
-        </UiTextH6> -->
-
         <UiTextH6 class="slide-copy__subtitle">
-          {{ $t("slide-copy-text") }}
+          {{ $t("slider.top-trader-slide.text") }}
         </UiTextH6>
 
-        <!-- <UiButtonDefault state="primary" class="slide-copy__btn">
-          Start
-        </UiButtonDefault> -->
-
         <UiButtonDefault state="primary" class="slide-copy__btn">
-          {{ $t("slide-copy-btn") }}
+          {{ $t("slider.top-trader-slide.btn") }}
         </UiButtonDefault>
       </div>
 
@@ -74,6 +63,7 @@ import UiContainer from "~/components/ui/UiContainer.vue";
     display: flex;
     flex-direction: column;
     gap: 20px;
+    white-space: nowrap;
 
     @media (max-width: 1024px) {
       align-items: center;
