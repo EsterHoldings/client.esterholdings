@@ -13,12 +13,6 @@
 
       <div class="blur-circle"></div>
       <div class="platform-title">
-        <!-- <UiTextTrading
-          title="Trading Platform"
-          subTitle="Level up with our products"
-          color="primary"
-        /> -->
-
         <UiTextTrading
           :title="t('platform__features[0].title')"
           :subTitle="t('platform__features[0].text')"
@@ -30,13 +24,6 @@
         <div class="device device-laptop">
           <img src="/static/Macbook.png" alt="Laptop Trading" />
 
-          <!-- <UiTextTrading
-            class="device device-laptop_position"
-            title="Mobile trading"
-            subTitle="Full control over transactions at any time."
-            hasBorder
-          /> -->
-
           <UiTextTrading
             class="device device-laptop_position"
             :title="t('platform__features[1].title')"
@@ -47,13 +34,6 @@
 
         <div class="device device-main">
           <img src="/static/iMac.png" alt="Trading Platform" />
-
-          <!-- <UiTextTrading
-            class="device device-main_position"
-            title="Ester MetaTrader 4"
-            subTitle="The popular, classic solution"
-            hasBorder
-          /> -->
 
           <UiTextTrading
             class="device device-main_position"
@@ -70,13 +50,6 @@
         <div class="device device-ipad">
           <img src="/static/iPad.png" alt="Mobile Trading" />
 
-          <!-- <UiTextTrading
-            class="device device-ipad_position"
-            title="High speed and reliability"
-            subTitle="Works even on weak PCs."
-            color="warning"
-          /> -->
-
           <UiTextTrading
             class="device device-ipad_position"
             :title="t('platform__features[3].title')"
@@ -89,34 +62,6 @@
       <div class="background-glow"></div>
 
       <div class="floating__wrapper">
-        <!-- <UiTextTrading
-          class="floating__item"
-          title="Mobile trading"
-          subTitle="Full control over transactions at any time."
-          hasBorder
-        />
-
-        <UiTextTrading
-          class="floating__item"
-          title="Trading Platform"
-          subTitle="Level up with our products"
-          hasBorder
-        />
-
-        <UiTextTrading
-          class="floating__item"
-          title="Ester MetaTrader 4"
-          subTitle="The popular, classic solution"
-          hasBorder
-        />
-
-        <UiTextTrading
-          class="floating__item"
-          title="High speed and reliability"
-          subTitle="Works even on weak PCs."
-          hasBorder
-        /> -->
-
         <UiTextTrading
           class="floating__item"
           v-for="(item, index) in platformFeatures"

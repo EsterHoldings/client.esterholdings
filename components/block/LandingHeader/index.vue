@@ -164,7 +164,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import { useUiStore } from "~/stores/uiStore";
 import { useThemeStore } from "~/stores/themeStore.js";
 import useTrackScroll from "./composables/trackScroll";
@@ -195,6 +195,7 @@ const activeLink = ref("");
 const headerItems = ref();
 const isMobileMenuOpen = ref(false);
 const menuRef = ref(null);
+const windowWidth = ref(0);
 
 const linksList = computed(() => {
   return [
@@ -218,6 +219,12 @@ const isWithPicture = computed(() => {
     return isSlideWithoutPicture.value;
   }
 });
+
+const updateWindowWidth = () => {
+  if (process.client) {
+    windowWidth.value = window.innerWidth;
+  }
+};
 
 const handleClick = (name) => {
   if (activeLink.value !== name) {
@@ -255,11 +262,27 @@ const toggleMenu = () => {
 };
 
 onMounted(() => {
+  updateWindowWidth();
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", updateWindowWidth);
+  }
   document.addEventListener("click", handleClickOutside);
 });
 
 onBeforeUnmount(() => {
+  if (typeof window !== "undefined") {
+    window.removeEventListener("resize", updateWindowWidth);
+  }
   document.removeEventListener("click", handleClickOutside);
+});
+
+watch(windowWidth, (width) => {
+  if (width > 991 && isMobileMenuOpen.value) {
+    isMobileMenuOpen.value = false;
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
 });
 </script>
 

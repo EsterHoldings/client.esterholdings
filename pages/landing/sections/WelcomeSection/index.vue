@@ -45,7 +45,6 @@ const components = [GeneralSlide, TenYearsSlide, TopTradersSlide];
 
 <style lang="scss" scoped>
 .welcome {
-  // background-image: url("~/assets/static/img/mainScrin.webp");
   min-height: 100vh;
   height: 100%;
   width: 100vw;

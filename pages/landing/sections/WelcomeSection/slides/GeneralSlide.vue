@@ -3,21 +3,21 @@
     <UiContainer>
       <div class="slide-welcome__content">
         <UiTextH1>
-          {{ $t("welcome-title.before") }}
+          {{ $t("slider.general-slide.title.before") }}
           <span class="slide-welcome__title--highlight">
-            {{ $t("welcome-title.highlight") }} </span
+            {{ $t("slider.general-slide.title.highlight") }} </span
           >,<br />
-          {{ $t("welcome-title.after") }}
+          {{ $t("slider.general-slide.title.after") }}
           <img class="rocket" src="/static/rocket.png" alt="Rocket" />
         </UiTextH1>
 
         <UiTextH5 class="slide-welcome__text">
-          {{ $t("welcome__text") }}
+          {{ $t("slider.general-slide.text") }}
         </UiTextH5>
 
         <div>
           <UiButtonDefault state="primary">
-            {{ $t("welcome-btn") }}
+            {{ $t("slider.general-slide.btn") }}
           </UiButtonDefault>
         </div>
       </div>
