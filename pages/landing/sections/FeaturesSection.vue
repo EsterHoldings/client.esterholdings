@@ -1,7 +1,7 @@
 <template>
   <section class="features_section">
     <UiTextH3 class="features_section_title">{{
-      t("feature__title")
+      t("landing.feature__title")
     }}</UiTextH3>
     <div class="features_container">
       <div
@@ -43,9 +43,9 @@ const { t } = useI18n();
 
 const features = computed(() => {
   return Array.from({ length: 6 }, (_, index) => ({
-    icon: t(`features__items[${index}].icon`),
-    title: t(`features__items[${index}].title`),
-    description: t(`features__items[${index}].text`),
+    icon: t(`landing.features__items[${index}].icon`),
+    title: t(`landing.features__items[${index}].title`),
+    description: t(`landing.features__items[${index}].text`),
   }));
 });
 

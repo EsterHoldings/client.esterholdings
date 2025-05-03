@@ -1,17 +1,11 @@
 <template>
   <ul class="footer-list">
     <li>
-      <UiTextH5>
-        {{ t(`${basePath}.title`) }}
-      </UiTextH5>
+      <UiTextH5>{{ t(`${basePath}.title`) }}</UiTextH5>
     </li>
 
-    <li
-      class="item"
-      v-for="(item, index) in tm(`${basePath}.items`)"
-      :key="index"
-    >
-      <UiTextH6>{{ item.body?.static }}</UiTextH6>
+    <li class="item" v-for="(_, index) in tm(`${basePath}.items`)" :key="index">
+      <UiTextH6>{{ t(`${basePath}.items[${index}]`) }}</UiTextH6>
     </li>
   </ul>
 </template>

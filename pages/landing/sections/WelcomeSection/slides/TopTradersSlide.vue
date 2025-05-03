@@ -3,18 +3,18 @@
     <UiContainer class="slide-copy__container">
       <div class="slide-copy__text">
         <UiTextH1 class="slide-copy__title">
-          {{ $t("slider.top-trader-slide.title.before") }}<br />
+          {{ $t("landing.slider.top-trader-slide.title.before") }}<br />
           <span class="highlight">
-            {{ $t("slider.top-trader-slide.title.highlight") }}
+            {{ $t("landing.slider.top-trader-slide.title.highlight") }}
           </span>
         </UiTextH1>
 
         <UiTextH6 class="slide-copy__subtitle">
-          {{ $t("slider.top-trader-slide.text") }}
+          {{ $t("landing.slider.top-trader-slide.text") }}
         </UiTextH6>
 
         <UiButtonDefault state="primary" class="slide-copy__btn">
-          {{ $t("slider.top-trader-slide.btn") }}
+          {{ $t("landing.slider.top-trader-slide.btn") }}
         </UiButtonDefault>
       </div>
 

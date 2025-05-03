@@ -2,7 +2,7 @@
   <section class="account-types__wrapper">
     <UiContainer>
       <UiTextH3 class="account-types__title"
-        >{{ t("accounts__title") }}
+        >{{ t("landing.accounts__title") }}
       </UiTextH3>
 
       <div class="account-types__tabs">
@@ -40,7 +40,7 @@ const tabsList = useTabs();
 
 const { t, tm } = useI18n();
 
-const accounts = tm("accounts__options");
+const accounts = tm("landing.accounts__options");
 
 const activeIndex = ref(0);
 

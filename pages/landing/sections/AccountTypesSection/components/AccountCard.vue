@@ -1,25 +1,25 @@
 <template>
   <div
     class="account-card"
-    :data-text="currentAccount?.title.body?.static"
+    :data-text="t(`landing.accounts__options[${currentIndex}].title`)"
     :class="{ active: activeIndex === index }"
     @mouseenter="setActive(index)"
   >
     <div class="account-content">
       <UiTextH3 v-if="activeIndex === index" class="account-title bold">
-        {{ currentAccount?.title.body?.static }}
+        {{ t(`landing.accounts__options[${currentIndex}].title`) }}
 
         <UiTextH5 class="account-subtitle">
-          {{ currentAccount?.label.body?.static }}
+          {{ t(`landing.accounts__options[${currentIndex}].label`) }}
         </UiTextH5>
       </UiTextH3>
 
       <UiTextH5 v-if="activeIndex === index" class="account-description">
-        {{ currentAccount?.description.body?.static }}
+        {{ t(`landing.accounts__options[${currentIndex}].description`) }}
       </UiTextH5>
 
       <UiButtonDefault state="primary" v-if="activeIndex === index">
-        {{ t("accounts__btn") }}
+        {{ t("landing.accounts__btn") }}
       </UiButtonDefault>
 
       <div v-else class="account-mini">
@@ -53,19 +53,18 @@ const { t, tm } = useI18n();
 const accountsMap = ref<Record<string, any>>({});
 
 watchEffect(() => {
-  const array = tm("accounts__options") || [];
+  const array = tm("landing.accounts__options") || [];
 
   accountsMap.value = Array.isArray(array)
-    ? array.reduce((acc, item) => {
-        if (item?.id.body?.static) {
-          acc[item.id.body?.static] = item;
-        }
+    ? array.reduce((acc, item, index) => {
+        const id = t(`landing.accounts__options[${index}].id`);
+        acc[id] = index;
         return acc;
-      }, {} as Record<string, any>)
+      }, {} as Record<string, number>)
     : {};
 });
 
-const currentAccount = computed(() => accountsMap.value[currentTab.value]);
+const currentIndex = computed(() => accountsMap.value[currentTab.value]);
 </script>
 
 <style lang="scss" scoped>
@@ -113,7 +112,7 @@ const currentAccount = computed(() => accountsMap.value[currentTab.value]);
     position: absolute;
     left: 100%;
     white-space: nowrap;
-    font-size: 150px;
+    font-size: 130px;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.07);
     text-transform: uppercase;
@@ -130,7 +129,7 @@ const currentAccount = computed(() => accountsMap.value[currentTab.value]);
     left: 50%;
     transform: translateX(-50%) scale(1);
     filter: blur(1px);
-    font-size: 150px;
+    font-size: 130px;
     color: rgba(255, 255, 255, 0.15);
   }
 

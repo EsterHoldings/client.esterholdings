@@ -56,7 +56,7 @@
                     'is-theme-light': isThemeLight || isWithPicture,
                   }"
                 >
-                  {{ t("header.auth.login") }}
+                  {{ t("landing.header.auth.login") }}
                 </UiButtonDefault>
               </NuxtLink>
 
@@ -65,7 +65,7 @@
                 class="register"
                 v-if="!isMobileMenuOpen"
               >
-                {{ t("header.auth.register") }}
+                {{ t("landing.header.auth.register") }}
               </UiButtonDefault>
 
               <div class="actions-icons">
@@ -122,14 +122,14 @@
                 class="register"
                 v-if="isMobileMenuOpen"
               >
-                {{ t("header.auth.register") }}
+                {{ t("landing.header.auth.register") }}
               </UiButtonDefault>
 
               <UiButtonDefault
                 state="link"
                 :class="{ 'is-theme-light': isThemeLight }"
               >
-                {{ t("header.auth.login") }}
+                {{ t("landing.header.auth.login") }}
               </UiButtonDefault>
             </div>
 
@@ -145,15 +145,15 @@
       <div ref="menuRef" class="menu-content">
         <transition name="fade" mode="out-in">
           <TradingMenu
-            v-if="activeLink === t('header.nav.trading')"
+            v-if="activeLink === t('landing.header.nav.trading')"
             :activeLink="activeLink"
           />
           <PartnershipMenu
-            v-else-if="activeLink === t('header.nav.partnership')"
+            v-else-if="activeLink === t('landing.header.nav.partnership')"
             :activeLink="activeLink"
           />
           <CompanyMenu
-            v-else-if="activeLink === t('header.nav.company')"
+            v-else-if="activeLink === t('landing.header.nav.company')"
             :activeLink="activeLink"
           />
         </transition>
@@ -199,9 +199,9 @@ const windowWidth = ref(0);
 
 const linksList = computed(() => {
   return [
-    { name: t("header.nav.trading"), path: "#" },
-    { name: t("header.nav.partnership"), path: "#" },
-    { name: t("header.nav.company"), path: "#" },
+    { name: t("landing.header.nav.trading"), path: "#" },
+    { name: t("landing.header.nav.partnership"), path: "#" },
+    { name: t("landing.header.nav.company"), path: "#" },
   ];
 });
 

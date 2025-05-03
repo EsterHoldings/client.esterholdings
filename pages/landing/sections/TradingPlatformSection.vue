@@ -8,14 +8,14 @@
   >
     <div class="trading-platform_overlay">
       <UiTextH3 class="trading-platform_title">
-        {{ t("platform__title") }}
+        {{ t("landing.platform__title") }}
       </UiTextH3>
 
       <div class="blur-circle"></div>
       <div class="platform-title">
         <UiTextTrading
-          :title="t('platform__features[0].title')"
-          :subTitle="t('platform__features[0].text')"
+          :title="t('landing.platform__features[0].title')"
+          :subTitle="t('landing.platform__features[0].text')"
           color="primary"
         />
       </div>
@@ -26,8 +26,8 @@
 
           <UiTextTrading
             class="device device-laptop_position"
-            :title="t('platform__features[1].title')"
-            :subTitle="t('platform__features[1].text')"
+            :title="t('landing.platform__features[1].title')"
+            :subTitle="t('landing.platform__features[1].text')"
             hasBorder
           />
         </div>
@@ -37,8 +37,8 @@
 
           <UiTextTrading
             class="device device-main_position"
-            :title="t('platform__features[2].title')"
-            :subTitle="t('platform__features[2].text')"
+            :title="t('landing.platform__features[2].title')"
+            :subTitle="t('landing.platform__features[2].text')"
             hasBorder
           />
         </div>
@@ -52,8 +52,8 @@
 
           <UiTextTrading
             class="device device-ipad_position"
-            :title="t('platform__features[3].title')"
-            :subTitle="t('platform__features[3].text')"
+            :title="t('landing.platform__features[3].title')"
+            :subTitle="t('landing.platform__features[3].text')"
             color="warning"
           />
         </div>
@@ -66,8 +66,8 @@
           class="floating__item"
           v-for="(item, index) in platformFeatures"
           :key="index"
-          :title="t(`platform__features[${index}].title`)"
-          :subTitle="t(`platform__features[${index}].text`)"
+          :title="t(`landing.platform__features[${index}].title`)"
+          :subTitle="t(`landing.platform__features[${index}].text`)"
           hasBorder
         />
       </div>

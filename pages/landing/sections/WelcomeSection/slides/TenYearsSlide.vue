@@ -5,21 +5,21 @@
         <div class="slide-10__image-wrapper">
           <img src="/static/ten-slide.webp" alt="10" class="slide-10__image" />
           <UiTextH3 class="slide-10__years">
-            {{ $t("slider.ten_years_slide.title.highlight") }}
+            {{ $t("landing.slider.ten_years_slide.title.highlight") }}
           </UiTextH3>
         </div>
       </div>
 
       <UiTextH2 class="slide-10__subtitle">
-        {{ $t("slider.ten_years_slide.title.after") }}
+        {{ $t("landing.slider.ten_years_slide.title.after") }}
       </UiTextH2>
 
       <UiTextH6 class="slide-10__description">
-        {{ $t("slider.ten_years_slide.text") }}
+        {{ $t("landing.slider.ten_years_slide.text") }}
       </UiTextH6>
 
       <UiButtonDefault state="primary" class="slide-10__btn">
-        {{ $t("slider.ten_years_slide.btn") }}
+        {{ $t("landing.slider.ten_years_slide.btn") }}
       </UiButtonDefault>
     </div>
   </section>

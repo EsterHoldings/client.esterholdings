@@ -8,7 +8,9 @@
         <HeaderMenuItem
           v-for="(section, index) in headerItems"
           :key="section.section"
-          :title="t(`header.megaMenu.${props.activeLink}[${index}].section`)"
+          :title="
+            t(`landing.header.megaMenu.${props.activeLink}[${index}].section`)
+          "
           :items="buildItems(section, index)"
           :isMobile="props.isMobile"
         />
@@ -43,12 +45,12 @@ const props = defineProps({
 
 const { t, tm } = useI18n();
 
-const headerItems = tm(`header.megaMenu.${props.activeLink}`);
+const headerItems = tm(`landing.header.megaMenu.${props.activeLink}`);
 
 function buildItems(section, sectionIndex) {
   return section.items.map((_, itemIndex) => ({
     name: t(
-      `header.megaMenu.${props.activeLink}[${sectionIndex}].items[${itemIndex}]`
+      `landing.header.megaMenu.${props.activeLink}[${sectionIndex}].items[${itemIndex}]`
     ),
     path: routes[section.section]?.[itemIndex] ?? "#",
   }));

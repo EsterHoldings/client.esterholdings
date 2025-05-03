@@ -1,6 +1,6 @@
 <template>
   <section class="wide_range_section">
-    <UiTextH3>{{ t("wide_range__title") }}</UiTextH3>
+    <UiTextH3>{{ t("landing.wide_range__title") }}</UiTextH3>
 
     <div class="wide_range_section__tabs">
       <UiTabs

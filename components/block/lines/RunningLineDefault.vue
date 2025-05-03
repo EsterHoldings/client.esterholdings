@@ -34,7 +34,7 @@
           </div>
           <UiButtonDefault
             :state="item.change > 0 ? 'success--outline' : 'danger--outline'"
-            >{{ $t("running-line-btn") }}</UiButtonDefault
+            >{{ $t("landing.running-line-btn") }}</UiButtonDefault
           >
         </div>
       </div>

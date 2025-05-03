@@ -12,7 +12,7 @@
 
           <li>
             <UiTextH6 class="logo-text"
-              >{{ t("footer.description") }}
+              >{{ t("landing.footer.description") }}
             </UiTextH6>
           </li>
 
@@ -29,40 +29,42 @@
           </li>
         </ul>
 
-        <FooterItem basePath="footer.trading" />
-        <FooterItem basePath="footer.partnership" />
-        <FooterItem basePath="footer.company" />
+        <FooterItem basePath="landing.footer.trading" />
+        <FooterItem basePath="landing.footer.partnership" />
+        <FooterItem basePath="landing.footer.company" />
       </div>
 
       <div class="line"></div>
 
       <div class="text-wrapper">
         <UiTextSmall class="text">
-          {{ t("footer.legal.regulated") }}
+          {{ t("landing.footer.legal.regulated") }}
         </UiTextSmall>
 
         <UiTextSmall class="text">
-          <strong>{{ t("footer.legal.risk").split(":")[0] }}:</strong>
-          {{ t("footer.legal.risk").split(":")[1] }}
+          <strong>{{ t("landing.footer.legal.risk").split(":")[0] }}:</strong>
+          {{ t("landing.footer.legal.risk").split(":")[1] }}
         </UiTextSmall>
 
         <UiTextSmall class="text">
-          <strong>{{ t("footer.legal.restricted").split(":")[0] }}:</strong>
-          {{ t("footer.legal.restricted").split(":")[1] }}
+          <strong
+            >{{ t("landing.footer.legal.restricted").split(":")[0] }}:</strong
+          >
+          {{ t("landing.footer.legal.restricted").split(":")[1] }}
         </UiTextSmall>
 
         <UiTextSmall class="text">
-          {{ t("footer.legal.age") }}
+          {{ t("landing.footer.legal.age") }}
         </UiTextSmall>
 
         <UiTextSmall class="text">
-          {{ t("footer.legal.compliance") }}
+          {{ t("landing.footer.legal.compliance") }}
         </UiTextSmall>
       </div>
 
       <UiTextSmall class="text center">
-        {{ t("footer.legal.copyrightStart") }} |
-        {{ t("footer.legal.copyrightEnd") }}
+        {{ t("landing.footer.legal.copyrightStart") }} |
+        {{ t("landing.footer.legal.copyrightEnd") }}
       </UiTextSmall>
     </footer>
   </UiContainer>

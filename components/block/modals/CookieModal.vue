@@ -2,15 +2,14 @@
   <div>
     <div v-if="showCookieModal" class="cookie-modal">
       <UiTextH5 class="cookie-modal_text">
-        This site uses cookies to enhance user experience. By continuing to use
-        the site, you agree to our use of cookies.
+        {{ t("modals.cookie-modal.text") }}
       </UiTextH5>
       <div class="cookie-modal__actions">
         <UiButtonDefault state="primary" @click="acceptCookies">
-          Accept
+          {{ t("modals.cookie-modal.btn-successful") }}
         </UiButtonDefault>
         <UiButtonDefault state="warning" @click="declineCookies">
-          Decline
+          {{ t("modals.cookie-modal.btn-negative") }}
         </UiButtonDefault>
       </div>
     </div>
@@ -19,8 +18,12 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
+
+const { t } = useI18n();
 
 const showCookieModal = ref(false);
 
@@ -33,7 +36,7 @@ const checkScroll = () => {
 
 const acceptCookies = () => {
   showCookieModal.value = false;
-  localStorage.setItem("cookiesAccepted", true);
+  localStorage.setItem("cookiesAccepted", "true");
 };
 
 const declineCookies = () => {
@@ -65,6 +68,12 @@ onMounted(() => {
 
   &_text {
     color: var(--ui-text-main);
+  }
+
+  @media screen and (max-width: 991px) {
+    padding: 20px;
+    flex-direction: column;
+    gap: 20px;
   }
 }
 

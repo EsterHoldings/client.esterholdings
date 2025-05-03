@@ -7,11 +7,12 @@
         :key="index"
       >
         <div class="advantage_item">
-          <UiTextH3 class="bold">{{
-            item.value?.body?.static ?? item.value
-          }}</UiTextH3>
+          <UiTextH3 class="bold">
+            {{ t(`landing.advantages[${index}].value`) }}
+          </UiTextH3>
+
           <UiTextH6 class="advantage_item_subtitle">
-            {{ item.label?.body?.static ?? item.label }}
+            {{ t(`landing.advantages[${index}].label`) }}
           </UiTextH6>
         </div>
 
@@ -28,14 +29,7 @@ import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH6 from "~/components/ui/UiTextH6.vue";
 
 const { tm, t } = useI18n();
-// const advantages = tm("advantages");
-
-const { locale, getLocaleMessage } = useI18n();
-
-const advantages = computed(() => {
-  const messages = getLocaleMessage(locale.value);
-  return messages.advantages || [];
-});
+const advantages = tm("landing.advantages");
 </script>
 
 <style lang="scss" scoped>

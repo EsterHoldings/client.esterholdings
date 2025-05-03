@@ -22,16 +22,19 @@ export const currentTabContent = {
 };
 
 export function useTabs() {
-  const { tm } = useI18n();
+  const { tm, t } = useI18n();
 
-  const raw = tm("wide_range__categories");
-
+  const raw = tm("landing.wide_range__categories");
   const tabs = ref(
     Array.isArray(raw)
-      ? raw.map((item: any) => ({
-          id: item?.id?.body?.static ?? item?.id,
-          label: item?.label?.body?.static ?? item?.label,
-        }))
+      ? raw.map((item: any, index: number) => {
+          const key = `landing.wide_range__categories[${index}]`;
+
+          return {
+            id: t(`${key}.id`),
+            label: t(`${key}.label`),
+          };
+        })
       : []
   );
 

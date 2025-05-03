@@ -16,9 +16,11 @@
 
       <div class="help-block">
         <UiTextH4>
-          {{ t("helpSection") }}
+          {{ t("landing.helpSection") }}
           <br />
-          <a href="#" class="help-block__link">{{ t("helpLinkText") }}</a>
+          <a href="#" class="help-block__link">{{
+            t("landing.helpLinkText")
+          }}</a>
         </UiTextH4>
       </div>
     </UiContainer>

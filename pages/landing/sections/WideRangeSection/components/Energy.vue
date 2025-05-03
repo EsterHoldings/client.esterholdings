@@ -6,14 +6,14 @@
     >
       <div class="energy__content">
         <UiTextH3 class="energy__title">
-          {{ t("wide_range_tabs.Energy.title") }}</UiTextH3
+          {{ t("landing.wide_range_tabs.Energy.title") }}</UiTextH3
         >
         <UiTextH5 class="energy__text">
-          {{ t("wide_range_tabs.Energy.description") }}
+          {{ t("landing.wide_range_tabs.Energy.description") }}
         </UiTextH5>
         <div>
           <UiButtonDefault state="primary">
-            {{ t("wide_range_tabs.Energy.btn") }}</UiButtonDefault
+            {{ t("landing.wide_range_tabs.Energy.btn") }}</UiButtonDefault
           >
         </div>
       </div>

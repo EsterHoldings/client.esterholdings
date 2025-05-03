@@ -3,9 +3,9 @@
     <UiContainer>
       <div class="four-steps">
         <UiTextH3 class="four-steps__title">
-          {{ t("four_steps_section.title.before") }} <br />
+          {{ t("landing.four_steps_section.title.before") }} <br />
           <span class="highlight">{{
-            t("four_steps_section.title.highlight")
+            t("landing.four_steps_section.title.highlight")
           }}</span>
         </UiTextH3>
 
@@ -17,18 +17,16 @@
           >
             <UiTextH3 class="four-steps__number">{{ index + 1 }}</UiTextH3>
             <div class="four-steps__content">
-              <UiTextH4 class="four-steps__heading">{{
-                step.title.body?.static
-              }}</UiTextH4>
+              <UiTextH4 class="four-steps__heading">{{ step.title }}</UiTextH4>
               <UiTextH5 class="four-steps__description"
-                >{{ step.text.body?.static }}
+                >{{ step.text }}
               </UiTextH5>
             </div>
           </div>
         </div>
 
         <UiButtonDefault state="primary" class="four-steps__button"
-          >{{ t("four_steps_section.button") }}
+          >{{ t("landing.four_steps_section.button") }}
         </UiButtonDefault>
       </div>
     </UiContainer>
@@ -47,7 +45,16 @@ import UiContainer from "~/components/ui/UiContainer.vue";
 
 const { t, tm } = useI18n();
 
-const steps = tm("four_steps_section.items");
+const stepsRaw = tm("landing.four_steps_section.items");
+
+const steps = ref(
+  Array.isArray(stepsRaw)
+    ? stepsRaw.map((_, index) => ({
+        title: t(`landing.four_steps_section.items[${index}].title`),
+        text: t(`landing.four_steps_section.items[${index}].text`),
+      }))
+    : []
+);
 </script>
 
 <style lang="scss" scoped>
