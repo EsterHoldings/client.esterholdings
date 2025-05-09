@@ -1,45 +1,60 @@
 <template>
   <div class="admins-panel__edit">
-    <div
-        class="admins-panel__edit__top"
-        v-if="props.title"
-    >
+    <div class="admins-panel__edit__top" v-if="props.title">
       <UiTextH2>{{ props.title }}</UiTextH2>
     </div>
 
     <div
-        class="admins-panel__edit__content"
-        :class="{'without-top': !props.title}"
+      class="admins-panel__edit__content"
+      :class="{ 'without-top': !props.title }"
     >
       <div class="admins-panel__edit__content__fields">
-
-        <UiFormControl label="Nickname">
+        <UiFormControl
+          :label="
+            t('admin.access.components.admins-panel-edit.labels.nickname')
+          "
+        >
           <UiInput
-              :disabled="true"
-              placeholder="Enter Role nickname"
-              :value="formData.nickname"
+            :disabled="true"
+            :placeholder="
+              t(
+                'admin.access.components.admins-panel-edit.placeholders.nickname'
+              )
+            "
+            :value="formData.nickname"
           />
         </UiFormControl>
 
-        <UiFormControl label="Email">
+        <UiFormControl
+          :label="t('admin.access.components.admins-panel-edit.labels.email')"
+        >
           <UiInput
-              :disabled="true"
-              placeholder="example@gmail.com"
-              :value="formData.email"
+            :disabled="true"
+            :placeholder="
+              t('admin.access.components.admins-panel-edit.placeholders.email')
+            "
+            :value="formData.email"
           />
         </UiFormControl>
 
-        <UiFormControl label="Roles" :errors="validatorAdminForm?.errorsFormData?.roles?.errors">
+        <UiFormControl
+          :label="t('admin.access.components.admins-panel-edit.labels.roles')"
+          :errors="validatorAdminForm?.errorsFormData?.roles?.errors"
+        >
           <UiMultiSelect
-              placeholder="Choose roles"
-              :data="rolesData"
-              :selected="formData.roles"
-              :isDirty="validatorAdminForm?.errorsFormData?.roles?.isDirty"
-              :isInvalid="validatorAdminForm?.errorsFormData?.roles?.errors?.length > 0"
-              @update="handleUpdateMultiSelectRoles"
-              @remove="handleRemoveMultiSelectRoles"
-              @open="handleOpenMultiSelectRoles"
-              @close="handleCloseMultiSelectRoles"
+            :placeholder="
+              t('admin.access.components.admins-panel-edit.placeholders.roles')
+            "
+            :data="rolesData"
+            :selected="formData.roles"
+            :isDirty="validatorAdminForm?.errorsFormData?.roles?.isDirty"
+            :isInvalid="
+              validatorAdminForm?.errorsFormData?.roles?.errors?.length > 0
+            "
+            @update="handleUpdateMultiSelectRoles"
+            @remove="handleRemoveMultiSelectRoles"
+            @open="handleOpenMultiSelectRoles"
+            @close="handleCloseMultiSelectRoles"
           />
         </UiFormControl>
       </div>
@@ -48,10 +63,13 @@
 
   <div class="admins-panel__edit__bottom">
     <UiButtonDefault
-        class="admins-panel__edit__bottom__save-btn"
-        state="secondary"
-        @click="handleSubmitForm"
-    >Update & Save</UiButtonDefault>
+      class="admins-panel__edit__bottom__save-btn"
+      state="secondary"
+      @click="handleSubmitForm"
+      >{{
+        t("admin.access.components.admins-panel-edit.actions.submit")
+      }}</UiButtonDefault
+    >
   </div>
 </template>
 
@@ -62,8 +80,8 @@ import UiInput from "~/components/ui/UiInput.vue";
 import UiMultiSelect from "~/components/ui/UiMultiSelect.vue";
 import UiTextH2 from "~/components/ui/UiTextH2.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import {validatorAdminForm} from "~/pages/admin/access/composables/AdminsPanelEdit/validation";
-import {formData} from "~/pages/admin/access/composables/AdminsPanelEdit";
+import { validatorAdminForm } from "~/pages/admin/access/composables/AdminsPanelEdit/validation";
+import { formData } from "~/pages/admin/access/composables/AdminsPanelEdit";
 import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
 
@@ -75,8 +93,8 @@ const props = defineProps({
   id: {
     type: String,
     required: true,
-  }
-})
+  },
+});
 
 let rolesData = reactive([]);
 
@@ -88,21 +106,21 @@ const getAdmin = async () => {
   const response = await app.admins.getById(props.id);
   const selectedRoles = response.data.data.roles;
 
-  console.log('selectedRoles', selectedRoles);
+  console.log("selectedRoles", selectedRoles);
 
   formData.id = response.data.data.id;
   formData.nickname = response.data.data.nickname;
   formData.email = response.data.data.email;
-  formData.roles = selectedRoles.map(role => role.id);
-}
+  formData.roles = selectedRoles.map((role) => role.id);
+};
 
 const getRoles = async () => {
-  const response = await app.roles.get({perPage: 100});
+  const response = await app.roles.get({ perPage: 100 });
   rolesData = response.data.data.data;
 };
 
 const validateThisField = () => {
-  validatorAdminForm?.doValidateField('roles', formData.roles);
+  validatorAdminForm?.doValidateField("roles", formData.roles);
 };
 
 const handleUpdateMultiSelectRoles = (selectedId: string) => {
@@ -124,24 +142,23 @@ const handleRemoveMultiSelectRoles = (id: string) => {
 const handleOpenMultiSelectRoles = () => {
   if (validatorAdminForm?.errorsFormData?.roles)
     validatorAdminForm.errorsFormData.roles.isDirty = true;
-}
+};
 const handleCloseMultiSelectRoles = () => validateThisField();
 
 const handleSubmitForm = async () => {
-
   try {
     await app.admins.patch(props.id, { roles: formData.roles });
     closeModal();
     useEventBus.emit("loadDataForAdmins");
   } catch (errorResponse) {
-    console.log('handleSubmitForm -> errorResponse', errorResponse);
+    console.log("handleSubmitForm -> errorResponse", errorResponse);
   }
-}
+};
 
 onMounted(async () => {
   await getRoles();
   await getAdmin();
-})
+});
 </script>
 
 <style lang="scss" scoped>

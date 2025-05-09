@@ -18,7 +18,7 @@
 
       <tbody class="table__body">
         <tr v-if="!isLoading && data.length === 0">
-          <td>Nothing to show... =(</td>
+          <td>{{ t("ui-components.tables.table-default") }}</td>
         </tr>
 
         <tr
@@ -121,8 +121,10 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
 import UiLoaderPlaceholder from "~/components/ui/UiLoaderPlaceholder.vue";
 
+const { t } = useI18n();
 const props = defineProps({
   columns: {
     type: Array as () => {
@@ -155,7 +157,7 @@ const props = defineProps({
 .table {
   width: 100%;
   border-collapse: collapse;
-  background-color: var(--color-ui-background);
+  background-color: var(--ui-background);
   font-family: Montserrat, sans-serif;
 }
 
@@ -170,7 +172,7 @@ const props = defineProps({
 }
 
 .table__header {
-  background-color: var(--color-ui-background);
+  background-color: var(--ui-background);
   color: #a2a2a2;
   font-weight: 500;
   border: 1px solid var(--color-stroke-ui-dark);
@@ -187,7 +189,7 @@ const props = defineProps({
 }
 
 .table__row:hover {
-  background-color: var(--color-ui-background);
+  background-color: var(--ui-background);
 }
 
 .table__cell:last-child {

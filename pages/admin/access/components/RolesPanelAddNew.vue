@@ -1,40 +1,58 @@
 <template>
   <div class="roles-panel__add-new">
-    <div
-        class="roles-panel__add-new__top"
-        v-if="props.title"
-    >
+    <div class="roles-panel__add-new__top" v-if="props.title">
       <UiTextH2>{{ props.title }}</UiTextH2>
     </div>
 
     <div
-        class="roles-panel__add-new__content"
-        :class="{'without-top': !props.title}"
+      class="roles-panel__add-new__content"
+      :class="{ 'without-top': !props.title }"
     >
       <div class="roles-panel__add-new__content__fields">
-
-        <UiFormControl label="Name" :errors="validatorRoleForm?.errorsFormData?.name?.errors">
+        <UiFormControl
+          :label="t('admin.access.components.roles-panel-add-new.labels.name')"
+          :errors="validatorRoleForm?.errorsFormData?.name?.errors"
+        >
           <UiInput
-              placeholder="Enter Role name"
-              :value="formData.name"
-              :isDirty="validatorRoleForm?.errorsFormData?.name?.isDirty"
-              :isInvalid="validatorRoleForm?.errorsFormData?.name?.errors?.length > 0"
-              @blur="validatorRoleForm?.doValidateField('name', $event.target.value)"
-              @input="validatorRoleForm?.doValidateField('name', $event.target.value)"
+            :placeholder="
+              t('admin.access.components.roles-panel-add-new.placeholders.name')
+            "
+            :value="formData.name"
+            :isDirty="validatorRoleForm?.errorsFormData?.name?.isDirty"
+            :isInvalid="
+              validatorRoleForm?.errorsFormData?.name?.errors?.length > 0
+            "
+            @blur="
+              validatorRoleForm?.doValidateField('name', $event.target.value)
+            "
+            @input="
+              validatorRoleForm?.doValidateField('name', $event.target.value)
+            "
           />
         </UiFormControl>
 
-        <UiFormControl label="Permissions" :errors="validatorRoleForm?.errorsFormData?.permissions?.errors">
+        <UiFormControl
+          :label="
+            t('admin.access.components.roles-panel-add-new.labels.permissions')
+          "
+          :errors="validatorRoleForm?.errorsFormData?.permissions?.errors"
+        >
           <UiMultiSelect
-              placeholder="Choose permissions"
-              :data="permissionsData"
-              :selected="formData.permissions"
-              :isDirty="validatorRoleForm?.errorsFormData?.permissions?.isDirty"
-              :isInvalid="validatorRoleForm?.errorsFormData?.permissions?.errors?.length > 0"
-              @update="handleUpdateMultiSelectPermissions"
-              @remove="handleRemoveMultiSelectPermission"
-              @open="handleOpenMultiSelectPermissions"
-              @close="handleCloseMultiSelectPermissions"
+            :placeholder="
+              t(
+                'admin.access.components.roles-panel-add-new.placeholders.permissions'
+              )
+            "
+            :data="permissionsData"
+            :selected="formData.permissions"
+            :isDirty="validatorRoleForm?.errorsFormData?.permissions?.isDirty"
+            :isInvalid="
+              validatorRoleForm?.errorsFormData?.permissions?.errors?.length > 0
+            "
+            @update="handleUpdateMultiSelectPermissions"
+            @remove="handleRemoveMultiSelectPermission"
+            @open="handleOpenMultiSelectPermissions"
+            @close="handleCloseMultiSelectPermissions"
           />
         </UiFormControl>
       </div>
@@ -43,32 +61,38 @@
 
   <div class="roles-panel__add-new__bottom">
     <UiButtonDefault
-        class="roles-panel__add-new__bottom__save-btn"
-        state="secondary"
-        @click="handleSubmitForm"
-    >Create new & Save</UiButtonDefault>
+      class="roles-panel__add-new__bottom__save-btn"
+      state="secondary"
+      @click="handleSubmitForm"
+      >{{
+        t("admin.access.components.roles-panel-add-new.actions.createAndSave")
+      }}</UiButtonDefault
+    >
   </div>
 </template>
 
 <script lang="ts" setup>
-import {inject, reactive} from "vue";
-import {onMounted} from "vue";
+import { useI18n } from "vue-i18n";
+import { inject, reactive } from "vue";
+import { onMounted } from "vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiMultiSelect from "~/components/ui/UiMultiSelect.vue";
 import UiTextH2 from "~/components/ui/UiTextH2.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import {validatorRoleForm} from "~/pages/admin/access/composables/RolesPabelAddNew/validation";
-import {formData} from "~/pages/admin/access/composables/RolesPabelAddNew";
+import { validatorRoleForm } from "~/pages/admin/access/composables/RolesPabelAddNew/validation";
+import { formData } from "~/pages/admin/access/composables/RolesPabelAddNew";
 import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
+
+const { t } = useI18n({ useScope: "global" });
 
 const props = defineProps({
   title: {
     type: String,
     default: "",
-  }
-})
+  },
+});
 
 let permissionsData = reactive([]);
 
@@ -82,7 +106,7 @@ const getPermissions = async () => {
 };
 
 const validateThisField = () => {
-  validatorRoleForm?.doValidateField('permissions', formData.permissions);
+  validatorRoleForm?.doValidateField("permissions", formData.permissions);
 };
 
 const handleUpdateMultiSelectPermissions = (selectedId: string) => {
@@ -95,7 +119,6 @@ const handleUpdateMultiSelectPermissions = (selectedId: string) => {
   validateThisField();
 };
 
-
 const handleRemoveMultiSelectPermission = (id: string) => {
   const index = formData.permissions.indexOf(id);
   if (index !== -1) formData.permissions.splice(index, 1);
@@ -105,8 +128,9 @@ const handleRemoveMultiSelectPermission = (id: string) => {
 const handleOpenMultiSelectPermissions = () => {
   if (validatorRoleForm?.errorsFormData?.permissions)
     validatorRoleForm.errorsFormData.permissions.isDirty = true;
-}
-const handleCloseMultiSelectPermissions = () => validatorRoleForm?.doValidateField('permissions', formData.permissions)
+};
+const handleCloseMultiSelectPermissions = () =>
+  validatorRoleForm?.doValidateField("permissions", formData.permissions);
 
 const handleSubmitForm = async () => {
   try {
@@ -114,9 +138,9 @@ const handleSubmitForm = async () => {
     closeModal();
     useEventBus.emit("loadDataForRoles");
   } catch (errorResponse) {
-    console.log('----------');
+    console.log("----------");
     console.log(errorResponse);
-    console.log('----------');
+    console.log("----------");
     // if (errorResponse.status === 422) {
     //   const transformedErrors = Object.keys(errorResponse.response.data.errors).reduce((acc, key) => {
     //     acc[key] = {
@@ -131,12 +155,11 @@ const handleSubmitForm = async () => {
     //   errorsFormDataObject = {...errorsFormDataObject, ...transformedErrors}
     // }
   }
-
-}
+};
 
 onMounted(async () => {
   await getPermissions();
-})
+});
 </script>
 
 <style lang="scss" scoped>

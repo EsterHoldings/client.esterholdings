@@ -2,15 +2,14 @@
   <div>
     <div v-if="showCookieModal" class="cookie-modal">
       <UiTextH5 class="cookie-modal_text">
-        This site uses cookies to enhance user experience. By continuing to use
-        the site, you agree to our use of cookies.
+        {{ t("ui-components.modals.cookie-modal.text") }}
       </UiTextH5>
       <div class="cookie-modal__actions">
         <UiButtonDefault state="primary" @click="acceptCookies">
-          Accept
+          {{ t("ui-components.modals.cookie-modal.btn-successful") }}
         </UiButtonDefault>
         <UiButtonDefault state="warning" @click="declineCookies">
-          Decline
+          {{ t("ui-components.modals.cookie-modal.btn-negative") }}
         </UiButtonDefault>
       </div>
     </div>
@@ -18,15 +17,26 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 
+const { t } = useI18n();
+
 const showCookieModal = ref(false);
+
+const checkScroll = () => {
+  if (window.scrollY > 80) {
+    showCookieModal.value = true;
+    window.removeEventListener("scroll", checkScroll);
+  }
+};
 
 const acceptCookies = () => {
   showCookieModal.value = false;
-  localStorage.setItem("cookiesAccepted", JSON.stringify(true));
+  localStorage.setItem("cookiesAccepted", "true");
 };
 
 const declineCookies = () => {
@@ -34,10 +44,8 @@ const declineCookies = () => {
 };
 
 onMounted(() => {
-  if (JSON.parse(localStorage.getItem("cookiesAccepted")) === true) {
-    showCookieModal.value = false;
-  } else {
-    showCookieModal.value = true;
+  if (!localStorage.getItem("cookiesAccepted")) {
+    window.addEventListener("scroll", checkScroll);
   }
 });
 </script>
@@ -54,13 +62,18 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   gap: 50px;
   z-index: 10001;
   transition: transform 0.3s ease-in-out;
 
   &_text {
-    color: var(--color-ui-primary-defalt);
+    color: var(--ui-text-main);
+  }
+
+  @media screen and (max-width: 991px) {
+    padding: 20px;
+    flex-direction: column;
+    gap: 20px;
   }
 }
 

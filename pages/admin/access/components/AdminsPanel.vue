@@ -1,33 +1,36 @@
 <template>
-  <PanelDefault title="# Admins">
+  <PanelDefault :title="t('admin.access.components.admins-panel.title')">
     <template #title-extra>
-      <UiButtonDefault class="add-btn" @click="handleClickAddRole">+</UiButtonDefault>
+      <UiButtonDefault class="add-btn" @click="handleClickAddRole"
+        >+</UiButtonDefault
+      >
     </template>
     <AdminsPanelSearch
-        @input="handleInputSearch"
-        :isLoading="isLoadingSearch"
-        :value="searchFilter"
+      @input="handleInputSearch"
+      :isLoading="isLoadingSearch"
+      :value="searchFilter"
     />
     <TableDefault
-        :columns="adminsColumns"
-        :data="adminsData"
-        :isLoading="isLoading"
-        :rowsPerPage="5"
+      :columns="adminsColumns"
+      :data="adminsData"
+      :isLoading="isLoading"
+      :rowsPerPage="5"
     />
     <PaginationDefault
-        :isLoading="isLoading"
-        :perPage="perPage"
-        :page="page"
-        :totalRows="totalRows"
-        @perPageChange="handleChangePerPage"
-        @pageChange="handleChangePage"
+      :isLoading="isLoading"
+      :perPage="perPage"
+      :page="page"
+      :totalRows="totalRows"
+      @perPageChange="handleChangePerPage"
+      @pageChange="handleChangePage"
     />
   </PanelDefault>
 </template>
 
 <script lang="ts" setup>
-import {inject, onMounted, reactive, ref} from "vue";
-import {debounce} from "~/utils/helper/debounce";
+import { inject, onMounted, reactive, ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { debounce } from "~/utils/helper/debounce";
 import TableDefault from "~/components/block/tables/TableDefault.vue";
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
@@ -42,6 +45,7 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import RolesPanelAddNew from "~/pages/access/components/RolesPanelAddNew.vue";
 import AdminsPanelAddNew from "~/pages/admin/access/components/AdminsPanelAddNew.vue";
 
+const { t } = useI18n({ useScope: "global" });
 const appCore = useAppCore();
 
 const isLoading = ref(false);
@@ -54,15 +58,39 @@ const searchFilter = ref("");
 
 const { openModal } = inject("modalControl") as { openModal: Function };
 const handleClickAddRole = () =>
-    openModal(AdminsPanelAddNew, { title: "Add new Admin" });
+  openModal(AdminsPanelAddNew, { title: "Add new Admin" });
+
+// const adminsColumns = reactive([
+//   { title: "Id", key: "id" },
+//   { title: "Nickname", key: "nickname" },
+//   { title: "Email", key: "email" },
+//   { title: "Roles", key: "roles" },
+//   { title: "CreatedAt", key: "created_at" },
+//   { title: "Options", key: "options" },
+// ]);
 
 const adminsColumns = reactive([
-  {title: "Id", key: "id"},
-  {title: "Nickname", key: "nickname"},
-  {title: "Email", key: "email"},
-  {title: "Roles", key: "roles"},
-  {title: "CreatedAt", key: "created_at"},
-  {title: "Options", key: "options"},
+  { title: t("admin.access.components.admins-panel.columns.id"), key: "id" },
+  {
+    title: t("admin.access.components.admins-panel.columns.nickname"),
+    key: "nickname",
+  },
+  {
+    title: t("admin.access.components.admins-panel.columns.email"),
+    key: "email",
+  },
+  {
+    title: t("admin.access.components.admins-panel.columns.roles"),
+    key: "roles",
+  },
+  {
+    title: t("admin.access.components.admins-panel.columns.createdAt"),
+    key: "created_at",
+  },
+  {
+    title: t("admin.access.components.admins-panel.columns.options"),
+    key: "options",
+  },
 ]);
 
 const adminsData = reactive([]);
@@ -80,17 +108,17 @@ const loadData = async (isFilterQuery = false) => {
   totalRows.value = response.data.data.total;
 
   let responseAdminsData = response.data.data.data;
-  responseAdminsData.forEach((user:any) => {
+  responseAdminsData.forEach((user: any) => {
     user.id = [
       {
         is: UiTextParagraph,
         props: {},
         events: { click: () => console.log(user.id) },
-        slot: user.id
-      }
+        slot: user.id,
+      },
     ];
 
-    user.roles = user.roles.map(role => role.name);
+    user.roles = user.roles.map((role) => role.name);
 
     user.options = [
       {
@@ -106,9 +134,11 @@ const loadData = async (isFilterQuery = false) => {
   adminsData.splice(0, adminsData.length, ...responseAdminsData);
 };
 
-const handleOpenClientPage = (id:string) => {
-  openModal(AdminsPanelEdit, { title: "Edit Admin Roles", id });
-}
+const handleOpenClientPage = (id: string) => {
+  openModal(AdminsPanelAddNew, {
+    title: t("admin.access.components.admins-panel.actions.addNewAdmin"),
+  });
+};
 
 const handleChangePerPage = async (value: number) => {
   page.value = 1;
@@ -134,7 +164,7 @@ const handleInputSearch = debounce(async (event: any) => {
 onMounted(async () => {
   isLoading.value = true;
   await loadData();
-  useEventBus.on('loadDataForAdmins', loadData)
+  useEventBus.on("loadDataForAdmins", loadData);
 });
 </script>
 

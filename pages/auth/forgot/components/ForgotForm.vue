@@ -1,6 +1,6 @@
 <template>
   <div class="forgot-form">
-    <UiTextH2 class="forgot-form__title">FORGOT PASSWORD</UiTextH2>
+    <UiTextH3 class="forgot-form__title">Forgot password</UiTextH3>
 
     <UiFormControl
       class="forgot-form__field"
@@ -11,38 +11,42 @@
         type="text"
         label="Email"
         placeholder="example@test.com"
-        @input="
-          validatorForgotForm?.doValidateField('email', $event.target.value)
-        "
-        @blur="
-          validatorForgotForm?.doValidateField('email', $event.target.value)
-        "
+        @input="validatorForgotForm?.doValidateField('email', $event.target.value)"
+        @blur="validatorForgotForm?.doValidateField('email', $event.target.value)"
         :value="props.formData.email"
         :isDirty="validatorForgotForm?.errorsFormData?.email?.isDirty"
-        :isInvalid="
-          validatorForgotForm?.errorsFormData?.email?.errors?.length > 0
-        "
+        :isInvalid="validatorForgotForm?.errorsFormData?.email?.errors?.length > 0"
       />
     </UiFormControl>
 
     <UiButtonPrimary
+      class="forgot-form__btn"
       type="submit"
       @click="validateForgotForm(doSendForm)"
       :isLoading="isLoading"
-      >SEND RESET LINK
+      >Send reset link
     </UiButtonPrimary>
 
-    <div>
-      <br>
-      <nuxt-link to="/auth/login">Login</nuxt-link>
+    <div class="forgot-form__links">
+      <div class="forgot-form__link">
+        <NuxtLink to="/auth/login">Sign In</NuxtLink>
+      </div>
     </div>
+
   </div>
 </template>
 
 <script lang="ts" setup>
+import UiButtonPrimary from "~/components/ui/UiButtonPrimary.vue";
+import UiFormControl from "~/components/ui/UiFormControl.vue";
+import UiInput from "~/components/ui/UiInput.vue";
+import UiTextH3 from "~/components/ui/UiTextH3.vue";
+
+import {ref} from "vue";
+
 import {
-  validateForgotForm,
   validatorForgotForm,
+  validateForgotForm,
   resetValidationForgotForm,
 } from "../composables/validation";
 
@@ -68,30 +72,44 @@ const doSendForm = () => {
   }
 };
 
+// @ts-ignore
 onUnmounted(() => resetValidationForgotForm());
 </script>
 
 <style lang="scss" scoped>
 .forgot-form {
+  color: #c4c4c4;
   display: flex;
   justify-content: center;
   flex-direction: column;
 
+  &__link {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__links {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
   &__title {
     text-align: center;
+    margin-bottom: 30px;
   }
 
   &__field {
     margin-bottom: 20px;
   }
 
-  &__submit {
-    margin: auto;
-  }
-
-  &__forgot-link {
-    margin-top: 10px;
-    text-align: center;
+  &__btn {
+    margin-top: 30px;
+    margin-bottom: 40px;
   }
 }
 </style>

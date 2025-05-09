@@ -1,3 +1,12 @@
+// Client
+
+export const ROUTE_AUTH_USER:string = "/auth/user";
+export const ROUTE_AUTH_LOGIN:string = "/auth/login";
+export const ROUTE_AUTH_LOGOUT:string = "/auth/logout";
+
+// ---
+
+// Admin
 export const ROUTE_ADMINS:string = "/admins";
 export const ROUTE_ADMIN_AUTH_LOGIN:string = "/admin/auth/login";
 export const ROUTE_ADMIN_AUTH_LOGOUT:string = "/admin/auth/logout";

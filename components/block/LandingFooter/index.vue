@@ -1,118 +1,101 @@
 <template>
-  <footer>
-    <div class="footer__content">
-      <ul class="logo">
-        <li>
-          <UiIconLogo />
-        </li>
+  <UiContainer>
+    <footer>
+      <div class="footer__content">
+        <ul class="logo">
+          <li>
+            <UiIconLogo
+              class="logo-svg"
+              :class="{ 'svg-invert': themeStore.currentTheme !== 'dark' }"
+            />
+          </li>
 
-        <li>
-          <UiTextH6 class="logo-text"
-            >The main goal of Ester is to create the best and most transparent
-            conditions for retail and corporate traders.
-          </UiTextH6>
-        </li>
+          <li>
+            <UiTextH6 class="logo-text"
+              >{{ t("landing.footer.description") }}
+            </UiTextH6>
+          </li>
 
-        <li class="logo-icons">
-          <UiIconFacebook />
-          <UiIconLinkedIn />
-          <UiIconInstagram />
-        </li>
-      </ul>
+          <li class="logo-icons">
+            <UiIconFacebook
+              :class="{ 'svg-fill': themeStore.currentTheme === 'dark' }"
+            />
+            <UiIconLinkedIn
+              :class="{ 'svg-fill': themeStore.currentTheme === 'dark' }"
+            />
+            <UiIconInstagram
+              :class="{ 'svg-fill': themeStore.currentTheme === 'dark' }"
+            />
+          </li>
+        </ul>
 
-      <FooterItem title="Trading" :items="trading" />
-      <FooterItem title="Partnership" :items="partnership" />
-      <FooterItem title="Company" :items="company" />
-    </div>
+        <FooterItem basePath="landing.footer.trading" />
+        <FooterItem basePath="landing.footer.partnership" />
+        <FooterItem basePath="landing.footer.company" />
+      </div>
 
-    <div class="line"></div>
+      <div class="line"></div>
 
-    <div class="text-wrapper">
-      <UiTextSmall class="text"
-        >Ester is the official trading name which is regulated by the Seychelles
-        Financial Services Authority (FSA) and holds a Securities Dealer License
-        No. SD018.
+      <div class="text-wrapper">
+        <UiTextSmall class="text">
+          {{ t("landing.footer.legal.regulated") }}
+        </UiTextSmall>
+
+        <UiTextSmall class="text">
+          <strong>{{ t("landing.footer.legal.risk").split(":")[0] }}:</strong>
+          {{ t("landing.footer.legal.risk").split(":")[1] }}
+        </UiTextSmall>
+
+        <UiTextSmall class="text">
+          <strong
+            >{{ t("landing.footer.legal.restricted").split(":")[0] }}:</strong
+          >
+          {{ t("landing.footer.legal.restricted").split(":")[1] }}
+        </UiTextSmall>
+
+        <UiTextSmall class="text">
+          {{ t("landing.footer.legal.age") }}
+        </UiTextSmall>
+
+        <UiTextSmall class="text">
+          {{ t("landing.footer.legal.compliance") }}
+        </UiTextSmall>
+      </div>
+
+      <UiTextSmall class="text center">
+        {{ t("landing.footer.legal.copyrightStart") }} |
+        {{ t("landing.footer.legal.copyrightEnd") }}
       </UiTextSmall>
-
-      <UiTextSmall class="text">
-        <strong> Risk Warning: </strong> and CFD trading carries a high level of
-        risk and can result in the loss of capital. You should only invest with
-        money you can afford to lose. Trading live instruments cannot be stopped
-        under any circumstances, so it is important that you fully understand
-        the risks involved and seek independent advice if necessary. Please read
-        our risk disclosure and ensure you fully understand it.
-      </UiTextSmall>
-
-      <UiTextSmall class="text">
-        <strong>Restricted Countries:</strong>  Raw Trading Ltd does not provide
-        its services to residents of a number of countries, including the United
-        States, Canada, Israel, New Zealand, Iran and North Korea (Democratic
-        People's Republic of Korea), as well as other jurisdictions where such
-        activities are contrary to local law.
-      </UiTextSmall>
-
-      <UiTextSmall class="text">
-        To register an account with Ester, you must be at least 18 years old or
-        have reached the age of majority in accordance with the laws of your
-        country. By creating an account, you confirm that you are registering on
-        your own initiative, without any solicitation or offer from Ester.
-      </UiTextSmall>
-
-      <UiTextSmall class="text">
-        Ester does not direct its services or website content to users in
-        countries where their use is prohibited by local laws. If you access
-        this website from a restricted country, you are responsible for
-        compliance with local laws. The Company also does not warrant that the
-        information provided complies with the requirements of all
-        jurisdictions.
-      </UiTextSmall>
-    </div>
-
-    <UiTextSmall class="text center">
-      © 2025 Ester | All rights reserved.
-    </UiTextSmall>
-  </footer>
+    </footer>
+  </UiContainer>
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+import UiContainer from "~/components/ui/UiContainer.vue";
 import UiIconFacebook from "~/components/ui/UiIconFacebook.vue";
 import UiIconInstagram from "~/components/ui/UiIconInstagram.vue";
 import UiIconLinkedIn from "~/components/ui/UiIconLinkedIn.vue";
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
-import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH6 from "~/components/ui/UiTextH6.vue";
 import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 import FooterItem from "./components/FooterItem.vue";
 
-const trading = [
-  "Account overview",
-  "Markets",
-  "Platform",
-  "Terms of trade",
-  "Tandem trading",
-];
+import { useThemeStore } from "~/stores/themeStore.js";
 
-const partnership = ["Register IB\ Partnership", "How IB generate income"];
-
-const company = [
-  "About the company",
-  "Documents",
-  "Company news",
-  "Contacts",
-  "Career",
-];
+const themeStore = useThemeStore();
+const { t } = useI18n();
 </script>
 
 <style lang="scss" scoped>
 footer {
-  padding: 20px 120px;
   margin-top: 75px;
   display: flex;
   flex-direction: column;
   gap: 30px;
 
   h3 {
-    color: var(--color-ui-primary-defalt);
+    color: var(--ui-text-main);
     text-align: center;
   }
 
@@ -128,9 +111,13 @@ footer {
     flex-direction: column;
     gap: 10px;
 
+    &-svg {
+      padding-right: 30px;
+    }
+
     &-text {
       width: 206px;
-      color: var(--color-ui-grey);
+      color: var(--ui-text-secondary);
     }
 
     &-icons {
@@ -154,12 +141,21 @@ footer {
   }
 
   .text {
-    color: var(--color-ui-grey);
+    color: var(--ui-text-secondary);
   }
 
   .center {
     text-align: center;
   }
+}
+
+.svg-invert {
+  filter: invert(1);
+}
+
+.svg-fill {
+  color: #0d6efd;
+  fill: currentColor;
 }
 
 @media (max-width: 991px) {
@@ -171,18 +167,24 @@ footer {
 
 @media (max-width: 767px) {
   footer {
+    padding: 15px;
     margin-top: 0;
   }
   .footer__content {
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 30px;
+  }
+
+  .logo {
+    .logo-text {
+      width: 100%;
+    }
   }
 }
 
 @media (max-width: 576px) {
   .logo {
     width: 100%;
-    align-items: center;
   }
 }
 </style>

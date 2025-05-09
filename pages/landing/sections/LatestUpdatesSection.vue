@@ -16,8 +16,11 @@
 
       <div class="help-block">
         <UiTextH4>
-          Need Help? Visit our
-          <a href="#" class="help-block__link">Help Section</a>
+          {{ t("landing.helpSection") }}
+          <br />
+          <a href="#" class="help-block__link">{{
+            t("landing.helpLinkText")
+          }}</a>
         </UiTextH4>
       </div>
     </UiContainer>
@@ -25,11 +28,14 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import UiCard from "~/components/ui/UiCard.vue";
 import UiContainer from "~/components/ui/UiContainer.vue";
+
+const { t, tm } = useI18n();
 
 const theNews = ref([
   {
@@ -60,7 +66,7 @@ const theNews = ref([
 .lates_updates {
   &_title {
     text-align: center;
-    color: var(--color-ui-primary-defalt);
+    color: var(--ui-text-main);
   }
 
   &_cards {
@@ -76,10 +82,8 @@ const theNews = ref([
   justify-content: center;
   align-items: center;
   height: 80px;
-
   background: transparent;
   padding: 10px 20px;
-
   text-align: center;
   position: relative;
   width: 100%;
@@ -89,8 +93,12 @@ const theNews = ref([
   border-radius: 15px;
 
   h4 {
-    color: white;
+    color: var(--ui-text-main);
     font-weight: 700;
+
+    br {
+      display: none;
+    }
   }
 
   &:hover {
@@ -120,6 +128,10 @@ const theNews = ref([
 
   .help-block {
     margin-top: 50px;
+
+    h4 > br {
+      display: block;
+    }
   }
 }
 </style>

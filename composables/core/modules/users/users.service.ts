@@ -4,29 +4,29 @@ export class UsersService {
 
   private useApi:any;
   constructor() {
-    this.useApi = new useApi();
+    this.useApi = new useApi(true);
   }
   async get(params: {}):Promise<any> {
-    return await this.useApi.get("/users", params);
+    return await this.useApi.get("/client/users", params);
   }
   async getFirst(id:any):Promise<any> {
-    return await this.useApi.get(`/users/${id}`);
+    return await this.useApi.get(`/client/users/${id}`);
   }
 
   async post(data:object = {}):Promise<any> {
-    return await this.useApi.post("/users", data);
+    return await this.useApi.post("/client/users", data);
   }
 
   async put(id:any, data:object = {}):Promise<any> {
-    return await this.useApi.put(`/users/${id}`, data);
+    return await this.useApi.put(`/client/users/${id}`, data);
   }
 
-  async patch(id:any, data:object = {}):Promise<any> {
-    return await this.useApi.patch(`/users/${id}`, data);
+  async patch(data:object = {}):Promise<any> {
+    return await this.useApi.post(`/client/profile/update`, data);
   }
 
-  async delete(id:any):Promise<any> {
-    return await this.useApi.delete(`/users/${id}/delete`);
+  async delete():Promise<any> {
+    return await this.useApi.delete(`/client/users`);
   }
 }
 

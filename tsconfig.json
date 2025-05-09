@@ -30,11 +30,8 @@
     ".nuxt/types/imports.d.ts",
     ".nuxt/types/imports.d.ts",
     ".nuxt/types/imports.d.ts",
+    ".nuxt/types/imports.d.ts",
     ".nuxt/types/imports.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    ".output",
-    ".nuxt"
-  ]
+  "exclude": ["node_modules", ".output", ".nuxt"]
 }

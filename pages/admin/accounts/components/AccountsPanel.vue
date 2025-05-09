@@ -1,32 +1,36 @@
 <template>
-  <PanelDefault title="# Clients">
+  <PanelDefault :title="t('admin.accounts.components.accounts-panel.title')">
     <template #title-extra>
       <div class="add-btn" @click="handleClickAddRole">+</div>
     </template>
+
     <AccountsPanelSearch
-        @input="handleInputSearch"
-        :isLoading="isLoadingSearch"
-        :value="searchFilter"
+      @input="handleInputSearch"
+      :isLoading="isLoadingSearch"
+      :value="searchFilter"
     />
+
     <TableDefault
-        :columns="accoutsColumns"
-        :data="data"
-        :isLoading="isLoading"
-        :rowsPerPage="15"
+      :columns="accoutsColumns"
+      :data="data"
+      :isLoading="isLoading"
+      :rowsPerPage="15"
     />
+
     <PaginationDefault
-        :isLoading="isLoading"
-        :perPage="perPage"
-        :page="page"
-        :totalRows="totalRows"
-        @perPageChange="handleChangePerPage"
-        @pageChange="handleChangePage"
+      :isLoading="isLoading"
+      :perPage="perPage"
+      :page="page"
+      :totalRows="totalRows"
+      @perPageChange="handleChangePerPage"
+      @pageChange="handleChangePage"
     />
   </PanelDefault>
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, onMounted} from "vue";
+import { useI18n } from "vue-i18n";
+import { computed, inject, onMounted, reactive } from "vue";
 
 import AccountsPanelSearch from "~/pages/admin/accounts/components/AccountsPanelSearch.vue";
 import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
@@ -34,31 +38,41 @@ import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import TableDefault from "~/components/block/tables/TableDefault.vue";
 
 import {
-  page, perPage, totalRows,
-  isLoading, isLoadingSearch,
-  searchFilter, accoutsColumns,
+  page,
+  perPage,
+  totalRows,
+  isLoading,
+  isLoadingSearch,
+  searchFilter,
+  accoutsColumns,
   accountsData,
 } from "~/pages/admin/accounts/composables";
 
 import {
   handleInputSearch,
-  handleChangePage, handleChangePerPage,
-  loadData, handleClickDeleteIcon
+  handleChangePage,
+  handleChangePerPage,
+  loadData,
+  handleClickDeleteIcon,
 } from "~/pages/admin/accounts/composables/setup";
 import AccountsPanelEdit from "~/pages/admin/accounts/components/AccountsPanelEdit.vue";
 import AccountsPanelAddNew from "~/pages/admin/accounts/components/AccountsPanelAddNew.vue";
 import UiIconEdit from "~/components/ui/UiIconEdit.vue";
 import UiIconDelete from "~/components/ui/UiIconDelete.vue";
 
-
+const { t } = useI18n({ useScope: "global" });
 const { openModal } = inject("modalControl") as { openModal: Function };
 
-
 const handleClickAddRole = () =>
-    openModal(AccountsPanelAddNew, { title: "Add new Client" });
-const handleClickEditIcon = (id: string) =>
-    openModal(AccountsPanelEdit, { title: "Edit Client", id });
+  openModal(AccountsPanelAddNew, {
+    title: t("admin.accounts.components.accounts-panel.addTitle"),
+  });
 
+const handleClickEditIcon = (id: string) =>
+  openModal(AccountsPanelEdit, {
+    title: t("admin.accounts.components.accounts-panel.editTitle"),
+    id,
+  });
 
 const extendClientData = () => {
   accountsData.forEach((client) => {
@@ -77,14 +91,41 @@ const extendClientData = () => {
       },
     ];
   });
-}
+};
 
 const data = computed(() => {
   extendClientData();
   Object.assign(accountsData, accountsData);
 
   return accountsData;
-})
+});
+
+const accoutsColumns = reactive([
+  {
+    title: t("admin.accounts.components.accounts-panel.columns.id"),
+    key: "id",
+  },
+  {
+    title: t("admin.accounts.components.accounts-panel.columns.name"),
+    key: "name",
+  },
+  {
+    title: t("admin.accounts.components.accounts-panel.columns.email"),
+    key: "email",
+  },
+  {
+    title: t("admin.accounts.components.accounts-panel.columns.phone"),
+    key: "phone",
+  },
+  {
+    title: t("admin.accounts.components.accounts-panel.columns.created_at"),
+    key: "created_at",
+  },
+  {
+    title: t("admin.accounts.components.accounts-panel.columns.options"),
+    key: "options",
+  },
+]);
 
 onMounted(async () => {
   await loadData();

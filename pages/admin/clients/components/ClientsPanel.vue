@@ -1,32 +1,36 @@
 <template>
-  <PanelDefault title="# Clients">
+  <PanelDefault :title="t('admin.clients.components.clients-panel.title')">
     <template #title-extra>
       <div class="add-btn" @click="handleClickAddRole">+</div>
     </template>
+
     <ClientsPanelSearch
-        @input="handleInputSearch"
-        :isLoading="isLoadingSearch"
-        :value="searchFilter"
+      @input="handleInputSearch"
+      :isLoading="isLoadingSearch"
+      :value="searchFilter"
     />
+
     <TableDefault
-        :columns="rolesColumns"
-        :data="data"
-        :isLoading="isLoading"
-        :rowsPerPage="15"
+      :columns="rolesColumns"
+      :data="data"
+      :isLoading="isLoading"
+      :rowsPerPage="15"
     />
+
     <PaginationDefault
-        :isLoading="isLoading"
-        :perPage="perPage"
-        :page="page"
-        :totalRows="totalRows"
-        @perPageChange="handleChangePerPage"
-        @pageChange="handleChangePage"
+      :isLoading="isLoading"
+      :perPage="perPage"
+      :page="page"
+      :totalRows="totalRows"
+      @perPageChange="handleChangePerPage"
+      @pageChange="handleChangePage"
     />
   </PanelDefault>
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, onMounted} from "vue";
+import { useI18n } from "vue-i18n";
+import { computed, inject, onMounted } from "vue";
 
 import ClientsPanelSearch from "~/pages/admin/clients/components/ClientsPanelSearch.vue";
 import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
@@ -34,16 +38,22 @@ import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import TableDefault from "~/components/block/tables/TableDefault.vue";
 
 import {
-  page, perPage, totalRows,
-  isLoading, isLoadingSearch,
-  searchFilter, rolesColumns,
+  page,
+  perPage,
+  totalRows,
+  isLoading,
+  isLoadingSearch,
+  searchFilter,
   clientsData,
+  useRolesColumns,
 } from "~/pages/admin/clients/composables";
 
 import {
   handleInputSearch,
-  handleChangePage, handleChangePerPage,
-  loadData, handleClickDeleteIcon
+  handleChangePage,
+  handleChangePerPage,
+  loadData,
+  handleClickDeleteIcon,
 } from "~/pages/admin/clients/composables/setup";
 import ClientsPanelEdit from "~/pages/admin/clients/components/ClientsPanelEdit.vue";
 import ClientsPanelAddNew from "~/pages/admin/clients/components/ClientsPanelAddNew.vue";
@@ -51,14 +61,19 @@ import UiIconEdit from "~/components/ui/UiIconEdit.vue";
 import UiIconDelete from "~/components/ui/UiIconDelete.vue";
 import useEventBus from "~/composables/useEventBus";
 
+const { t } = useI18n();
+const rolesColumns = useRolesColumns();
 const { openModal } = inject("modalControl") as { openModal: Function };
 
-
 const handleClickAddRole = () =>
-    openModal(ClientsPanelAddNew, { title: "Add new Client" });
+  openModal(ClientsPanelAddNew, {
+    title: t("admin.clients.components.clients-panel.addTitle"),
+  });
 const handleClickEditIcon = (id: string) =>
-    openModal(ClientsPanelEdit, { title: "Edit Client", id });
-
+  openModal(ClientsPanelEdit, {
+    title: t("admin.clients.components.clients-panel.editTitle"),
+    id,
+  });
 
 const extendClientData = () => {
   clientsData.forEach((client) => {
@@ -77,18 +92,18 @@ const extendClientData = () => {
       },
     ];
   });
-}
+};
 
 const data = computed(() => {
   extendClientData();
   Object.assign(clientsData, clientsData);
 
   return clientsData;
-})
+});
 
 onMounted(async () => {
   await loadData();
-  useEventBus.on('loadDataForUsers', loadData)
+  useEventBus.on("loadDataForUsers", loadData);
 });
 </script>
 

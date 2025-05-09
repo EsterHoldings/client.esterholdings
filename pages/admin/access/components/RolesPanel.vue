@@ -1,33 +1,36 @@
 <template>
-  <PanelDefault title="# Roles">
+  <PanelDefault :title="t('admin.access.components.roles-panel.title')">
     <template #title-extra>
-      <UiButtonDefault class="add-btn" @click="handleClickAddRole">+</UiButtonDefault>
-<!--      <div class="add-btn" @click="handleClickAddRole">+</div>-->
+      <UiButtonDefault class="add-btn" @click="handleClickAddRole"
+        >+</UiButtonDefault
+      >
+      <!--      <div class="add-btn" @click="handleClickAddRole">+</div>-->
     </template>
     <RolesPanelSearch
-        @input="handleInputSearch"
-        :isLoading="isLoadingSearch"
-        :value="searchFilter"
+      @input="handleInputSearch"
+      :isLoading="isLoadingSearch"
+      :value="searchFilter"
     />
     <TableDefault
-        :columns="rolesColumns"
-        :data="rolesData"
-        :isLoading="isLoading"
-        :rowsPerPage="4"
+      :columns="rolesColumns"
+      :data="rolesData"
+      :isLoading="isLoading"
+      :rowsPerPage="4"
     />
     <PaginationDefault
-        :isLoading="isLoading"
-        :perPage="perPage"
-        :page="page"
-        :totalRows="totalRows"
-        @perPageChange="handleChangePerPage"
-        @pageChange="handleChangePage"
+      :isLoading="isLoading"
+      :perPage="perPage"
+      :page="page"
+      :totalRows="totalRows"
+      @perPageChange="handleChangePerPage"
+      @pageChange="handleChangePage"
     />
   </PanelDefault>
 </template>
 
 <script lang="ts" setup>
-import {ref, inject, onMounted, onUnmounted} from "vue";
+import { ref, inject, onMounted, onUnmounted, computed } from "vue";
+import { useI18n } from "vue-i18n";
 import TableDefault from "~/components/block/tables/TableDefault.vue";
 import UiIconEdit from "~/components/ui/UiIconEdit.vue";
 import UiIconDelete from "~/components/ui/UiIconDelete.vue";
@@ -38,13 +41,14 @@ import RolesPanelEdit from "~/pages/admin/access/components/RolesPanelEdit.vue";
 import RolesPanelSearch from "~/pages/admin/access/components/RolesPanelSearch.vue";
 import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
-import {debounce} from "~/utils/helper/debounce";
+import { debounce } from "~/utils/helper/debounce";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 
 interface IPermissionItem {
   name: string;
 }
 
+const { t } = useI18n({ useScope: "global" });
 const appCore = useAppCore();
 
 const isLoading = ref(true);
@@ -57,16 +61,28 @@ const searchFilter = ref("");
 
 const { openModal } = inject("modalControl") as { openModal: Function };
 
-const rolesColumns = ref([
-  { title: "Name", key: "name" },
-  { title: "Permissions", key: "permissions" },
+// const rolesColumns = ref([
+//   { title: "Name", key: "name" },
+//   { title: "Permissions", key: "permissions" },
+//   { title: "", key: "options" },
+// ]);
+
+const rolesColumns = computed(() => [
+  { title: t("admin.access.components.roles-panel.columns.name"), key: "name" },
+  {
+    title: t("admin.access.components.roles-panel.columns.permissions"),
+    key: "permissions",
+  },
   { title: "", key: "options" },
 ]);
 
 const rolesData = ref([]);
 
 const handleClickEditIcon = (id: string) =>
-    openModal(RolesPanelEdit, { title: "Edit Role", id });
+  openModal(RolesPanelEdit, {
+    title: t("admin.access.components.roles-panel.editTitle"),
+    id,
+  });
 
 const handleClickDeleteIcon = async (id: string) => {
   await appCore.roles.delete(id);
@@ -87,7 +103,9 @@ const loadData = async (isFilterQuery = false) => {
   rolesData.value = response.data.data.data;
 
   rolesData.value.forEach((role) => {
-    role.permissions = [...role.permissions.map((permission: IPermissionItem) => permission.name)];
+    role.permissions = [
+      ...role.permissions.map((permission: IPermissionItem) => permission.name),
+    ];
     role.options = [
       {
         isIcon: true,
@@ -108,7 +126,9 @@ const loadData = async (isFilterQuery = false) => {
 };
 
 const handleClickAddRole = () =>
-    openModal(RolesPanelAddNew, { title: "Add new Role" });
+  openModal(RolesPanelAddNew, {
+    title: t("admin.access.components.roles-panel.addTitle"),
+  });
 
 const handleInputSearch = debounce(async (event: any) => {
   try {
@@ -133,12 +153,10 @@ const handleChangePage = async (value: number) => {
 
 onMounted(async () => {
   await loadData();
-  useEventBus.on('loadDataForRoles', loadData)
+  useEventBus.on("loadDataForRoles", loadData);
 });
 
-onUnmounted(async () => {
-
-})
+onUnmounted(async () => {});
 </script>
 
 <style lang="scss" scoped>

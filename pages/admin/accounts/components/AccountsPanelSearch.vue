@@ -1,37 +1,42 @@
 <template>
   <div class="panel-search">
     <UiInput
-        class="panel-search__input"
-        placeholder="Search"
-        @input="handleInputSearch"
-        :borderNone="true"
-        :paddingNone="true"
-        :isLoading="isLoadingSearch"
-        :value="searchFilter"
+      class="panel-search__input"
+      :placeholder="
+        t('admin.accounts.components.accounts-panel-search.placeholder')
+      "
+      @input="handleInputSearch"
+      :borderNone="true"
+      :paddingNone="true"
+      :isLoading="isLoadingSearch"
+      :value="searchFilter"
     >
       <template #icon-left>
-        <UiIconSearch/>
+        <UiIconSearch />
       </template>
     </UiInput>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiIconSearch from "~/components/ui/UiIconSearch.vue";
 
-const emit = defineEmits(['input'])
+const { t } = useI18n({ useScope: "global" });
+
+const emit = defineEmits(["input"]);
 const props = defineProps({
   searchFilter: {
     type: String,
-    default: ''
+    default: "",
   },
   isLoadingSearch: {
     type: Boolean,
-    default: false
-  }
-})
-const handleInputSearch = event => emit('input', event)
+    default: false,
+  },
+});
+const handleInputSearch = (event) => emit("input", event);
 </script>
 
 <style lang="scss" scoped>

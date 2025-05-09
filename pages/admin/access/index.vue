@@ -1,8 +1,10 @@
 <template>
   <div class="access-page">
     <div class="access-page__title">
-      <UiTextH3>Access controls</UiTextH3>
-      <UiTextParagraph>( Roles and Permissions )</UiTextParagraph>
+      <UiTextH3>{{ t("admin.access.index.title") }}</UiTextH3>
+      <UiTextParagraph>
+        {{ t("admin.access.index.subtitle") }}
+      </UiTextParagraph>
     </div>
     <div class="access-page__content">
       <div class="access-page__content__top">
@@ -10,19 +12,20 @@
           <RolesPanel />
         </div>
         <div class="access-page__content__top__right">
-          <PermissionsPanel/>
+          <PermissionsPanel />
         </div>
       </div>
-      <br>
+      <br />
       <div class="access-page__content__bottom">
-        <AdminsPanel/>
+        <AdminsPanel />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {definePageMeta} from "~/.nuxt/imports";
+import { useI18n } from "vue-i18n";
+import { definePageMeta } from "~/.nuxt/imports";
 
 import AdminsPanel from "~/pages/admin/access/components/AdminsPanel.vue";
 import RolesPanel from "~/pages/admin/access/components/RolesPanel.vue";
@@ -31,8 +34,10 @@ import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 
 definePageMeta({
-  middleware: ["admin-middleware"]
+  middleware: ["admin-middleware"],
 });
+
+const { t } = useI18n({ useScope: "global" });
 </script>
 
 <style lang="scss" scoped>
@@ -47,7 +52,6 @@ definePageMeta({
     }
 
     &__content {
-
       &__top {
         display: flex;
         justify-content: space-between;

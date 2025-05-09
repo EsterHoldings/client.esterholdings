@@ -1,22 +1,23 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import {useAdminAuthStore} from "~/stores/adminAuthStore";
+import {useAuthStore} from "~/stores/authStore";
 
 export class useApi {
   private api: AxiosInstance;
 
-  constructor() {
+  constructor(forClient = false) {
     this.api = axios.create({
-      baseURL: "http://139.59.143.82/api/",
-      // baseURL: "http://localhost:8000/api/",
+      // baseURL: "http://127.0.0.1:8000/api/",
+      baseURL: "https://esterholdings.website/api/",
     });
 
     this.api.interceptors.request.use((config) => {
-      const authStore = useAdminAuthStore();
-      const token = authStore.accessToken;
+      const authStore = forClient ? useAuthStore() : useAdminAuthStore();
+      let token = authStore.accessToken;
 
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+      // TODO :: Переделать все на стор
+      if (forClient) token = localStorage.getItem('user_access_token');
+      if (token) { config.headers.Authorization = `Bearer ${token}`; }
 
       return config;
     });

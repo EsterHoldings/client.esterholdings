@@ -3,9 +3,15 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Variable Name</th>
-          <th>Preview</th>
-          <th>Color Picker</th>
+          <th>
+            {{ t("admin.settings.tables.appearance.variable") }}
+          </th>
+          <th>
+            {{ t("admin.settings.tables.appearance.preview") }}
+          </th>
+          <th>
+            {{ t("admin.settings.tables.appearance.picker") }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -18,14 +24,14 @@
               class="preview-box"
               :style="{ backgroundColor: color }"
             >
-              Background
+              {{ t("admin.settings.tables.appearance.background") }}
             </div>
             <div
               v-else-if="key.includes('text')"
               class="preview-text"
               :style="{ color: color }"
             >
-              Example Text
+              {{ t("admin.settings.tables.appearance.text") }}
             </div>
             <button
               v-else
@@ -35,7 +41,7 @@
                 color: getContrastColor(color),
               }"
             >
-              Button
+              {{ t("admin.settings.tables.appearance.button") }}
             </button>
           </td>
 
@@ -53,8 +59,10 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { ref, watch } from "vue";
 
+const { t } = useI18n();
 const colors = ref({
   "--color-background": "#ffffff",
   "--color-text": "#000000",

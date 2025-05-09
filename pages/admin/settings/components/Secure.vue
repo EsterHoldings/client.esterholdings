@@ -3,8 +3,12 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Key</th>
-          <th>Value (Seconds)</th>
+          <th>
+            {{ t("admin.settings.tables.security.key") }}
+          </th>
+          <th>
+            {{ t("admin.settings.tables.security.value") }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -20,9 +24,11 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import UiInput from "~/components/ui/UiInput.vue";
 
+const { t } = useI18n();
 const tableData = ref([
   { key: "Access Token", value: 900 },
   { key: "Refresh Token", value: 630000 },

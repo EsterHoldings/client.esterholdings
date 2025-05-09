@@ -9,7 +9,9 @@
       'btn--primary': props.state === 'primary',
       'btn--warning': props.state === 'warning',
       'btn--success': props.state === 'success',
+      'btn--info--outline': props.state === 'info--outline',
       'btn--success--outline': props.state === 'success--outline',
+      'btn--danger--outline': props.state === 'danger--outline',
       'btn--secondary': props.state === 'secondary',
     }"
     :type="props.type"
@@ -52,9 +54,10 @@ const handleClick = (): void => emit("click");
   // padding: 0 20px;
   // min-width: min-content;
   // height: 50px;
-
+  box-sizing: border-box;
   height: 46px;
-  border-radius: 50px;
+  //border-radius: 50px;
+  border-radius: var(--ui-border--raduis);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -71,10 +74,10 @@ const handleClick = (): void => emit("click");
   &--link {
     background-color: transparent;
     border: none;
-    color: var(--color-ui-primary-defalt);
+    color: var(--ui-text-main);
 
     &:hover {
-      color: var(--color-ui-warning) !important;
+      color: var(--ui-primary-accent) !important;
       background-color: transparent !important;
     }
   }
@@ -82,6 +85,16 @@ const handleClick = (): void => emit("click");
   &--danger {
     background-color: #c71e1e;
     color: white;
+
+    &--outline {
+      border: 1px solid var(--ui-sticker-danger);
+      background-color: transparent;
+      color: var(--ui-sticker-danger);
+
+      &:hover {
+        background: var(--ui-sticker-danger) !important;
+      }
+    }
   }
 
   &--dark {
@@ -95,18 +108,37 @@ const handleClick = (): void => emit("click");
   }
 
   &--warning {
-    background-color: var(--color-ui-warning);
+    background-color: var(--ui-primary-accent);
     color: white;
   }
 
-  &--success {
-    background-color: var(--color-sticker-ui-success);
+  &--info {
+    background-color: var(--color-ui-primary);
     color: white;
 
     &--outline {
-      border: 1px solid var(--color-sticker-ui-success);
+      border: 1px solid var(--color-ui-primary);
       background-color: transparent;
-      color: var(--color-sticker-ui-success);
+      color: var(--color-ui-primary);
+
+      &:hover {
+        background: var(--color-ui-primary) !important;
+      }
+    }
+  }
+
+  &--success {
+    background-color: var(--ui-sticker-success);
+    color: white;
+
+    &--outline {
+      border: 1px solid var(--ui-sticker-success);
+      background-color: transparent;
+      color: var(--ui-sticker-success);
+
+      &:hover {
+        background: var(--ui-sticker-success) !important;
+      }
     }
   }
 
@@ -116,7 +148,7 @@ const handleClick = (): void => emit("click");
   }
 
   &:hover {
-    background: var(--color-ui-warning);
+    background: var(--ui-primary-accent);
     color: white;
   }
 }

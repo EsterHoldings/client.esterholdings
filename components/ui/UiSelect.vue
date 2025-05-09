@@ -1,145 +1,161 @@
 <template>
-  <div class="select">
+  <div :class="['select', { dropup }]" ref="wrapper">
     <div
-        class="select__body"
-        :class="{'is-open': isOpen}"
-        @click="handleClick"
+      ref="body"
+      class="select__body"
+      :class="{ 'is-open': isOpen }"
+      @click="toggle"
     >
-      {{ currentValueItemText }}
+      {{ displayText }}
     </div>
 
-    <div class="select__options" v-if="isOpen">
+    <div v-if="isOpen" class="select__options">
       <div
-        class="select__option select__option--no-selected"
-        :class="{'is-active': currentValueItem?.value === null}"
-        @click="handleOnChange(null)"
+        class="select__option no-select"
+        :class="{ active: internalValue === null }"
+        @click="choose(null)"
       >
-        No selected...
+        {{ t("ui-components.ui-select") }}
       </div>
       <div
+        v-for="item in data"
+        :key="item.value"
         class="select__option"
-        :class="{'is-active': currentValueItem?.value === option.value}"
-        v-for="option in data"
-        @click="handleOnChange(option)"
+        :class="{ active: internalValue === item.value }"
+        @click="choose(item)"
       >
-        {{ option.text }}
+        {{ item.text }}
       </div>
     </div>
 
-    <select>
-      <option
-        v-for="option of data"
-        :value="option.value"
-        :key="option.text"
-        :selected="currentValueItem?.value === option.value"
-      >
-        {{ option.text }}
+    <select v-model="internalValue" hidden>
+      <option v-for="item in data" :key="item.value" :value="item.value">
+        {{ item.text }}
       </option>
     </select>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { useI18n } from "vue-i18n";
+import { ref, computed, watch, nextTick } from "vue";
 
-interface IListOfSelectOptions {
-  id: string,
-  value: string,
-  text: string,
+interface Option {
+  id: string;
+  value: string;
+  text: string;
+}
+const { t } = useI18n({ useScope: "global" });
+const props = defineProps<{ data: Option[]; value?: string | null }>();
+const emit = defineEmits(["change"]);
+const data = props.data;
+
+const isOpen = ref(false);
+const dropup = ref(false);
+const body = ref<HTMLElement | null>(null);
+
+const internalValue = ref<string | null>(props.value ?? null);
+watch(
+  () => props.value,
+  (v) => (internalValue.value = v ?? null)
+);
+
+const displayText = computed(
+  () =>
+    data.find((i) => i.value === internalValue.value)?.text ||
+    t("ui-components.ui-select")
+);
+
+function toggle() {
+  isOpen.value = !isOpen.value;
+  if (isOpen.value) nextTick(calcDropup);
 }
 
-const emit = defineEmits(["change"]);
-const props = defineProps({
-  data: {
-    type: Array<IListOfSelectOptions>,
-    default: [],
-  },
-});
+function calcDropup() {
+  if (!body.value) return;
+  const rect = body.value.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const optionHeight = 40; // px per option
+  const totalOptions = data.length + 1;
+  const dropdownHeight = Math.min(250, totalOptions * optionHeight);
+  dropup.value = spaceBelow < dropdownHeight;
+}
 
-const currentValue = ref(null);
-const isOpen = ref(false);
-
-const currentValueItemText = computed(() => {
-  if (currentValue.value === null) return 'No selected...';
-  const item = props.data.filter(x => x.value === currentValue.value)
-  return item ? item[0].text : '...';
-});
-
-const currentValueItem = computed(() => {
-  return props.data[
-    currentValue.value as keyof typeof props.data
-  ];
-});
-
-const handleClick = (): void => {
-  isOpen.value = !isOpen.value;
-};
-
-const handleOnChange = (option: any): void => {
-  currentValue.value = option.value;
+function choose(item: Option | null) {
+  internalValue.value = item?.value ?? null;
+  emit("change", internalValue.value);
   isOpen.value = false;
-  emit("change", currentValue?.value);
-};
+}
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .select {
   position: relative;
-
-  &__body {
-    padding: 0 20px;
-    border: 1px solid #0f0f0f;
-    height: 40px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    user-select: none;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: 500;
-
-    &.is-open {
-      border-radius: 5px 5px 0 0;
+  &.dropup {
+    .select__options {
+      top: auto;
+      bottom: 100%;
       border-bottom: none;
+      border-radius: 10px 10px 0 0;
     }
-  }
-
-  &__options {
-    z-index: 1;
-    position: absolute;
-    width: 100%;
-    max-height: 250px;
-    overflow-x: scroll;
-    border: 1px solid #0f0f0f;
-    border-radius: 0px 0px 5px 5px;
-    box-shadow: 0px 27px 38px -9px rgba(0, 0, 0, 0.75);
-  }
-
-  &__option {
-    padding: 0 20px;
-    border: 1px solid gainsboro;
-    height: 40px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    background-color: gainsboro;
-    border-top: 1px solid white;
-    user-select: none;
-
-    &--no-selected {
-      border: none;
-      font-size: 13px;
-      font-weight: 600;
-      background-color: #a4a1a1;
-    }
-
-    &.is-active {
-      font-weight: 600;
+    .select__body.is-open {
+      border-top: none;
+      border-radius: 0 0 10px 10px;
     }
   }
 }
 
-select {
-  display: none;
+.select__body {
+  box-sizing: border-box;
+  padding: 0 1.25rem;
+  height: 2.875rem;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-stroke-ui-dark);
+  border-radius: 10px;
+  background: var(--ui-background);
+  color: var(--color-ui-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  &.is-open {
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+  }
+}
+
+.select__options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid var(--color-stroke-ui-dark);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  background: var(--ui-background);
+  z-index: 1;
+}
+
+.select__option {
+  padding: 0 1.25rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--color-stroke-ui-dark);
+  background: var(--ui-background);
+  color: var(--color-ui-text);
+  cursor: pointer;
+  &.active {
+    font-weight: 600;
+  }
+}
+
+.no-select {
+  border: none;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
 }
 </style>

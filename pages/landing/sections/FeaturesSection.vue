@@ -1,6 +1,8 @@
 <template>
   <section class="features_section">
-    <UiTextH3 class="features_section_title">Why Choose Us?</UiTextH3>
+    <UiTextH3 class="features_section_title">{{
+      t("landing.feature__title")
+    }}</UiTextH3>
     <div class="features_container">
       <div
         class="feature_item"
@@ -8,8 +10,12 @@
         :key="index"
       >
         <div class="feature_icon">
-          <UiIconPoligon class="feature_icon-bg" />
-
+          <UiIconPoligon
+            class="feature_icon-bg"
+            :background-fill="
+              themeStore.currentTheme === 'light' ? '#F9F9F9' : '#031743'
+            "
+          />
           <div class="img">
             <img :src="feature.icon" alt="Feature Icon" />
           </div>
@@ -26,49 +32,22 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { ref, computed } from "vue";
+import { useThemeStore } from "~/stores/themeStore";
 import RunningLineDefault from "~/components/block/lines/RunningLineDefault.vue";
-
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 
-const features = ref([
-  {
-    icon: "/static/F-Wrench & Screwdriver.png",
-    // icon: UiIconInstruments,
-    title: "Instruments",
-    description: "Forex/Spot Shares/Indices",
-  },
-  {
-    // icon: UiIconLiquidity,
-    icon: "static/F-Building Library.png",
-    title: "Liquidity:<br><strong>200+ Top-Level</strong>",
-    description: "Financial institutions",
-  },
-  {
-    // icon: UiIconFloating,
-    icon: "/static/F-Money.png",
-    title: "Floating Spread",
-    description: "from 0 pips",
-  },
-  {
-    // icon: UiIconLimitStopLevels,
-    icon: "/static/LIMIT AND STOP LEVELS.png",
-    title: "Limit and Stop Levels",
-    description: "= 0",
-  },
-  {
-    // icon: UiIconBlueRocket,
-    icon: "/static/F-Rocket.png",
-    title: "Fastest Server Technologies",
-    description: "with high order processing speeds",
-  },
-  {
-    // icon: UiIconSecurity,
-    icon: "/static/L-Shield Done.png",
-    title: "Bank's Security",
-    description: "of trading accounts",
-  },
-]);
+const themeStore = useThemeStore();
+const { t } = useI18n();
+
+const features = computed(() => {
+  return Array.from({ length: 6 }, (_, index) => ({
+    icon: t(`landing.sections.features__items[${index}].icon`),
+    title: t(`landing.sections.features__items[${index}].title`),
+    description: t(`landing.sections.features__items[${index}].text`),
+  }));
+});
 
 const items = ref([
   {
@@ -114,7 +93,7 @@ const items = ref([
   }
 
   &_title {
-    color: var(--color-ui-primary-defalt);
+    color: var(--ui-text-main);
   }
 }
 
@@ -162,12 +141,33 @@ const items = ref([
   margin-top: 15px;
   font-size: 20px;
   font-weight: bold;
+  color: var(--ui-text-main);
 }
 
 .feature_description {
   margin-top: 5px;
   font-size: 16px;
-  color: var(--color-ui-grey);
+  white-space: pre-line;
+  color: var(--ui-text-secondary);
+}
+
+@media (max-width: 1199px) {
+  .features_section {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 991px) {
+  .features_section_title {
+    display: none;
+  }
+  .feature_title {
+    font-size: 16px;
+  }
+
+  .feature_description {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 1199px) {

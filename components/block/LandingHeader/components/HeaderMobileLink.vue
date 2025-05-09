@@ -1,18 +1,57 @@
 <template>
-  <NuxtLink :to="props.path" class="header__link">
-    <UiTextH4>{{ props.name }}</UiTextH4>
-    <UiIconChevronRight />
-  </NuxtLink>
+  <div class="header-mobile">
+    <NuxtLink
+      :to="props.path"
+      class="header__link"
+      :class="{ header__link_active: props.name === props.activeLink }"
+    >
+      <UiTextH5>{{ props.name }}</UiTextH5>
+
+      <UiIconChevronUp v-if="props.name === props.activeLink" />
+      <UiIconChevronDown v-else />
+    </NuxtLink>
+
+    <div class="header__underline"></div>
+
+    <TradingMenu
+      :activeLink="props.activeLink"
+      isMobile
+      class="header-mobile_menu"
+      v-if="props.name === props.activeLink"
+    />
+
+    <PartnershipMenu
+      :activeLink="activeLink"
+      isMobile
+      class="header-mobile_menu"
+      v-if="props.name === props.activeLink"
+    />
+
+    <CompanyMenu
+      :activeLink="activeLink"
+      isMobile
+      class="header-mobile_menu"
+      v-if="props.name === props.activeLink"
+    />
+  </div>
 </template>
 
 <script setup>
 import UiIconChevronDown from "~/components/ui/UiIconChevronDown.vue";
-import UiIconChevronRight from "~/components/ui/UiIconChevronRight.vue";
-import UiTextH4 from "~/components/ui/UiTextH4.vue";
+import UiIconChevronUp from "~/components/ui/UiIconChevronUp.vue";
+import UiTextH5 from "~/components/ui/UiTextH5.vue";
+import TradingMenu from "./TradingMenu.vue";
+import PartnershipMenu from "./PartnershipMenu.vue";
+import CompanyMenu from "./CompanyMenu.vue";
 
 const props = defineProps({
   name: String,
   path: String,
+  headerItems: {
+    type: Object,
+    default: () => ({}),
+  },
+  activeLink: String,
 });
 </script>
 
@@ -22,11 +61,23 @@ const props = defineProps({
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  color: white;
+  color: var(--ui-text-main);
   text-decoration: none;
+  padding-bottom: 18px;
 
   &:hover {
-    color: var(--color-ui-warning);
+    color: var(--ui-primary-accent);
   }
+
+  &_active {
+    color: var(--ui-primary-accent);
+  }
+}
+
+.header__underline {
+  height: 1px;
+  width: 100%;
+  background: var(--color-stroke-ui);
+  margin-bottom: 16px;
 }
 </style>

@@ -32,6 +32,9 @@ export class AuthModule implements AuthModuleInterface {
   doRegistration(data: any): Promise<any> {
     return undefined;
   }
+  async getAuthUser() {
+    return await this.authService.authUser()
+  }
 }
 
 export default AuthModule;

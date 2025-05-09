@@ -4,24 +4,23 @@
       <div class="banner-section__wrapper">
         <div class="banner-image">
           <UiImage class="banner-image__image" src="/static/banner-bg.png" />
-          <UiImage
-            class="banner-image__image"
+          <img
+            class="banner-image__image small"
             src="/static/banner-bg-front.png"
           />
         </div>
 
         <div class="banner-content">
-          <UiTextH3 class="banner-title bold"
-            >Trade the Markets Like a Pro!</UiTextH3
+          <UiTextH3 class="banner-title bold">
+            {{ t("landing.sections.banner_section.title") }}</UiTextH3
           >
           <UiTextH6 class="banner-subtitle">
-            Whether you're a beginner or a pro, our advanced tools and resources
-            help you make informed trading decisions.
+            {{ t("landing.sections.banner_section.subtitle") }}
           </UiTextH6>
 
           <div>
-            <UiButtonDefault state="primary"
-              >Start trading today!</UiButtonDefault
+            <UiButtonDefault state="primary">
+              {{ t("landing.sections.banner_section.button") }}</UiButtonDefault
             >
           </div>
         </div>
@@ -31,11 +30,14 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
 import UiImage from "~/components/ui/UiImage.vue";
 import UiContainer from "~/components/ui/UiContainer.vue";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH6 from "~/components/ui/UiTextH6.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+
+const { t, tm } = useI18n();
 </script>
 
 <style lang="scss" scoped>
@@ -50,6 +52,7 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 
   &__wrapper {
     position: relative;
+    overflow: hidden;
     height: 450px;
     width: 100%;
   }
@@ -72,7 +75,7 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 
 .banner-subtitle {
   overflow-wrap: break-word;
-  color: var(--color-ui-grey);
+  color: var(--ui-gray);
 }
 
 .banner-image {
@@ -92,9 +95,21 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   object-fit: cover;
 }
 
+img.banner-image__image.small {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60vw !important;
+  z-index: 0;
+}
+
 @media (max-width: 991px) {
-  .banner-section {
-    padding: 0;
+  .banner-title {
+    font-size: 26px;
+  }
+
+  img.banner-image__image.small {
+    top: 58%;
   }
 }
 
@@ -102,6 +117,11 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   .banner-content {
     padding: 10px;
     width: 100%;
+  }
+
+  img.banner-image__image.small {
+    width: 90vw !important;
+    top: 65%;
   }
 }
 </style>

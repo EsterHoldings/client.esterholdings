@@ -1,16 +1,29 @@
 <template>
   <div>
-    <div v-if="isMenuOpen" class="overlay blurred"></div>
-    <div :class="{ blurred: isBlurred || isMenuOpen }" class="header__wrapper">
+    <div v-if="isMobileMenuOpen" class="overlay blurred"></div>
+    <div
+      :class="{ blurred: isBlurred, 'nav--open': isMobileMenuOpen }"
+      class="header__wrapper"
+    >
       <UiContainer>
-        <header class="header">
+        <header
+          class="header"
+          :class="{ 'header-is-open-menu ': isMobileMenuOpen }"
+        >
           <div class="logo">
-            <UiIconLogo />
+            <UiIconLogo
+              :class="{
+                'svg-invert': isThemeLight || isWithPicture,
+              }"
+            />
           </div>
 
           <div
             class="burger-menu"
-            :class="{ 'burger-menu--open': isMenuOpen }"
+            :class="{
+              'burger-menu--open': isMobileMenuOpen,
+              'is-theme-light': isThemeLight || isWithPicture,
+            }"
             @click="toggleMenu"
           >
             <span></span>
@@ -18,54 +31,145 @@
             <span></span>
           </div>
 
-          <nav class="nav" :class="{ 'nav--open': isMenuOpen }">
+          <nav class="nav" :class="{ 'nav--open': isMobileMenuOpen }">
             <HeaderLink
               v-for="link in linksList"
               :key="link"
               :name="link.name"
               :path="link.path"
+              :activeLink="activeLink"
+              @click.stop="handleClick(link.name)"
+              :isInvertColor="isThemeLight || isWithPicture"
             />
           </nav>
-          <div class="actions-wrapper">
-            <div class="actions">
-              <UiButtonDefault state="link" class="login"
-                >Log In</UiButtonDefault
-              >
 
-              <UiButtonDefault state="primary" class="register"
-                >Register</UiButtonDefault
+          <div
+            class="actions-wrapper"
+            :class="{ 'is-menu-open': isMobileMenuOpen }"
+          >
+            <div class="actions">
+              <NuxtLink to="/auth/login">
+                <UiButtonDefault
+                  state="link"
+                  class="login"
+                  :class="{
+                    'is-theme-light': isThemeLight || isWithPicture,
+                  }"
+                >
+                  {{ t("landing.header.auth.login") }}
+                </UiButtonDefault>
+              </NuxtLink>
+
+              <UiButtonDefault
+                state="primary"
+                class="register"
+                v-if="!isMobileMenuOpen"
               >
-              <UiIconGlobe class="icon" />
-              <UiIconMoon class="icon" />
+                {{ t("landing.header.auth.register") }}
+              </UiButtonDefault>
+
+              <div class="actions-icons">
+                <LanguageSwitcher
+                  class="icon"
+                  :isInvert="isThemeLight || isWithPicture"
+                />
+
+                <transition name="fade" mode="out-in">
+                  <span
+                    :key="themeStore.currentTheme"
+                    @click="themeStore.toggleTheme()"
+                    class="icon"
+                  >
+                    <UiIconMoon
+                      v-if="themeStore.currentTheme === 'dark'"
+                      :class="{
+                        'svg-invert': isThemeLight || isWithPicture,
+                      }"
+                    />
+
+                    <UiIconSun
+                      :class="{
+                        'svg-invert': isThemeLight || isWithPicture,
+                      }"
+                      v-else
+                    />
+                  </span>
+                </transition>
+              </div>
             </div>
           </div>
         </header>
 
         <div
-          v-if="isMenuOpen"
-          :class="{ 'nav--open': isMenuOpen }"
+          v-if="isMobileMenuOpen"
+          :class="{ 'nav--open': isMobileMenuOpen }"
           class="mobile-nav"
         >
-          <UiContainer>
-            <nav>
-              <HeaderMobileLink
-                v-for="link in linksList"
-                :key="link"
-                :name="link.name"
-                :path="link.path"
-              />
-            </nav>
-          </UiContainer>
+          <nav>
+            <HeaderMobileLink
+              v-for="link in linksList"
+              :key="`${link.name}-${activeLink}`"
+              :name="link.name"
+              :path="link.path"
+              :headerItems="headerItems"
+              :activeLink="activeLink"
+              @click="handleClick(link.name)"
+            />
+
+            <div class="mobile-acions">
+              <UiButtonDefault
+                state="primary"
+                class="register"
+                v-if="isMobileMenuOpen"
+              >
+                {{ t("landing.header.auth.register") }}
+              </UiButtonDefault>
+
+              <UiButtonDefault
+                state="link"
+                :class="{ 'is-theme-light': isThemeLight }"
+              >
+                {{ t("landing.header.auth.login") }}
+              </UiButtonDefault>
+            </div>
+
+            <div class="mobile-banner">
+              <UiTextH6>BANNER</UiTextH6>
+            </div>
+          </nav>
         </div>
       </UiContainer>
+    </div>
+
+    <div class="fixed-header-menu" v-if="!isMobileMenuOpen && activeLink">
+      <div ref="menuRef" class="menu-content">
+        <transition name="fade" mode="out-in">
+          <TradingMenu
+            v-if="activeLink === t('landing.header.nav.trading')"
+            :activeLink="activeLink"
+          />
+          <PartnershipMenu
+            v-else-if="activeLink === t('landing.header.nav.partnership')"
+            :activeLink="activeLink"
+          />
+          <CompanyMenu
+            v-else-if="activeLink === t('landing.header.nav.company')"
+            :activeLink="activeLink"
+          />
+        </transition>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
+import { useUiStore } from "~/stores/uiStore";
+import { useThemeStore } from "~/stores/themeStore.js";
 import useTrackScroll from "./composables/trackScroll";
-import UiIconGlobe from "~/components/ui/UiIconGlobe.vue";
+import { isSlideWithoutPicture } from "./composables/trackScroll";
+
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconMoon from "~/components/ui/UiIconMoon.vue";
 import UiIconSun from "~/components/ui/UiIconSun.vue";
@@ -73,33 +177,113 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import HeaderLink from "./components/HeaderLink.vue";
 import HeaderMobileLink from "./components/HeaderMobileLink.vue";
 import UiContainer from "~/components/ui/UiContainer.vue";
+import UiTextH6 from "~/components/ui/UiTextH6.vue";
+import TradingMenu from "./components/TradingMenu.vue";
+import PartnershipMenu from "./components/PartnershipMenu.vue";
+import CompanyMenu from "./components/CompanyMenu.vue";
+
+import LanguageSwitcher from "./components/LanguageSwitcher.vue";
+
+const themeStore = useThemeStore();
+const uiStore = useUiStore();
 
 const { isBlurred } = useTrackScroll();
-const isMenuOpen = ref(false);
 
-const linksList = [
-  {
-    name: "Trading",
-    path: "#",
-  },
-  {
-    name: "Partnership",
-    path: "#",
-  },
-  {
-    name: "Company",
-    path: "#",
-  },
-];
+const { t } = useI18n();
 
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value;
-  if (isMenuOpen.value) {
-    document.body.style.overflow = "hidden";
+const activeLink = ref("");
+const headerItems = ref();
+const isMobileMenuOpen = ref(false);
+const menuRef = ref(null);
+const windowWidth = ref(0);
+
+const linksList = computed(() => {
+  return [
+    { name: t("landing.header.nav.trading"), path: "#" },
+    { name: t("landing.header.nav.partnership"), path: "#" },
+    { name: t("landing.header.nav.company"), path: "#" },
+  ];
+});
+
+const isThemeLight = computed(() => {
+  return (
+    (uiStore.headerScrolled && themeStore.currentTheme !== "dark") ||
+    (themeStore.currentTheme !== "dark" && isMobileMenuOpen.value)
+  );
+});
+
+const isWithPicture = computed(() => {
+  if (themeStore.currentTheme == "dark") {
+    return false;
   } else {
-    document.body.style.overflow = "";
+    return isSlideWithoutPicture.value;
+  }
+});
+
+const updateWindowWidth = () => {
+  if (process.client) {
+    windowWidth.value = window.innerWidth;
   }
 };
+
+const handleClick = (name) => {
+  if (activeLink.value !== name) {
+    activeLink.value = name;
+    uiStore.showMenu = true;
+  } else {
+    activeLink.value = "";
+    uiStore.showMenu = false;
+  }
+};
+const handleClickOutside = (event) => {
+  const menuEl = menuRef.value;
+
+  if (!menuEl || !activeLink.value) return;
+
+  if (!menuEl.contains(event.target)) {
+    activeLink.value = "";
+    uiStore.showMenu = false;
+  }
+};
+const toggleMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+  uiStore.showMenu = false;
+  activeLink.value = "";
+
+  if (isMobileMenuOpen.value) {
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+  } else {
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
+};
+
+onMounted(() => {
+  updateWindowWidth();
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", updateWindowWidth);
+  }
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  if (typeof window !== "undefined") {
+    window.removeEventListener("resize", updateWindowWidth);
+  }
+  document.removeEventListener("click", handleClickOutside);
+});
+
+watch(windowWidth, (width) => {
+  if (width > 991 && isMobileMenuOpen.value) {
+    isMobileMenuOpen.value = false;
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -115,6 +299,7 @@ const toggleMenu = () => {
 }
 
 .header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -127,12 +312,24 @@ const toggleMenu = () => {
     position: fixed;
     width: 100%;
     z-index: 10000;
+
+    .login {
+      color: white;
+    }
   }
 }
 
 .blurred {
   background: rgba(0, 0, 40, 0.05);
   backdrop-filter: blur(10px);
+}
+
+.is-theme-light {
+  color: #151515 !important;
+
+  span {
+    background: #151515 !important;
+  }
 }
 
 .nav {
@@ -145,6 +342,10 @@ const toggleMenu = () => {
 }
 
 .burger-menu {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
   display: none;
   width: 30px;
   height: 25px;
@@ -168,12 +369,30 @@ const toggleMenu = () => {
   span:nth-child(1) {
     transform: translateY(12px) rotate(45deg);
   }
+
   span:nth-child(2) {
     opacity: 0;
   }
+
   span:nth-child(3) {
     transform: translateY(-10px) rotate(-45deg);
   }
+}
+
+.fixed-header-menu {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9998;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100vh;
+}
+
+.menu-content {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .mobile-nav {
@@ -182,24 +401,49 @@ const toggleMenu = () => {
   left: 0;
   width: 100%;
   height: calc(100vh - 80px);
-  transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
-  padding: 40px;
-  z-index: 10001;
+  padding: 10px;
+  z-index: 10;
+  overflow-y: auto;
   transform: translateY(-30px) scale(0.98);
   transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 
   nav {
+    padding: 20px;
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 40px;
+
+    .mobile-acions {
+      width: 100%;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .mobile-banner {
+      padding: 54px 154px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 15px;
+      background: var(--ui-background-card);
+
+      h6 {
+        text-align: center;
+        color: var(--ui-text-main);
+      }
+    }
   }
 }
 
-.mobile-nav.nav--open {
+.nav--open {
   opacity: 1;
   transform: translateY(0) scale(1);
+  background: var(--ui-background);
 }
+
 .actions {
   position: relative;
   display: flex;
@@ -210,7 +454,26 @@ const toggleMenu = () => {
 
   .icon {
     cursor: pointer;
+    margin-right: 16px;
   }
+
+  &-icons {
+    display: flex;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.svg-invert {
+  filter: invert(1);
 }
 
 @media (max-width: 991px) {
@@ -221,26 +484,50 @@ const toggleMenu = () => {
   .burger-menu {
     display: flex;
   }
+
+  .login {
+    display: none;
+    padding: 0;
+  }
+
+  .actions-wrapper {
+    padding-right: 50px;
+  }
+
+  .actions-icons {
+    display: none;
+  }
+
+  .is-menu-open {
+    padding-left: 15px;
+    border-left: 1px solid var(--ui-gray);
+
+    .actions {
+      &-icons {
+        display: flex;
+      }
+    }
+  }
+
+  .header-is-open-menu {
+    justify-content: unset !important;
+    transition: all 0.2s ease;
+  }
 }
 
 @media (max-width: 575px) {
   .logo {
+    margin-right: 15px;
+    padding-left: 25px;
+
     svg {
       width: auto;
-      height: 35px;
+      height: 40px;
     }
-  }
-
-  .login {
-    padding: 0;
   }
 
   .register {
     padding: 15px;
-  }
-
-  .actions {
-    margin-right: 0;
   }
 }
 </style>

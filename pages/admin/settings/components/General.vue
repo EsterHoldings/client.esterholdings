@@ -2,15 +2,26 @@
   <div class="cards-container">
     <div v-for="(row, index) in tableData" :key="index" class="card">
       <div class="card__logo">
-        <img v-if="row.previewUrl" :src="row.previewUrl" alt="Logo" class="preview-image" />
+        <img
+          v-if="row.previewUrl"
+          :src="row.previewUrl"
+          alt="Logo"
+          class="preview-image"
+        />
         <UiIconLogo v-else class="logo-placeholder" />
       </div>
 
       <div class="card__upload">
         <label class="upload-button">
           <UiIconLoad />
-          <UiTextH4> Upload </UiTextH4>
-          <input type="file" accept="image/*" @change="handleFileChange($event, index)" />
+          <UiTextH4>
+            {{ t("admin.settings.tables.general.button") }}
+          </UiTextH4>
+          <input
+            type="file"
+            accept="image/*"
+            @change="handleFileChange($event, index)"
+          />
         </label>
       </div>
 
@@ -20,13 +31,15 @@
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
 import { ref } from "vue";
-import axios from "axios"; // Используем axios для запросов
+import axios from "axios";
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconLoad from "~/components/ui/UiIconLoad.vue";
 import UiIconTrash from "~/components/ui/UiIconTrash.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 
+const { t } = useI18n();
 const tableData = ref([{ id: 1, previewUrl: null, file: null }]);
 
 const appCore = useAppCore();
@@ -46,9 +59,9 @@ const handleFileChange = async (event, index) => {
       fileName: selectedFile.name,
       fileType: selectedFile.type,
     });
-    console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
+    console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     console.log(response.data);
-    console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-');
+    console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
     const presignedUrl = response.data.url;
     const s3FileUrl = response.data.key;
 
@@ -59,7 +72,7 @@ const handleFileChange = async (event, index) => {
     });
 
     const responseTempViewLink = await appCore.s3.getTempViewUrl({
-      fileKey: s3FileUrl
+      fileKey: s3FileUrl,
     });
 
     tableData.value[index].file = selectedFile;
@@ -93,11 +106,11 @@ const removeFile = (index) => {
   gap: 15px;
   width: 100%;
   border: 1px solid var(--color-stroke-ui-dark);
-  transition: .5s;
+  transition: 0.5s;
 
   &:hover {
     box-shadow: 0 16px 50px rgb(247 87 9 / 10%);
-    transition: .3s;
+    transition: 0.3s;
   }
 }
 

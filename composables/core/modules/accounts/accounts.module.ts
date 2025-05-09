@@ -14,7 +14,7 @@ export class AccountsModule implements BasicModuleInterface {
     this.accountsService = new AccountsService();
   }
 
-  async get(params: {}):Promise<any> {
+  async get(params: {} = {}):Promise<any> {
     return await this.accountsService.get(params);
   }
   async getById(id:any) {

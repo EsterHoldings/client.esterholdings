@@ -1,8 +1,10 @@
 <template>
   <div class="panel--default">
-    <div v-if="title.length > 0" class="panel--default__title">
+    <div v-if="title.length > 0"
+         class="panel--default__title"
+    >
       <div class="panel--default__title-content">
-        {{ props.title }}
+        <span>{{ props.title }}</span>
         <div>
           <slot name="title-extra"></slot>
         </div>
@@ -19,6 +21,10 @@ const props = defineProps({
   title: {
     type: String,
     default: ""
+  },
+  state: {
+    type: String,
+    default: ""
   }
 });
 </script>
@@ -26,8 +32,10 @@ const props = defineProps({
 <style lang="scss" scoped>
 .panel {
   &--default {
+    background-color: var(--ui-background-panel);
     border: 1px solid var(--color-stroke-ui-dark);
-    border-radius: 5px;
+    //border-radius: var(--ui-border--raduis);
+    border-radius: 10px;
 
     &__title {
       font-weight: 600;

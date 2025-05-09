@@ -1,40 +1,58 @@
 <template>
   <div class="roles-panel__edit">
-    <div
-        class="roles-panel__edit__top"
-        v-if="props.title"
-    >
+    <div class="roles-panel__edit__top" v-if="props.title">
       <UiTextH2>{{ props.title }}</UiTextH2>
     </div>
 
     <div
-        class="roles-panel__edit__content"
-        :class="{'without-top': !props.title}"
+      class="roles-panel__edit__content"
+      :class="{ 'without-top': !props.title }"
     >
       <div class="roles-panel__edit__content__fields">
-
-        <UiFormControl label="Name" :errors="validatorRoleForm?.errorsFormData?.name?.errors">
+        <UiFormControl
+          :label="t('admin.clients.components.clients-panel-edit.labels.name')"
+          :errors="validatorRoleForm?.errorsFormData?.name?.errors"
+        >
           <UiInput
-              placeholder="Enter Role name"
-              :value="formData.name"
-              :isDirty="validatorRoleForm?.errorsFormData?.name?.isDirty"
-              :isInvalid="validatorRoleForm?.errorsFormData?.name?.errors?.length > 0"
-              @blur="validatorRoleForm?.doValidateField('name', $event.target.value)"
-              @input="validatorRoleForm?.doValidateField('name', $event.target.value)"
+            :placeholder="
+              t('admin.clients.components.clients-panel-edit.placeholders.name')
+            "
+            :value="formData.name"
+            :isDirty="validatorRoleForm?.errorsFormData?.name?.isDirty"
+            :isInvalid="
+              validatorRoleForm?.errorsFormData?.name?.errors?.length > 0
+            "
+            @blur="
+              validatorRoleForm?.doValidateField('name', $event.target.value)
+            "
+            @input="
+              validatorRoleForm?.doValidateField('name', $event.target.value)
+            "
           />
         </UiFormControl>
 
-        <UiFormControl label="Permissions" :errors="validatorRoleForm?.errorsFormData?.permissions?.errors">
+        <UiFormControl
+          :label="
+            t('admin.clients.components.clients-panel-edit.labels.permissions')
+          "
+          :errors="validatorRoleForm?.errorsFormData?.permissions?.errors"
+        >
           <UiMultiSelect
-              placeholder="Choose permissions"
-              :data="permissionsData"
-              :selected="formData.permissions"
-              :isDirty="validatorRoleForm?.errorsFormData?.permissions?.isDirty"
-              :isInvalid="validatorRoleForm?.errorsFormData?.permissions?.errors?.length > 0"
-              @update="handleUpdateMultiSelectPermissions"
-              @remove="handleRemoveMultiSelectPermission"
-              @open="handleOpenMultiSelectPermissions"
-              @close="handleCloseMultiSelectPermissions"
+            :placeholder="
+              t(
+                'admin.clients.components.clients-panel-edit.placeholders.permissions'
+              )
+            "
+            :data="permissionsData"
+            :selected="formData.permissions"
+            :isDirty="validatorRoleForm?.errorsFormData?.permissions?.isDirty"
+            :isInvalid="
+              validatorRoleForm?.errorsFormData?.permissions?.errors?.length > 0
+            "
+            @update="handleUpdateMultiSelectPermissions"
+            @remove="handleRemoveMultiSelectPermission"
+            @open="handleOpenMultiSelectPermissions"
+            @close="handleCloseMultiSelectPermissions"
           />
         </UiFormControl>
       </div>
@@ -43,25 +61,30 @@
 
   <div class="roles-panel__edit__bottom">
     <UiButtonDefault
-        class="roles-panel__edit__bottom__save-btn"
-        state="secondary"
-        @click="handleSubmitForm"
-    >Create new & Save</UiButtonDefault>
+      class="roles-panel__edit__bottom__save-btn"
+      state="secondary"
+      @click="handleSubmitForm"
+      >{{
+        t("admin.clients.components.clients-panel-edit.submit")
+      }}</UiButtonDefault
+    >
   </div>
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
 import { reactive, inject, onMounted } from "vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiMultiSelect from "~/components/ui/UiMultiSelect.vue";
 import UiTextH2 from "~/components/ui/UiTextH2.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import {validatorRoleForm} from "~/pages/admin/access/composables/RolesPanelEdit/validation";
-import {formData} from "~/pages/admin/access/composables/RolesPanelEdit";
+import { validatorRoleForm } from "~/pages/admin/access/composables/RolesPanelEdit/validation";
+import { formData } from "~/pages/admin/access/composables/RolesPanelEdit";
 import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
 
+const { t } = useI18n();
 const props = defineProps({
   title: {
     type: String,
@@ -70,8 +93,8 @@ const props = defineProps({
   id: {
     type: String,
     required: true,
-  }
-})
+  },
+});
 
 let permissionsData = reactive([]);
 
@@ -84,17 +107,16 @@ const getRole = async () => {
   const selectedPermissions = response.data.data.permissions;
 
   formData.name = response.data.data.name;
-  formData.permissions = selectedPermissions.map(permission => permission.id);
-}
+  formData.permissions = selectedPermissions.map((permission) => permission.id);
+};
 
 const getPermissions = async () => {
   const response = await app.permissions.get();
   permissionsData = response.data.data.data;
 };
 
-
 const validateThisField = () => {
-  validatorRoleForm?.doValidateField('permissions', formData.permissions);
+  validatorRoleForm?.doValidateField("permissions", formData.permissions);
 };
 
 const handleUpdateMultiSelectPermissions = (selectedId: string) => {
@@ -116,24 +138,23 @@ const handleRemoveMultiSelectPermission = (id: string) => {
 const handleOpenMultiSelectPermissions = () => {
   if (validatorRoleForm?.errorsFormData?.permissions)
     validatorRoleForm.errorsFormData.permissions.isDirty = true;
-}
+};
 const handleCloseMultiSelectPermissions = () => validateThisField();
 
 const handleSubmitForm = async () => {
-
   try {
     await app.roles.patch(props.id, formData);
     closeModal();
     useEventBus.emit("loadDataForRoles");
   } catch (errorResponse) {
-    console.log('handleSubmitForm -> errorResponse', errorResponse);
+    console.log("handleSubmitForm -> errorResponse", errorResponse);
   }
-}
+};
 
 onMounted(async () => {
   await getPermissions();
   await getRole();
-})
+});
 </script>
 
 <style lang="scss" scoped>

@@ -1,29 +1,35 @@
 <template>
   <section class="advantages_section">
     <div class="advantages_container">
-      <div class="advantage_item">
-        <UiTextH3 class="bold">10+</UiTextH3>
-        <UiTextH6 class="advantage_item_subtitle"
-          >Years of experience in field</UiTextH6
-        >
-      </div>
-      <div class="divider"></div>
-      <div class="advantage_item">
-        <UiTextH3 class="bold">1 160 000+</UiTextH3>
-        <UiTextH6 class="advantage_item_subtitle">Clients</UiTextH6>
-      </div>
-      <div class="divider"></div>
-      <div class="advantage_item">
-        <UiTextH3 class="bold">5* Rated</UiTextH3>
-        <UiTextH6 class="advantage_item_subtitle">Customer service</UiTextH6>
+      <div
+        class="advantage_wrapper"
+        v-for="(item, index) in advantages"
+        :key="index"
+      >
+        <div class="advantage_item">
+          <UiTextH3 class="bold">
+            {{ t(`landing.sections.advantages[${index}].value`) }}
+          </UiTextH3>
+
+          <UiTextH6 class="advantage_item_subtitle">
+            {{ t(`landing.sections.advantages[${index}].label`) }}
+          </UiTextH6>
+        </div>
+
+        <div class="divider" v-if="index !== advantages.length - 1"></div>
       </div>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH6 from "~/components/ui/UiTextH6.vue";
+
+const { tm, t } = useI18n();
+const advantages = tm("landing.sections.advantages");
 </script>
 
 <style lang="scss" scoped>
@@ -43,13 +49,19 @@ import UiTextH6 from "~/components/ui/UiTextH6.vue";
   width: 100%;
 }
 
+.advantage_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 100px;
+}
+
 .advantage_item {
   text-align: center;
-  color: white;
+  color: var(--ui-text-main);
   flex: 1;
 
   &_subtitle {
-    color: var(--color-ui-grey);
+    color: var(--ui-text-secondary);
   }
 }
 
@@ -66,7 +78,7 @@ import UiTextH6 from "~/components/ui/UiTextH6.vue";
 .divider {
   width: 1px;
   height: 50px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background: var(--color-stroke-ui);
 }
 
 @media (max-width: 991px) {
@@ -76,34 +88,24 @@ import UiTextH6 from "~/components/ui/UiTextH6.vue";
     padding: 20px;
   }
 
-  .advantage_item {
-    h3 {
-      font-size: 25px;
-    }
+  .advantages_container {
+    flex-direction: column;
+  }
+
+  .advantage_wrapper {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .divider {
+    transform: rotate(90deg);
   }
 }
 
 @media (max-width: 767px) {
   .advantage_item {
     h3 {
-      font-size: 20px;
-    }
-  }
-}
-
-@media (max-width: 576px) {
-  .advantages_section {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-
-  .advantage_item {
-    h3 {
-      font-size: 16px;
-    }
-
-    h6 {
-      font-size: 13px;
+      font-size: 26px;
     }
   }
 }

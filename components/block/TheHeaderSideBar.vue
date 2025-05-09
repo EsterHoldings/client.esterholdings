@@ -35,7 +35,9 @@ import useAppCore from "~/composables/useAppCore";
 import {ref, onMounted, computed} from "vue";
 import {useRoute} from "vue-router";
 import {navigateTo} from "nuxt/app";
-import {useAdminAuthStore} from "~/stores/adminAuthStore";
+import {useAuthStore} from "~/stores/authStore";
+
+import {ROUTE_AUTH_LOGIN} from "~/constants/routes";
 
 import TheHeaderSideBarMenu from "~/components/block/TheHeaderSideBarMenu.vue";
 import UiIconArrowsLeft from "~/components/ui/UiIconArrowsLeft.vue";
@@ -43,15 +45,10 @@ import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconLogout from "~/components/ui/UiIconLogout.vue";
 import UiImageCircle from "~/components/ui/UiImageCircle.vue";
 
-
-import {ROUTE_ADMIN_AUTH_LOGIN} from "~/constants/routes";
+const appCore = useAppCore();
+const authStore = useAuthStore();
 
 const isOpen = ref(false);
-
-const appCore = useAppCore();
-const route = useRoute();
-const currentRouteName = computed(() => route.name);
-const adminAuthStore = useAdminAuthStore();
 
 onMounted(() => {
   const storedState = localStorage.getItem("sidebarIsOpen");
@@ -66,11 +63,10 @@ const handleClickOpenCloseSideBar = () => {
 };
 
 const handleClickLogoutButton = async () => {
-  // TODO :: SEND REQUEST FOR LOGOUT
-  await appCore.adminAuth.doLogout();
-  adminAuthStore.setAccessToken('');
-  adminAuthStore.setRefreshToken('');
-  navigateTo(ROUTE_ADMIN_AUTH_LOGIN)
+  await appCore.auth.doLogout();
+  authStore.setAccessToken('');
+  authStore.setRefreshToken('');
+  navigateTo(ROUTE_AUTH_LOGIN)
 }
 
 </script>
@@ -81,7 +77,7 @@ const handleClickLogoutButton = async () => {
 }
 
 .header {
-  background-color: var(--color-ui-background);
+  background-color: var(--ui-background);
   height: 100vh;
   border-right: 1px solid var(--color-stroke-ui-dark);
   min-width: 60px;

@@ -1,6 +1,6 @@
 <template>
   <div class="registration-form">
-    <UiTextH2 class="registration-form__title">REGISTRATION</UiTextH2>
+    <UiTextH3 class="registration-form__title">Registration</UiTextH3>
 
     <UiFormControl
       class="registration-form__field"
@@ -93,6 +93,7 @@
     </UiFormControl>
 
     <UiButtonPrimary
+      class="registration-form__btn"
       type="submit"
       @click="validateRegistrationForm(doSendForm)"
       :isLoading="isLoading"
@@ -100,7 +101,7 @@
       REGISTRATION
     </UiButtonPrimary>
 
-    <div>
+    <div class="registration-form__links">
       <br>
       <nuxt-link to="/auth/login">Login</nuxt-link>
     </div>
@@ -115,6 +116,11 @@ import {
 } from "../composables/validation";
 import { validatorLoginForm } from "~/pages/auth/login/composables/validation";
 import { useAppCore } from "~/composables/useAppCore";
+import UiTextH2 from "~/components/ui/UiTextH2.vue";
+import UiFormControl from "~/components/ui/UiFormControl.vue";
+import UiInput from "~/components/ui/UiInput.vue";
+import UiButtonPrimary from "~/components/ui/UiButtonPrimary.vue";
+import UiTextH3 from "~/components/ui/UiTextH3.vue";
 // import { serverSideErrorsHandler } from "@/utils/validation/server-side-errors-handler.helper";
 
 const props = defineProps({ formData: { type: Object, required: true } });
@@ -142,20 +148,38 @@ onUnmounted(() => resetValidationRegistrationForm());
 
 <style lang="scss" scoped>
 .registration-form {
+  color: #c4c4c4;
   display: flex;
   justify-content: center;
   flex-direction: column;
 
+  &__link {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__links {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
   &__title {
     text-align: center;
+    margin-bottom: 30px;
   }
 
   &__field {
     margin-bottom: 20px;
   }
 
-  &__submit {
-    margin: auto;
+  &__btn {
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 }
 </style>

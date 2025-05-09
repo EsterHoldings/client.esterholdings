@@ -1,11 +1,22 @@
 <template>
-  <section class="trading-platform">
+  <section
+    class="trading-platform"
+    :class="[
+      'trading-platform',
+      { 'light-theme': themeStore.currentTheme === 'light' },
+    ]"
+  >
     <div class="trading-platform_overlay">
+      <UiTextH3 class="trading-platform_title">
+        {{ t("landing.sections.platform__title") }}
+      </UiTextH3>
+
       <div class="blur-circle"></div>
       <div class="platform-title">
         <UiTextTrading
-          title="Trading Platform"
-          subTitle="Level up with our products"
+          :title="t('landing.sections.platform__features[0].title')"
+          :subTitle="t('landing.sections.platform__features[0].text')"
+          color="primary"
         />
       </div>
 
@@ -15,8 +26,8 @@
 
           <UiTextTrading
             class="device device-laptop_position"
-            title="Ester MetaTrader 4"
-            subTitle="The popular, classic solution"
+            :title="t('landing.sections.platform__features[1].title')"
+            :subTitle="t('landing.sections.platform__features[1].text')"
             hasBorder
           />
         </div>
@@ -26,8 +37,8 @@
 
           <UiTextTrading
             class="device device-main_position"
-            title="Ester MetaTrader 4"
-            subTitle="The popular, classic solution"
+            :title="t('landing.sections.platform__features[2].title')"
+            :subTitle="t('landing.sections.platform__features[2].text')"
             hasBorder
           />
         </div>
@@ -41,52 +52,74 @@
 
           <UiTextTrading
             class="device device-ipad_position"
-            title="Ester MetaTrader 4"
-            subTitle="The popular, classic solution"
+            :title="t('landing.sections.platform__features[3].title')"
+            :subTitle="t('landing.sections.platform__features[3].text')"
+            color="warning"
           />
         </div>
       </div>
 
       <div class="background-glow"></div>
+
+      <div class="floating__wrapper">
+        <UiTextTrading
+          class="floating__item"
+          v-for="(item, index) in platformFeatures"
+          :key="index"
+          :title="t(`landing.sections.platform__features[${index}].title`)"
+          :subTitle="t(`landing.sections.platform__features[${index}].text`)"
+          hasBorder
+        />
+      </div>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import UiImage from "~/components/ui/UiImage.vue";
+import { useThemeStore } from "~/stores/themeStore";
+import { useI18n } from "vue-i18n";
+import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextTrading from "~/components/ui/UiTextTrading.vue";
+
+const themeStore = useThemeStore();
+const { t } = useI18n();
+
+const platformFeatures = [0, 1, 2, 3];
 </script>
 
 <style lang="scss" scoped>
 .trading-platform {
   position: relative;
-  text-align: center;
   padding: 100px 20px;
-  height: 635px;
-  background-image: url("/static/trading-platform-bg.webp");
-  background-position: left;
-  background-repeat: no-repeat;
-
-  color: white;
+  min-height: 900px;
+  background-color: var(--ui-background);
+  color: var(--ui-text-main);
+  transition: var(--default-transition);
   overflow: hidden;
-
+  background-image: url("/static/trading-platform-bg.webp");
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size: cover;
   z-index: 1;
+  box-shadow: inset 0 -200px 200px -60px var(--ui-background),
+    inset 0 200px 200px -60px var(--ui-background);
 
-  &::before {
+  &::after {
     content: "";
+    overflow: hidden;
     position: absolute;
+    background-color: var(--ui-background);
+    transition: var(--default-transition);
     inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 40, 1) 0%,
-      rgba(0, 0, 40, 0.95) 20%,
-      rgba(0, 0, 40, 0.8) 50%,
-      rgba(0, 0, 40, 0.95) 80%,
-      rgba(0, 0, 40, 1) 100%
-    );
-
+    opacity: 0.5;
     z-index: 1;
+  }
+
+  &_title {
+    color: var(--ui-text-main);
+    margin-bottom: 90px;
+    white-space: pre-line;
+    text-align: center;
   }
 
   &_overlay {
@@ -94,14 +127,25 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
     inset: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 30, -0.6);
-    backdrop-filter: blur(15px);
-    z-index: 2;
+    z-index: 3;
   }
 
   &-title {
     display: flex;
     align-items: flex-start;
+  }
+}
+
+.light-theme {
+  transition: var(--default-transition);
+  background-image: none;
+
+  .trading-platform::after {
+    opacity: 0;
+  }
+
+  .blur-circle {
+    background: transparent;
   }
 }
 
@@ -157,6 +201,10 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
   }
 }
 
+.floating__wrapper {
+  display: none;
+}
+
 .platform-title {
   display: flex;
   justify-content: center;
@@ -168,13 +216,14 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
   width: 446px;
   height: 446px;
   background: rgb(247, 87, 9);
-  filter: blur(200px);
+  filter: blur(93px);
   overflow: hidden;
   border-radius: 100%;
-  left: 100%;
-  top: 0;
+  left: 95%;
+  top: 10%;
   z-index: 100000;
   animation: pulse 5s infinite ease-in-out;
+  transition: var(--default-transition);
 }
 
 @keyframes pulse {
@@ -201,12 +250,17 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
     &_position {
       left: 65% !important;
     }
+
     img {
       width: 75%;
     }
   }
 
   .device-laptop {
+    &_position {
+      right: 40% !important;
+    }
+
     img {
       width: 75%;
     }
@@ -222,6 +276,7 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
 
   .device-phone {
     left: 74% !important;
+
     img {
       width: 75%;
     }
@@ -229,57 +284,92 @@ import UiTextTrading from "~/components/ui/UiTextTrading.vue";
 }
 
 @media (max-width: 991px) {
+  .trading-platform {
+    min-height: 1100px;
+  }
+  .trading-wrapper {
+    display: none;
+  }
   .devices {
     max-width: 767px;
-  }
+    display: flex;
+    flex-direction: column;
 
-  .platform-title {
-    margin-right: 500px;
-  }
+    .device-main_position,
+    .device-laptop_position,
+    .device-ipad_position,
+    .device-phone_position {
+      display: none;
+    }
 
-  .device-laptop {
-    right: 40% !important;
-  }
-}
+    .device-main {
+      img {
+        width: 90%;
+      }
+    }
 
-@media (max-width: 767px) {
-  .devices {
-    max-width: 565px;
+    .device-laptop {
+      right: 35%;
+      top: 55%;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .device-ipad {
+      top: 60%;
+      left: 50% !important;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .device-phone {
+      img {
+        width: 100%;
+      }
+    }
   }
 
   .blur-circle {
     display: none;
   }
 
-  .platform-title {
-    margin: 0;
-    margin-bottom: 50px;
-    text-align: center;
-  }
+  .floating__wrapper {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 
-  .device-main {
-    &_position {
-      display: none;
-    }
-    img {
-      width: 100%;
+    .floating__item {
+      display: flex;
     }
   }
+}
 
-  .device-laptop {
-    display: none;
+@media (max-width: 767px) {
+  .trading-platform {
+    min-height: calc(900px + 4 * 50px);
   }
-
-  .device-ipad {
-    img {
-      width: 100%;
-    }
+  .trading-platform_title {
+    font-size: 26px;
+    white-space: normal;
   }
 
   .device-phone {
-    img {
-      width: 100%;
-    }
+    top: 68% !important;
+    left: 80% !important;
+  }
+  .floating__wrapper {
+    margin-top: 100px;
+  }
+}
+
+@media (max-width: 500px) {
+  .trading-platform {
+    min-height: 900px;
   }
 }
 </style>

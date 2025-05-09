@@ -20,16 +20,16 @@ export class UsersModule implements BasicModuleInterface {
         return await this.usersService.post(data);
     }
 
-    async put(id:any, data:object): Promise<any> {
-        return await this.usersService.put(id, data);
+    async put(data:object): Promise<any> {
+        return await this.usersService.put(data);
     }
 
-    async patch(id:any, data:object): Promise<any> {
-        return await this.usersService.patch(id, data);
+    async patch(data:object): Promise<any> {
+        return await this.usersService.patch(data);
     }
 
-    async delete(id:any): Promise<any> {
-        return await this.usersService.delete(id);
+    async delete(): Promise<any> {
+        return await this.usersService.delete();
     }
 }
 

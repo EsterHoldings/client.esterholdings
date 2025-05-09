@@ -1,8 +1,10 @@
 <template>
   <div class="clients-page">
     <div class="clients-page__title">
-      <UiTextH1>Accounts</UiTextH1>
-      <UiTextParagraph>( List of accounts )</UiTextParagraph>
+      <UiTextH1>{{ $t("admin.accounts.index.title") }}</UiTextH1>
+      <UiTextParagraph>{{
+        $t("admin.accounts.index.subtitle")
+      }}</UiTextParagraph>
     </div>
     <div class="accounts-page__content">
       <AccountsPanel />
@@ -11,10 +13,13 @@
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
 import UiTextH1 from "~/components/ui/UiTextH1.vue";
 import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 
 import AccountsPanel from "~/pages/admin/accounts/components/AccountsPanel.vue";
+
+const { t } = useI18n({ useScope: "global" });
 </script>
 
 <style lang="scss" scoped>

@@ -1,0 +1,820 @@
+{
+  "ui-components": {
+    "modals": {
+      "cookie-modal": {
+        "text": "This site uses cookies to enhance user experience. By continuing to use the site, you agree to our use of cookies.",
+        "btn-successful": "Accept",
+        "btn-negative": "Decline"
+      }
+    },
+
+    "lines": {
+      "running-line-btn": "Trade"
+    },
+    "tables": {
+      "table-default": "Nothing to show..."
+    },
+    "ui-select": "No selected..."
+  },
+  "landing": {
+    "header": {
+      "nav": {
+        "trading": "Trading",
+        "partnership": "Partnership",
+        "company": "Company"
+      },
+      "auth": {
+        "login": "Log In",
+        "register": "Register"
+      },
+      "megaMenu": {
+        "Trading": [
+          {
+            "section": "Account overview",
+            "items": ["Standard", "Pro", "Islamic", "Demo"]
+          },
+          {
+            "section": "Market Instruments",
+            "items": [
+              "Forex",
+              "Metals",
+              "Stock CFDs",
+              "Crypto CFDs",
+              "Commodities",
+              "Indices",
+              "ETFs"
+            ]
+          },
+          {
+            "section": "Platform",
+            "items": ["MT4 Desktop", "MT 4 Mobile"]
+          },
+          {
+            "section": "Trading conditions",
+            "items": ["Account replenishment", "Withdrawal of funds"]
+          },
+          {
+            "section": "Trader's HUB",
+            "items": ["Trader's blog", "Economic calendar", "Market news"]
+          },
+          {
+            "section": "TANDEM trading",
+            "items": ["For trader", "For investor"]
+          }
+        ],
+        "Partnership": {},
+        "Company": {}
+      }
+    },
+
+    "slider": {
+      "general-slide": {
+        "title": {
+          "before": "Trade",
+          "highlight": "Smarter",
+          "after": "Trade Faster!"
+        },
+        "text": "Access global markets, including Forex, Stocks, and CFDs, with \nfast execution, low spreads, and real-time market analysis.",
+        "btn": "Trade Now"
+      },
+
+      "top-trader-slide": {
+        "title": {
+          "before": "Copy Strategies",
+          "highlight": "Top Traders",
+          "after": ""
+        },
+        "text": "Gain access to real deals from professionals and improve your trading.",
+        "btn": "Start"
+      },
+
+      "ten_years_slide": {
+        "title": {
+          "highlight": "Years",
+          "after": "in Trading"
+        },
+        "text": "Experience tested by time. Reliability confirmed by results.",
+        "btn": "Join in Us"
+      }
+    },
+
+    "sections": {
+      "advantages": [
+        {
+          "value": "10+",
+          "label": "Years of experience in field"
+        },
+        {
+          "value": "1,160,000+",
+          "label": "Clients"
+        },
+        {
+          "value": "5* Rated",
+          "label": "Customer service"
+        }
+      ],
+
+      "platform__title": "Legendary platform for successful\nForex and CFD trading",
+
+      "platform__features": [
+        {
+          "title": "Trading Platform",
+          "text": "Level up with our products"
+        },
+        {
+          "title": "Mobile trading",
+          "text": "Full control over transactions at any time."
+        },
+        {
+          "title": "Ester MetaTrader 4",
+          "text": "The popular, classic solution"
+        },
+        {
+          "title": "High speed and reliability",
+          "text": "Works even on weak PCs."
+        }
+      ],
+
+      "feature__title": "Why Choose Us?",
+      "features__items": [
+        {
+          "title": "Instruments",
+          "text": "Forex/Spot\nShares/Indices",
+          "icon": "/static/F-Wrench & Screwdriver.png"
+        },
+        {
+          "title": "Liquidity:\n200+ Top-Level",
+          "text": "Financial institutions",
+          "icon": "/static/F-Building Library.png"
+        },
+        {
+          "title": "Floating Spread",
+          "text": "from 0 pips",
+          "icon": "/static/F-Money.png"
+        },
+        {
+          "title": "Limit and Stop Levels",
+          "text": "= 0",
+          "icon": "/static/LIMIT AND STOP LEVELS.png"
+        },
+        {
+          "title": "Fastest Server Technologies",
+          "text": "with high order processing speeds",
+          "icon": "/static/F-Rocket.png"
+        },
+        {
+          "title": "Bank's Security",
+          "text": "of trading accounts",
+          "icon": "/static/L-Shield Done.png"
+        }
+      ],
+
+      "account_types__categories": [
+        { "id": "Standard", "label": "Standard" },
+        { "id": "Pro", "label": "Pro" },
+        { "id": "Tandem", "label": "Tandem" },
+        { "id": "Islamic", "label": "Islamic" }
+      ],
+
+      "accounts__title": "Explore Our Trading Account Options",
+      "accounts__btn": "Open Account",
+      "accounts__options": [
+        {
+          "id": "Standard",
+          "title": "Standard",
+          "label": "account",
+          "description": "Test trading strategies risk-free."
+        },
+        {
+          "id": "Pro",
+          "title": "Pro",
+          "label": "account",
+          "description": "Test trading strategies risk-free."
+        },
+        {
+          "id": "Islamic",
+          "title": "Islamic",
+          "label": "account",
+          "description": "Test trading strategies risk-free."
+        },
+        {
+          "id": "Tandem",
+          "title": "Tandem",
+          "label": "account",
+          "description": "Test trading strategies risk-free."
+        }
+      ],
+
+      "wide_range__title": "Wide Range of Products",
+      "wide_range__categories": [
+        { "id": "forex", "label": "Forex" },
+        { "id": "metals", "label": "Metals" },
+        { "id": "cryptocurrency CDs", "label": "Cryptocurrency CDs" },
+        { "id": "indices", "label": "Indices" },
+        { "id": "shares", "label": "Shares" },
+        { "id": "energy", "label": "Energy" },
+        { "id": "ETFS", "label": "ETFS" }
+      ],
+      "wide_range_tabs": {
+        "Forex": {
+          "title": "Forex",
+          "description": "Trade 70 major, minor & exotic currency pairs\n with competitive trading conditions.",
+          "btn": "Trade Forex"
+        },
+
+        "Metals": {
+          "title": "Metals",
+          "description": "Trade metal commodities such as Gold,\n Silver & Platinum.",
+          "btn": "Trade Metals"
+        },
+
+        "CryptocurrencyCDs": {
+          "title": "Cryptocurrency CDs",
+          "description": "Trade Bitcoin CFD, Ether CFD, Doge CFD\n & more crypto CDs & altcoin CFDs ",
+          "btn": "Trade Cryptocurrency CFDs"
+        },
+
+        "Indices": {
+          "title": "Indices",
+          "description": "Trade major and minor Index CDs Spot and\nFutures from around the globe.",
+          "btn": "Trade Indices"
+        },
+
+        "Shares": {
+          "title": "Shares",
+          "description": "Thousands of public companies from the US,\n UK & EU available to trade.",
+          "btn": "Trade Shares"
+        },
+
+        "Energy": {
+          "title": "Energy",
+          "description": "Discover opportunities on UK & US Crude Oil\n and Natural Gas Spot and Future contracts.",
+          "btn": "Trade Energy"
+        },
+
+        "ETFS": {
+          "title": "ETFs",
+          "description": "Access a World of Markets with ETF CFDs-From\n Bonds to Commodities, Real Estate to Volatility.",
+          "btn": "Trade ETFs"
+        }
+      },
+
+      "four_steps_section": {
+        "title": {
+          "before": "Open an account in",
+          "highlight": "4 simple steps"
+        },
+        "button": "Open account",
+        "items": [
+          {
+            "title": "Register",
+            "text": "Choose an account type and complete our fast and secure application form"
+          },
+          {
+            "title": "Verify",
+            "text": "Use our digital onboarding system for fast verification"
+          },
+          {
+            "title": "Fund",
+            "text": "Fund your trading account using a wide range of funding methods"
+          },
+          {
+            "title": "Trade",
+            "text": "Start trading on your live account and access +2,100 instruments"
+          }
+        ]
+      },
+
+      "banner_section": {
+        "title": "Trade the Markets Like a Pro!",
+        "subtitle": "Whether you're a beginner or a pro, our advanced tools and resources help you make informed trading decisions.",
+        "button": "Start trading today!"
+      },
+
+      "helpSection": "Need Help? Visit our",
+      "helpLinkText": "Help Section"
+    },
+
+    "footer": {
+      "description": "The main goal of Ester is to create the best and most transparent conditions for retail and corporate traders.",
+      "trading": {
+        "title": "Trading",
+        "items": [
+          "Account overview",
+          "Markets",
+          "Platform",
+          "Terms of trade",
+          "Tandem trading"
+        ]
+      },
+      "partnership": {
+        "title": "Partnership",
+        "items": ["Register IB/ Partnership", "How IB generate income"]
+      },
+      "company": {
+        "title": "Company",
+        "items": [
+          "About the company",
+          "Documents",
+          "Company news",
+          "Contacts",
+          "Career"
+        ]
+      },
+      "legal": {
+        "regulated": "Ester is the official trading name which is regulated by the Seychelles Financial Services Authority (FSA) and holds a Securities Dealer License No. SD018.",
+        "risk": "Risk Warning: and CFD trading carries a high level of risk and can result in the loss of capital. You should only invest with money you can afford to lose. Trading live instruments cannot be stopped under any circumstances, so it is important that you fully understand the risks involved and seek independent advice if necessary. Please read our risk disclosure and ensure you fully understand it.",
+        "restricted": "Restricted Countries: Raw Trading Ltd does not provide its services to residents of a number of countries, including the United States, Canada, Israel, New Zealand, Iran and North Korea (Democratic People's Republic of Korea), as well as other jurisdictions where such activities are contrary to local law.",
+        "age": "To register an account with Ester, you must be at least 18 years old or have reached the age of majority in accordance with the laws of your country. By creating an account, you confirm that you are registering on your own initiative, without any solicitation or offer from Ester.",
+        "compliance": "Ester does not direct its services or website content to users in countries where their use is prohibited by local laws. If you access this website from a restricted country, you are responsible for compliance with local laws. The Company also does not warrant that the information provided complies with the requirements of all jurisdictions.",
+        "copyrightStart": "© 2025 Ester",
+        "copyrightEnd": "All rights reserved."
+      }
+    }
+  },
+
+  "cabinet": {
+    "menu": {
+      "dashboard": "Dashboard",
+      "payment_details": "Payment details",
+      "accounts": "Accounts",
+      "referral_system": "Referral system",
+      "billing": "Billing",
+      "support": "Support"
+    },
+
+    "dashboard": {
+      "title": "Dashboard",
+      "accountVerification": {
+        "title": "Account Verification",
+        "subtitle": "Verification in progress",
+        "addressFailed": "Address verification failed!",
+        "documentVerified": "Document successfully verified!",
+        "paymentInProgress": "Payment verification in progress!",
+        "profileInProgress": "Profile verification in progress!",
+        "profileButton": "Profile"
+      },
+      "actions": {
+        "newDeposit": "New Deposit",
+        "newWithdrawal": "New Withdrawal",
+        "chartPlaceholder": "Chart will go here"
+      },
+      "mt4": {
+        "title": "MT4 Accounts",
+        "openNewAccount": "Open new account",
+        "table": {
+          "account": "Account",
+          "type": "Type",
+          "balance": "Balance",
+          "status": "Status",
+          "active": "Active",
+          "inactive": "Inactive"
+        }
+      }
+    },
+
+    "billing": {
+      "title": "Billing",
+      "create": "Create new payment",
+      "search": "Search",
+      "columns": {
+        "id": "Id",
+        "paysystem": "Paysystem",
+        "status": "Status",
+        "currency": "Currency",
+        "amount": "Amount",
+        "createdAt": "Created At"
+      },
+      "nothingToShow": "Nothing to show =(",
+      "pagination": {
+        "prev": "Prev",
+        "next": "Next"
+      },
+      "panel-title": "Add new Admin"
+    },
+
+    "payments": {
+      "title": "Payment details",
+      "search": "Search",
+      "create": "Create new payment detail",
+      "columns": {
+        "title": "Title",
+        "paysystem": "Paysystem",
+        "currency": "Currency",
+        "createdAt": "Created At"
+      },
+      "nothingToShow": "Nothing to show =(",
+      "pagination": {
+        "prev": "Prev",
+        "next": "Next"
+      }
+    },
+
+    "profile": {
+      "components": {
+        "tab-change-password": {
+          "labels": {
+            "old_password": "Old password",
+            "new_password": "New password",
+            "new_password_confirmation": "New password confirmation"
+          },
+          "placeholders": {
+            "old_password": "*********",
+            "new_password": "*********",
+            "new_password_confirmation": "*********"
+          },
+          "button": "Save new password",
+          "success": "Password was successfully updated!"
+        },
+
+        "tab-general": {
+          "labels": {
+            "email": "Email",
+            "first_name": "Firstname",
+            "last_name": "Lastname",
+            "mid_name": "Midname",
+            "birthdate": "Birthdate",
+            "phone": "Phone",
+            "country": "Country",
+            "state": "State",
+            "city": "City",
+            "address": "Address",
+            "postal_code": "Postal code"
+          },
+
+          "placeholders": {
+            "email": "example1test.com",
+            "first_name": "John",
+            "last_name": "Doe",
+            "mid_name": "William",
+            "birthdate": "",
+            "phone": "",
+            "country": "Country",
+            "state": "State",
+            "city": "City",
+            "address": "Backer Str. 2b, Apartments 8",
+            "postal_code": "00000"
+          },
+          "button": "Save and send to verification",
+          "success": "User data successfully updated and sent for verification!"
+        },
+
+        "tab-user-documents": {
+          "buttons": {
+            "choose": "Choose file",
+            "upload": "Upload"
+          },
+          "messages": {
+            "upload_success": "Profile photo successfully updated and sent for verification!",
+            "upload_error": "Failed to upload photo",
+            "delete_error": "Failed to delete photo"
+          },
+          "errors": {
+            "type": "Only images are allowed",
+            "size": "Max size is 2MB"
+          }
+        },
+
+        "tab-user-photo": {
+          "buttons": {
+            "choose": "Choose file",
+            "upload": "Upload"
+          },
+          "messages": {
+            "upload_success": "Profile photo successfully updated",
+            "delete_success": "Profile photo deleted",
+            "upload_error": "Failed to upload photo",
+            "delete_error": "Failed to delete photo"
+          },
+          "errors": {
+            "type": "Only images are allowed",
+            "size": "Max size is 2MB"
+          }
+        }
+      },
+      "index": {
+        "tabs": {
+          "general": "General",
+          "photo": "User photo",
+          "documents": "Documents",
+          "verification": "Verification",
+          "change_password": "Change password"
+        },
+        "title": "Profile"
+      }
+    },
+
+    "accounts": {
+      "title": "Accounts",
+      "openNew": "Open new account",
+      "search": "Search",
+      "columns": {
+        "type": "Account type",
+        "leverage": "Leverage",
+        "number": "Account number",
+        "balance": "MT Balance"
+      },
+      "nothingToShow": "Nothing to show =(",
+      "pagination": {
+        "prev": "Prev",
+        "next": "Next"
+      },
+
+      "accounts-form": {
+        "title": "Open new account",
+        "fields": {
+          "accountType": "Account type",
+          "phonePassword": "Phone password",
+          "phonePasswordPlaceholder": "Enter phone password"
+        },
+        "actions": {
+          "submit": "Open new account"
+        }
+      }
+    }
+  },
+
+  "admin": {
+    "menu": {
+      "dashboard": "Dashboard",
+      "clients": "Clients",
+      "accounts": "Accounts",
+      "referral": "Referral system",
+      "payments": "Payments",
+      "settings": "Settings",
+      "access": "Access"
+    },
+
+    "access": {
+      "components": {
+        "admins-panel": {
+          "title": "# Admins",
+          "columns": {
+            "id": "Id",
+            "nickname": "Nickname",
+            "email": "Email",
+            "roles": "Roles",
+            "createdAt": "Created At",
+            "options": "Options"
+          },
+          "actions": {
+            "addNewAdmin": "Add new Admin"
+          }
+        },
+        "admins-panel-add-new": {
+          "title": "Create new Admin",
+          "fields": {
+            "nickname": "Nickname",
+            "email": "Email",
+            "password": "Password",
+            "roles": "Roles"
+          },
+          "placeholders": {
+            "nickname": "Enter admin nickname",
+            "email": "example\\u0040gmail.com",
+            "roles": "Choose roles"
+          },
+          "actions": {
+            "submit": "Create new & Save"
+          }
+        },
+        "admins-panel-edit": {
+          "title": "Edit Admin Roles",
+          "labels": {
+            "nickname": "Nickname",
+            "email": "Email",
+            "roles": "Roles"
+          },
+          "placeholders": {
+            "nickname": "Enter role nickname",
+            "email": "example1gmail.com",
+            "roles": "Choose roles"
+          },
+          "actions": {
+            "submit": "Update & Save"
+          }
+        },
+        "admins-panel-search": {
+          "placeholder": "Search"
+        },
+        "permissions-panel": {
+          "title": "# Permissions",
+          "searchPlaceholder": "Search",
+          "columns": {
+            "id": "ID",
+            "name": "Name"
+          }
+        },
+        "roles-panel": {
+          "title": "# Roles",
+          "addTitle": "Add new Role",
+          "editTitle": "Edit Role",
+          "columns": {
+            "name": "Name",
+            "permissions": "Permissions"
+          }
+        },
+        "roles-panel-add-new": {
+          "labels": {
+            "name": "Name",
+            "permissions": "Permissions"
+          },
+          "placeholders": {
+            "name": "Enter Role name",
+            "permissions": "Choose permissions"
+          },
+          "actions": {
+            "createAndSave": "Create new & Save"
+          }
+        },
+        "roles-panel-edit": {
+          "labels": {
+            "name": "Name",
+            "permissions": "Permissions"
+          },
+          "placeholders": {
+            "name": "Enter Role name",
+            "permissions": "Choose permissions"
+          },
+          "actions": {
+            "updateAndSave": "Update & Save"
+          }
+        },
+        "roles-panel-search": {
+          "placeholder": "Search"
+        }
+      },
+      "index": {
+        "title": "Access controls",
+        "subtitle": "( Roles and Permissions )"
+      }
+    },
+
+    "accounts": {
+      "components": {
+        "accounts-panel": {
+          "title": "# Clients",
+          "addTitle": "Add new Client",
+          "editTitle": "Edit Client",
+          "columns": {
+            "id": "ID",
+            "name": "Name",
+            "email": "Email",
+            "phone": "Phone",
+            "created_at": "Created At",
+            "options": "Actions"
+          }
+        },
+        "accounts-panel-add-new": {
+          "labels": {
+            "email": "Email",
+            "first_name": "First name",
+            "last_name": "Last name",
+            "mid_name": "Mid name",
+            "birthdate": "Birthdate",
+            "phone": "Phone",
+            "country": "Country",
+            "city": "City",
+            "address": "Address",
+            "postal_code": "Postal code",
+            "password": "Password",
+            "password_confirmation": "Password confirmation"
+          },
+          "placeholders": {
+            "email": "Enter email",
+            "first_name": "Enter first name",
+            "last_name": "Enter last name",
+            "mid_name": "Enter mid name",
+            "phone": "Enter phone",
+            "address": "Enter address",
+            "postal_code": "Enter postal code",
+            "password": "Enter password",
+            "password_confirmation": "Enter password confirmation"
+          },
+          "submit": "Create new & Save"
+        },
+        "accounts-panel-edit": {
+          "labels": {
+            "name": "Name",
+            "permissions": "Permissions"
+          },
+          "placeholders": {
+            "name": "Enter role name",
+            "permissions": "Choose permissions"
+          },
+          "submit": "Update & Save"
+        },
+        "accounts-panel-search": {
+          "placeholder": "Search clients..."
+        }
+      },
+      "index": {
+        "title": "Accounts",
+        "subtitle": "List of accounts"
+      }
+    },
+
+    "clients": {
+      "components": {
+        "clients-panel": {
+          "title": "# Clients",
+          "addTitle": "Add new Client",
+          "editTitle": "Edit Client",
+
+          "columns": {
+            "id": "ID",
+            "email": "Email",
+            "first_name": "First name",
+            "last_name": "Last name",
+            "phone": "Phone",
+            "created_at": "Created at",
+            "options": "Actions"
+          }
+        },
+
+        "clients-panel-add-new": {
+          "labels": {
+            "email": "Email",
+            "first_name": "First name",
+            "last_name": "Last name",
+            "mid_name": "Mid name",
+            "birthdate": "Birthdate",
+            "phone": "Phone",
+            "country": "Country",
+            "city": "City",
+            "address": "Address",
+            "postal_code": "Postal code",
+            "password": "Password",
+            "password_confirmation": "Password confirmation"
+          },
+          "placeholders": {
+            "email": "Enter email",
+            "first_name": "Enter first name",
+            "last_name": "Enter last name",
+            "mid_name": "Enter mid name",
+            "phone": "Enter phone",
+            "address": "Enter address",
+            "postal_code": "Enter postal code",
+            "password": "Enter password",
+            "password_confirmation": "Enter password confirmation"
+          },
+          "submit": "Create new & Save"
+        },
+
+        "clients-panel-edit": {
+          "labels": {
+            "name": "Name",
+            "permissions": "Permissions"
+          },
+          "placeholders": {
+            "name": "Enter role name",
+            "permissions": "Choose permissions"
+          },
+          "submit": "Update & Save"
+        },
+
+        "clients-panel-search": {
+          "placeholder": "Search clients..."
+        }
+      },
+
+      "index": {
+        "title": "Clients",
+        "subtitle": "List of clients"
+      }
+    },
+
+    "dashboard": {},
+
+    "profile": {},
+
+    "referral": {},
+
+    "settings": {
+      "title": "Settings",
+      "tabs": {
+        "general": "General",
+        "appearance": "Appearance",
+        "secure": "Security"
+      },
+      "tables": {
+        "appearance": {
+          "variable": "Variable Name",
+          "preview": "Preview",
+          "picker": "Color Picker",
+          "background": "Background",
+          "text": "Example Text",
+          "button": "Button"
+        },
+        "security": {
+          "key": "Key",
+          "value": "Value (Seconds)"
+        },
+
+        "general": {
+          "button": "Upload"
+        }
+      }
+    }
+  }
+}

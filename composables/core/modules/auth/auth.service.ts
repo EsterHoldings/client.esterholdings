@@ -1,29 +1,28 @@
 import useApi from "~/composables/useApi";
+import {
+  ROUTE_ADMIN_AUTH_LOGIN,
+  ROUTE_ADMIN_AUTH_LOGOUT, ROUTE_ADMINS, ROUTE_AUTH_USER
+} from "~/constants/routes";
 
-export class AuthService {
+export class AdminAuthService {
+
   private useApi:any;
   constructor() {
     this.useApi = new useApi();
   }
-  async userRegister(params: {}):Promise<any> {
-    return await this.useApi.post("/users/register", params);
+  async get(params: {}):Promise<any> {
+    return await this.useApi.get(ROUTE_AUTH_USER, params);
   }
-  async userLogin(params: {}):Promise<any> {
-    return await this.useApi.post("/users/login", params);
+  async postLogin(data:object = {}):Promise<any> {
+    return await this.useApi.post(ROUTE_ADMIN_AUTH_LOGIN, data);
   }
-  async userLogout(params: {}):Promise<any> {
-    return await this.useApi.post("/users/logout", params);
-  }
-  async userForgotPass(params: {}):Promise<any> {
-    return await this.useApi.post("/users/forgot_pass", params);
+  async postLogout():Promise<any> {
+    return await this.useApi.post(ROUTE_ADMIN_AUTH_LOGOUT);
   }
 
-  async adminLogin(params: {}):Promise<any> {
-    return await this.useApi.post(`/admins/login`, params);
-  }
-  async adminLogout():Promise<any> {
-    return await this.useApi.post(`/admins/logout`);
+  async authUser() {
+    return await this.useApi.get(ROUTE_AUTH_USER);
   }
 }
 
-export default AuthService;
+export default AdminAuthService;

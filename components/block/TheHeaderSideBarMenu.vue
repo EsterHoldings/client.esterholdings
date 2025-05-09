@@ -2,20 +2,21 @@
   <nav class="nav">
     <ul class="nav-menu">
       <TheHeaderSideBarMenuItem
-          v-for="menuItem in menuList"
-          :title="menuItem.title"
-          :to="menuItem.to"
-          :icon="menuItem.icon"
-          :sideBarIsOpen="sideBarIsOpen"
-          :key="menuItem.title"
-          @click="handleClickMenuItem"
-      >{{ menuItem.icon }}
+        v-for="menuItem in menuItems"
+        :title="menuItem.title"
+        :to="menuItem.to"
+        :icon="menuItem.icon"
+        :sideBarIsOpen="sideBarIsOpen"
+        :key="menuItem.title"
+        @click="handleClickMenuItem"
+        >{{ menuItem.icon }}
       </TheHeaderSideBarMenuItem>
     </ul>
   </nav>
 </template>
 
 <script lang="ts" setup>
+import { useI18n } from "vue-i18n";
 import TheHeaderSideBarMenuItem from "~/components/block/TheHeaderSideBarMenuItem.vue";
 
 import UiIconHome from "~/components/ui/UiIconHome.vue";
@@ -26,10 +27,11 @@ import UiIconProfile from "~/components/ui/UiIconProfile.vue";
 import UiIconSetting from "~/components/ui/UiIconSetting.vue";
 import UiIconKeys from "~/components/ui/UiIconKeys.vue";
 
-import {useRouter} from 'vue-router';
-import {useAdminAuthStore} from '~/stores/adminAuthStore';
-import {computed} from "vue";
+import { useRouter } from "vue-router";
+import { useAdminAuthStore } from "~/stores/adminAuthStore";
+import { computed } from "vue";
 
+const { t } = useI18n();
 const store = useAdminAuthStore();
 
 const hasPermission = (permName: string) => store.hasPermission(permName);
@@ -39,65 +41,67 @@ const router = useRouter();
 const props = defineProps({
   sideBarIsOpen: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
 const menuItems = [
   {
-    title: 'Dashboard',
-    to: '/admin/dashboard',
+    title: t("admin.menu.dashboard"),
+    to: "/admin/dashboard",
     icon: UiIconHome,
-    displayIfHasPermission: 'view-dashboard',
+    displayIfHasPermission: "view-dashboard",
   },
   {
-    title: 'Clients',
-    to: '/admin/clients',
+    title: t("admin.menu.clients"),
+    to: "/admin/clients",
     icon: UiIconClients,
-    displayIfHasPermission: 'view-clients',
+    displayIfHasPermission: "view-clients",
   },
   {
-    title: 'Accounts',
-    to: '/admin/accounts',
+    title: t("admin.menu.accounts"),
+    to: "/admin/accounts",
     icon: UiIconUser,
-    displayIfHasPermission: 'view-accounts',
+    displayIfHasPermission: "view-accounts",
   },
   {
-    title: 'Referral system',
-    to: '/admin/referral',
+    title: t("admin.menu.referral"),
+    to: "/admin/referral",
     icon: UiIconReferral,
-    displayIfHasPermission: 'view-referrals',
+    displayIfHasPermission: "view-referrals",
   },
   {
-    title: 'Payments',
-    to: '/admin/payments',
+    title: t("admin.menu.payments"),
+    to: "/admin/payments",
     icon: UiIconProfile,
-    displayIfHasPermission: 'view-payments',
+    displayIfHasPermission: "view-payments",
   },
   {
-    title: 'Settings',
-    to: '/admin/settings',
+    title: t("admin.menu.settings"),
+    to: "/admin/settings",
     icon: UiIconSetting,
-    displayIfHasPermission: 'view-settings',
+    displayIfHasPermission: "view-settings",
   },
   {
-    title: 'Access',
-    to: '/admin/access',
+    title: t("admin.menu.access"),
+    to: "/admin/access",
     icon: UiIconKeys,
-    displayIfHasPermission: 'view-admins',
+    displayIfHasPermission: "view-admins",
   },
 ];
 
 const menuList = computed(() => {
-  const filteredMenuItems = menuItems.filter(x => hasPermission(x.displayIfHasPermission));
-  console.log('filteredMenuItems');
+  const filteredMenuItems = menuItems.filter((x) =>
+    hasPermission(x.displayIfHasPermission)
+  );
+  console.log("filteredMenuItems");
   console.log(filteredMenuItems);
-  console.log('filteredMenuItems');
-  console.log('menuItems');
+  console.log("filteredMenuItems");
+  console.log("menuItems");
   console.log(menuItems);
-  console.log('menuItems');
+  console.log("menuItems");
   return filteredMenuItems;
-})
+});
 
 const handleClickMenuItem = (to: string) => {
   router.push(to);
