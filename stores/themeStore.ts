@@ -5,33 +5,48 @@ export const useThemeStore = defineStore("theme", () => {
   const currentTheme = ref<"light" | "dark">("dark");
   const lightTheme = {
     "--ui-background": "#ffffff",
+    "--ui-background-secondary": "#0051FF",
+    "--ui-background-admin": "rgba(255, 255, 255, 0.95)",
+    "--ui-background-card": "#F9F9F9",
+    "--ui-background-panel": "#f9f9f9",
+    "--ui-background-sidebar": "#f9f9f9",
+    "--ui-background-sidebar-link": "#9CA9B3",
+
     "--ui-primary-main": "#ffffff",
-    "--ui-text-main": "#151515",
     "--ui-primary-accent": "#f75709",
+
+    "--ui-text-main": "#151515",
+    "--ui-text-secondary": "#3C3C3C",
+
     "--ui-sticker-success": "#03c11f",
     "--ui-sticker-danger": "#d93025",
-    "--ui-background-card": "#F9F9F9",
+
     "--color-stroke-ui-dark": "#011644",
     "--color-stroke-ui": "#b8b8c3",
-    // '--color-ui-grey': '#3c3c3c'
-    "--ui-text-secondary": "#3C3C3C",
-    "--ui-background-secondary": "#0051FF",
   };
 
   const darkTheme = {
     "--ui-background": "#000028",
+    "--ui-background-admin": "rgba(0, 0, 40, 0.95)",
+    "--ui-background-card": "#01014E",
+    "--ui-background-panel": "#011644b5",
+    "--ui-background-secondary": "#031743",
+    "--ui-background-sidebar": "rgba(0, 0, 40, 0.95)",
+    "--ui-background-sidebar-link": "#011644;",
+
     "--ui-primary-main": "#0051ff",
-    "--ui-text-main": "#ffffff",
     "--ui-primary-accent": "#f75709",
+
+    "--ui-text-main": "#ffffff",
+    "--ui-text-secondary": "#b8b8c3",
+
     "--ui-sticker-success": "#03c11f",
     "--ui-sticker-danger": "#d93025",
-    "--ui-background-card": "#01014E",
-    "--ui-background-secondary": "#031743",
+
     "--color-stroke-ui-dark": "#011644",
     "--color-stroke-ui":
       "linear-gradient(137.67deg, #1b63ff 2.397%, #011644 99.041%)",
     "--color-ui-grey": "#b8b8c3",
-    "--ui-text-secondary": "#b8b8c3",
   };
 
   function applyTheme(theme: Record<string, string>) {

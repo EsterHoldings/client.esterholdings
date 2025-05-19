@@ -1,185 +1,60 @@
 <template>
-  <div class="cards-container">
-    <div v-for="(row, index) in tableData" :key="index" class="card">
-      <div class="card__logo">
-        <img
-          v-if="row.previewUrl"
-          :src="row.previewUrl"
-          alt="Logo"
-          class="preview-image"
-        />
-        <UiIconLogo v-else class="logo-placeholder" />
+  <UiContainer>
+    <div class="general">
+      <div class="general__title">
+        <UiTextH4>General settings</UiTextH4>
       </div>
-
-      <div class="card__upload">
-        <label class="upload-button">
-          <UiIconLoad />
-          <UiTextH4>
-            {{ t("admin.settings.tables.general.button") }}
-          </UiTextH4>
-          <input
-            type="file"
-            accept="image/*"
-            @change="handleFileChange($event, index)"
-          />
-        </label>
+      <div class="general__content">
+        <UiTextH1>Coming Soon</UiTextH1>
+        <UiTextParagraph
+          >Our team is completing the system upgrade. This section will be
+          available soon, we will notify you by email and in the notifications
+          section.
+        </UiTextParagraph>
       </div>
-
-      <UiIconTrash @click="removeFile(index)" class="delete-icon" />
     </div>
-  </div>
+  </UiContainer>
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
-import { ref } from "vue";
-import axios from "axios";
-import UiIconLogo from "~/components/ui/UiIconLogo.vue";
-import UiIconLoad from "~/components/ui/UiIconLoad.vue";
-import UiIconTrash from "~/components/ui/UiIconTrash.vue";
+import UiTextH1 from "~/components/ui/UiTextH1.vue";
+import UiContainer from "~/components/ui/UiContainer.vue";
+import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
-
-const { t } = useI18n();
-const tableData = ref([{ id: 1, previewUrl: null, file: null }]);
-
-const appCore = useAppCore();
-
-const handleFileChange = async (event, index) => {
-  const selectedFile = event.target.files[0];
-
-  if (!selectedFile) return;
-
-  try {
-    // const { data } = await axios.post("/api/admin/get-pre-signed-url", {
-    //   fileName: selectedFile.name,
-    //   fileType: selectedFile.type,
-    // });
-
-    const response = await appCore.s3.getPreSignedUrl({
-      fileName: selectedFile.name,
-      fileType: selectedFile.type,
-    });
-    console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-    console.log(response.data);
-    console.log("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-    const presignedUrl = response.data.url;
-    const s3FileUrl = response.data.key;
-
-    await axios.put(presignedUrl, selectedFile, {
-      headers: {
-        "Content-Type": selectedFile.type,
-      },
-    });
-
-    const responseTempViewLink = await appCore.s3.getTempViewUrl({
-      fileKey: s3FileUrl,
-    });
-
-    tableData.value[index].file = selectedFile;
-    tableData.value[index].previewUrl = responseTempViewLink.data.url;
-  } catch (error) {
-    console.error("Ошибка при загрузке файла:", error);
-  }
-};
-
-const removeFile = (index) => {
-  tableData.value[index].file = null;
-  tableData.value[index].previewUrl = null;
-};
 </script>
 
 <style scoped lang="scss">
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
+.general {
+  padding-bottom: 40px;
 
-.card {
-  position: relative;
-  border-radius: 25px;
-  padding: 20px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
-  width: 100%;
-  border: 1px solid var(--color-stroke-ui-dark);
-  transition: 0.5s;
+  &__title {
+    margin-bottom: 20px;
 
-  &:hover {
-    box-shadow: 0 16px 50px rgb(247 87 9 / 10%);
-    transition: 0.3s;
-  }
-}
-
-.card__logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 150px;
-  width: 150px;
-}
-
-.card__upload {
-  width: 100%;
-}
-
-.preview-image {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.logo-placeholder {
-  width: 100px;
-  height: 100px;
-  background: var(--color-ui-text);
-  //border-radius: 50%;
-}
-
-.upload-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s;
-  border: 2px dashed var(--color-ui-primary);
-  width: 100%;
-  text-align: center;
-  height: 200px;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.05);
-
-    svg {
-      transform: scale(1.1);
-      transition: transform 0.3s ease-in-out;
+    h4 {
+      color: var(--ui-text-main);
     }
   }
 
-  input {
-    display: none;
-  }
-}
+  &__content {
+    height: 80vh;
+    width: 100%;
 
-.delete-icon {
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  position: absolute;
-  top: -13px;
-  right: -13px;
+    flex-direction: column;
 
-  &:hover {
-    transform: scale(1.1);
+    p {
+      margin-top: 20px;
+      width: 300px;
+      text-align: center;
+    }
+
+    h1,
+    p {
+      color: var(--ui-text-main);
+    }
   }
 }
 </style>

@@ -1,8 +1,6 @@
 <template>
   <div class="panel--default">
-    <div v-if="title.length > 0"
-         class="panel--default__title"
-    >
+    <div v-if="title.length > 0" class="panel--default__title">
       <div class="panel--default__title-content">
         <span>{{ props.title }}</span>
         <div>
@@ -20,12 +18,12 @@
 const props = defineProps({
   title: {
     type: String,
-    default: ""
+    default: "",
   },
   state: {
     type: String,
-    default: ""
-  }
+    default: "",
+  },
 });
 </script>
 
@@ -33,7 +31,7 @@ const props = defineProps({
 .panel {
   &--default {
     background-color: var(--ui-background-panel);
-    border: 1px solid var(--color-stroke-ui-dark);
+    border: 1px solid var(--color-stroke-ui);
     //border-radius: var(--ui-border--raduis);
     border-radius: 10px;
 
@@ -52,7 +50,8 @@ const props = defineProps({
       }
     }
 
-    &__content {}
+    &__content {
+    }
   }
 }
 </style>

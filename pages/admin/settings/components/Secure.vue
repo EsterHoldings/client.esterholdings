@@ -1,34 +1,21 @@
 <template>
   <div class="table-container">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>
-            {{ t("admin.settings.tables.security.key") }}
-          </th>
-          <th>
-            {{ t("admin.settings.tables.security.value") }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, index) in tableData" :key="index">
-          <td class="table__cell">{{ item.key }}</td>
-          <td class="table__cell">
-            <UiInput type="number" :value="item.value" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <PanelDefault v-for="input in tableData" :key="input.key">
+      <div class="secure__wrapper">
+        <UiFormControl :label="input.key"></UiFormControl>
+        <UiInput type="number" :value="input.value" />
+      </div>
+    </PanelDefault>
   </div>
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
-import { ref } from "vue";
+import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import UiInput from "~/components/ui/UiInput.vue";
+import UiFormControl from "~/components/ui/UiFormControl.vue";
 
-const { t } = useI18n();
+import { ref } from "vue";
+
 const tableData = ref([
   { key: "Access Token", value: 900 },
   { key: "Refresh Token", value: 630000 },
@@ -37,34 +24,13 @@ const tableData = ref([
 
 <style scoped lang="scss">
 .table-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.secure__wrapper {
+  padding: 20px;
   width: 100%;
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-}
-
-.table th,
-.table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.table th {
-  background-color: #c8c8c8;
-  color: #3e3939;
-  font-weight: 500;
-}
-
-.table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.table tr:hover {
-  background-color: #f1f1f1;
 }
 </style>

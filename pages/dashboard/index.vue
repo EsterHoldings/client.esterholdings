@@ -17,6 +17,7 @@
                   {{ t("cabinet.dashboard.accountVerification.subtitle") }}
                 </div>
               </div>
+
               <UiButtonDefault state="primary">{{
                 t("cabinet.dashboard.accountVerification.profileButton")
               }}</UiButtonDefault>
@@ -28,18 +29,21 @@
                   t("cabinet.dashboard.accountVerification.addressFailed")
                 }}</span>
               </li>
+
               <li>
                 <UiIconSuccess />
                 <span>{{
                   t("cabinet.dashboard.accountVerification.documentVerified")
                 }}</span>
               </li>
+
               <li>
                 <UiIconWarning />
                 <span>{{
                   t("cabinet.dashboard.accountVerification.paymentInProgress")
                 }}</span>
               </li>
+
               <li>
                 <UiIconWarning />
                 <span>{{
@@ -57,10 +61,12 @@
               <UiButtonDefault state="success">{{
                 t("cabinet.dashboard.actions.newDeposit")
               }}</UiButtonDefault>
+
               <UiButtonDefault state="primary">{{
                 t("cabinet.dashboard.actions.newWithdrawal")
               }}</UiButtonDefault>
             </div>
+
             <div class="chart-placeholder">
               {{ t("cabinet.dashboard.actions.chartPlaceholder") }}
             </div>
@@ -74,6 +80,7 @@
               <div class="card__title">
                 {{ t("cabinet.dashboard.mt4.title") }}
               </div>
+
               <div class="card__options">
                 <UiButtonDefault state="primary">{{
                   t("cabinet.dashboard.mt4.openNewAccount")
@@ -89,6 +96,7 @@
                   <th>{{ t("cabinet.dashboard.mt4.table.status") }}</th>
                 </tr>
               </thead>
+
               <tbody>
                 <tr>
                   <td>123456</td>
@@ -141,7 +149,6 @@ definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
 
 import { useI18n } from "vue-i18n";
 import UiContainer from "~/components/ui/UiContainer.vue";
-import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 const { locale, t } = useI18n({ useScope: "global" });
@@ -152,9 +159,11 @@ const { locale, t } = useI18n({ useScope: "global" });
   color: #ffffff;
 
   &__title {
-    //font-size: 24px;
-    //font-weight: bold;
     margin-bottom: 24px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
   }
 
   &__grid {
@@ -206,6 +215,7 @@ const { locale, t } = useI18n({ useScope: "global" });
   &__title {
     font-size: 18px;
     font-weight: 600;
+    color: var(--ui-text-main);
   }
 
   &__options {
@@ -213,7 +223,7 @@ const { locale, t } = useI18n({ useScope: "global" });
 
   &__subtitle {
     font-size: 14px;
-    color: #a3aed0;
+    color: var(--ui-text-secondary);
   }
 
   &__list {
@@ -221,7 +231,7 @@ const { locale, t } = useI18n({ useScope: "global" });
     padding-left: 0;
     margin-top: 12px;
     font-size: 14px;
-    color: #e4e9f2;
+    color: var(--ui-text-secondary);
     margin-bottom: 20px;
 
     li {
@@ -245,12 +255,12 @@ const { locale, t } = useI18n({ useScope: "global" });
 
 .chart-placeholder {
   height: 160px;
-  background-color: #1a1d3b;
+  background-color: var(--ui-background-sidebar-link);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  color: #a3aed0;
+  color: var(--ui-text-main);
   font-size: 14px;
 }
 
@@ -263,12 +273,13 @@ const { locale, t } = useI18n({ useScope: "global" });
   th {
     text-align: left;
     padding-bottom: 8px;
-    color: #a3aed0;
+    color: var(--ui-text-secondary);
   }
 
   td {
     padding: 8px 0;
     border-top: 1px solid #2e335a;
+    color: var(--ui-text-secondary);
   }
 }
 

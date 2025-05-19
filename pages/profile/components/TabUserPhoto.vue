@@ -186,6 +186,7 @@ onMounted(async () => {
       padding: 20px;
       height: 100%;
       width: 100%;
+      color: var(--ui-text-main);
     }
   }
 }
@@ -272,10 +273,12 @@ onMounted(async () => {
 
     .btn-select {
       cursor: pointer;
+      color: var(--ui-text-main);
     }
 
     .btn-upload {
       cursor: pointer;
+      color: var(--ui-text-main);
     }
   }
 

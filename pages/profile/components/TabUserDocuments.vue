@@ -6,15 +6,13 @@
       </PanelDefault>
     </div>
     <div class="user-documents__right">
-      <PanelDefault class="user-documents__right__panel">
-        ...
-      </PanelDefault>
+      <PanelDefault class="user-documents__right__panel"> ... </PanelDefault>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import PanelDefault from '~/components/block/panels/PanelDefault.vue'
+import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -27,14 +25,14 @@ import PanelDefault from '~/components/block/panels/PanelDefault.vue'
   &__left {
     width: 50%;
 
-    &>div {
+    & > div {
       padding: 20px;
     }
   }
   &__right {
     width: 50%;
 
-    &>div {
+    & > div {
       padding: 20px;
     }
 
@@ -42,7 +40,12 @@ import PanelDefault from '~/components/block/panels/PanelDefault.vue'
       padding: 20px;
       height: 100%;
       width: 100%;
+      color: var(--ui-text-main);
     }
+  }
+
+  &-uploader {
+    color: var(--ui-text-main);
   }
 }
 
@@ -84,17 +87,18 @@ import PanelDefault from '~/components/block/panels/PanelDefault.vue'
   padding: 20px;
 
   .title {
-    margin-bottom: 20px
+    margin-bottom: 20px;
   }
 
   .uploader-body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    align-items: center
+    align-items: center;
   }
 
-  .avatar-preview, .avatar-placeholder {
+  .avatar-preview,
+  .avatar-placeholder {
     position: relative;
     width: 300px;
     height: 300px;
@@ -112,12 +116,12 @@ import PanelDefault from '~/components/block/panels/PanelDefault.vue'
   .avatar-preview img {
     width: 100%;
     height: 100%;
-    object-fit: cover
+    object-fit: cover;
   }
 
   .icon {
     font-size: 2.5rem;
-    color: #9ca3af
+    color: #9ca3af;
   }
 
   .actions {
@@ -144,13 +148,13 @@ import PanelDefault from '~/components/block/panels/PanelDefault.vue'
     .progress {
       height: 100%;
       background: #3b82f6;
-      transition: width .2s
+      transition: width 0.2s;
     }
   }
 
   .error {
     color: #dc2626;
-    margin-top: 8px
+    margin-top: 8px;
   }
 }
 </style>

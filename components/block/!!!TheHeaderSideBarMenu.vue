@@ -38,50 +38,52 @@ const addCurrentLocaleToPath = (path = "") => {
 const router = useRouter();
 const sideBarIsOpen = ref(true);
 
-const menuItems = [
-  {
-    title: t("admin.menu.dashboard"),
-    to: localePath("/admin/dashboard"),
-    icon: UiIconHome,
-    displayIfHasPermission: "view-dashboard",
-  },
-  {
-    title: t("admin.menu.clients"),
-    to: localePath("/admin/clients"),
-    icon: UiIconClients,
-    displayIfHasPermission: "view-clients",
-  },
-  {
-    title: t("admin.menu.accounts"),
-    to: localePath("/admin/accounts"),
-    icon: UiIconUser,
-    displayIfHasPermission: "view-accounts",
-  },
-  {
-    title: t("admin.menu.referral"),
-    to: localePath("/admin/referral"),
-    icon: UiIconReferral,
-    displayIfHasPermission: "view-referrals",
-  },
-  {
-    title: t("admin.menu.payments"),
-    to: localePath("/admin/payments"),
-    icon: UiIconProfile,
-    displayIfHasPermission: "view-payments",
-  },
-  {
-    title: t("admin.menu.settings"),
-    to: localePath("/admin/settings"),
-    icon: UiIconSetting,
-    displayIfHasPermission: "view-settings",
-  },
-  {
-    title: t("admin.menu.access"),
-    to: localePath("/admin/access"),
-    icon: UiIconKeys,
-    displayIfHasPermission: "view-admins",
-  },
-];
+const menuItems = computed(() => {
+  return [
+    {
+      title: t("admin.menu.dashboard"),
+      to: localePath("/admin/dashboard"),
+      icon: UiIconHome,
+      displayIfHasPermission: "view-dashboard",
+    },
+    {
+      title: t("admin.menu.clients"),
+      to: localePath("/admin/clients"),
+      icon: UiIconClients,
+      displayIfHasPermission: "view-clients",
+    },
+    {
+      title: t("admin.menu.accounts"),
+      to: localePath("/admin/accounts"),
+      icon: UiIconUser,
+      displayIfHasPermission: "view-accounts",
+    },
+    {
+      title: t("admin.menu.referral"),
+      to: localePath("/admin/referral"),
+      icon: UiIconReferral,
+      displayIfHasPermission: "view-referrals",
+    },
+    {
+      title: t("admin.menu.payments"),
+      to: localePath("/admin/payments"),
+      icon: UiIconProfile,
+      displayIfHasPermission: "view-payments",
+    },
+    {
+      title: t("admin.menu.settings"),
+      to: localePath("/admin/settings"),
+      icon: UiIconSetting,
+      displayIfHasPermission: "view-settings",
+    },
+    {
+      title: t("admin.menu.access"),
+      to: localePath("/admin/access"),
+      icon: UiIconKeys,
+      displayIfHasPermission: "view-admins",
+    },
+  ];
+});
 
 const handleClickMenuItem = (to: string) => {
   router.push(to);

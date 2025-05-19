@@ -28,7 +28,7 @@
 svg {
   height: 20px;
   width: 20px;
-  stroke: white;
+  stroke: currentColor;
 }
 </style>
 <script setup lang="ts"></script>

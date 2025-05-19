@@ -1,6 +1,6 @@
 <template>
   <div class="page__wrapper">
-    <TheCabinetSideBar/>
+    <TheCabinetSideBar />
     <UiImage class="bg-image" src="/space.gif" />
     <Transition name="fade" mode="out-in">
       <div class="page" :key="route.fullPath">
@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import TheCabinetSideBar from '~/components/block/TheCabinetSideBar.vue'
-import { useRoute } from 'vue-router'
+import TheCabinetSideBar from "~/components/block/TheCabinetSideBar.vue";
+import { useRoute } from "vue-router";
 import UiImage from "~/components/ui/UiImage.vue";
-const route = useRoute()
+const route = useRoute();
 </script>
 
 <style lang="scss" scoped>
@@ -27,7 +27,7 @@ const route = useRoute()
 }
 
 .page__wrapper {
-  background-color: var(--color-ui-background);
+  background-color: var(--ui-background-admin);
   height: 100vh;
   overflow: hidden;
 }

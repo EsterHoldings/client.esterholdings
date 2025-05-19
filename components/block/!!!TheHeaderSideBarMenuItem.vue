@@ -1,18 +1,21 @@
 <template>
-  <li class="side-bar-cabinet__menu__item"
-      :class="{'active': isActive}"
-      @click="handleClickMenuItem($event)"
+  <li
+    class="side-bar-cabinet__menu__item"
+    :class="{ active: isActive }"
+    @click="handleClickMenuItem($event)"
   >
-    <div class="side-bar-cabinet__menu__item__indicator"
-         :class="{'active': isActive}"
+    <div
+      class="side-bar-cabinet__menu__item__indicator"
+      :class="{ active: isActive }"
     ></div>
 
     <div class="side-bar-cabinet__menu__item__icon">
       <component :is="icon"></component>
     </div>
 
-    <div class="side-bar-cabinet__menu__item__title"
-         :class="{'hide': !props.sideBarIsOpen}"
+    <div
+      class="side-bar-cabinet__menu__item__title"
+      :class="{ hide: !props.sideBarIsOpen }"
     >
       {{ title }}
     </div>
@@ -20,35 +23,35 @@
 </template>
 
 <script lang="ts" setup>
-import {useRoute} from "vue-router";
-import {computed} from "vue";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(["click"]);
 
 const props = defineProps({
   title: {
     type: String,
-    required: true
+    required: true,
   },
   to: {
     type: String,
-    required: true
+    required: true,
   },
   icon: {
     type: Object,
-    default: ""
+    default: "",
   },
   sideBarIsOpen: {
     type: Boolean,
-    default: false
-  }
-})
+    default: false,
+  },
+});
 
-const route = useRoute()
+const route = useRoute();
 
-const isActive = computed(() => route.path === props.to)
+const isActive = computed(() => route.path === props.to);
 
-const handleClickMenuItem = (event: Event) => emit('click', props.to)
+const handleClickMenuItem = (event: Event) => emit("click", props.to);
 </script>
 
 <style lang="scss" scoped>
@@ -58,27 +61,23 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
   margin-top: 1px;
   height: 80px;
-
   background-color: transparent;
-
-  transition: .3s;
+  transition: 0.3s;
 
   &.active {
-    background-color: var(--color-stroke-ui-dark);
-    border-right: 1px solid var(--color-ui-primary);
+    background-color: var(--ui-background-sidebar-link);
+    border-right: 1px solid var(--color-stroke-ui);
   }
-
 
   &:hover {
-    transition: .3s;
-    background-color: var(--color-stroke-ui-dark);
+    transition: 0.3s;
+    background-color: var(--ui-background-sidebar-link);
   }
 
   &.active {
-    border-right: 1px solid var(--color-ui-primary);
+    border-right: 1px solid var(--ui-stroke);
   }
 
   &__indicator {
@@ -88,7 +87,7 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
     width: 1px;
     height: 100%;
 
-    background-color: var(--color-stroke-ui-dark);
+    background-color: var(--ui-stroke);
 
     &.active {
       background-color: var(--color-ui-primary);
@@ -96,8 +95,13 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
   }
 
   &__icon {
-    //padding-left: 20px;
     padding-top: 10px;
+    color: var(--ui-text-main);
+
+    svg {
+      stroke: none;
+      fill: currentColor;
+    }
   }
 
   &__title {
@@ -115,21 +119,16 @@ const handleClickMenuItem = (event: Event) => emit('click', props.to)
     align-items: center;
     justify-content: center;
 
-    color: #d8d8d8;
+    color: var(--ui-text-main);
     font-size: 14px;
     font-weight: 500;
 
-    &:hover {
-      color: #a9a9a9;
-    }
-
     &.hide {
-      transition: .1s;
+      transition: 0.1s;
       opacity: 0;
       width: 0;
       overflow: hidden;
     }
   }
 }
-
 </style>
