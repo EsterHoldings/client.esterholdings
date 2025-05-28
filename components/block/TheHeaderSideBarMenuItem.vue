@@ -6,14 +6,10 @@
   >
     <div class="item__indicator" :class="{ active: isActive }"></div>
     <div class="item__icon">
-      <!--      <NuxtLink :to="to">-->
       <component :is="icon"></component>
-      <!--      </NuxtLink>-->
     </div>
     <div class="item__title" :class="{ hide: !props.sideBarIsOpen }">
-      <!--      <NuxtLink :to="to">-->
       {{ title }}
-      <!--      </NuxtLink>-->
     </div>
   </li>
 </template>
@@ -65,7 +61,7 @@ const handleClickMenuItem = (event: Event) => emit("click", props.to);
 
   &:hover {
     transition: 0.3s;
-    background-color: var(--color-stroke-ui-dark);
+    background-color: var(--ui-background-sidebar-link);
   }
 
   &.active {
@@ -77,7 +73,7 @@ const handleClickMenuItem = (event: Event) => emit("click", props.to);
     width: 8px;
     height: 100%;
 
-    background-color: var(--color-stroke-ui-dark);
+    background-color: var(--ui-background-sidebar-link);
 
     &.active {
       background-color: var(--ui-primary-main);
@@ -114,23 +110,6 @@ const handleClickMenuItem = (event: Event) => emit("click", props.to);
       width: 0;
       overflow: hidden;
     }
-
-    //a {
-    //  z-index: 3;
-    //  display: flex;
-    //  align-items: center;
-    //
-    //  width: 100%;
-    //  height: 100%;
-    //
-    //  color: #210e32;
-    //  font-size: 14px;
-    //  font-weight: 500;
-    //
-    //  &:hover {
-    //    color: #210e32;
-    //  }
-    //}
   }
 }
 </style>

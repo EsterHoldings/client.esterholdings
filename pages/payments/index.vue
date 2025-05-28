@@ -4,6 +4,7 @@
       <div class="payments__title">
         <UiTextH4>{{ t("cabinet.billing.title") }}</UiTextH4>
       </div>
+
       <div class="payments__content">
         <div class="payments__content__options">
           <div class="payments__content__option">
@@ -205,6 +206,9 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
+import { computed, inject, onMounted, reactive, ref } from "vue";
+import { definePageMeta } from "~/.nuxt/imports";
+
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiContainer from "~/components/ui/UiContainer.vue";
@@ -212,8 +216,6 @@ import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiIconSort from "~/components/ui/UiIconSort.vue";
 import useAppCore from "~/composables/useAppCore";
-import { computed, inject, onMounted, reactive, ref } from "vue";
-import { definePageMeta } from "~/.nuxt/imports";
 import UiIconCopy from "~/components/ui/UiIconCopy.vue";
 import AdminsPanelAddNew from "~/pages/admin/access/components/AdminsPanelAddNew.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
@@ -424,6 +426,10 @@ onMounted(async () => {
 
   &__title {
     margin-bottom: 20px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
   }
 
   &__content {
@@ -449,6 +455,7 @@ onMounted(async () => {
       row-gap: 10px;
       padding: 20px;
       width: 100%;
+      color: var(--ui-text-main);
 
       & > div:last-child {
         display: flex;
@@ -493,6 +500,7 @@ onMounted(async () => {
         column-gap: 20px;
         row-gap: 10px;
         align-items: center;
+        color: var(--ui-text-main);
 
         > div:first-child {
           color: var(--color-ui-accent);
@@ -518,11 +526,11 @@ onMounted(async () => {
       .page-link {
         padding: 6px 12px;
         border: 1px solid var(--color-ui-border);
-        background: var(--color-ui-background);
+        background: var(--ui-background);
         cursor: pointer;
         font-size: 14px;
         border-radius: 4px;
-        color: white;
+        color: var(--ui-text-main);
       }
 
       .page-link.active {

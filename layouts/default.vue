@@ -6,7 +6,9 @@
       <Transition name="fade" mode="out-in">
         <div class="page-content">
           <div class="page" :key="route.fullPath">
-            <slot />
+            <UiContainer>
+              <slot />
+            </UiContainer>
           </div>
         </div>
       </Transition>
@@ -23,6 +25,7 @@ import UiImage from "~/components/ui/UiImage.vue";
 import TheFooter from "@/components/block/TheFooter.vue";
 import HeaderMenu from "~/components/block/LandingHeader/components/HeaderMenu.vue";
 import { useRoute } from "vue-router";
+import UiContainer from "~/components/ui/UiContainer.vue";
 const route = useRoute();
 </script>
 
@@ -41,7 +44,7 @@ const route = useRoute();
 
   &-wrapper {
     display: flex;
-    background-color: var(--color-ui-background);
+    background-color: var(--ui-background-admin);
     color: #b0b0b0;
     overflow: hidden;
   }

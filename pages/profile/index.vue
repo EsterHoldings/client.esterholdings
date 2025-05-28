@@ -2,9 +2,8 @@
   <UiContainer>
     <div class="profile">
       <div class="profile__title">
-        <!-- <UiTextH4>Profile</UiTextH4> -->
-
         <UiTextH4>{{ t("cabinet.profile.index.title") }}</UiTextH4>
+
         <TabsDefault
           :tabsList="tabsList"
           @selectTab="handleActiveTab"
@@ -42,14 +41,6 @@ const { t } = useI18n();
 
 const STORAGE_KEY = "profileActiveTab";
 const activeTabIndex = ref(0);
-
-// const tabsList = reactive([
-//   { label: "General", component: TabGeneral },
-//   { label: "User photo", component: TabUserPhoto },
-//   { label: "Documents", component: TabUserDocuments },
-//   { label: "Verification", component: TabUserPhoto },
-//   { label: "Change password", component: TabChangePassword },
-// ]);
 
 const tabsList = computed(() => {
   return [
@@ -92,6 +83,10 @@ const handleActiveTab = (tabIndex: number) => {
 
   &__title {
     margin-bottom: 20px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
 
     display: flex;
     align-items: center;

@@ -6,8 +6,10 @@
       </div>
       <div class="referrals__content">
         <UiTextH1>Coming Soon</UiTextH1>
-        <UiTextParagraph>Our team is completing the system upgrade. This section will be available soon, we will notify
-          you by email and in the notifications section.
+        <UiTextParagraph
+          >Our team is completing the system upgrade. This section will be
+          available soon, we will notify you by email and in the notifications
+          section.
         </UiTextParagraph>
       </div>
     </div>
@@ -15,14 +17,13 @@
 </template>
 
 <script lang="ts" setup>
-import {definePageMeta} from "~/.nuxt/imports";
+import { definePageMeta } from "~/.nuxt/imports";
 import UiTextH1 from "~/components/ui/UiTextH1.vue";
 import UiContainer from "~/components/ui/UiContainer.vue";
 import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 
-definePageMeta({ layout: 'cabinet', middleware: ['auth-client'] });
-
+definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
 </script>
 
 <style lang="scss" scoped>
@@ -31,6 +32,10 @@ definePageMeta({ layout: 'cabinet', middleware: ['auth-client'] });
 
   &__title {
     margin-bottom: 20px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
   }
 
   &__content {
@@ -47,6 +52,11 @@ definePageMeta({ layout: 'cabinet', middleware: ['auth-client'] });
       margin-top: 20px;
       width: 300px;
       text-align: center;
+    }
+
+    h1,
+    p {
+      color: var(--ui-text-main);
     }
   }
 }

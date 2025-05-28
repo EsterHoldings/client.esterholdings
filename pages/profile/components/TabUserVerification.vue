@@ -18,30 +18,42 @@ import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 </script>
 
 <style lang="scss" scoped>
-.user-verification {
-  &__wrapper {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-  }
-  &__left {
-    width: 50%;
+.user {
+  &-verification {
+    &__wrapper {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    &__left {
+      width: 50%;
 
-    &>div {
-      padding: 20px;
+      & > div {
+        padding: 20px;
+      }
+    }
+    &__right {
+      width: 50%;
+
+      & > div {
+        padding: 20px;
+      }
+
+      &__panel {
+        padding: 20px;
+        height: 100%;
+        width: 100%;
+      }
     }
   }
-  &__right {
-    width: 50%;
 
-    &>div {
-      padding: 20px;
+  &-photo {
+    &-uploader {
+      color: var(--ui-text-main);
     }
 
-    &__panel {
-      padding: 20px;
-      height: 100%;
-      width: 100%;
+    &__right__panel {
+      color: var(--ui-text-main);
     }
   }
 }

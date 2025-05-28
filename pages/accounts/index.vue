@@ -4,6 +4,7 @@
       <div class="accounts__title">
         <UiTextH4>{{ t("cabinet.accounts.title") }}</UiTextH4>
       </div>
+
       <div class="accounts__content">
         <div class="accounts__content__options">
           <div class="accounts__content__option">
@@ -352,6 +353,10 @@ onMounted(async () => {
 .accounts {
   &__title {
     margin-bottom: 20px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
   }
 
   &__content {
@@ -373,6 +378,7 @@ onMounted(async () => {
     &__account_item__data-wrapper--header {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
+      color: var(--ui-text-main);
       column-gap: 20px;
       row-gap: 10px;
       padding: 20px;
@@ -421,6 +427,7 @@ onMounted(async () => {
         column-gap: 20px;
         row-gap: 10px;
         align-items: center;
+        color: var(--ui-text-main);
 
         > div:first-child {
           color: var(--color-ui-accent);
@@ -446,11 +453,11 @@ onMounted(async () => {
       .page-link {
         padding: 6px 12px;
         border: 1px solid var(--color-ui-border);
-        background: var(--color-ui-background);
+        background: var(--ui-background);
         cursor: pointer;
         font-size: 14px;
         border-radius: 4px;
-        color: white;
+        color: var(--ui-text-main);
       }
 
       .page-link.active {
