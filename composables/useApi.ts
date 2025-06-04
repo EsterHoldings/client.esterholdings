@@ -7,8 +7,8 @@ export class useApi {
 
   constructor(forClient = false) {
     this.api = axios.create({
-      baseURL: process.env.NUXT_PUBLIC_API_URL,
-      // baseURL: "https://esterholdings.website/api/",
+      // baseURL: process.env.NUXT_PUBLIC_API_URL,
+      baseURL: "https://esterholdings.website/api/",
     });
 
     this.api.interceptors.request.use((config) => {
