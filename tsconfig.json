@@ -31,7 +31,8 @@
     ".nuxt/types/imports.d.ts",
     ".nuxt/types/imports.d.ts",
     ".nuxt/types/imports.d.ts",
-    ".nuxt/types/imports.d.ts"
+    ".nuxt/types/imports.d.ts",
+    "404.vue"
   ],
   "exclude": ["node_modules", ".output", ".nuxt"]
 }

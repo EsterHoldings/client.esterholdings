@@ -3,6 +3,7 @@
     <div ref="welcomeRef">
       <WelcomeSection />
     </div>
+
     <AdvantagesSection />
     <TradingPlatformSection />
     <FeaturesSection />
@@ -31,6 +32,8 @@ import BannerSection from "~/pages/landing/sections/BannerSection.vue";
 import TradingPlatformSection from "~/pages/landing/sections/TradingPlatformSection.vue";
 import LatestUpdatesSection from "~/pages/landing/sections/LatestUpdatesSection.vue";
 import CookieModal from "~/components/block/modals/CookieModal.vue";
+
+import UiQRCode from "~/components/ui/UiQRCode.vue";
 
 definePageMeta({
   // middleware: ["not-auth-client"],

@@ -38,9 +38,7 @@ const props = defineProps({
 
 const { t, tm } = useI18n();
 
-const headerItems = tm(`landing.header.megaMenu.Partnership`);
-
-console.log("ITEM", headerItems);
+const headerItems = tm(`landing.header.megaMenu.${props.activeLink}`);
 
 function buildItems(section, sectionIndex) {
   return section.items.map((_, itemIndex) => ({
