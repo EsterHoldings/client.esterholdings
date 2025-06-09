@@ -4,7 +4,7 @@
     <div class="user-documents__left">
       <PanelDefault class="user-documents-uploader">
         <UiTextH5 class="user-documents-uploader__title">
-          <span>Uploaded documents</span>
+          <span># Uploaded documents</span>
           <div class="user-documents-uploader__title__options">
             <span class="user-documents-uploader__title__options_reload"
                   @click="handleRefreshDocuments"
@@ -13,25 +13,26 @@
             </span>
           </div>
         </UiTextH5>
-        <div class="user-documents-uploader__is-loading" v-if="isLoading">
-          <UiIconSpinnerDefault />
-        </div>
-        <div class="user-documents-uploader__documents" v-if="!isLoading">
+        <div class="user-documents-uploader__documents">
           <TabUserDocumentsDocument
               v-for="document in documents"
               :data="document"
               :key="document.id"
               @document-was-removed="handleRefreshDocuments"
           />
+          <div class="user-documents-uploader__documents--no-data" v-if="documents.length === 0">
+            У вас нет загруженных документов.
+          </div>
+          <div class="user-documents-uploader__is-loading" v-if="isLoading">
+            <UiIconSpinnerDefault />
+          </div>
         </div>
       </PanelDefault>
     </div>
 
     <div class="user-documents__right">
       <PanelDefault class="user-documents__right__panel">
-        <UiTextH5 class="user-documents__right__panel__title">
-          Upload new documents
-        </UiTextH5>
+        <UiTextH5 class="user-documents__right__panel__title"># Upload new documents</UiTextH5>
         <UiDragAndDrop
             @files="handleFilesSelected"
             v-if="selectedFiles.length === 0"
@@ -444,12 +445,30 @@ onMounted(async () => {
     }
   }
 
-  &__is-loading {
+  &__documents {
+    position: relative;
 
-    min-height: 30vh;
+    &--no-data {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 40px;
+    }
+  }
+
+  &__is-loading {
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 10px;
+    background-color: var(--ui-background);
+    opacity: .3;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 }
 </style>

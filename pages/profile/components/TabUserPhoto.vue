@@ -33,27 +33,35 @@
               :disabled="!file || loading || !!error"
               @click="upload"
             >
-              {{
-                loading
-                  ? uploadProgress + "%"
-                  : t(
-                      "cabinet.profile.components.tab-user-photo.buttons.upload"
-                    )
-              }}
+              {{loading ? uploadProgress + "%" : t("cabinet.profile.components.tab-user-photo.buttons.upload") }}
             </UiButtonDefault>
           </div>
           <div v-if="loading" class="progress-bar">
             <div class="progress" :style="{ width: uploadProgress + '%' }" />
           </div>
           <p v-if="error" class="error">{{ error }}</p>
+
+          <UiTextSmall>Фото пользователя не должно превышать размер в 5Мб. <br/> Поддерживаемые форматы файлов: PNG, JPG, JPEG</UiTextSmall>
         </div>
       </PanelDefault>
     </div>
+
     <div class="user-photo__right">
       <PanelDefault class="user-photo__right__panel">
-        Тут буде інформація про статус перевірки,
-        <br />
-        а також про заповненість профілю.
+        <UiTextH5 class="user-photo__right__panel__title"># Информация</UiTextH5>
+        <div class="user-photo__right__panel__text">
+          <UiTextParagraph>
+            Фото профиля улучает взаимодействие с пользователем, а так же улучшает внешний вид интерфейса.
+            Наличие фото профиля влияет на значение заполненности профиля - что в свою очередь влияет на показатели доверия.
+          </UiTextParagraph>
+        </div>
+        <UiTextH5 class="user-photo__right__panel__title"># Статус верификации</UiTextH5>
+        <div class="user-photo__right__panel__verification-status">
+          <span>
+            <UiIconSuccess />
+          </span>
+          <span>Успешно верифицировано!</span>
+        </div>
       </PanelDefault>
     </div>
   </div>
@@ -69,6 +77,10 @@ import useApi from "~/composables/useApi";
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import { useAuthStore } from "~/stores/authStore";
+import UiTextH5 from "~/components/ui/UiTextH5.vue";
+import UiTextSmall from "~/components/ui/UiTextSmall.vue";
+import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
+import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -187,6 +199,20 @@ onMounted(async () => {
       height: 100%;
       width: 100%;
       color: var(--ui-text-main);
+
+      &__title {
+        margin-bottom: 20px;
+      }
+
+      &__text {
+        margin-bottom: 20px;
+      }
+
+      &__verification-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
     }
   }
 }

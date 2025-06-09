@@ -3,186 +3,102 @@
     <div class="profile__tab--general__profile-data">
       <PanelDefault>
         <div class="profile__tab--general__profile-data__form">
+          <UiTextH5 class="title"># Основные данные пользователя</UiTextH5>
           <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            :label="t('cabinet.profile.components.tab-general.labels.email')"
-            :errors="validatorUserDataForm.errorsFormData.email.errors"
+              class="profile__tab--general__profile-data__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.email')"
+              :errors="validatorUserDataForm.errorsFormData.email.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t('cabinet.profile.components.tab-general.placeholders.email')
-              "
-              :value="formData.email"
-              :isDirty="validatorUserDataForm.errorsFormData.email.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.email.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'email',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'email',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.email')"
+                :value="formData.email"
+                :isDirty="validatorUserDataForm.errorsFormData.email.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.email.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('email',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('email',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            :label="
-              t('cabinet.profile.components.tab-general.labels.first_name')
-            "
-            :errors="validatorUserDataForm.errorsFormData.first_name.errors"
+              class="profile__tab--general__profile-data__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.first_name')"
+              :errors="validatorUserDataForm.errorsFormData.first_name.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t(
-                  'cabinet.profile.components.tab-general.placeholders.first_name'
-                )
-              "
-              :value="formData.first_name"
-              :isDirty="validatorUserDataForm.errorsFormData.first_name.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.first_name.errors.length >
-                0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'first_name',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'first_name',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.first_name')"
+                :value="formData.first_name"
+                :isDirty="validatorUserDataForm.errorsFormData.first_name.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.first_name.errors.length >0"
+                @input="validatorUserDataForm.doValidateField('first_name',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('first_name',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            :label="
-              t('cabinet.profile.components.tab-general.labels.last_name')
-            "
-            :errors="validatorUserDataForm.errorsFormData.last_name.errors"
+              class="profile__tab--general__profile-data__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.last_name')"
+              :errors="validatorUserDataForm.errorsFormData.last_name.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t(
-                  'cabinet.profile.components.tab-general.placeholders.last_name'
-                )
-              "
-              :value="formData.last_name"
-              :isDirty="validatorUserDataForm.errorsFormData.last_name.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.last_name.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'last_name',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'last_name',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.last_name')"
+                :value="formData.last_name"
+                :isDirty="validatorUserDataForm.errorsFormData.last_name.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.last_name.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('last_name',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('last_name',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            :label="t('cabinet.profile.components.tab-general.labels.mid_name')"
-            :errors="validatorUserDataForm.errorsFormData.mid_name.errors"
+              class="profile__tab--general__profile-data__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.mid_name')"
+              :errors="validatorUserDataForm.errorsFormData.mid_name.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t(
-                  'cabinet.profile.components.tab-general.placeholders.mid_name'
-                )
-              "
-              :value="formData.mid_name"
-              :isDirty="validatorUserDataForm.errorsFormData.mid_name.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.mid_name.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'mid_name',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'mid_name',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.mid_name')"
+                :value="formData.mid_name"
+                :isDirty="validatorUserDataForm.errorsFormData.mid_name.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.mid_name.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('mid_name',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('mid_name',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            :label="
-              t('cabinet.profile.components.tab-general.labels.birthdate')
-            "
-            :errors="validatorUserDataForm.errorsFormData.birthdate.errors"
+              class="profile__tab--general__profile-data__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.birthdate')"
+              :errors="validatorUserDataForm.errorsFormData.birthdate.errors"
           >
             <UiInputDate
-              type="date"
-              placeholder=""
-              inputFormat="yyyy-MM-dd"
-              displayFormat="yyyy.MM.dd"
-              :value="formData.birthdate"
-              :isDirty="validatorUserDataForm.errorsFormData.birthdate.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.birthdate.errors.length > 0
-              "
-              @input="handleInputBirthday"
-              @blur="handleInputBirthday"
+                type="date"
+                placeholder=""
+                inputFormat="yyyy-MM-dd"
+                displayFormat="yyyy.MM.dd"
+                :value="formData.birthdate"
+                :isDirty="validatorUserDataForm.errorsFormData.birthdate.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.birthdate.errors.length > 0"
+                @input="handleInputBirthday"
+                @blur="handleInputBirthday"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            :label="t('cabinet.profile.components.tab-general.labels.phone')"
-            :errors="validatorUserDataForm.errorsFormData.phone.errors"
+              class="profile__tab--general__profile-data__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.phone')"
+              :errors="validatorUserDataForm.errorsFormData.phone.errors"
           >
             <UiInputPhone
-              type="number"
-              :placeholder="
-                t('cabinet.profile.components.tab-general.placeholders.phone')
-              "
-              v-model="formData.phone"
-              :isDirty="validatorUserDataForm.errorsFormData.phone.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.phone.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'phone',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'phone',
-                  $event.target.value
-                )
-              "
+                type="number"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.phone')"
+                v-model="formData.phone"
+                :isDirty="validatorUserDataForm.errorsFormData.phone.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.phone.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('phone',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('phone',$event.target.value)"
             />
           </UiFormControl>
         </div>
@@ -192,174 +108,98 @@
     <div class="profile__tab--general__profile-data--additional">
       <PanelDefault>
         <div class="profile__tab--general__profile-data--additional__form">
+          <UiTextH5 class="title"># Дополнительные данные пользователя</UiTextH5>
           <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            :label="t('cabinet.profile.components.tab-general.labels.country')"
-            :errors="validatorUserDataForm.errorsFormData.country.errors"
+              class="profile__tab--general__profile-data--additional__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.country')"
+              :errors="validatorUserDataForm.errorsFormData.country.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t('cabinet.profile.components.tab-general.placeholders.country')
-              "
-              :value="formData.country"
-              :isDirty="validatorUserDataForm.errorsFormData.country.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.country.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'country',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'country',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.country')"
+                :value="formData.country"
+                :isDirty="validatorUserDataForm.errorsFormData.country.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.country.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('country',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('country',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            :label="t('cabinet.profile.components.tab-general.labels.state')"
-            :errors="validatorUserDataForm.errorsFormData.state.errors"
+              class="profile__tab--general__profile-data--additional__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.state')"
+              :errors="validatorUserDataForm.errorsFormData.state.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t('cabinet.profile.components.tab-general.placeholders.state')
-              "
-              :value="formData.state"
-              :isDirty="validatorUserDataForm.errorsFormData.state.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.state.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'state',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'state',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.state')"
+                :value="formData.state"
+                :isDirty="validatorUserDataForm.errorsFormData.state.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.state.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('state',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('state',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            :label="t('cabinet.profile.components.tab-general.labels.city')"
-            :errors="validatorUserDataForm.errorsFormData.city.errors"
+              class="profile__tab--general__profile-data--additional__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.city')"
+              :errors="validatorUserDataForm.errorsFormData.city.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t('cabinet.profile.components.tab-general.placeholders.city')
-              "
-              :value="formData.city"
-              :isDirty="validatorUserDataForm.errorsFormData.city.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.city.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'city',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'city',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.city')"
+                :value="formData.city"
+                :isDirty="validatorUserDataForm.errorsFormData.city.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.city.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('city',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('city',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            :label="t('cabinet.profile.components.tab-general.labels.address')"
-            :errors="validatorUserDataForm.errorsFormData.address.errors"
+              class="profile__tab--general__profile-data--additional__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.address')"
+              :errors="validatorUserDataForm.errorsFormData.address.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t('cabinet.profile.components.tab-general.placeholders.address')
-              "
-              :value="formData.address"
-              :isDirty="validatorUserDataForm.errorsFormData.address.isDirty"
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.address.errors.length > 0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'address',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'address',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.address')"
+                :value="formData.address"
+                :isDirty="validatorUserDataForm.errorsFormData.address.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.address.errors.length > 0"
+                @input="validatorUserDataForm.doValidateField('address',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('address',$event.target.value)"
             />
           </UiFormControl>
 
           <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            :label="
-              t('cabinet.profile.components.tab-general.labels.postal_code')
-            "
-            :errors="validatorUserDataForm.errorsFormData.postal_code.errors"
+              class="profile__tab--general__profile-data--additional__form__field"
+              :label="t('cabinet.profile.components.tab-general.labels.postal_code')"
+              :errors="validatorUserDataForm.errorsFormData.postal_code.errors"
           >
             <UiInput
-              type="text"
-              :placeholder="
-                t(
-                  'cabinet.profile.components.tab-general.placeholders.postal_code'
-                )
-              "
-              :value="formData.postal_code"
-              :isDirty="
-                validatorUserDataForm.errorsFormData.postal_code.isDirty
-              "
-              :isInvalid="
-                validatorUserDataForm.errorsFormData.postal_code.errors.length >
-                0
-              "
-              @input="
-                validatorUserDataForm.doValidateField(
-                  'postal_code',
-                  $event.target.value
-                )
-              "
-              @blur="
-                validatorUserDataForm.doValidateField(
-                  'postal_code',
-                  $event.target.value
-                )
-              "
+                type="text"
+                :placeholder="t('cabinet.profile.components.tab-general.placeholders.postal_code')"
+                :value="formData.postal_code"
+                :isDirty="validatorUserDataForm.errorsFormData.postal_code.isDirty"
+                :isInvalid="validatorUserDataForm.errorsFormData.postal_code.errors.length >0"
+                @input="validatorUserDataForm.doValidateField('postal_code',$event.target.value)"
+                @blur="validatorUserDataForm.doValidateField('postal_code',$event.target.value)"
             />
           </UiFormControl>
 
           <div
-            class="profile__tab--general__profile-data--additional__form__field__save_btn"
+              class="profile__tab--general__profile-data--additional__form__field__save_btn"
           >
             <UiButtonDefault
-              state="info--outline"
-              @click="validateUserDataForm(handleSubmit)"
+                state="info--outline"
+                @click="validateUserDataForm(handleSubmit)"
             >
-              <UiIconSpinnerDefault v-if="isLoading" />
+              <UiIconSpinnerDefault v-if="isLoading"/>
               <span v-if="!isLoading">{{
-                t("cabinet.profile.components.tab-general.button")
-              }}</span>
+                  t("cabinet.profile.components.tab-general.button")
+                }}</span>
             </UiButtonDefault>
           </div>
         </div>
@@ -369,9 +209,9 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import { formData } from "~/pages/profile/composables";
-import { onMounted, reactive, ref } from "vue";
+import {useI18n} from "vue-i18n";
+import {formData} from "~/pages/profile/composables";
+import {onMounted, reactive, ref} from "vue";
 import {
   validateUserDataForm,
   validatorUserDataForm,
@@ -384,12 +224,13 @@ import UiInputDate from "~/components/ui/UiInputDate.vue";
 import UiInputPhone from "~/components/ui/UiInputPhone.vue";
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 
-import { useToast } from "vue-toastification";
-import { useAuthStore } from "~/stores/authStore";
+import {useToast} from "vue-toastification";
+import {useAuthStore} from "~/stores/authStore";
 import useAppCore from "~/composables/useAppCore";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+import UiTextH5 from "~/components/ui/UiTextH5.vue";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const toast = useToast();
 const appCore = useAppCore();
 const isLoading = ref(false);
@@ -418,7 +259,7 @@ const handleSubmit = async () => {
 };
 
 onMounted(async () => {
-  const { data } = await appCore.auth.getAuthUser();
+  const {data} = await appCore.auth.getAuthUser();
   formData.email = data.email;
   formData.first_name = data.first_name;
   formData.mid_name = data.mid_name;
@@ -434,6 +275,10 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+.title {
+  margin-bottom: 20px;
+}
+
 .profile__tab--general {
   height: 80vh;
   width: 100%;

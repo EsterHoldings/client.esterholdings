@@ -9,15 +9,19 @@
           # {{ data.document_data.number }}
         </div>
         <div class="document__content-left__status">
-          Status: in progress
+          Status: {{ data.state }}
         </div>
       </div>
       <div class="document__content-right">
         <span class="document__content-right__time">
-          <UiIconTime />1 day ago
+          <UiIconTime />{{ data.created_at }}
         </span>
         <span class="document__content-right__options">
-          <UiIconTrash @click="handleRemoveDocument" />
+          <UiIconTrash
+              v-if="!inProcessRemoving"
+              @click="handleRemoveDocument"
+          />
+          <UiIconSpinnerDefault v-if="inProcessRemoving" />
         </span>
       </div>
     </div>
@@ -25,11 +29,12 @@
 </template>
 
 <script lang="ts" setup>
+import {ref} from "vue";
+import useAppCore from "~/composables/useAppCore";
 import UiIconTime from "~/components/ui/UiIconTime.vue";
 import UiIconImage from "~/components/ui/UiIconImage.vue";
 import UiIconTrash from "~/components/ui/UiIconTrash.vue";
-import UiIconEdit from "~/components/ui/UiIconEdit.vue";
-import useAppCore from "~/composables/useAppCore";
+import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
 interface DocumentInterface {
   document_data: object
@@ -47,9 +52,12 @@ const props = defineProps({
 const emits = defineEmits(['documentWasRemoved']);
 
 const appCore = useAppCore();
+const inProcessRemoving = ref(false);
 
 const handleRemoveDocument = async () => {
+  inProcessRemoving.value = true;
   await appCore.documents.delete(props.data.id)
+  inProcessRemoving.value = false;
   emits('documentWasRemoved');
 }
 </script>
