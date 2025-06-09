@@ -19,4 +19,14 @@ svg {
   stroke: currentColor;
   fill: currentColor;
 }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+  cursor:pointer;
+}
 </style>

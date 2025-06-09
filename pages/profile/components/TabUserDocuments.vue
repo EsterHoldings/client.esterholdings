@@ -1,54 +1,32 @@
 <template>
   <div class="user-documents__wrapper">
+
     <div class="user-documents__left">
       <PanelDefault class="user-documents-uploader">
-        <UiTextH5 class="user-documents-uploader__title">Uploaded documents</UiTextH5>
-        <div class="user-documents-uploader__documents">
-          <div class="user-documents-uploader__document">
-            <div class="user-documents-uploader__document__image">
-              <UiIconImage />
-            </div>
-            <div class="user-documents-uploader__document__content">
-              <div class="user-documents-uploader__document__content-left">
-                <div class="user-documents-uploader__document__content-left__doc-name">
-                  Document name
-                </div>
-                <div class="user-documents-uploader__document__content-left__status">
-                  Status: in progress
-                </div>
-              </div>
-              <div class="user-documents-uploader__document__content-right">
-                <span class="user-documents-uploader__document__content-right__time">
-                  <UiIconTime />5 hour ago
-                </span>
-                <span>...</span>
-              </div>
-            </div>
+        <UiTextH5 class="user-documents-uploader__title">
+          <span>Uploaded documents</span>
+          <div class="user-documents-uploader__title__options">
+            <span class="user-documents-uploader__title__options_reload"
+                  @click="handleRefreshDocuments"
+            >
+              <UiIconUpdate :class="{ spin: isLoading }" />
+            </span>
           </div>
-          <div class="user-documents-uploader__document">
-            <div class="user-documents-uploader__document__image">
-              <UiIconImage />
-            </div>
-            <div class="user-documents-uploader__document__content">
-              <div class="user-documents-uploader__document__content-left">
-                <div class="user-documents-uploader__document__content-left__doc-name">
-                  Document name
-                </div>
-                <div class="user-documents-uploader__document__content-left__status">
-                  Status: in progress
-                </div>
-              </div>
-              <div class="user-documents-uploader__document__content-right">
-                <span class="user-documents-uploader__document__content-right__time">
-                  <UiIconTime />1 day ago
-                </span>
-                <span>...</span>
-              </div>
-            </div>
-          </div>
+        </UiTextH5>
+        <div class="user-documents-uploader__is-loading" v-if="isLoading">
+          <UiIconSpinnerDefault />
+        </div>
+        <div class="user-documents-uploader__documents" v-if="!isLoading">
+          <TabUserDocumentsDocument
+              v-for="document in documents"
+              :data="document"
+              :key="document.id"
+              @document-was-removed="handleRefreshDocuments"
+          />
         </div>
       </PanelDefault>
     </div>
+
     <div class="user-documents__right">
       <PanelDefault class="user-documents__right__panel">
         <UiTextH5 class="user-documents__right__panel__title">
@@ -77,12 +55,13 @@
                 @click="removeFile(index)"
             />
             <div class="user-documents__right__panel__selected-file__wrapper__preview">
-              <UiImage :src="getPreviewUrl(file)" />
+              <UiImage :src="getPreviewUrl(file)"/>
             </div>
             <div class="user-documents__right__panel__selected-file__wrapper__content">
               <UiFormControl :label="file.name">
                 <UiInput
-                    v-model="docNumbers[index]"
+                    :model-value="docNumbers[index]"
+                    @update:modelValue="val => docNumbers[index] = val"
                     placeholder="Номер документа"
                     maxlength="100"
                 />
@@ -103,7 +82,7 @@
             label="Comment"
             class="user-documents__right__panel__comment"
         >
-          <UiTextarea v-model="comment" placeholder="Ваш коментар..." />
+          <UiTextarea v-model="comment" placeholder="Ваш коментар..."/>
         </UiFormControl>
         <UiButtonDefault
             state="info--outline"
@@ -118,21 +97,24 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onBeforeUnmount } from "vue";
+import {reactive, ref, onBeforeUnmount, onMounted} from "vue";
 import useApi from "~/composables/useApi";
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
-import UiIconImage from "~/components/ui/UiIconImage.vue";
+
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 import UiDragAndDrop from "~/components/ui/UiDragAndDrop.vue";
 import UiTextarea from "~/components/ui/UiTextarea.vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import UiIconTime from "~/components/ui/UiIconTime.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiImage from "~/components/ui/UiImage.vue";
 import UiIconDelete from "~/components/ui/UiIconDelete.vue";
 import axios from "axios";
-import { useToast } from "vue-toastification";
+import {useToast} from "vue-toastification";
+import TabUserDocumentsDocument from "~/pages/profile/components/TabUserDocumentsDocument.vue";
+import useAppCore from "~/composables/useAppCore";
+import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
 
 interface FileWithPreview extends File {
   _previewUrl?: string;
@@ -144,7 +126,12 @@ const uploadProgress = reactive<number[]>([]);
 const comment = ref("");
 const isUploading = ref(false);
 const toast = useToast();
+
 const apiClient = new useApi(true);
+const appCore = useAppCore();
+
+const isLoading = ref(true)
+let documents = reactive([]);
 
 function isValidFormat(file: File): boolean {
   const allowed = ["image/png", "image/jpeg", "application/pdf"];
@@ -199,30 +186,23 @@ function removeFile(index: number) {
   uploadProgress.splice(index, 1);
 }
 
-onBeforeUnmount(() => {
-  selectedFiles.forEach((f) => {
-    if (f._previewUrl) {
-      URL.revokeObjectURL(f._previewUrl);
-      delete f._previewUrl;
-    }
-  });
-});
-
 async function uploadFiles() {
+
+  console.log('uploadFiles -> start');
+
   if (selectedFiles.length === 0) {
     toast.warning("Спочатку виберіть принаймні один файл.");
     return;
   }
   isUploading.value = true;
 
-  // Собираем массив для отправки на бэкенд
   const documentsPayload: {
     name: string;
     path: string;
+    document_type: string;
     document_data: { number: string };
   }[] = [];
 
-  // Сначала загружаем файлы на S3 и собираем payload
   for (let i = 0; i < selectedFiles.length; i++) {
     const file = selectedFiles[i];
     const docNumber = docNumbers[i] || "";
@@ -232,9 +212,11 @@ async function uploadFiles() {
         contentType: file.type,
         path: "documents",
       });
-      const { url, key } = presignResp.data as { url: string; key: string };
+      const {url, key} = presignResp.data as { url: string; key: string };
       await axios.put(url, file, {
-        headers: { "Content-Type": file.type },
+        headers: {
+          "Content-Type": file.type
+        },
         onUploadProgress(event) {
           uploadProgress[i] = Math.round((event.loaded / (event.total || 1)) * 100);
         },
@@ -242,7 +224,8 @@ async function uploadFiles() {
       documentsPayload.push({
         name: file.name,
         path: key,
-        document_data: { number: docNumber },
+        document_type: 'passport',
+        document_data: {number: docNumber},
       });
     } catch (err) {
       console.error(`Не вдалося завантажити файл ${file.name}:`, err);
@@ -251,7 +234,6 @@ async function uploadFiles() {
     }
   }
 
-  // Отправляем один запрос с массивом documents
   try {
     await apiClient.post("/client/user/documents", {
       documents: documentsPayload,
@@ -263,19 +245,49 @@ async function uploadFiles() {
     toast.error("Не вдалося зберегти документи. Спробуйте пізніше.");
   }
 
-  // Очищаем локальные данные и превью
   selectedFiles.forEach((f) => {
     if (f._previewUrl) {
       URL.revokeObjectURL(f._previewUrl);
       delete f._previewUrl;
     }
   });
+
   selectedFiles.splice(0, selectedFiles.length);
   docNumbers.splice(0, docNumbers.length);
   uploadProgress.splice(0, uploadProgress.length);
   comment.value = "";
   isUploading.value = false;
+
+  await loadUploadedDocuments();
 }
+
+const loadUploadedDocuments = async () => {
+  isLoading.value = true;
+  // TODO :: LOAD UPLOADED DOCUMENTS
+  const response = await appCore.documents.get();
+  documents.splice(0, documents.length, ...response.data.data.data);
+
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 300)
+}
+
+const handleRefreshDocuments = async () => {
+  await loadUploadedDocuments();
+}
+
+onBeforeUnmount(() => {
+  selectedFiles.forEach((f) => {
+    if (f._previewUrl) {
+      URL.revokeObjectURL(f._previewUrl);
+      delete f._previewUrl;
+    }
+  });
+});
+
+onMounted(async () => {
+  await loadUploadedDocuments();
+})
 </script>
 
 <style lang="scss" scoped>
@@ -288,6 +300,7 @@ async function uploadFiles() {
 
   &__left {
     width: 50%;
+
     & > div {
       padding: 20px;
     }
@@ -295,6 +308,7 @@ async function uploadFiles() {
 
   &__right {
     width: 50%;
+
     & > div {
       padding: 20px;
     }
@@ -387,7 +401,7 @@ async function uploadFiles() {
   background-color: var(--ui-background);
   border-radius: 50%;
   cursor: pointer;
-  padding: 0;
+  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -407,71 +421,35 @@ async function uploadFiles() {
 
 .user-documents-uploader {
   color: var(--ui-text-main);
+  transition: .3s;
 
   &__title {
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__options {
+      &_reload {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        padding: 5px;
+
+        &:hover {
+          background-color: var(--color-stroke-ui-dark);
+        }
+      }
+    }
   }
 
-  &__document {
-    height: 100px;
-    width: 100%;
+  &__is-loading {
+
+    min-height: 30vh;
     display: flex;
-    gap: 20px;
-    margin-bottom: 10px;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    &__image {
-      height: 100%;
-      width: 100px;
-      border: 1px dashed var(--ui-text-main);
-      border-radius: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    &__content {
-      width: 100%;
-      height: 100%;
-      display: flex;
-
-      &-left {
-        width: 100%;
-        position: relative;
-
-        &__doc-name {
-          margin-bottom: 10px;
-        }
-
-        &__status {
-          color: var(--color-warning);
-        }
-      }
-
-      &-right {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: flex-end;
-
-        &__time {
-          font-size: 13px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          white-space: pre;
-
-          svg {
-            height: 20px;
-            width: 20px;
-            margin-right: 5px;
-          }
-        }
-      }
-    }
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
