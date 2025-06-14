@@ -402,7 +402,7 @@ watch(windowWidth, (width) => {
 
 .fixed-header-menu {
   position: fixed;
-  top: 60px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9998;

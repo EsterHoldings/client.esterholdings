@@ -52,7 +52,7 @@ import UiIconEye from "~/components/ui/UiIconEye.vue";
 import UiIconEyeClose from "~/components/ui/UiIconEyeClose.vue";
 
 const props = defineProps({
-  modelValue: String,
+  modelValue: { type: String, default: '' },
   type: { type: String, default: 'text' },
   placeholder: { type: String, default: '' },
   value: { type: String, default: '' },
@@ -71,12 +71,14 @@ const currentValue = computed(() => props.modelValue != null ? props.modelValue 
 const emit = defineEmits(['update:modelValue','input','focus','blur'])
 const onFocus = (e: Event) => emit('focus', e)
 const onInput = (e: Event) => {
-  const v = (e.target as HTMLInputElement).value
-  emit('update:modelValue', v)
-  emit('input', v)
+  const val = (e.target as HTMLInputElement).value
+  console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+  console.log(val);
+  console.log('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+  emit('update:modelValue', val)
+  // emit('input', val)
 }
 const onBlur = (e: Event) => emit('blur', e)
-
 
 const typeInput = computed(() => {
   if (props.type === "password") {
@@ -84,6 +86,10 @@ const typeInput = computed(() => {
   }
   return props.type;
 });
+
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value;
+}
 </script>
 
 <style lang="scss" scoped>
