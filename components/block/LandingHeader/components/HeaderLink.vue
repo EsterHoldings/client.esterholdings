@@ -1,11 +1,11 @@
 <template>
-  <NuxtLink :to="props.path" class="header__link" :class="linkClass">
+  <div class="header__link" :class="linkClass">
     <UiTextH5 :class="textClass">{{ props.name }}</UiTextH5>
 
     <UiIconChevronUp v-if="isActive" :class="iconUpClass" />
 
     <UiIconChevronDown v-else :class="iconDownClass" />
-  </NuxtLink>
+  </div>
 </template>
 
 <script setup>
@@ -16,7 +16,6 @@ import UiTextH5 from "~/components/ui/UiTextH5.vue";
 
 const props = defineProps({
   name: String,
-  path: String,
   activeLink: String,
   isInvertColor: Boolean,
 });
@@ -49,6 +48,7 @@ const iconDownClass = computed(() => ({
   gap: 10px;
   color: white;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     color: #f75709;

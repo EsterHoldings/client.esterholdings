@@ -2,9 +2,13 @@
   <div class="page-wrapper">
     <div class="page-content">
       <LandingHeader class="header" />
-      <div class="page">
-        <slot />
-      </div>
+
+      <transition name="fade" mode="out-in">
+        <div class="page">
+          <slot />
+        </div>
+      </transition>
+
       <LandingFooter />
     </div>
   </div>
@@ -33,5 +37,15 @@ import LandingFooter from "~/components/block/LandingFooter";
     width: 100%;
     background-color: var(--ui-background);
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

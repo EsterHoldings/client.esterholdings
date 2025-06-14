@@ -8,9 +8,7 @@
         <HeaderMenuItem
           v-for="(section, index) in headerItems"
           :key="section.section"
-          :title="
-            t(`landing.header.megaMenu.${props.activeLink}[${index}].section`)
-          "
+          :titles="buildTitle(index)"
           :items="buildItems(section, index)"
           :isMobile="props.isMobile"
         />
@@ -47,12 +45,26 @@ const { t, tm } = useI18n();
 
 const headerItems = tm(`landing.header.megaMenu.${props.activeLink}`);
 
-function buildItems(section, sectionIndex) {
-  return section.items.map((_, itemIndex) => ({
+function buildTitle(sectionIndex) {
+  const title = t(
+    `landing.header.megaMenu.${props.activeLink}[${sectionIndex}].section`
+  );
+  return {
+    name: title,
+    path: routes[title]?.path ?? "#",
+  };
+}
+
+function buildItems(sections, sectionIndex) {
+  const titleList = t(
+    `landing.header.megaMenu.${props.activeLink}[${sectionIndex}].section`
+  );
+
+  return sections.items.map((_, itemIndex) => ({
     name: t(
       `landing.header.megaMenu.${props.activeLink}[${sectionIndex}].items[${itemIndex}]`
     ),
-    path: routes[section.section]?.[itemIndex] ?? "#",
+    path: routes[titleList]?.list?.[itemIndex] ?? "#",
   }));
 }
 </script>
@@ -62,6 +74,8 @@ function buildItems(section, sectionIndex) {
   padding: 30px;
   background: var(--ui-background);
   border-radius: 16px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.85), 0 0 60px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 128, 255, 0.2), 0 0 6px rgba(255, 255, 255, 0.08);
 
   &-mobile {
     padding: 0px;

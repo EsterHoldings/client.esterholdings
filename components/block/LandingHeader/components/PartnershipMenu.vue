@@ -8,9 +8,7 @@
         <HeaderMenuItem
           v-for="(section, index) in headerItems"
           :key="section.section"
-          :title="
-            t(`landing.header.megaMenu.${props.activeLink}[${index}].section`)
-          "
+          :titles="buildTitle(index)"
           :items="buildItems(section, index)"
           :isMobile="props.isMobile"
         />
@@ -40,12 +38,26 @@ const { t, tm } = useI18n();
 
 const headerItems = tm(`landing.header.megaMenu.${props.activeLink}`);
 
-function buildItems(section, sectionIndex) {
-  return section.items.map((_, itemIndex) => ({
+function buildTitle(sectionIndex) {
+  const title = t(
+    `landing.header.megaMenu.${props.activeLink}[${sectionIndex}].section`
+  );
+  return {
+    name: title,
+    path: routes[title]?.path ?? "#",
+  };
+}
+
+function buildItems(sections, sectionIndex) {
+  const titleList = t(
+    `landing.header.megaMenu.${props.activeLink}[${sectionIndex}].section`
+  );
+
+  return sections.items.map((_, itemIndex) => ({
     name: t(
       `landing.header.megaMenu.${props.activeLink}[${sectionIndex}].items[${itemIndex}]`
     ),
-    path: routes[section.section]?.[itemIndex] ?? "#",
+    path: routes[titleList]?.list?.[itemIndex] ?? "#",
   }));
 }
 </script>

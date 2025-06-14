@@ -1,82 +1,38 @@
 <template>
-  <section class="account-types__wrapper">
-    <UiContainer>
-      <UiTextH3 class="account-types__title"
-        >{{ t("landing.sections.accounts__title") }}
+  <div
+    class="account-card"
+    :data-text="t(`landing.sections.accounts__options[0].title`)"
+  >
+    <div class="account-content">
+      <UiTextH3 class="account-title bold">
+        {{ t(`landing.sections.accounts__options[0].title`) }}
+
+        <UiTextH5 class="account-subtitle">
+          {{ t(`landing.sections.accounts__options[0].label`) }}
+        </UiTextH5>
       </UiTextH3>
 
-      <div class="account-types__tabs">
-        <TabsDefault
-          :tabsList="tabsList"
-          @selectTab="handleActiveTab"
-          :activeTabIndex="activeTabIndex"
-        />
-      </div>
+      <UiTextH5 class="account-description">
+        {{ t(`landing.sections.accounts__options[0].description`) }}
+      </UiTextH5>
 
-      <div class="account-types">
-        <transition name="slide-short" mode="out-in">
-          <component
-            :is="tabsList[activeTabIndex].component"
-            :key="activeTabIndex"
-          />
-        </transition>
-      </div>
-    </UiContainer>
-  </section>
+      <UiButtonDefault state="primary">
+        {{ t("landing.sections.accounts__btn") }}
+      </UiButtonDefault>
+    </div>
+  </div>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import { computed, ref, watchEffect } from "vue";
 
-import { ref, computed } from "vue";
-
-import { useTabs } from "./composables/index";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiIconArrowRight from "~/components/ui/UiIconArrowRight.vue";
 
-import UiContainer from "~/components/ui/UiContainer.vue";
-import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
-
-import Standard from "./components/Standart.vue";
-import Pro from "./components/Pro.vue";
-import Tandem from "./components/Tandem.vue";
-import Islamic from "./components/Islamic.vue";
-
 const { t, tm } = useI18n();
-
-const accounts = tm("landing.sections.accounts__options");
-
-const activeTabIndex = ref(0);
-
-const tabsList = computed(() => {
-  return [
-    {
-      label: t("landing.sections.accounts__options[0].title"),
-      component: Standard,
-    },
-
-    {
-      label: t("landing.sections.accounts__options[1].title"),
-      component: Pro,
-    },
-
-    {
-      label: t("landing.sections.accounts__options[2].title"),
-      component: Islamic,
-    },
-
-    {
-      label: t("landing.sections.accounts__options[3].title"),
-      component: Tandem,
-    },
-  ];
-});
-
-const handleActiveTab = (tabIndex: number) => {
-  activeTabIndex.value = tabIndex;
-};
 </script>
 
 <style lang="scss" scoped>
@@ -90,12 +46,6 @@ const handleActiveTab = (tabIndex: number) => {
     text-align: center;
     margin-bottom: 70px;
   }
-
-  &__tabs {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 }
 
 .account-container {
@@ -106,8 +56,12 @@ const handleActiveTab = (tabIndex: number) => {
 }
 
 .account-card {
+  background: linear-gradient(rgba(21, 21, 21, 0.6), rgba(21, 21, 21, 0.6)),
+    url("/static/standardBgCard.jpeg") center / cover no-repeat;
+
   flex: 1;
-  height: 385px;
+  min-height: 500px;
+  min-width: 100%;
   border-radius: 15px;
   border: 1px solid var(--ui-stroke);
   cursor: pointer;
@@ -128,16 +82,46 @@ const handleActiveTab = (tabIndex: number) => {
   &:before {
     content: attr(data-text);
     position: absolute;
-    bottom: -10px;
-    left: 20px;
-    font-size: 180px;
+    left: 100%;
+    white-space: nowrap;
+    font-size: 130px;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.07);
     text-transform: uppercase;
     filter: blur(4px);
     z-index: 0;
-    white-space: nowrap;
     pointer-events: none;
+    animation: scroll-text 12s linear infinite;
+    transition: left 0.6s ease, bottom 0.6s ease, transform 0.6s ease,
+      filter 0.6s ease, font-size 0.6s ease, color 0.6s ease;
+  }
+
+  &:hover:before {
+    animation: pulse 1.5s ease-in-out infinite;
+    left: 50%;
+    transform: translateX(-50%) scale(1);
+    filter: blur(1px);
+    font-size: 130px;
+    color: rgba(255, 255, 255, 0.15);
+  }
+
+  @keyframes scroll-text {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: translateX(-50%) scale(1);
+    }
+    50% {
+      transform: translateX(-50%) scale(1.1);
+    }
   }
 
   .account-description {
@@ -188,29 +172,19 @@ const handleActiveTab = (tabIndex: number) => {
   margin-top: 50px;
 }
 
-.slide-short-enter-active,
-.slide-short-leave-active {
-  transition: opacity 0.1s ease, transform 0.1s ease;
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
-.slide-short-enter-from {
+.fade-slide-enter-from,
+.fade-slide-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateY(10px);
 }
-
-.slide-short-enter-to {
+.fade-slide-enter-to,
+.fade-slide-leave-from {
   opacity: 1;
-  transform: translateX(0);
-}
-
-.slide-short-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.slide-short-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
+  transform: translateY(0);
 }
 
 @media (max-width: 991px) {
@@ -241,6 +215,25 @@ const handleActiveTab = (tabIndex: number) => {
 
   .account-card.active {
     transform: scale(1);
+
+    &::before {
+      font-size: 100px !important;
+    }
+
+    &:hover:before {
+      left: 0;
+      transform: scale(1);
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
   }
 }
 

@@ -5,5 +5,9 @@ export const useUiStore = defineStore("ui", () => {
   const headerScrolled = false;
   const showMenu = ref(false);
 
-  return { headerScrolled, showMenu };
+  const toggleMenu = () => {
+    return (showMenu.value = !showMenu.value);
+  };
+
+  return { headerScrolled, showMenu, toggleMenu };
 });
