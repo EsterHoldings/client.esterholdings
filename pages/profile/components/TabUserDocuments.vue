@@ -61,7 +61,7 @@
             <div class="user-documents__right__panel__selected-file__wrapper__content">
               <UiFormControl :label="file.name">
                 <UiInput
-                    :model-value="docNumbers[index]"
+                    :value="docNumbers[index]"
                     @input="val => docNumbers[index] = val"
                     placeholder="Номер документа"
                     maxlength="100"

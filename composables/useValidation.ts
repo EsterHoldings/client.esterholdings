@@ -8,9 +8,11 @@ import MinLength from "./services/validation/rules/minLength"
 import MaxLength from "./services/validation/rules/maxLength"
 import isUnique from "./services/validation/rules/isUnique"
 import passwordConfirmation from "./services/validation/rules/passwordConfirmation"
+import IsDecimal from "~/composables/services/validation/rules/isDecimal";
 
 const rulesBindingsList = {
   required: IsRequired,
+  isDecimal: IsDecimal,
   isEmail: IsEmail,
   min: MinLength,
   max: MaxLength,

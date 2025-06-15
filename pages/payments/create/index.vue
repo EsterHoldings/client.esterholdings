@@ -22,7 +22,7 @@
         </PanelDefault>
 
         <PanelDefault class="payment-create__content__right">
-          <UiTextH5 class="payment-create__content__right_title">Форма оплаты</UiTextH5>
+<!--          <UiTextH5 class="payment-create__content__right_title">Форма оплаты</UiTextH5>-->
           <div>
             <component :is="activePaymentSystemComponentIs.componentForm" />
           </div>

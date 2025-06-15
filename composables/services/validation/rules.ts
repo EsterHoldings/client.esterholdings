@@ -1,7 +1,14 @@
-import { isEmailRegEx } from "~/constants/validation";
+import {
+  isDecimalRegEx,
+  isEmailRegEx
+} from "~/constants/validation";
 
 export const isRequired = (value: any): Boolean => {
   return !value;
+};
+
+export const isDecimal = (value: any): boolean => {
+  return (typeof value === 'string' && isDecimalRegEx.test(value));
 };
 
 export const isEmail = (value: any): Boolean => {
