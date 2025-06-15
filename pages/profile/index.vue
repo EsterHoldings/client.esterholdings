@@ -35,7 +35,7 @@ import TabUserVerification from "~/pages/profile/components/TabUserVerification.
 
 definePageMeta({
   layout: "cabinet",
-  middleware: ["auth-client"],
+  middleware: ["auth-client", "client-check-auth"],
 });
 const { t } = useI18n();
 

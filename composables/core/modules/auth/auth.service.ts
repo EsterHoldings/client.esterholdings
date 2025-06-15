@@ -2,7 +2,6 @@ import useApi from "~/composables/useApi";
 import {
   ROUTE_ADMIN_AUTH_LOGIN,
   ROUTE_ADMIN_AUTH_LOGOUT,
-  ROUTE_ADMINS,
   ROUTE_AUTH_USER,
 } from "~/constants/routes";
 
@@ -27,6 +26,10 @@ export class AdminAuthService {
 
   async postSocialLogin(data: object): Promise<any> {
     return await this.useApi.post("/auth/social", data);
+  }
+
+  async postCheckIsAuth(): Promise<any> {
+    return await this.useApi.post("/auth/isAuth");
   }
 }
 

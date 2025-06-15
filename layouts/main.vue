@@ -4,9 +4,7 @@
       <LandingHeader class="header" />
 
       <transition name="fade" mode="out-in">
-        <div class="page">
-          <slot />
-        </div>
+        <div class="page"><slot /></div>
       </transition>
 
       <LandingFooter />

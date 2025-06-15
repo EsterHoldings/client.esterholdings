@@ -23,7 +23,7 @@ import UiContainer from "~/components/ui/UiContainer.vue";
 import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 
-definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
+definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 </script>
 
 <style lang="scss" scoped>

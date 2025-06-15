@@ -1,7 +1,7 @@
 import AdminAuthModule from "~/composables/core/modules/adminAuth/adminAuth.module";
 import AdminsModule from "~/composables/core/modules/admins/admins.module";
 import AccountsModule from "~/composables/core/modules/accounts/accounts.module";
-import AuthModule from "~/composables/core/modules/clients/auth.module";
+import AuthModule from "~/composables/core/modules/clients/auth.module"; // TODO :: Fix it
 import ItemsModule from "~/composables/core/modules/items/items.module";
 import RolesModule from "~/composables/core/modules/roles/roles.module";
 import PermissionsModule from "~/composables/core/modules/permissions/permissions.module";

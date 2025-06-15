@@ -175,7 +175,7 @@ import { definePageMeta } from "~/.nuxt/imports";
 import AccountsCreateNew from "~/pages/accounts/components/AccountsCreateNew.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 
-definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
+definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
 const { t } = useI18n({ useScope: "global" });
 const appCore = useAppCore();

@@ -145,7 +145,7 @@ import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
 import UiIconFailed from "~/components/ui/UiIconFailed.vue";
 import UiIconWarning from "~/components/ui/UiIconWarning.vue";
 
-definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
+definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
 import { useI18n } from "vue-i18n";
 import UiContainer from "~/components/ui/UiContainer.vue";

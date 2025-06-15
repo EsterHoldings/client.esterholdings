@@ -200,7 +200,7 @@ const { t } = useI18n({ useScope: "global" });
 
 definePageMeta({
   layout: "cabinet",
-  middleware: ["auth-client"],
+  middleware: ["auth-client", "client-check-auth"],
 });
 
 const appCore = useAppCore();

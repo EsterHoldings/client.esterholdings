@@ -22,5 +22,9 @@ export class AuthModule {
   async doSocialLogin(params: {}): Promise<any> {
     return await this.authService.postSocialLogin(params);
   }
+
+  async doCheckIsAuth(): Promise<any> {
+    return await this.authService.postCheckIsAuth()
+  }
 }
 export default AuthModule;

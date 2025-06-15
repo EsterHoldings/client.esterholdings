@@ -37,7 +37,7 @@ import TabTerms from "./components/TabTerms.vue";
 
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 
-definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
+definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 const { t } = useI18n();
 
 const activeTabIndex = ref(0);

@@ -6,7 +6,9 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import UiImage from "~/components/ui/UiImage.vue";
+</script>
 
 <style lang="scss" scoped>
 .page {

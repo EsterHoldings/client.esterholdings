@@ -1,20 +1,36 @@
 <template>
   <div class="page__wrapper">
-    <TheCabinetSideBar />
-    <UiImage class="bg-image" src="/space.gif" />
+    <TheCabinetSideBar/>
+    <UiImage class="bg-image" src="/space.gif"/>
     <Transition name="fade" mode="out-in">
       <div class="page" :key="route.fullPath">
-        <slot />
+        <slot/>
       </div>
     </Transition>
+    <TheFooter/>
   </div>
 </template>
 
 <script setup lang="ts">
-import TheCabinetSideBar from "~/components/block/TheCabinetSideBar.vue";
-import { useRoute } from "vue-router";
+import {onMounted} from "vue";
+import {useRoute} from "vue-router";
 import UiImage from "~/components/ui/UiImage.vue";
+import TheCabinetSideBar from "~/components/block/TheCabinetSideBar.vue";
+import TheFooter from "~/components/block/TheFooter.vue";
+
+import useAppCore from "~/composables/useAppCore";
+
 const route = useRoute();
+const appCore = useAppCore();
+
+onMounted(async () => {
+  const response = await appCore.auth.doCheckIsAuth();
+  if (!response.data.success) {
+    console.log('-------------------');
+    console.log(response.data);
+    console.log('-------------------');
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -33,8 +49,9 @@ const route = useRoute();
 }
 
 .page {
+  box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 100px);
   padding: 40px 40px 40px 142px;
   overflow-y: auto;
   color: white;

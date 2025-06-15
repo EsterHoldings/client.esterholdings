@@ -1,6 +1,7 @@
 <template>
   <div class="page__wrapper">
     <TheGuestHeader />
+    <UiImage class="bg-image" src="/space.gif" />
     <div class="page">
       <slot />
     </div>
@@ -9,6 +10,7 @@
 
 <script setup lang="ts">
 import TheGuestHeader from "~/components/block/TheGuestHeader.vue";
+import UiImage from "~/components/ui/UiImage.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -20,5 +22,12 @@ import TheGuestHeader from "~/components/block/TheGuestHeader.vue";
   &__wrapper {
     background-color: var(--ui-background-admin);
   }
+}
+.bg-image {
+  position: fixed;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  z-index: -1;
 }
 </style>

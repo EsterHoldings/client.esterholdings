@@ -25,9 +25,7 @@ defineProps({
   },
 });
 
-const handleClickTab = (index) => {
-  emit("selectTab", index);
-};
+const handleClickTab = (index: number) => emit("selectTab", index);
 </script>
 
 <style lang="scss" scoped>

@@ -39,6 +39,10 @@ export class AuthModule implements AuthModuleInterface {
   doSocialLogin(data: any): Promise<any> {
     return this.authService.postSocialLogin(data);
   }
+
+  async doCheckIsAuth(): Promise<any> {
+    return await this.authService.checkIsAuth()
+  }
 }
 
 export default AuthModule;
