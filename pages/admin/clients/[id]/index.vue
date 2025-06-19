@@ -19,7 +19,6 @@
       />
     </transition>
   </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -98,15 +97,17 @@ const tabsList = computed(() => {
     {
       label: 'Верификация',
       component: TabVerification,
-      props: { userData },
+      props: { userData, clientId },
     },
     {
       label: 'Рефералы',
       component: TabReferrals,
+      props: { userData, clientId },
     },
     {
       label: 'Смена пароля',
       component: TabChangePassword,
+      props: { userData, clientId },
     },
   ];
 });

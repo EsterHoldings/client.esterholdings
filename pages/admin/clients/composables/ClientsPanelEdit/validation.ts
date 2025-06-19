@@ -1,4 +1,4 @@
-import useValidation from "~/composables/useValidation";
+import useValidation from "../../../../../composables/useValidation";
 
 import { formData } from ".";
 

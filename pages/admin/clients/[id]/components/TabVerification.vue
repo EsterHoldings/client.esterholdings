@@ -8,11 +8,16 @@
             <span class="user-documents-uploader__title__options_reload"
                   @click="handleRefreshDocuments"
             >
-              <UiIconUpdate :class="{ spin: isLoading }" />
+              <UiIconUpdate :class="{ spin: isLoading }"/>
             </span>
           </div>
         </div>
         <div class="user-verification__left__verification-list_wrapper">
+
+          <div>
+            {{ verificationRequestDto.info.verification_status }}
+          </div>
+
           <ul class="user-verification__left__verification-list">
             <li>
               <UiIconFailed/>
@@ -23,12 +28,12 @@
             <li>
               <UiIconFailed/>
               <span>{{ t("cabinet.dashboard.accountVerification.addressFailed") }}</span>
-              <VerificationActions status="rejected" />
+              <VerificationActions status="rejected"/>
             </li>
             <li>
               <UiIconSuccess/>
               <span>{{ t("cabinet.dashboard.accountVerification.documentVerified") }}</span>
-              <VerificationActions status="approved" />
+              <VerificationActions status="approved"/>
             </li>
             <li>
               <UiIconWarning/>
@@ -38,11 +43,11 @@
             <li>
               <UiIconWarning/>
               <span>{{ t("cabinet.dashboard.accountVerification.profileInProgress") }}</span>
-              <VerificationActions status="pending" />
+              <VerificationActions status="pending"/>
             </li>
           </ul>
           <div class="user-verification__left__verification-list--is-loading" v-if="isLoading">
-            <UiIconSpinnerDefault />
+            <UiIconSpinnerDefault/>
           </div>
         </div>
       </PanelDefault>
@@ -53,7 +58,7 @@
 
         <UiTextH5 class="user-verification__right__panel__title">
           <span># Profile info</span>
-          <VerificationActions status="pending" />
+          <VerificationActions status="pending"/>
         </UiTextH5>
 
         <div class="user-verification__right__panel__personal-info">
@@ -121,33 +126,33 @@
       <div class="user-verification__documents__content">
         <div class="document">
           <div class="document__options">
-            <VerificationActions :document="{'name': 1}" status="rejected" />
+            <VerificationActions :document="{'name': 1}" status="rejected"/>
           </div>
-          <UiIconImage />
+          <UiIconImage/>
           <span># Doc1</span>
         </div>
 
         <div class="document">
           <div class="document__options">
-            <VerificationActions :document="{'name': 1}" status="pending" />
+            <VerificationActions :document="{'name': 1}" status="pending"/>
           </div>
-          <UiIconImage />
+          <UiIconImage/>
           <span># Doc2</span>
         </div>
 
         <div class="document">
           <div class="document__options">
-            <VerificationActions :document="{'name': 1}" status="pending" />
+            <VerificationActions :document="{'name': 1}" status="pending"/>
           </div>
-          <UiIconImage />
+          <UiIconImage/>
           <span># Doc3</span>
         </div>
 
         <div class="document">
           <div class="document__options">
-            <VerificationActions :document="{'name': 1}" status="approved" />
+            <VerificationActions :document="{'name': 1}" status="approved"/>
           </div>
-          <UiIconImage />
+          <UiIconImage/>
           <span># Doc4</span>
         </div>
 
@@ -196,28 +201,52 @@ import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
 import UiIconFailed from "~/components/ui/UiIconFailed.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 import UiIconImage from "~/components/ui/UiIconImage.vue";
 import VerificationActions from "~/pages/admin/clients/[id]/components/VerificationActions.vue";
+import useAppCore from "~/composables/useAppCore";
+import verificationRequestsModule
+  from "~/composables/core/modules/adminModules/verificationRequests/verificationRequests.module";
+
+interface VerificationSection {
+  verification_status: "",
+  comment: ""
+}
+
+interface VerificationRequestDto {
+  info: VerificationSection
+  photo: VerificationSection
+  email: VerificationSection
+  address: VerificationSection
+  documents: VerificationSection
+  deposit: VerificationSection
+}
 
 const props = defineProps({
   userData: {
     type: Object,
     default: {}
   },
+  clientId: {
+    type: String,
+    required: false
+  },
 });
 
-const {locale, t} = useI18n({useScope: "global"});
-
+const appCore = useAppCore();
 const isLoading = ref(false);
+let verificationRequestData = reactive({});
+const {t} = useI18n({useScope: "global"});
 
 const loadVerificationData = async () => {
   isLoading.value = true;
 
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 1000)
+  const response = await appCore.adminModules.verificationRequests.get(props.clientId.value);
+  const verificationRequestDto = response.data.data.length > 0 ? response.data.data[0] : {};
+  Object.assign(verificationRequestData, verificationRequestDto.data);
+
+  isLoading.value = false;
 }
 
 const handleRefreshDocuments = async () => {
@@ -306,7 +335,8 @@ onMounted(async () => {
           justify-content: space-between;
           padding: 0 10px;
 
-          span {}
+          span {
+          }
 
           &:last-child {
             border-bottom: none;

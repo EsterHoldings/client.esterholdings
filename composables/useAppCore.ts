@@ -6,14 +6,16 @@ import DocumentsModule from "~/composables/core/modules/documents/documents.modu
 import HelperModule from "~/composables/core/modules/helper/helper.module";
 import ItemsModule from "~/composables/core/modules/items/items.module";
 import PasswordModule from "~/composables/core/modules/password/password.module";
+import PaymentSystemsModule from "~/composables/core/modules/paymentSystems/paymentSystems.module";
 import PaymentsModule from "~/composables/core/modules/payments/payments.module";
 import PermissionsModule from "~/composables/core/modules/permissions/permissions.module";
 import RolesModule from "~/composables/core/modules/roles/roles.module";
 import S3Module from "~/composables/core/modules/s3/s3.module";
 import UsersModule from "~/composables/core/modules/users/users.module";
-import PaymentSystemsModule from "~/composables/core/modules/paymentSystems/paymentSystems.module";
 
 import AdminClientsModule from "~/composables/core/modules/adminModules/clients/clients.module";
+import AdminDocumentsModule from "~/composables/core/modules/adminModules/documents/documents.module";
+import AdminVerificationRequests from "~/composables/core/modules/adminModules/verificationRequests/verificationRequests.module";
 
 export interface ICoreModules {
     adminAuth : AdminAuthModule;
@@ -34,6 +36,8 @@ export interface ICoreModules {
 
     adminModules: {
         clients: AdminClientsModule,
+        documents: AdminDocumentsModule,
+        verificationRequests: AdminVerificationRequests,
     }
 }
 
@@ -57,6 +61,8 @@ export const useAppCore = (): ICoreModules => {
 
         adminModules: {
             clients: new AdminClientsModule(),
+            documents: new AdminDocumentsModule(),
+            verificationRequests: new AdminVerificationRequests(),
         },
     };
 };
