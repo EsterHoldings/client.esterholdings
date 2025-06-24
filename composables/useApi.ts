@@ -9,9 +9,9 @@ export class useApi {
     constructor(forClient = false) {
 
         this.api = axios.create({
-            // baseURL: "https://esterholdings.website/api/",
+            baseURL: "https://esterholdings.website/api/",
             // baseURL: "http://127.0.0.1:8000/api/",
-            baseURL: "/api",
+            // baseURL: "/api",
             headers: {
                 'Content-Type': 'application/json',
             },
