@@ -101,7 +101,8 @@
 
           <template v-if="payments.length === 0">
             <div class="payments__content__nothing-to-show">
-              {{ t("cabinet.billing.nothingToShow") }}
+              <span v-if="!isLoading">{{t("cabinet.billing.nothingToShow")}}</span>
+              <UiIconSpinnerDefault v-if="isLoading" />
             </div>
           </template>
 
@@ -205,6 +206,8 @@ import UiIconSort from "~/components/ui/UiIconSort.vue";
 import useAppCore from "~/composables/useAppCore";
 import UiIconCopy from "~/components/ui/UiIconCopy.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
+import {isLoading} from "~/pages/admin/accounts/composables";
+import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
 
 definePageMeta({
@@ -224,6 +227,7 @@ const perPage = ref(4);
 const currentPage = ref(1);
 const orderBy = ref("");
 const orderDirection = ref(ORDER_DIRECTION_DESC);
+const isLoading = ref(false)
 
 const payments = reactive([]);
 const spinIcon = ref(false);
@@ -295,6 +299,7 @@ const handleOrderByAndDirection = async (value) => {
 };
 
 const loadData = async () => {
+  isLoading.value = true;
   const response = await appCore.payments.get({
     search: search.value,
     perPage: perPage.value,
@@ -312,6 +317,7 @@ const loadData = async () => {
     return x;
   });
   payments.splice(0, payments.length, ...paymentsData);
+  isLoading.value = false;
 };
 
 const shortId = (uuid: string) => {

@@ -3,67 +3,67 @@
     <UiTextH3 class="login-form__title">Login</UiTextH3>
 
     <UiFormControl
-      class="login-form__field"
-      label="Email"
-      :errors="validatorLoginForm.errorsFormData.email.errors"
+        class="login-form__field"
+        label="Email"
+        :errors="validatorLoginForm.errorsFormData.email.errors"
     >
       <UiInput
-        type="text"
-        placeholder="example@test.com"
-        :value="props.formData.email"
-        :isDirty="validatorLoginForm.errorsFormData.email.isDirty"
-        :isInvalid="validatorLoginForm.errorsFormData.email.errors.length > 0"
-        @input="
+          type="text"
+          placeholder="example@test.com"
+          :value="props.formData.email"
+          :isDirty="validatorLoginForm.errorsFormData.email.isDirty"
+          :isInvalid="validatorLoginForm.errorsFormData.email.errors.length > 0"
+          @input="
           validatorLoginForm.doValidateField('email', $event.target.value)
         "
-        @blur="validatorLoginForm.doValidateField('email', $event.target.value)"
+          @blur="validatorLoginForm.doValidateField('email', $event.target.value)"
       />
     </UiFormControl>
 
     <UiFormControl
-      class="login-form__field"
-      label="Password"
-      :errors="validatorLoginForm.errorsFormData.password.errors"
+        class="login-form__field"
+        label="Password"
+        :errors="validatorLoginForm.errorsFormData.password.errors"
     >
       <UiInput
-        type="password"
-        placeholder="********"
-        :value="props.formData.password"
-        :isDirty="validatorLoginForm.errorsFormData.password.isDirty"
-        :isInvalid="
+          type="password"
+          placeholder="********"
+          :value="props.formData.password"
+          :isDirty="validatorLoginForm.errorsFormData.password.isDirty"
+          :isInvalid="
           validatorLoginForm.errorsFormData.password.errors.length > 0
         "
-        @input="
+          @input="
           validatorLoginForm.doValidateField('password', $event.target.value)
         "
-        @blur="
+          @blur="
           validatorLoginForm.doValidateField('password', $event.target.value)
         "
       />
     </UiFormControl>
 
     <UiFormControl
-      class="login-form__field"
-      label="2Fa code"
-      :errors="twoFaErrors"
-      v-if="twoFaEnabled"
+        class="login-form__field"
+        label="2Fa code"
+        :errors="twoFaErrors"
+        v-if="twoFaEnabled"
     >
       <UiInput
-        type="text"
-        placeholder="********"
-        :value="props.formData.twoFaCode"
-        :isDirty="twoFaErrors.length > 0"
-        :isInvalid="twoFaErrors.length > 0"
-        @input="handleTwoFaCodeInput"
+          type="text"
+          placeholder="********"
+          :value="props.formData.twoFaCode"
+          :isDirty="twoFaErrors.length > 0"
+          :isInvalid="twoFaErrors.length > 0"
+          @input="handleTwoFaCodeInput"
       />
     </UiFormControl>
 
     <UiButtonDefault
-      type="submit"
-      state="primary"
-      class="login-form__btn"
-      :isLoading="isLoading"
-      @click="validateLoginForm(doSendForm)"
+        type="submit"
+        state="primary"
+        class="login-form__btn"
+        :isLoading="isLoading"
+        @click="validateLoginForm(doSendForm)"
     >
       Login
     </UiButtonDefault>
@@ -78,18 +78,18 @@
     </div>
 
     <div class="login-form__social-links">
-      <GoogleLogin />
-      <FacebookLogin />
-      <LinkedInLogin />
+      <GoogleLogin/>
+      <FacebookLogin/>
+      <LinkedInLogin/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {reactive, ref} from "vue";
-import { navigateTo } from "nuxt/app";
-import { useAuthStore } from "~/stores/authStore";
-import { useAppCore } from "~/composables/useAppCore";
+import {navigateTo} from "nuxt/app";
+import {useAuthStore} from "~/stores/authStore";
+import {useAppCore} from "~/composables/useAppCore";
 
 import UiInput from "~/components/ui/UiInput.vue";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
@@ -100,7 +100,7 @@ import GoogleLogin from "./GoogleLogin.vue";
 import FacebookLogin from "./FacebookLogin.vue";
 import LinkedInLogin from "./LinkedInLogin.vue";
 
-import { useToast } from "vue-toastification";
+import {useToast} from "vue-toastification";
 
 import {
   validatorLoginForm,
@@ -139,14 +139,17 @@ const doSendForm = async () => {
     navigateTo("/dashboard");
   } catch (e: any) {
     if (e.status === 401) {
-      if (!twoFaEnabled.value) {
-        toast.info(e.response.data.message)
-        twoFaEnabled.value = true;
+      if (e.response.data?.data?.two_fa_is_required) {
+        if (!twoFaEnabled.value) {
+          toast.info(e.response.data.message)
+          twoFaEnabled.value = true;
+        } else {
+          twoFaErrors = [e.response.data.message]
+        }
       } else {
-        twoFaErrors = [e.response.data.message]
+        toast.error("Invalid credentials");
       }
     } else {
-      console.log("LoginForm -> doSendForm -> catch", e.message);
       toast.error("Invalid credentials");
     }
   } finally {

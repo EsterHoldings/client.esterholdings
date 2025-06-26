@@ -45,22 +45,22 @@ export interface ICoreModules {
 
 export const useAppCore = (): ICoreModules => {
     return {
+        accounts: new AccountsModule(),
         adminAuth: new AdminAuthModule(), // TODO :: Move to adminModules
         admins: new AdminsModule(), // TODO :: Move to adminModules
-        accounts: new AccountsModule(),
-        auth: new AuthModule(),
         auth2fa: new Auth2faModule(),
+        auth: new AuthModule(),
         clients: new AuthModule(), // TODO :: Fix (Or remove)
         documents: new DocumentsModule(),
-        items: new ItemsModule(),
-        roles: new RolesModule(), // TODO :: Move to adminModules
-        permissions: new PermissionsModule(), // TODO :: Move to adminModules
-        payments: new PaymentsModule(),
-        paymentSystems: new PaymentSystemsModule(),
-        users: new UsersModule(), // TODO :: Move to adminModules or remove
         helper: new HelperModule(),
+        items: new ItemsModule(),
         password: new PasswordModule(),
+        paymentSystems: new PaymentSystemsModule(),
+        payments: new PaymentsModule(),
+        permissions: new PermissionsModule(), // TODO :: Move to adminModules
+        roles: new RolesModule(), // TODO :: Move to adminModules
         s3: new S3Module(),
+        users: new UsersModule(), // TODO :: Move to adminModules or remove
 
         adminModules: {
             clients: new AdminClientsModule(),

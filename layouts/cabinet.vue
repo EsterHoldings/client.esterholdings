@@ -50,8 +50,8 @@ const route = useRoute();
 .page {
   box-sizing: border-box;
   width: 100%;
-  height: auto;
-  min-height: calc(100vh - 100px);
+  height: min-content;
+  min-height: calc(100vh - 120px);
   padding: 40px 40px 40px 142px;
   color: white;
 }

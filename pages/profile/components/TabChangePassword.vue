@@ -75,6 +75,7 @@
           <UiButtonDefault
               state="primary"
               class="recovery-card__button"
+              @click="handleClickSendResetPasswordEmail"
           >
             Отправить ссылку на почту
           </UiButtonDefault>
@@ -90,9 +91,11 @@
           </div>
 
           <div class="qr--2fa-enabled" v-if="!qrIsLoading && twoFaEnabled">
-            <UiIconSuccess/>
-            <div v-html="qrSvg"></div>
-            <div>
+            <div class="qr--2fa-enabled__indicate">
+              <UiIconSuccess/>
+              <div v-html="qrSvg"></div>
+            </div>
+            <div class="qr--2fa-enabled__options">
               <UiButtonDefault state="danger--outline" @click="handleClickTwoFaDisable">
                 <span v-if="!loadingDisable">Disable 2Fa</span>
                 <UiIconSpinnerDefault v-if="loadingDisable"/>
@@ -127,6 +130,7 @@ import {useToast} from "vue-toastification";
 import {formData} from "~/pages/profile/composables/TheChangePassword";
 import {resetValidationUserDataForm,} from "~/pages/profile/composables/validation";
 import {
+  resetFormData, resetValidationChangePasswordDataForm,
   validateChangePasswordDataForm,
   validatorChangePasswordDataForm,
 } from "~/pages/profile/composables/TheChangePassword/validation";
@@ -168,15 +172,28 @@ const handleInputOtp = (value: string) => {
 const handleSubmit = async () => {
   try {
     isLoading.value = true;
-    await appCore.users.patch(formData);
+    await appCore.password.updatePassword(formData);
     resetValidationUserDataForm();
     toast.success("Password was successfully updated!");
   } catch (e) {
     console.error(e);
+    if (e.status === 422) {
+      if (e.response.data.errors.newPassword) {
+        validatorChangePasswordDataForm.errorsFormData.newPassword.errors = [e.response.data.errors.newPassword]
+      }
+
+      if (e.response.data.errors.newPasswordConfirmation) {
+        validatorChangePasswordDataForm.errorsFormData.newPasswordConfirmation.errors = [e.response.data.errors.newPasswordConfirmation]
+      }
+
+      if (e.response.data.errors.oldPassword) {
+        validatorChangePasswordDataForm.errorsFormData.oldPassword.errors = [e.response.data.errors.oldPassword]
+      }
+    }
   } finally {
-    setTimeout(() => {
-      isLoading.value = false;
-    }, 1000);
+    isLoading.value = false;
+    resetFormData();
+    resetValidationChangePasswordDataForm();
   }
 };
 
@@ -201,6 +218,9 @@ const onEnable = async () => {
 const handleClickTwoFaDisable = async () => {
   errorDisable.value = null
   loadingDisable.value = true
+  error.value = ''
+  success.value = false
+  loading.value = true
 
   try {
     await appCore.auth2fa.doDisable2fa({})
@@ -213,9 +233,16 @@ const handleClickTwoFaDisable = async () => {
     errorDisable.value = e.message || 'Помилка при вимкненні 2FA'
     toast.error(errorDisable.value)
   } finally {
-    loadingDisable.value = false
     await loadTwoFaQr();
+    loadingDisable.value = false
+    twoFaEnabled.value = false
+    loading.value = false
   }
+}
+
+const handleClickSendResetPasswordEmail = async () => {
+  await appCore.password.resetPassword();
+  toast.success('Reset password email was sent to your email.')
 }
 
 const loadTwoFaQr = async () => {
@@ -295,6 +322,7 @@ onMounted(async () => {
           display: flex;
           flex-direction: column;
           gap: 16px;
+          color: var(--ui-text-main);
 
           .qr--2fa-enabled {
             padding: 20px;
@@ -303,10 +331,25 @@ onMounted(async () => {
             width: 100%;
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-direction: column;
+            justify-content: space-between;
             gap: 20px;
             border-radius: 10px;
+
+            &__indicate {
+              width: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-direction: column;
+              gap: 20px;
+            }
+
+            &__options {
+              width: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
 
             svg {
               height: 50px;
