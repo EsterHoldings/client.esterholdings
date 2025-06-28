@@ -1,55 +1,61 @@
 <template>
   <div class="input">
     <div v-if="slots['icon-left']" class="input-icon--left">
-      <slot name="icon-left" />
+      <slot name="icon-left"/>
     </div>
     <input
-      :class="{
+        :class="{
         border: !borderNone,
         padding: !paddingNone,
         'is-invalid': isDirty && isInvalid,
         'is-valid': isDirty && !isInvalid,
         disabled: props.disabled,
       }"
-      :type="typeInput"
-      :placeholder="props.placeholder"
-      :value="props.value"
-      :disabled="props.disabled"
-      @focus="onFocus"
-      @input="onInput"
-      @blur="onBlur"
-      readonly
-      onfocus="this.removeAttribute('readonly');"
+        :type="typeInput"
+        :placeholder="props.placeholder"
+        :value="props.value"
+        :disabled="props.disabled"
+        @focus="onFocus"
+        @input="onInput"
+        @blur="onBlur"
+        readonly
+        onfocus="this.removeAttribute('readonly');"
     />
 
     <transition name="fade">
       <UiIconEye
-        v-if="props.type === 'password' && isPasswordVisible"
-        class="password-eye"
-        @click="togglePasswordVisibility"
+          v-if="props.type === 'password' && isPasswordVisible"
+          class="password-eye"
+          @click="togglePasswordVisibility"
       />
     </transition>
 
     <transition name="fade">
       <UiIconEyeClose
-        v-if="props.type === 'password' && !isPasswordVisible"
-        class="password-eye"
-        @click="togglePasswordVisibility"
+          v-if="props.type === 'password' && !isPasswordVisible"
+          class="password-eye"
+          @click="togglePasswordVisibility"
       />
     </transition>
 
-    <div v-if="isLoading" class="is-loading"><UiIconSpinnerDefault /></div>
+    <div v-if="isLoading" class="is-loading">
+      <UiIconSpinnerDefault/>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import { useSlots } from "vue";
+import {ref, computed} from "vue";
+import {useSlots} from "vue";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 import UiIconEye from "~/components/ui/UiIconEye.vue";
 import UiIconEyeClose from "~/components/ui/UiIconEyeClose.vue";
 
 const props = defineProps({
+  modelValue: {
+    type: [String, Boolean, Number],
+    default: "",
+  },
   type: {
     type: String,
     default: "text",

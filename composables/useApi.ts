@@ -1,57 +1,61 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { useAdminAuthStore } from "~/stores/adminAuthStore";
-import { useAuthStore } from "~/stores/authStore";
+import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
+import {useAdminAuthStore} from "~/stores/adminAuthStore";
+import {useAuthStore} from "~/stores/authStore";
+
 
 export class useApi {
-  private api: AxiosInstance;
+    private api: AxiosInstance;
 
-  constructor(forClient = false) {
-    this.api = axios.create({
-      // baseURL: "https://esterholdings.website/api/",
-      baseURL: "http://127.0.0.1:8000/api/",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    constructor(forClient = false) {
+        const {public: pub} = useRuntimeConfig()
 
-    this.api.interceptors.request.use((config) => {
-      const authStore = forClient ? useAuthStore() : useAdminAuthStore();
-      let token = authStore.accessToken;
 
-      // TODO :: Переделать все на стор
-      if (forClient) token = localStorage.getItem("user_access_token");
+        this.api = axios.create({
+            // baseURL: "https://esterholdings.website/api/",
+            baseURL: pub.baseApi,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+        this.api.interceptors.request.use((config) => {
+            const authStore = forClient ? useAuthStore() : useAdminAuthStore();
+            let token = authStore.accessToken;
 
-      return config;
-    });
-  }
+            // TODO :: Переделать все на стор
+            if (forClient) token = localStorage.getItem("user_access_token");
 
-  request(config: AxiosRequestConfig): Promise<AxiosResponse> {
-    return this.api.request(config);
-  }
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
 
-  get(url: string, params: object = {}): Promise<AxiosResponse> {
-    return this.api.get(url, { params });
-  }
+            return config;
+        });
+    }
 
-  post(url: string, data?: object): Promise<AxiosResponse> {
-    return this.api.post(url, data);
-  }
+    request(config: AxiosRequestConfig): Promise<AxiosResponse> {
+        return this.api.request(config);
+    }
 
-  put(url: string, data?: object): Promise<AxiosResponse> {
-    return this.api.put(url, data);
-  }
+    get(url: string, params: object = {}): Promise<AxiosResponse> {
+        return this.api.get(url, {params});
+    }
 
-  patch(url: string, data?: object): Promise<AxiosResponse> {
-    return this.api.patch(url, data);
-  }
+    post(url: string, data?: object): Promise<AxiosResponse> {
+        return this.api.post(url, data);
+    }
 
-  delete(url: string, params: object = {}): Promise<AxiosResponse> {
-    return this.api.delete(url, { params });
-  }
+    put(url: string, data?: object): Promise<AxiosResponse> {
+        return this.api.put(url, data);
+    }
+
+    patch(url: string, data?: object): Promise<AxiosResponse> {
+        return this.api.patch(url, data);
+    }
+
+    delete(url: string, params: object = {}): Promise<AxiosResponse> {
+        return this.api.delete(url, {params});
+    }
 }
 
 export default useApi;

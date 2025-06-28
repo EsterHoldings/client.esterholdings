@@ -3,8 +3,9 @@
     <div class="side-bar-cabinet__top">
       <div class="side-bar-cabinet__top__logo">
         <NuxtLink to="/"
-          ><UiIconLogo
-            :class="{
+        >
+          <UiIconLogo
+              :class="{
               'svg-invert': isThemeLight,
             }"
           />
@@ -12,18 +13,18 @@
       </div>
 
       <div class="side-bar-cabinet__actions">
-        <LanguageSwitcher isSidebar :isInvert="isThemeLight" class="icon" />
+        <LanguageSwitcher isSidebar :isInvert="isThemeLight" class="icon"/>
 
         <transition name="fade" mode="out-in">
           <span
-            :key="themeStore.currentTheme"
-            @click="themeStore.toggleTheme()"
-            class="icon"
+              :key="themeStore.currentTheme"
+              @click="themeStore.toggleTheme()"
+              class="icon"
           >
-            <UiIconMoon v-if="themeStore.currentTheme === 'dark'" />
+            <UiIconMoon v-if="themeStore.currentTheme === 'dark'"/>
             <UiIconSun
-              v-else
-              :class="{
+                v-else
+                :class="{
                 'svg-invert': isThemeLight,
               }"
             />
@@ -32,7 +33,7 @@
       </div>
       <div class="side-bar-cabinet__top__profile">
         <UiImageCircle
-          :class="{
+            :class="{
             'svg-invert': isThemeLight,
           }"
         />
@@ -40,13 +41,13 @@
     </div>
 
     <div class="side-bar-cabinet__content">
-      <TheHeaderSideBarMenu />
+      <TheHeaderSideBarMenu/>
     </div>
 
     <div class="side-bar-cabinet__logout">
       <UiIconLogout
-        @click="handleClickLogout"
-        :class="{
+          @click="handleClickLogout"
+          :class="{
           'svg-invert': isThemeLight,
         }"
       />
@@ -55,33 +56,37 @@
 </template>
 
 <script lang="ts" setup>
-import { useUiStore } from "~/stores/uiStore";
-import { useThemeStore } from "~/stores/themeStore.js";
-import { useAuthStore } from "~/stores/authStore";
-import { useRoute } from "vue-router";
-import { navigateTo } from "nuxt/app";
-import { computed } from "vue";
+import {computed} from "vue";
+import {navigateTo} from "nuxt/app";
+import {useAuthStore} from "~/stores/authStore";
+import {useRoute} from "vue-router";
+import {useThemeStore} from "~/stores/themeStore.js";
+import {useLocalePath} from "~/.nuxt/imports";
 
-import UiIconLogo from "~/components/ui/UiIconLogo.vue";
+import LanguageSwitcher from "~/components/block/LandingHeader/components/LanguageSwitcher.vue";
 import TheHeaderSideBarMenu from "~/components/block/!!!TheHeaderSideBarMenu.vue";
+import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconLogout from "~/components/ui/UiIconLogout.vue";
 import UiIconMoon from "~/components/ui/UiIconMoon.vue";
 import UiIconSun from "~/components/ui/UiIconSun.vue";
-import LanguageSwitcher from "~/components/block/LandingHeader/components/LanguageSwitcher.vue";
 
+const authStore = useAuthStore();
 const localePath = useLocalePath();
 const themeStore = useThemeStore();
-const uiStore = useUiStore();
-const authStore = useAuthStore();
 
 if (!authStore.user) {
   authStore.initAuth();
 }
 
 const handleClickLogout = () => {
-  authStore.setAccessToken("");
-  authStore.setRefreshToken("");
-  navigateTo(localePath("/admin/auth/login"));
+  localStorage.setItem('access_token', '');
+  localStorage.setItem('remember_token', '');
+
+  console.log('!!!TheHeaderSideBar -> handleClickLogout');
+
+  navigateTo(
+      localePath("/admin/auth/login")
+  );
 };
 
 const isThemeLight = computed(() => {

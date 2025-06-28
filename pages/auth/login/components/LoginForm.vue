@@ -3,51 +3,52 @@
     <UiTextH3 class="login-form__title">Login</UiTextH3>
 
     <UiFormControl
-      class="login-form__field"
-      label="Email"
-      :errors="validatorLoginForm.errorsFormData.email.errors"
+        class="login-form__field"
+        label="Email"
+        :errors="validatorLoginForm.errorsFormData.email.errors"
     >
       <UiInput
-        type="text"
-        placeholder="example@test.com"
-        :value="props.formData.email"
-        :isDirty="validatorLoginForm.errorsFormData.email.isDirty"
-        :isInvalid="validatorLoginForm.errorsFormData.email.errors.length > 0"
-        @input="
+          type="text"
+          placeholder="example@test.com"
+          :value="props.formData.email"
+          :isDirty="validatorLoginForm.errorsFormData.email.isDirty"
+          :isInvalid="validatorLoginForm.errorsFormData.email.errors.length > 0"
+          @input="
           validatorLoginForm.doValidateField('email', $event.target.value)
         "
-        @blur="validatorLoginForm.doValidateField('email', $event.target.value)"
+          @blur="validatorLoginForm.doValidateField('email', $event.target.value)"
       />
     </UiFormControl>
 
     <UiFormControl
-      class="login-form__field"
-      label="Password"
-      :errors="validatorLoginForm.errorsFormData.password.errors"
+        class="login-form__field"
+        label="Password"
+        :errors="validatorLoginForm.errorsFormData.password.errors"
     >
       <UiInput
-        type="password"
-        placeholder="********"
-        :value="props.formData.password"
-        :isDirty="validatorLoginForm.errorsFormData.password.isDirty"
-        :isInvalid="
+          type="password"
+          placeholder="********"
+          :value="props.formData.password"
+          :isDirty="validatorLoginForm.errorsFormData.password.isDirty"
+          :isInvalid="
           validatorLoginForm.errorsFormData.password.errors.length > 0
         "
-        @input="
+          @input="
           validatorLoginForm.doValidateField('password', $event.target.value)
         "
-        @blur="
+          @blur="
           validatorLoginForm.doValidateField('password', $event.target.value)
         "
       />
     </UiFormControl>
 
     <UiButtonDefault
-      type="submit"
-      state="primary"
-      class="login-form__btn"
-      :isLoading="isLoading"
-      @click="validateLoginForm(doSendForm)"
+        type="submit"
+        state="primary"
+        class="login-form__btn"
+        :isLoading="isLoading"
+        @click="validateLoginForm(doSendForm)"
+        :disabled="!isRecaptchaValid"
     >
       Login
     </UiButtonDefault>
@@ -62,18 +63,18 @@
     </div>
 
     <div class="login-form__social-links">
-      <GoogleLogin />
-      <FacebookLogin />
-      <LinkedInLogin />
+      <GoogleLogin/>
+      <FacebookLogin/>
+      <LinkedInLogin/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { navigateTo } from "nuxt/app";
-import { useAuthStore } from "~/stores/authStore";
-import { useAppCore } from "~/composables/useAppCore";
+import {ref} from "vue";
+import {navigateTo} from "nuxt/app";
+import {useAuthStore} from "~/stores/authStore";
+import {useAppCore} from "~/composables/useAppCore";
 
 import UiInput from "~/components/ui/UiInput.vue";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
@@ -84,13 +85,14 @@ import GoogleLogin from "./GoogleLogin.vue";
 import FacebookLogin from "./FacebookLogin.vue";
 import LinkedInLogin from "./LinkedInLogin.vue";
 
-import { useToast } from "vue-toastification";
+import {useToast} from "vue-toastification";
 
 import {
   validatorLoginForm,
   validateLoginForm,
   resetValidationLoginForm,
 } from "@/pages/auth/login/composables/validation";
+import UiButtonPrimary from "~/components/ui/UiButtonPrimary.vue";
 
 const props = defineProps({
   formData: {
@@ -99,6 +101,8 @@ const props = defineProps({
   },
 });
 
+const {$recaptcha} = useNuxtApp()
+const isRecaptchaValid = ref(false)
 const isLoading = ref(false);
 const appCore = useAppCore();
 const toast = useToast();
