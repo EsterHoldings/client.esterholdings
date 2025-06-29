@@ -61,6 +61,18 @@ export default defineNuxtConfig({
         },
     },
 
+    runtimeConfig: {
+        recaptchaSecretKey: process.env.RECAPTCHA_SECRET_KEY,
+        public: {
+            baseApi: process.env.NUXT_PUBLIC_BASE_API,
+            baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
+            cliFacebook: process.env.NUXT_PUBLIC_CLI_FACEBOOK,
+            cliGoogle: process.env.NUXT_PUBLIC_CLI_GOOGLE,
+            cliLinkIdIn: process.env.NUXT_PUBLIC_CLI_LINK_ID_IN,
+            reCaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
+        }
+    },
+
     routeRules: {
         "/**": {ssr: false} as any,
         "/": {ssr: true} as any,
@@ -92,18 +104,4 @@ export default defineNuxtConfig({
             }
         }
     },
-
-    runtimeConfig: {
-        recaptchaSecretKey: process.env.RECAPTCHA_SECRET_KEY,
-        public: {
-            apiUrl: "https://esterholdings.website/api/",
-            baseApi: process.env.NUXT_PUBLIC_BASE_API,
-            baseUrl: process.env.NUXT_PUBLIC_BASE_URL,
-            cliFacebook: process.env.NUXT_PUBLIC_CLI_FACEBOOK,
-            cliGoogle: process.env.NUXT_PUBLIC_CLI_GOOGLE,
-            cliLinkIdIn: process.env.NUXT_PUBLIC_CLI_LINK_ID_IN,
-            reCaptchaSiteKey: process.env.NUXT_PUBLIC_RECAPTCHA_SITE_KEY,
-
-        }
-    }
 });

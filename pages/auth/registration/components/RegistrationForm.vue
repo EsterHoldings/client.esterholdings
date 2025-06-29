@@ -125,10 +125,11 @@
 
     <UiButtonPrimary
         class="registration-form__btn"
+        :class="{'is-disabled':!isFormAgreementValid}"
         type="submit"
         @click="validateRegistrationForm(doSendForm)"
         :isLoading="isLoading"
-        :disabled="!isFormAgreementValid || !isRecaptchaValid"
+        :disabled="!isFormAgreementValid"
     >
       REGISTRATION
     </UiButtonPrimary>
@@ -215,9 +216,9 @@ const doSendForm = async (): Promise<void> => {
 };
 
 
-onMounted(async () => {
-  isRecaptchaValid.value = await $recaptcha('registration')
-})
+// onMounted(async () => {
+//   isRecaptchaValid.value = await $recaptcha('registration')
+// })
 onUnmounted(() => resetValidationRegistrationForm());
 </script>
 
@@ -306,6 +307,11 @@ onUnmounted(() => resetValidationRegistrationForm());
   &__btn {
     margin-top: 20px;
     margin-bottom: 10px;
+  }
+
+  .is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 }
 </style>
