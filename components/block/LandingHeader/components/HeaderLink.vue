@@ -2,14 +2,15 @@
   <div class="header__link" :class="linkClass">
     <UiTextH5 :class="textClass">{{ props.name }}</UiTextH5>
 
-    <UiIconChevronUp v-if="isActive" :class="iconUpClass" />
+    <UiIconChevronUp v-if="isActive" :class="iconUpClass"/>
 
-    <UiIconChevronDown v-else :class="iconDownClass" />
+    <UiIconChevronDown v-else :class="iconDownClass"/>
+    
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import {computed} from "vue";
 import UiIconChevronDown from "~/components/ui/UiIconChevronDown.vue";
 import UiIconChevronUp from "~/components/ui/UiIconChevronUp.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
@@ -29,6 +30,7 @@ const linkClass = computed(() => ({
 const textClass = computed(() => ({
   "active-link": isActive.value,
   "is-theme-light": props.isInvertColor,
+  'text-white': !props.isInvertColor,
 }));
 
 const iconUpClass = computed(() => ({
@@ -49,6 +51,7 @@ const iconDownClass = computed(() => ({
   color: white;
   text-decoration: none;
   cursor: pointer;
+
 
   &:hover {
     color: #f75709;
@@ -74,5 +77,9 @@ const iconDownClass = computed(() => ({
 
 .is-theme-light {
   color: var(--ui-text-main);
+}
+
+.text-white {
+  color: white
 }
 </style>

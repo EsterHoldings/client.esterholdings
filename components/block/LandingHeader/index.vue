@@ -8,7 +8,7 @@
       <UiContainer>
         <header
             class="header"
-            :class="{ 'header-is-open-menu ': isMobileMenuOpen }"
+            :class="{ 'header-is-open-menu': isMobileMenuOpen }"
         >
           <div class="logo">
             <NuxtLink to="/">
@@ -243,10 +243,12 @@ const isWithPicture = computed(() => {
   }
 });
 
+
 const forceSvgInvert = computed(() => {
   const baseRouteName = route.name?.toString().split("___")[0];
   return themeStore.currentTheme === "light" && baseRouteName !== "index";
 });
+
 
 const updateWindowWidth = () => {
   if (process.client) {

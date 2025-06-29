@@ -2,13 +2,13 @@
   <section class="slide-welcome">
     <UiContainer>
       <div class="slide-welcome__content">
-        <UiTextH1>
+        <UiTextH1 class="slide-welcome__title">
           {{ $t("landing.slider.general-slide.title.before") }}
           <span class="slide-welcome__title--highlight">
             {{ $t("landing.slider.general-slide.title.highlight") }} </span
-          >,<br />
+          >,<br/>
           {{ $t("landing.slider.general-slide.title.after") }}
-          <img class="rocket" src="/static/rocket.png" alt="Rocket" />
+          <img class="rocket" src="/static/rocket.png" alt="Rocket"/>
         </UiTextH1>
 
         <UiTextH5 class="slide-welcome__text">
@@ -49,9 +49,14 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
     margin-left: 20px;
   }
 
-  &__title--highlight {
-    color: #ff6b00;
+  &__title {
+    color: #fff;
+
+    &--highlight {
+      color: #ff6b00;
+    }
   }
+
 
   &__text {
     color: var(--ui-gray);

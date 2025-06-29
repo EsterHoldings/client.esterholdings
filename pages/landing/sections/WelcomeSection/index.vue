@@ -1,16 +1,16 @@
 <template>
   <section class="welcome">
     <SliderDefault
-      class="welcome__slider"
-      :images="images"
-      :components="components"
-      :autoPlayInterval="10000"
+        class="welcome__slider"
+        :images="images"
+        :components="components"
+        :autoPlayInterval="10000"
     />
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import {ref} from "vue";
 
 import GeneralSlide from "./slides/GeneralSlide.vue";
 import TenYearsSlide from "./slides/TenYearsSlide.vue";
@@ -19,17 +19,17 @@ import TopTradersSlide from "./slides/TopTradersSlide.vue";
 import SliderDefault from "~/components/block/sliders/SliderDefaultTest.vue";
 
 const items = ref([
-  { name: "EURUSD", price: 1.04282, change: 0.00014 },
-  { name: "GBPUSD", price: 1.25267, change: -0.00016 },
-  { name: "US30", price: 44674.97, change: 1.28 },
-  { name: "ETHUSD", price: 2655.08, change: -6.84 },
-  { name: "WTI", price: 71.11, change: 0.21 },
+  {name: "EURUSD", price: 1.04282, change: 0.00014},
+  {name: "GBPUSD", price: 1.25267, change: -0.00016},
+  {name: "US30", price: 44674.97, change: 1.28},
+  {name: "ETHUSD", price: 2655.08, change: -6.84},
+  {name: "WTI", price: 71.11, change: 0.21},
 ]);
 
 const images = [
-  { id: "slide1", alt: "Welcome", src: "/static/welcome-first-slide.webp" },
-  { id: "slide2", alt: "10", src: "/static/ten_years_slide_background.webp" },
-  { id: "slide3", alt: "", src: "" },
+  {id: "slide1", alt: "Welcome", src: "/static/welcome-first-slide.webp"},
+  {id: "slide2", alt: "10", src: "/static/ten_years_slide_background.webp"},
+  {id: "slide3", alt: "", src: ""},
 ];
 
 const components = [GeneralSlide, TenYearsSlide, TopTradersSlide];
@@ -97,6 +97,7 @@ const components = [GeneralSlide, TenYearsSlide, TopTradersSlide];
 @media (max-width: 768px) {
   .welcome__text {
     font-size: 14px;
+
     br {
       display: none;
     }
