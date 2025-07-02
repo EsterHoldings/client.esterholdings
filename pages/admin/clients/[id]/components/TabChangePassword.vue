@@ -5,22 +5,6 @@
         <div class="change-password__left__form">
           <UiFormControl
               class="change-password__left__form__field"
-              :label="t('cabinet.profile.components.tab-change-password.labels.old_password')"
-              :errors="validatorChangePasswordDataForm.errorsFormData.oldPassword.errors"
-          >
-            <UiInput
-                type="password"
-                :placeholder="t('cabinet.profile.components.tab-change-password.placeholders.old_password')"
-                :value="formData.oldPassword"
-                :isDirty="validatorChangePasswordDataForm.errorsFormData.oldPassword.isDirty"
-                :isInvalid="validatorChangePasswordDataForm.errorsFormData.oldPassword.errors.length > 0"
-                @input="validatorChangePasswordDataForm.doValidateField('oldPassword',$event.target.value)"
-                @blur="validatorChangePasswordDataForm.doValidateField('oldPassword',$event.target.value)"
-            />
-          </UiFormControl>
-
-          <UiFormControl
-              class="change-password__left__form__field"
               :label="t('cabinet.profile.components.tab-change-password.labels.new_password')"
               :errors="validatorChangePasswordDataForm.errorsFormData.newPassword.errors"
           >
@@ -120,7 +104,7 @@ const isLoading = ref(false);
 const handleSubmit = async () => {
   try {
     isLoading.value = true;
-    await appCore.users.patch(formData);
+    // await appCore.adminModules.users.patch(formData);
     resetValidationUserDataForm();
     toast.success("Password was successfully updated!");
   } catch (e) {
@@ -134,6 +118,19 @@ const handleSubmit = async () => {
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 992px) {
+  .change-password {
+    flex-direction: column;
+
+    &__left {
+      width: 100% !important;
+    }
+    &__right {
+      width: 100% !important;
+    }
+  }
+}
+
 .change-password {
   display: flex;
   justify-content: space-between;

@@ -72,6 +72,17 @@ import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
 import {onMounted, ref} from "vue";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
+const props = defineProps({
+  userData: {
+    type: Object,
+    default: {}
+  },
+  clientId: {
+    type: String,
+    default: ""
+  }
+})
+
 const {locale, t} = useI18n({useScope: "global"});
 
 const isLoading = ref(false);

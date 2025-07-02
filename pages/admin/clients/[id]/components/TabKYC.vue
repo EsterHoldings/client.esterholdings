@@ -1,6 +1,6 @@
 <template>
   <div class="profile__tab--kyc">
-    <div class="profile__tab--kyc__profile-data">
+    <div class="profile__tab--kyc__left profile__tab--kyc__profile-data">
       <PanelDefault>
         <div class="profile__tab--kyc__profile-data__form">
           <UiTextH5 class="title">
@@ -55,7 +55,7 @@
       </PanelDefault>
     </div>
 
-    <div class="profile__tab--kyc__profile-data--additional">
+    <div class="profile__tab--kyc__right profile__tab--kyc__profile-data--additional">
       <PanelDefault>
         <div class="profile__tab--kyc__profile-data--additional__form">
           <UiTextH5 class="title"># История посещений - IP</UiTextH5>
@@ -154,9 +154,25 @@ onMounted(async () => {
   display: flex;
   gap: 20px;
 
+  @media (max-width: 1058px) {
+    flex-direction: column;
+
+    .profile__tab--kyc__left {
+      width: 100%;
+    }
+
+    .profile__tab--kyc__right {
+      width: 100%;
+    }
+
+    .profile-data__info_photo {
+      height: 500px;
+    }
+  }
+
   &__profile-data {
     width: 50%;
-    height: 100%;
+    //height: 100%;
 
     .actions {
       width: 100%;

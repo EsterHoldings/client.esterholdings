@@ -1,31 +1,28 @@
 <template>
   <PanelDefault class="clients-panel">
     <ClientsPanelSearch
-      @input="handleInputSearch"
-      :isLoading="isLoadingSearch"
-      :value="searchFilter"
+        @input="handleInputSearch"
+        :isLoading="isLoadingSearch"
+        :value="searchFilter"
     />
-    <TableDefault
-      :columns="adminsColumns"
-      :data="clientsData"
-      :isLoading="isLoading"
-      :rowsPerPage="5"
-    />
+
+    <ClientsContent :data="clientsData" @click="handleOpenClientPage"/>
+
     <PaginationDefault
-      :isLoading="isLoading"
-      :perPage="perPage"
-      :page="page"
-      :totalRows="totalRows"
-      @perPageChange="handleChangePerPage"
-      @pageChange="handleChangePage"
+        :isLoading="isLoading"
+        :perPage="perPage"
+        :page="page"
+        :totalRows="totalRows"
+        @perPageChange="handleChangePerPage"
+        @pageChange="handleChangePage"
     />
   </PanelDefault>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { debounce } from "~/utils/helper/debounce";
+import {onMounted, reactive, ref} from "vue";
+import {useI18n} from "vue-i18n";
+import {debounce} from "~/utils/helper/debounce";
 import TableDefault from "~/components/block/tables/TableDefault.vue";
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
@@ -36,13 +33,15 @@ import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 import ClientsPanelSearch from "~/pages/admin/clients/components/ClientsPanelSearch.vue";
 import {navigateTo} from "nuxt/app";
 import UiIconUser from "~/components/ui/UiIconUser.vue";
+import UiImageCircle from "~/components/ui/UiImageCircle.vue";
+import ClientsContent from "~/pages/admin/clients/components/ClientsContent.vue";
 
-const { t } = useI18n({ useScope: "global" });
+const {t} = useI18n({useScope: "global"});
 const appCore = useAppCore();
 
 const isLoading = ref(false);
 const isLoadingSearch = ref(false);
-const perPage = ref(5);
+const perPage = ref(3);
 const page = ref(1);
 const totalRows = ref(0);
 const searchFields = ref([
@@ -53,48 +52,12 @@ const searchFields = ref([
   'phone',
   'country',
   'city',
+  'state',
+  'address',
+  'postal_code',
   'created_at'
 ]);
 const searchFilter = ref("");
-
-const adminsColumns = reactive([
-  {
-    title: 'Id',
-    key: "id"
-  },
-  {
-    title: 'Почта',
-    key: "email",
-  },
-  {
-    title: 'Имя',
-    key: "first_name",
-  },
-  {
-    title: 'Фамилия',
-    key: "last_name",
-  },
-  {
-    title: 'Телефон',
-    key: "phone",
-  },
-  {
-    title: 'Страна',
-    key: "country",
-  },
-  {
-    title: 'Город',
-    key: "city",
-  },
-  {
-    title: 'Дата создания',
-    key: "created_at",
-  },
-  {
-    title: '',
-    key: "options",
-  },
-]);
 
 const clientsData = reactive([]);
 
@@ -107,29 +70,9 @@ const loadData = async (isFilterQuery = false) => {
   };
 
   const response = await appCore.adminModules.clients.get(params);
-
   totalRows.value = response.data.data.total;
 
   let responseClientData = response.data.data.data;
-  responseClientData.forEach((user: any) => {
-    // user.id = [
-    //   {
-    //     is: UiTextParagraph,
-    //     props: {},
-    //     events: { click: () => console.log(user.id) },
-    //     slot: user.id,
-    //   },
-    // ];
-
-    user.options = [
-      {
-        isIcon: true,
-        is: UiIconUser,
-        props: {},
-        events: { click: () => handleOpenClientPage(user.id) },
-      },
-    ];
-  });
 
   isLoading.value = false;
   clientsData.splice(0, clientsData.length, ...responseClientData);

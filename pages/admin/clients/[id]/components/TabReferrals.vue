@@ -1,23 +1,24 @@
 <template>
-  <div class="user-verification__wrapper">
-    <div class="user-verification__left">
-      <PanelDefault>
-        <div class="user-verification__left__title__wrapper">
-          <UiTextH5 class="user-verification__left__title"># Referrals status</UiTextH5>
-          <div>...</div>
-        </div>
-      </PanelDefault>
-    </div>
+  REFFERRALS
+<!--  <div class="user-verification__wrapper">-->
+<!--    <div class="user-verification__left">-->
+<!--      <PanelDefault>-->
+<!--        <div class="user-verification__left__title__wrapper">-->
+<!--          <UiTextH5 class="user-verification__left__title"># Referrals status</UiTextH5>-->
+<!--          <div>...</div>-->
+<!--        </div>-->
+<!--      </PanelDefault>-->
+<!--    </div>-->
 
-    <div class="user-verification__right">
-      <PanelDefault class="user-verification__right__panel">
-        <UiTextH5 class="user-verification__right__panel__title"># Achieve history</UiTextH5>
-        <div class="user-verification__right__panel__verification-history">
-          ...
-        </div>
-      </PanelDefault>
-    </div>
-  </div>
+<!--    <div class="user-verification__right">-->
+<!--      <PanelDefault class="user-verification__right__panel">-->
+<!--        <UiTextH5 class="user-verification__right__panel__title"># Achieve history</UiTextH5>-->
+<!--        <div class="user-verification__right__panel__verification-history">-->
+<!--          ...-->
+<!--        </div>-->
+<!--      </PanelDefault>-->
+<!--    </div>-->
+<!--  </div>-->
 </template>
 
 <script lang="ts" setup>
@@ -30,6 +31,17 @@ import UiTextH5 from "~/components/ui/UiTextH5.vue";
 import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
 import {onMounted, ref} from "vue";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+
+const props = defineProps({
+  userData: {
+    type: Object,
+    default: {}
+  },
+  clientId: {
+    type: String,
+    default: ""
+  }
+})
 
 const {locale, t} = useI18n({useScope: "global"});
 

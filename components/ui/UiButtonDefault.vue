@@ -23,8 +23,6 @@
 </template>
 
 <script lang="ts" setup>
-// @ts-ignore
-import UiIconSpinnerLoader from "~/components/ui/UiIconSpinnerLoader.vue";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
 const props = defineProps({
@@ -43,7 +41,13 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["click"]);
-const handleClick = (): void => emit("click");
+const handleClick = (): void => {
+  console.log('CLICK - CLICK - CLICK');
+  console.log('CLICK - CLICK - CLICK');
+  console.log('CLICK - CLICK - CLICK');
+  console.log('CLICK - CLICK - CLICK');
+  emit("click");
+}
 </script>
 
 <style lang="scss" scoped>

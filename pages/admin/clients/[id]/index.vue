@@ -1,23 +1,23 @@
 <template>
   <div class="client-page">
     <div class="client-page__title">
-      <UiTextH4>{{ t("admin.clients.index.title") }}</UiTextH4>
-      <UiTextParagraph>{{ t("admin.clients.index.subtitle") }}</UiTextParagraph>
+      <UiTextH4>{{ userData.first_name }} {{ userData.last_name }}</UiTextH4>
+      <UiTextParagraph>{{ userData.email }}</UiTextParagraph>
     </div>
     <div class="client-page__content">
       <TabsDefault
+          class="tabs"
           :tabsList="tabsList"
           @selectTab="handleActiveTab"
           :activeTabIndex="activeTabIndex"
       />
-    </div>
-    <transition name="slide-short" mode="out-in">
       <component
           :is="tabsList[activeTabIndex].component"
           :key="activeTabIndex"
-          v-bind="currentTab.props"
+          :clientId="clientId"
+          :userData="userData"
       />
-    </transition>
+    </div>
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import {definePageMeta} from "~/.nuxt/imports";
 import {useI18n} from "vue-i18n";
 import {useRoute} from 'vue-router'
 
-import TabChangePassword from "~/pages/profile/components/TabChangePassword.vue";
+import TabChangePassword from "~/pages/admin/clients/[id]/components/TabChangePassword.vue";
 import TabKYC from "~/pages/admin/clients/[id]/components/TabKYC.vue";
 import TabReferrals from "~/pages/admin/clients/[id]/components/TabReferrals.vue";
 import TabVerification from "~/pages/admin/clients/[id]/components/TabVerification.vue";
@@ -92,22 +92,18 @@ const tabsList = computed(() => {
     {
       label: 'KYC',
       component: TabKYC,
-      props: { userData, clientId },
     },
     {
       label: 'Верификация',
       component: TabVerification,
-      props: { userData, clientId },
     },
     {
       label: 'Рефералы',
       component: TabReferrals,
-      props: { userData, clientId },
     },
     {
       label: 'Смена пароля',
       component: TabChangePassword,
-      props: { userData, clientId },
     },
   ];
 });
@@ -138,6 +134,10 @@ const handleActiveTab = (tabIndex: number) => {
 
     &__content {
       padding-bottom: 20px;
+
+      .tabs {
+        margin-bottom: 20px;
+      }
     }
   }
 }

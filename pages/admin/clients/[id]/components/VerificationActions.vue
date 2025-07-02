@@ -2,7 +2,7 @@
   <div class="doc-actions">
     <button
         class="doc-actions__btn doc-actions__btn--rejected"
-        :class="{'active': status === 'rejected'}"
+        :class="{'active': props.status === 'rejected'}"
         @click="onReject"
         title="Rejected"
     >
@@ -10,7 +10,7 @@
     </button>
     <button
         class="doc-actions__btn doc-actions__btn--pending"
-        :class="{'active': status === 'pending'}"
+        :class="{'active': props.status === 'pending'}"
         @click="onPending"
         title="Pending"
     >
@@ -18,7 +18,7 @@
     </button>
     <button
         class="doc-actions__btn doc-actions__btn--approved"
-        :class="{'active': status === 'approved'}"
+        :class="{'active': props.status === 'approved'}"
         @click="onApprove"
         title="Approved"
     >
@@ -28,38 +28,36 @@
 </template>
 
 <script lang="ts" setup>
-
 import UiIconDelete from "~/components/ui/UiIconDelete.vue";
 import UiIconWarning from "~/components/ui/UiIconWarning.vue";
 import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
 
 const props = defineProps<{ status: string }>()
 
-const emit = defineEmits<{
-  (e: 'reject', doc: any): void
-  (e: 'pending', doc: any): void
-  (e: 'approve', doc: any): void
-}>()
+const emit = defineEmits(['updateStatus'])
 
-function onReject(doc: any)   { emit('reject', doc) }
-function onPending(doc: any)  { emit('pending', doc) }
-function onApprove(doc: any)  { emit('approve', doc) }
+function onReject(doc: any)   { emit('updateStatus', 'rejected') }
+function onPending(doc: any)  { emit('updateStatus', 'pending') }
+function onApprove(doc: any)  { emit('updateStatus', 'approved') }
 </script>
 
 <style scoped>
 .doc-actions {
   display: flex;
+  gap: 5px;
+  padding: 3px;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
 }
 
 .doc-actions__btn {
   border: none;
-  padding: 4px;
-  border-radius: 10px;
+  border-radius: 9px;
   cursor: pointer;
   transition: background .2s;
 
-  height: 30px;
-  width: 30px;
+  height: 30px !important;
+  width: 30px !important;
 
   display: flex;
   align-items: center;
