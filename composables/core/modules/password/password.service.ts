@@ -7,7 +7,10 @@ export class PasswordService {
     this.useApi = new useApi(true);
   }
   async updatePassword(params: {}):Promise<any> {
-    return await this.useApi.post("/update/password", params);
+    return await this.useApi.post("/client/password/update", params);
+  }
+  async resetPassword(params: {}):Promise<any> {
+    return await this.useApi.post("/client/password/resetPassword");
   }
 }
 

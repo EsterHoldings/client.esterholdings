@@ -6,15 +6,20 @@
       </UiTextH3>
 
       <div class="account-types__tabs">
-        <UiTabs
-          :tabs="tabsList.tabs.value"
-          @active-tab="setActiveTab"
-          class="tabs"
+        <TabsDefault
+          :tabsList="tabsList"
+          @selectTab="handleActiveTab"
+          :activeTabIndex="activeTabIndex"
         />
       </div>
 
       <div class="account-types">
-        <AccountCard />
+        <transition name="slide-short" mode="out-in">
+          <component
+            :is="tabsList[activeTabIndex].component"
+            :key="activeTabIndex"
+          />
+        </transition>
       </div>
     </UiContainer>
   </section>
@@ -22,30 +27,51 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
 
-import { useTabs } from "./composables/index";
+import { ref, computed } from "vue";
+
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
-import UiTextH5 from "~/components/ui/UiTextH5.vue";
-import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import UiIconArrowRight from "~/components/ui/UiIconArrowRight.vue";
-import UiTabs from "~/components/ui/UiTabs.vue";
-
-import AccountCard from "./components/AccountCard.vue";
 
 import UiContainer from "~/components/ui/UiContainer.vue";
+import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
 
-import { activeComponent, setActiveTab } from "./composables/setup";
-const tabsList = useTabs();
+import Standard from "./components/Standart.vue";
+import Pro from "./components/Pro.vue";
+import Tandem from "./components/Tandem.vue";
+import Islamic from "./components/Islamic.vue";
 
 const { t, tm } = useI18n();
 
 const accounts = tm("landing.sections.accounts__options");
 
-const activeIndex = ref(0);
+const activeTabIndex = ref(0);
 
-const setActive = (index: number) => {
-  activeIndex.value = index;
+const tabsList = computed(() => {
+  return [
+    {
+      label: t("landing.sections.accounts__options[0].title"),
+      component: Standard,
+    },
+
+    {
+      label: t("landing.sections.accounts__options[1].title"),
+      component: Pro,
+    },
+
+    {
+      label: t("landing.sections.accounts__options[2].title"),
+      component: Islamic,
+    },
+
+    {
+      label: t("landing.sections.accounts__options[3].title"),
+      component: Tandem,
+    },
+  ];
+});
+
+const handleActiveTab = (tabIndex: number) => {
+  activeTabIndex.value = tabIndex;
 };
 </script>
 
@@ -59,6 +85,12 @@ const setActive = (index: number) => {
     color: var(--ui-text-main);
     text-align: center;
     margin-bottom: 70px;
+  }
+
+  &__tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -150,6 +182,31 @@ const setActive = (index: number) => {
 
 .arrow {
   margin-top: 50px;
+}
+
+.slide-short-enter-active,
+.slide-short-leave-active {
+  transition: opacity 0.1s ease, transform 0.1s ease;
+}
+
+.slide-short-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.slide-short-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-short-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-short-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
 }
 
 @media (max-width: 991px) {

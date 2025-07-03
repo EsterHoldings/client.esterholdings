@@ -3,30 +3,85 @@
     <UiTextH3>{{ t("landing.sections.wide_range__title") }}</UiTextH3>
 
     <div class="wide_range_section__tabs">
-      <UiTabs
+      <!-- <UiTabs
         :tabs="tabsList.tabs.value"
         @active-tab="setActiveTab"
         class="tabs"
+      /> -->
+
+      <TabsDefault
+        :tabsList="tabsList"
+        @selectTab="handleActiveTab"
+        :activeTabIndex="activeTabIndex"
       />
     </div>
 
     <div class="wide_range_section__content">
-      <Transition name="tab-fade" mode="out-in">
-        <component :is="activeComponent" :key="activeComponent" />
-      </Transition>
+      <transition name="slide-short" mode="out-in">
+        <component
+          :is="tabsList[activeTabIndex].component"
+          :key="activeTabIndex"
+        />
+      </transition>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
-import { useTabs } from "./composables/index";
+import { computed, ref } from "vue";
 const { t } = useI18n();
-import { activeComponent, setActiveTab } from "./composables/setup";
-import UiTextH3 from "~/components/ui/UiTextH3.vue";
-import UiTabs from "~/components/ui/UiTabs.vue";
 
-const tabsList = useTabs();
+import UiTextH3 from "~/components/ui/UiTextH3.vue";
+
+import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
+
+import Forex from "./components/Forex.vue";
+import ETFS from "./components/ETFS.vue";
+import Energy from "./components/Energy.vue";
+import CryptocurrencyCDs from "./components/CryptocurrencyCDs.vue";
+import Indices from "./components/Indices.vue";
+import Shares from "./components/Shares.vue";
+import Metals from "./components/Metals.vue";
+
+const activeTabIndex = ref(0);
+
+const tabsList = computed(() => {
+  return [
+    {
+      label: t("landing.sections.wide_range__categories[0].label"),
+      component: Forex,
+    },
+    {
+      label: t("landing.sections.wide_range__categories[1].label"),
+      component: Metals,
+    },
+    {
+      label: t("landing.sections.wide_range__categories[2].label"),
+      component: CryptocurrencyCDs,
+    },
+    {
+      label: t("landing.sections.wide_range__categories[3].label"),
+      component: Indices,
+    },
+    {
+      label: t("landing.sections.wide_range__categories[4].label"),
+      component: Shares,
+    },
+    {
+      label: t("landing.sections.wide_range__categories[5].label"),
+      component: Energy,
+    },
+    {
+      label: t("landing.sections.wide_range__categories[6].label"),
+      component: ETFS,
+    },
+  ];
+});
+
+const handleActiveTab = (tabIndex: number) => {
+  activeTabIndex.value = tabIndex;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -38,6 +93,9 @@ const tabsList = useTabs();
 
   &__tabs {
     margin-top: 54px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   &__content {
@@ -45,20 +103,29 @@ const tabsList = useTabs();
   }
 }
 
-.tab-fade-enter-active,
-.tab-fade-leave-active {
-  transition: all 0.3s ease-in-out;
-  will-change: transform, opacity;
+.slide-short-enter-active,
+.slide-short-leave-active {
+  transition: opacity 0.1s ease, transform 0.1s ease;
 }
 
-.tab-fade-enter-from {
+.slide-short-enter-from {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateX(30px);
 }
 
-.tab-fade-leave-to {
+.slide-short-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-short-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slide-short-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateX(-30px);
 }
 
 @media (max-width: 991px) {

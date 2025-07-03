@@ -17,6 +17,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
+
 import TheHeaderSideBarMenuItem from "~/components/block/TheHeaderSideBarMenuItem.vue";
 
 import UiIconHome from "~/components/ui/UiIconHome.vue";
@@ -32,6 +33,7 @@ import { useAdminAuthStore } from "~/stores/adminAuthStore";
 import { computed } from "vue";
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 const store = useAdminAuthStore();
 
 const hasPermission = (permName: string) => store.hasPermission(permName);
@@ -48,43 +50,43 @@ const props = defineProps({
 const menuItems = [
   {
     title: t("admin.menu.dashboard"),
-    to: "/admin/dashboard",
+    to: localePath("/admin/dashboard"),
     icon: UiIconHome,
     displayIfHasPermission: "view-dashboard",
   },
   {
     title: t("admin.menu.clients"),
-    to: "/admin/clients",
+    to: localePath("/admin/clients"),
     icon: UiIconClients,
     displayIfHasPermission: "view-clients",
   },
   {
     title: t("admin.menu.accounts"),
-    to: "/admin/accounts",
+    to: localePath("/admin/accounts"),
     icon: UiIconUser,
     displayIfHasPermission: "view-accounts",
   },
   {
     title: t("admin.menu.referral"),
-    to: "/admin/referral",
+    to: localePath("/admin/referral"),
     icon: UiIconReferral,
     displayIfHasPermission: "view-referrals",
   },
   {
     title: t("admin.menu.payments"),
-    to: "/admin/payments",
+    to: localePath("/admin/payments"),
     icon: UiIconProfile,
     displayIfHasPermission: "view-payments",
   },
   {
     title: t("admin.menu.settings"),
-    to: "/admin/settings",
+    to: localePath("/admin/settings"),
     icon: UiIconSetting,
     displayIfHasPermission: "view-settings",
   },
   {
     title: t("admin.menu.access"),
-    to: "/admin/access",
+    to: localePath("/admin/access"),
     icon: UiIconKeys,
     displayIfHasPermission: "view-admins",
   },
@@ -103,8 +105,16 @@ const menuList = computed(() => {
   return filteredMenuItems;
 });
 
+// const handleClickMenuItem = (to: string) => {
+//   router.push(to);
+// };
+
 const handleClickMenuItem = (to: string) => {
-  router.push(to);
+  router.push(to).catch((err) => {
+    if (err.name !== "NavigationDuplicated") {
+      console.error(err);
+    }
+  });
 };
 </script>
 

@@ -1,23 +1,33 @@
 <template>
   <div class="page__wrapper">
     <TheCabinetSideBar/>
-    <UiImage class="bg-image" src="/space.gif" />
+    <UiImage class="bg-image" src="/space.gif"/>
     <Transition name="fade" mode="out-in">
-      <div class="page" :key="route.fullPath">
-        <slot />
+      <div class="page__wrapper_scroll">
+        <div class="page" :key="route.fullPath">
+          <slot/>
+        </div>
+        <TheFooter class="footer"/>
       </div>
     </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import TheCabinetSideBar from '~/components/block/TheCabinetSideBar.vue'
-import { useRoute } from 'vue-router'
+import {useRoute} from "vue-router";
+
+import TheCabinetSideBar from "~/components/block/TheCabinetSideBar.vue";
+import TheFooter from "~/components/block/TheFooter.vue";
 import UiImage from "~/components/ui/UiImage.vue";
-const route = useRoute()
+
+const route = useRoute();
 </script>
 
 <style lang="scss" scoped>
+.footer {
+  height: 120px;
+}
+
 .bg-image {
   position: fixed;
   left: 0;
@@ -27,16 +37,22 @@ const route = useRoute()
 }
 
 .page__wrapper {
-  background-color: var(--color-ui-background);
+  background-color: var(--ui-background-admin);
   height: 100vh;
   overflow: hidden;
+
+  &_scroll {
+    height: 100%;
+    overflow: scroll;
+  }
 }
 
 .page {
+  box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  height: min-content;
+  min-height: calc(100vh - 120px);
   padding: 40px 40px 40px 142px;
-  overflow-y: auto;
   color: white;
 }
 

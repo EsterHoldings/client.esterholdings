@@ -1,5 +1,10 @@
 <template>
   <textarea
+    :class="{
+      'is-invalid': props.isDirty && props.isInvalid,
+      'is-valid': props.isDirty && !props.isInvalid,
+      disabled: props.disabled
+    }"
     :value="value"
     :ref="resizeTextarea"
     @focus="handleFocus"
@@ -12,10 +17,9 @@
 import { onMounted } from "vue";
 
 const props = defineProps({
-  value: {
-    type: String,
-    default: "",
-  },
+  value: {type: String, default: "",},
+  isDirty: {type: Boolean, default: false},
+  isInvalid: {type: Boolean, default: false},
 });
 
 const refTextarea = null;
@@ -37,9 +41,7 @@ const resizeTextarea = () => {
 };
 
 onMounted(() => {
-  console.log("-=-=-=-=-=-=-");
-  console.log(resizeTextarea());
-  console.log("-=-=-=-=-=-=-");
+  resizeTextarea();
 });
 </script>
 
@@ -48,5 +50,27 @@ textarea {
   width: 100%;
   min-height: 150px;
   resize: vertical;
+
+  padding: 10px;
+
+  background-color: var(--ui-background);
+  border: 1px solid var(--color-stroke-ui-dark);
+  border-radius: 8px;
+
+  color: var(--ui-text-main);
+
+  outline: none;
+}
+
+.is-invalid {
+  border-color: red;
+}
+
+.is-valid {
+  border-color: green;
+}
+
+.disabled {
+  background-color: #e5e5e5;
 }
 </style>

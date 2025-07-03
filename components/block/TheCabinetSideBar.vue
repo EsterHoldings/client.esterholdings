@@ -2,74 +2,85 @@
   <header class="side-bar-cabinet">
     <div class="side-bar-cabinet__top">
       <div class="side-bar-cabinet__top__logo">
-        <NuxtLink to="/"><UiIconLogo /></NuxtLink>
+        <NuxtLink to="/"
+        >
+          <UiIconLogo
+              :class="{
+              'svg-invert': isThemeLight,
+            }"
+          />
+        </NuxtLink>
       </div>
       <div class="side-bar-cabinet__top__profile">
         <NuxtLink to="/ru/profile">
           <div
-            :class="[
+              :class="[
               'side-bar-cabinet__top__profile__image',
               { active: isProfileRoute },
             ]"
           >
-            <UiIconUser v-if="!authStore.photoUrl" />
+            <UiIconUser v-if="!authStore.photoUrl"/>
             <img
-              v-if="authStore.photoUrl"
-              :src="authStore.photoUrl"
-              alt="User Photo"
+                v-if="authStore.photoUrl"
+                :src="authStore.photoUrl"
+                alt="User Photo"
             />
           </div>
         </NuxtLink>
-        <!--        <div class="side-bar-cabinet__top__profile__name">-->
-        <!--          <NuxtLink to="/ru/profile">-->
-        <!--            Firstname-->
-        <!--          </NuxtLink>-->
-        <!--        </div>-->
+      </div>
+
+      <div class="side-bar-cabinet__actions">
+        <LanguageSwitcher isSidebar :isInvert="isThemeLight" class="icon"/>
+
+        <transition name="fade" mode="out-in">
+          <span
+              :key="themeStore.currentTheme"
+              @click="themeStore.toggleTheme()"
+              class="icon"
+          >
+            <UiIconMoon v-if="themeStore.currentTheme === 'dark'"/>
+            <UiIconSun
+                v-else
+                :class="{
+                'svg-invert': isThemeLight,
+              }"
+            />
+          </span>
+        </transition>
       </div>
     </div>
     <div class="side-bar-cabinet__content">
-      <TheCabinetSideBarMenu />
+      <TheCabinetSideBarMenu/>
     </div>
-    <div class="side-bar-cabinet__bottom">
-      <!-- <UiIconGlobe /> -->
-      <LanguageSwitcher isSidebar :isInvert="isThemeLight" class="icon" />
-
-      <transition name="fade" mode="out-in">
-        <span
-          :key="themeStore.currentTheme"
-          @click="themeStore.toggleTheme()"
-          class="icon"
-        >
-          <UiIconMoon v-if="themeStore.currentTheme === 'dark'" />
-          <UiIconSun v-else />
-        </span>
-      </transition>
-      <UiIconLogout @click="handleClickLogout" />
+    <div class="side-bar-cabinet__logout">
+      <UiIconLogout
+          @click="handleClickLogout"
+          :class="{
+          'svg-invert': isThemeLight,
+        }"
+      />
     </div>
   </header>
 </template>
 
 <script lang="ts" setup>
-import { useUiStore } from "~/stores/uiStore";
-import { useThemeStore } from "~/stores/themeStore.js";
-import UiIconLogo from "~/components/ui/UiIconLogo.vue";
+import {useUiStore} from "~/stores/uiStore";
+import {useThemeStore} from "~/stores/themeStore.js";
+import {useAuthStore} from "~/stores/authStore";
+import {useRoute} from "vue-router";
+import {navigateTo} from "nuxt/app";
+import {computed} from "vue";
+
+import LanguageSwitcher from "~/components/block/LandingHeader/components/LanguageSwitcher.vue";
 import TheCabinetSideBarMenu from "~/components/block/TheCabinetSideBarMenu.vue";
-import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconLogout from "~/components/ui/UiIconLogout.vue";
-import UiIconGlobe from "~/components/ui/UiIconGlobe.vue";
 import UiIconMoon from "~/components/ui/UiIconMoon.vue";
 import UiIconSun from "~/components/ui/UiIconSun.vue";
 import UiIconUser from "~/components/ui/UiIconUser.vue";
-import LanguageSwitcher from "~/components/block/LandingHeader/components/LanguageSwitcher.vue";
-import { useAuthStore } from "~/stores/authStore";
-import { useRoute } from "vue-router";
-import { navigateTo } from "nuxt/app";
-import { computed } from "vue";
 
-const themeStore = useThemeStore();
-const uiStore = useUiStore();
 const authStore = useAuthStore();
-const router = useRoute();
+const themeStore = useThemeStore();
 
 if (!authStore.user) {
   authStore.initAuth();
@@ -77,12 +88,11 @@ if (!authStore.user) {
 
 const handleClickLogout = () => {
   authStore.setAccessToken("");
-  authStore.setRefreshToken("");
   navigateTo("/auth/login");
 };
 
 const isThemeLight = computed(() => {
-  return uiStore.headerScrolled && themeStore.currentTheme !== "dark";
+  return themeStore.currentTheme !== "dark";
 });
 
 const route = useRoute();
@@ -96,28 +106,26 @@ const isProfileRoute = computed(() => {
 <style lang="scss" scoped>
 .side-bar-cabinet {
   position: fixed;
-  color: white;
+  color: var(--ui-text-main);
   height: 100vh;
   width: 6.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  border-right: 1px solid var(--color-stroke-ui-dark);
-  background-color: var(--color-ui-background-opacity-80);
+  border-right: 1px solid var(--color-stroke-ui);
+  background-color: var(--ui-background-sidebar);
   z-index: 1;
 
   box-shadow: 0 0 5px -1px rgba(255, 249, 249, 0.1);
-  //animation: shadowPulse 2s infinite alternate ease-in-out;
   transition: 0.5s;
 
   &:hover {
     transition: 0.3s;
-    box-shadow: 0 0 5px 1px var(--color-stroke-ui-dark);
+    box-shadow: 0 0 5px 1px var(--ui-background-sidebar);
   }
 
   &__top {
-    overflow: hidden;
     height: auto;
     width: 100%;
     display: flex;
@@ -141,7 +149,7 @@ const isProfileRoute = computed(() => {
         justify-content: center;
         height: 62px;
         width: 62px;
-        border: 3px solid var(--color-stroke-ui-dark);
+        border: 3px solid var(--ui-text-main);
         border-radius: 25%;
 
         img {
@@ -152,7 +160,7 @@ const isProfileRoute = computed(() => {
         }
 
         &.active {
-          border-color: var(--color-primary);
+          border-color: var(--ui-primary-main);
         }
       }
 
@@ -172,17 +180,33 @@ const isProfileRoute = computed(() => {
     justify-content: center;
   }
 
-  &__bottom {
+  &__actions {
     height: 72px;
     width: 100%;
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    border-top: 1px solid var(--color-stroke-ui-dark);
+    justify-content: center;
+    gap: 10px;
 
     padding: 0 10px;
   }
+
+  &__logout {
+    height: 72px;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top: 1px solid var(--color-stroke-ui);
+
+    padding: 0 10px;
+  }
+}
+
+.svg-invert {
+  filter: invert(1);
 }
 
 @keyframes shadowPulse {

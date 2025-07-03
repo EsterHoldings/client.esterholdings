@@ -44,6 +44,11 @@ const menuItems = computed(() => [
     icon: UiIconHome,
   },
   {
+    title: 'Deposit',
+    to: addCurrentLocaleToPath("payments"),
+    icon: UiIconPayment,
+  },
+  {
     title: t("cabinet.menu.payment_details"),
     to: addCurrentLocaleToPath("payments/details"),
     icon: UiIconClients,
@@ -57,11 +62,6 @@ const menuItems = computed(() => [
     title: t("cabinet.menu.referral_system"),
     to: addCurrentLocaleToPath("referrals"),
     icon: UiIconReferral,
-  },
-  {
-    title: t("cabinet.menu.billing"),
-    to: addCurrentLocaleToPath("payments"),
-    icon: UiIconPayment,
   },
   // {
   //   title: t("cabinet.menu.settings"),

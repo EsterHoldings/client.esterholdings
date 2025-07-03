@@ -3,7 +3,7 @@
     <div class="slide-10__content">
       <div class="slide-10__title">
         <div class="slide-10__image-wrapper">
-          <img src="/static/ten-slide.webp" alt="10" class="slide-10__image" />
+          <img src="/static/ten-slide.webp" alt="10" class="slide-10__image"/>
           <UiTextH3 class="slide-10__years">
             {{ $t("landing.slider.ten_years_slide.title.highlight") }}
           </UiTextH3>
@@ -77,10 +77,12 @@ import UiTextH6 from "~/components/ui/UiTextH6.vue";
     font-weight: 600;
     white-space: nowrap;
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    color: #ffffff;
   }
 
   &__subtitle {
     font-weight: 600;
+    color: #ffffff;
   }
 
   &__description {

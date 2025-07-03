@@ -3,8 +3,11 @@
     <UiTextH6
       class="menu-category_title"
       :class="{ 'menu-category_title_mobile': props.isMobile }"
+      @click="activeLink = ''"
     >
-      {{ props.title }}
+      <NuxtLink :to="props.titles.path">
+        {{ props.titles.name }}
+      </NuxtLink>
       <div
         class="menu-category_line"
         :class="{ 'menu-category_line_mobile': props.isMobile }"
@@ -17,23 +20,28 @@
       v-for="link in props.items"
       :key="link.name"
     >
-      <NuxtLink :to="link.path"> {{ link.name }} </NuxtLink>
+      <NuxtLink :to="link.path" @click="activeLink = ''">
+        {{ link.name }}
+      </NuxtLink>
     </UiTextH5>
   </div>
 </template>
 
 <script setup>
+import { inject } from "vue";
 import UiTextH6 from "~/components/ui/UiTextH6.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 
 const props = defineProps({
-  title: String,
+  titles: Object,
   items: Array,
   isMobile: {
     type: Boolean,
     default: false,
   },
 });
+
+const activeLink = inject("stateLink");
 </script>
 
 <style lang="scss" scoped>
@@ -44,6 +52,10 @@ const props = defineProps({
 
   &_title {
     color: #b8b8c3;
+
+    a {
+      color: inherit;
+    }
 
     &_mobile {
       color: var(--ui-primary-accent);

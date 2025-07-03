@@ -31,6 +31,7 @@
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
 import { computed, inject, onMounted, reactive } from "vue";
+import useAppCore from "~/composables/useAppCore";
 
 import AccountsPanelSearch from "~/pages/admin/accounts/components/AccountsPanelSearch.vue";
 import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
@@ -48,13 +49,23 @@ import {
   accountsData,
 } from "~/pages/admin/accounts/composables";
 
-import {
-  handleInputSearch,
-  handleChangePage,
-  handleChangePerPage,
+// import {
+//   handleInputSearch,
+//   handleChangePage,
+//   handleChangePerPage,
+//   loadData,
+//   handleClickDeleteIcon,
+// } from "~/pages/admin/accounts/composables/setup";
+
+import { useAccountsMethods } from "~/pages/admin/accounts/composables/setup";
+
+const {
   loadData,
   handleClickDeleteIcon,
-} from "~/pages/admin/accounts/composables/setup";
+  handleChangePage,
+  handleChangePerPage,
+  handleInputSearch,
+} = useAccountsMethods();
 import AccountsPanelEdit from "~/pages/admin/accounts/components/AccountsPanelEdit.vue";
 import AccountsPanelAddNew from "~/pages/admin/accounts/components/AccountsPanelAddNew.vue";
 import UiIconEdit from "~/components/ui/UiIconEdit.vue";
@@ -62,6 +73,8 @@ import UiIconDelete from "~/components/ui/UiIconDelete.vue";
 
 const { t } = useI18n({ useScope: "global" });
 const { openModal } = inject("modalControl") as { openModal: Function };
+
+const appCore = useAppCore();
 
 const handleClickAddRole = () =>
   openModal(AccountsPanelAddNew, {

@@ -4,7 +4,6 @@
       <slot name="icon-left"/>
     </div>
 
-    <!-- Скрытый нативный input для открытия дейтпикера -->
     <input
         ref="nativeInput"
         type="date"
@@ -14,7 +13,6 @@
         @input="onNativeInput"
     />
 
-    <!-- Видимое поле только для отображения -->
     <input
         type="text"
         class="visible-input"
@@ -59,12 +57,10 @@ const emit = defineEmits<{ (e: 'input', v: string): void }>()
 const rawValue = ref<string>(props.value)
 const nativeInput = ref<HTMLInputElement|null>(null)
 
-// Синхронизируем внешнее value → rawValue
 watch(() => props.value, v => {
   rawValue.value = v
 })
 
-// Формат для отображения
 const displayText = computed(() => {
   if (!rawValue.value) return ''
   let dt = parse(rawValue.value, props.inputFormat, new Date())

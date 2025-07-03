@@ -1,5 +1,4 @@
 import {reactive} from "vue";
-import debounce from 'lodash/debounce';
 
 import type { IFormDataDto } from "~/pages/auth/login/composables"
 
@@ -9,9 +8,11 @@ import MinLength from "./services/validation/rules/minLength"
 import MaxLength from "./services/validation/rules/maxLength"
 import isUnique from "./services/validation/rules/isUnique"
 import passwordConfirmation from "./services/validation/rules/passwordConfirmation"
+import IsDecimal from "~/composables/services/validation/rules/isDecimal";
 
 const rulesBindingsList = {
   required: IsRequired,
+  isDecimal: IsDecimal,
   isEmail: IsEmail,
   min: MinLength,
   max: MaxLength,
@@ -39,7 +40,7 @@ const generateErrorsFormData = (formData: any) => {
 }
 
 export const useValidation = (
-    formData: IFormDataDto,
+    formData: IFormDataDto | any,
     validationFormRules: any,
 ): any => {
   const errorsFormData = generateErrorsFormData({ ...formData })

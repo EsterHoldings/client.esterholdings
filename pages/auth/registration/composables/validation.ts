@@ -3,7 +3,7 @@ import useValidation from "@/composables/useValidation";
 import { formData } from ".";
 
 export const validatorRegistrationForm: any = useValidation(formData, {
-  email: ["required", "isEmail"],
+  email: ["unique:users,email", "required", "isEmail"],
   password: ["required"],
   confirmPassword: ["required"],
 });

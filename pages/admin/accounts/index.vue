@@ -1,7 +1,7 @@
 <template>
-  <div class="clients-page">
-    <div class="clients-page__title">
-      <UiTextH1>{{ $t("admin.accounts.index.title") }}</UiTextH1>
+  <div class="accounts-page">
+    <div class="accounts-page__title">
+      <UiTextH4>{{ $t("admin.accounts.index.title") }}</UiTextH4>
       <UiTextParagraph>{{
         $t("admin.accounts.index.subtitle")
       }}</UiTextParagraph>
@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { useI18n } from "vue-i18n";
-import UiTextH1 from "~/components/ui/UiTextH1.vue";
+import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 
 import AccountsPanel from "~/pages/admin/accounts/components/AccountsPanel.vue";
@@ -30,6 +30,11 @@ const { t } = useI18n({ useScope: "global" });
 
   &__title {
     margin-bottom: 20px;
+    color: var(--ui-text-main);
+
+    h4 {
+      color: var(--ui-text-main);
+    }
   }
 
   &__content {

@@ -2,29 +2,31 @@
   <div>
     <div v-if="isMobileMenuOpen" class="overlay blurred"></div>
     <div
-      :class="{ blurred: isBlurred, 'nav--open': isMobileMenuOpen }"
-      class="header__wrapper"
+        :class="{ blurred: isBlurred, 'nav--open': isMobileMenuOpen }"
+        class="header__wrapper"
     >
       <UiContainer>
         <header
-          class="header"
-          :class="{ 'header-is-open-menu ': isMobileMenuOpen }"
+            class="header"
+            :class="{ 'header-is-open-menu': isMobileMenuOpen }"
         >
           <div class="logo">
-            <UiIconLogo
-              :class="{
-                'svg-invert': isThemeLight || isWithPicture,
-              }"
-            />
+            <NuxtLink to="/">
+              <UiIconLogo
+                  :class="{
+                  'svg-invert': isThemeLight || isWithPicture || forceSvgInvert,
+                }"
+              />
+            </NuxtLink>
           </div>
 
           <div
-            class="burger-menu"
-            :class="{
+              class="burger-menu"
+              :class="{
               'burger-menu--open': isMobileMenuOpen,
-              'is-theme-light': isThemeLight || isWithPicture,
+              'is-theme-light': isThemeLight || isWithPicture || forceSvgInvert,
             }"
-            @click="toggleMenu"
+              @click="toggleMenu"
           >
             <span></span>
             <span></span>
@@ -33,65 +35,70 @@
 
           <nav class="nav" :class="{ 'nav--open': isMobileMenuOpen }">
             <HeaderLink
-              v-for="link in linksList"
-              :key="link"
-              :name="link.name"
-              :path="link.path"
-              :activeLink="activeLink"
-              @click.stop="handleClick(link.name)"
-              :isInvertColor="isThemeLight || isWithPicture"
+                v-for="link in linksList"
+                :key="link"
+                :name="link.name"
+                :path="link.path"
+                :activeLink="activeLink"
+                @click.stop="handleClick(link.name)"
+                :isInvertColor="isThemeLight || isWithPicture || forceSvgInvert"
             />
           </nav>
 
           <div
-            class="actions-wrapper"
-            :class="{ 'is-menu-open': isMobileMenuOpen }"
+              class="actions-wrapper"
+              :class="{ 'is-menu-open': isMobileMenuOpen }"
           >
             <div class="actions">
               <NuxtLink to="/auth/login">
                 <UiButtonDefault
-                  state="link"
-                  class="login"
-                  :class="{
-                    'is-theme-light': isThemeLight || isWithPicture,
+                    state="link"
+                    class="login"
+                    :class="{
+                    'is-theme-light':
+                      isThemeLight || isWithPicture || forceSvgInvert,
                   }"
                 >
                   {{ t("landing.header.auth.login") }}
                 </UiButtonDefault>
               </NuxtLink>
 
-              <UiButtonDefault
-                state="primary"
-                class="register"
-                v-if="!isMobileMenuOpen"
-              >
-                {{ t("landing.header.auth.register") }}
-              </UiButtonDefault>
+              <nuxt-link to="/auth/registration" class="register">
+                <UiButtonDefault
+                    state="primary"
+                    v-if="!isMobileMenuOpen"
+                >
+                  {{ t("landing.header.auth.register") }}
+                </UiButtonDefault>
+              </nuxt-link>
+
 
               <div class="actions-icons">
                 <LanguageSwitcher
-                  class="icon"
-                  :isInvert="isThemeLight || isWithPicture"
+                    class="icon"
+                    :isInvert="isThemeLight || isWithPicture || forceSvgInvert"
                 />
 
                 <transition name="fade" mode="out-in">
                   <span
-                    :key="themeStore.currentTheme"
-                    @click="themeStore.toggleTheme()"
-                    class="icon"
+                      :key="themeStore.currentTheme"
+                      @click="themeStore.toggleTheme()"
+                      class="icon"
                   >
                     <UiIconMoon
-                      v-if="themeStore.currentTheme === 'dark'"
-                      :class="{
-                        'svg-invert': isThemeLight || isWithPicture,
+                        v-if="themeStore.currentTheme === 'dark'"
+                        :class="{
+                        'svg-invert':
+                          isThemeLight || isWithPicture || forceSvgInvert,
                       }"
                     />
 
                     <UiIconSun
-                      :class="{
-                        'svg-invert': isThemeLight || isWithPicture,
+                        :class="{
+                        'svg-invert':
+                          isThemeLight || isWithPicture || forceSvgInvert,
                       }"
-                      v-else
+                        v-else
                     />
                   </span>
                 </transition>
@@ -100,75 +107,91 @@
           </div>
         </header>
 
-        <div
-          v-if="isMobileMenuOpen"
-          :class="{ 'nav--open': isMobileMenuOpen }"
-          class="mobile-nav"
-        >
-          <nav>
-            <HeaderMobileLink
-              v-for="link in linksList"
-              :key="`${link.name}-${activeLink}`"
-              :name="link.name"
-              :path="link.path"
-              :headerItems="headerItems"
-              :activeLink="activeLink"
-              @click="handleClick(link.name)"
-            />
+        <transition name="fade">
+          <div
+              v-if="isMobileMenuOpen"
+              :class="{ 'nav--open': isMobileMenuOpen }"
+              class="mobile-nav"
+          >
+            <nav>
+              <HeaderMobileLink
+                  v-for="link in linksList"
+                  :key="`${link.name}-${activeLink}`"
+                  :name="link.name"
+                  :path="link.path"
+                  :headerItems="headerItems"
+                  :activeLink="activeLink"
+                  @click="handleClick(link.name)"
+              />
 
-            <div class="mobile-acions">
-              <UiButtonDefault
-                state="primary"
-                class="register"
-                v-if="isMobileMenuOpen"
-              >
-                {{ t("landing.header.auth.register") }}
-              </UiButtonDefault>
+              <div class="mobile-acions">
+                <nuxt-link to="/auth/registration" class="register">
+                  <UiButtonDefault
+                      state="primary"
+                      v-if="isMobileMenuOpen"
+                  >
+                    {{ t("landing.header.auth.register") }}
+                  </UiButtonDefault>
+                </nuxt-link>
 
-              <UiButtonDefault
-                state="link"
-                :class="{ 'is-theme-light': isThemeLight }"
-              >
-                {{ t("landing.header.auth.login") }}
-              </UiButtonDefault>
-            </div>
+                <UiButtonDefault
+                    state="link"
+                    :class="{ 'is-theme-light': isThemeLight }"
+                >
+                  {{ t("landing.header.auth.login") }}
+                </UiButtonDefault>
+              </div>
 
-            <div class="mobile-banner">
-              <UiTextH6>BANNER</UiTextH6>
-            </div>
-          </nav>
-        </div>
+              <div class="mobile-banner">
+                <UiTextH6>BANNER</UiTextH6>
+              </div>
+            </nav>
+          </div>
+        </transition>
       </UiContainer>
     </div>
 
-    <div class="fixed-header-menu" v-if="!isMobileMenuOpen && activeLink">
-      <div ref="menuRef" class="menu-content">
-        <transition name="fade" mode="out-in">
-          <TradingMenu
-            v-if="activeLink === t('landing.header.nav.trading')"
-            :activeLink="activeLink"
-          />
-          <PartnershipMenu
-            v-else-if="activeLink === t('landing.header.nav.partnership')"
-            :activeLink="activeLink"
-          />
-          <CompanyMenu
-            v-else-if="activeLink === t('landing.header.nav.company')"
-            :activeLink="activeLink"
-          />
-        </transition>
+    <transition name="fade" mode="out-in">
+      <div class="fixed-header-menu" v-if="!isMobileMenuOpen && activeLink">
+        <div
+            ref="menuRef"
+            class="menu-content"
+            :class="{
+            'menu-content_is-partnership':
+              activeLink === t('landing.header.nav.partnership'),
+
+            'menu-content_is-company':
+              activeLink === t('landing.header.nav.company'),
+          }"
+        >
+          <transition name="fade" mode="out-in">
+            <TradingMenu
+                v-if="activeLink === t('landing.header.nav.trading')"
+                :activeLink="activeLink"
+            />
+            <PartnershipMenu
+                v-else-if="activeLink === t('landing.header.nav.partnership')"
+                :activeLink="activeLink"
+            />
+            <CompanyMenu
+                v-else-if="activeLink === t('landing.header.nav.company')"
+                :activeLink="activeLink"
+            />
+          </transition>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
-import { useUiStore } from "~/stores/uiStore";
-import { useThemeStore } from "~/stores/themeStore.js";
+import {useI18n} from "vue-i18n";
+import {ref, computed, onMounted, onBeforeUnmount, watch, provide} from "vue";
+import {useRoute} from "vue-router";
+import {useUiStore} from "~/stores/uiStore";
+import {useThemeStore} from "~/stores/themeStore.js";
 import useTrackScroll from "./composables/trackScroll";
-import { isSlideWithoutPicture } from "./composables/trackScroll";
+import {isSlideWithoutPicture} from "./composables/trackScroll";
 
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconMoon from "~/components/ui/UiIconMoon.vue";
@@ -181,17 +204,17 @@ import UiTextH6 from "~/components/ui/UiTextH6.vue";
 import TradingMenu from "./components/TradingMenu.vue";
 import PartnershipMenu from "./components/PartnershipMenu.vue";
 import CompanyMenu from "./components/CompanyMenu.vue";
-
 import LanguageSwitcher from "./components/LanguageSwitcher.vue";
 
 const themeStore = useThemeStore();
 const uiStore = useUiStore();
+const route = useRoute();
 
-const { isBlurred } = useTrackScroll();
-
-const { t } = useI18n();
+const {isBlurred} = useTrackScroll();
+const {t} = useI18n();
 
 const activeLink = ref("");
+provide("stateLink", activeLink);
 const headerItems = ref();
 const isMobileMenuOpen = ref(false);
 const menuRef = ref(null);
@@ -199,16 +222,16 @@ const windowWidth = ref(0);
 
 const linksList = computed(() => {
   return [
-    { name: t("landing.header.nav.trading"), path: "#" },
-    { name: t("landing.header.nav.partnership"), path: "#" },
-    { name: t("landing.header.nav.company"), path: "#" },
+    {name: t("landing.header.nav.trading")},
+    {name: t("landing.header.nav.partnership")},
+    {name: t("landing.header.nav.company")},
   ];
 });
 
 const isThemeLight = computed(() => {
   return (
-    (uiStore.headerScrolled && themeStore.currentTheme !== "dark") ||
-    (themeStore.currentTheme !== "dark" && isMobileMenuOpen.value)
+      (uiStore.headerScrolled && themeStore.currentTheme !== "dark") ||
+      (themeStore.currentTheme !== "dark" && isMobileMenuOpen.value)
   );
 });
 
@@ -219,6 +242,13 @@ const isWithPicture = computed(() => {
     return isSlideWithoutPicture.value;
   }
 });
+
+
+const forceSvgInvert = computed(() => {
+  const baseRouteName = route.name?.toString().split("___")[0];
+  return themeStore.currentTheme === "light" && baseRouteName !== "index";
+});
+
 
 const updateWindowWidth = () => {
   if (process.client) {
@@ -245,6 +275,7 @@ const handleClickOutside = (event) => {
     uiStore.showMenu = false;
   }
 };
+
 const toggleMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
   uiStore.showMenu = false;
@@ -332,6 +363,12 @@ watch(windowWidth, (width) => {
   }
 }
 
+.register {
+  a {
+    color: inherit;
+  }
+}
+
 .nav {
   display: flex;
   gap: 15px;
@@ -381,7 +418,7 @@ watch(windowWidth, (width) => {
 
 .fixed-header-menu {
   position: fixed;
-  top: 80px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9998;
@@ -393,6 +430,14 @@ watch(windowWidth, (width) => {
 .menu-content {
   max-width: 1200px;
   margin: 0 auto;
+
+  &_is-partnership {
+    max-width: 500px;
+  }
+
+  &_is-company {
+    max-width: 120px;
+  }
 }
 
 .mobile-nav {
@@ -528,6 +573,7 @@ watch(windowWidth, (width) => {
 
   .register {
     padding: 15px;
+
   }
 }
 </style>

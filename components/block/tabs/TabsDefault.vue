@@ -1,10 +1,11 @@
 <template>
   <div class="tabs">
-    <div class="tab"
-         v-for="(tabItem, index) in tabsList"
-         :key="tabItem.label"
-         :class="{'active': activeTabIndex === index}"
-         @click="handleClickTab(index)"
+    <div
+      class="tab"
+      v-for="(tabItem, index) in tabsList"
+      :key="tabItem.label"
+      :class="{ active: activeTabIndex === index }"
+      @click="handleClickTab(index)"
     >
       {{ tabItem.label }}
     </div>
@@ -12,21 +13,19 @@
 </template>
 
 <script lang="ts" setup>
-const emit = defineEmits(['selectTab'])
+const emit = defineEmits(["selectTab"]);
 defineProps({
   tabsList: {
     type: Array,
-    default: []
+    default: [],
   },
   activeTabIndex: {
     type: Number,
-    default: 0
-  }
-})
+    default: 0,
+  },
+});
 
-const handleClickTab = (index) => {
-  emit('selectTab', index)
-}
+const handleClickTab = (index: number) => emit("selectTab", index);
 </script>
 
 <style lang="scss" scoped>
@@ -37,6 +36,7 @@ const handleClickTab = (index) => {
   .tab {
     cursor: pointer;
     padding: 5px;
+    color: var(--ui-text-main);
     border-bottom: 1px solid var(--ui-background-panel);
 
     &:hover {

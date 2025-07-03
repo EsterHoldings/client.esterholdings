@@ -1,5 +1,5 @@
 import useApi from "~/composables/useApi";
-import {ROUTE_AUTH_USER} from "~/constants/routes";
+import { ROUTE_AUTH_USER } from "~/constants/routes";
 
 export class AuthService {
   private useApi: any;
@@ -22,6 +22,18 @@ export class AuthService {
 
   async authUser() {
     return await this.useApi.get(ROUTE_AUTH_USER);
+  }
+
+  async postSocialLogin(data: Object): Promise<any> {
+    return await this.useApi.post("/auth/social", data);
+  }
+
+  async checkIsAuth(): Promise<any> {
+    return await this.useApi.get("/auth/isAuth");
+  }
+
+  async refresh(): Promise<any> {
+    return await this.useApi.post("/auth/refresh");
   }
 }
 

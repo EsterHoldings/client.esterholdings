@@ -1,22 +1,16 @@
 <template>
-  <PanelDefault :title="t('admin.clients.components.clients-panel.title')">
-    <template #title-extra>
-      <div class="add-btn" @click="handleClickAddRole">+</div>
-    </template>
-
+  <PanelDefault class="clients-panel">
     <ClientsPanelSearch
       @input="handleInputSearch"
       :isLoading="isLoadingSearch"
       :value="searchFilter"
     />
-
     <TableDefault
-      :columns="rolesColumns"
-      :data="data"
+      :columns="adminsColumns"
+      :data="clientsData"
       :isLoading="isLoading"
-      :rowsPerPage="15"
+      :rowsPerPage="5"
     />
-
     <PaginationDefault
       :isLoading="isLoading"
       :perPage="perPage"
@@ -29,87 +23,171 @@
 </template>
 
 <script lang="ts" setup>
+import { onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { computed, inject, onMounted } from "vue";
-
-import ClientsPanelSearch from "~/pages/admin/clients/components/ClientsPanelSearch.vue";
-import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
-import PanelDefault from "~/components/block/panels/PanelDefault.vue";
+import { debounce } from "~/utils/helper/debounce";
 import TableDefault from "~/components/block/tables/TableDefault.vue";
+import PanelDefault from "~/components/block/panels/PanelDefault.vue";
+import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
 
-import {
-  page,
-  perPage,
-  totalRows,
-  isLoading,
-  isLoadingSearch,
-  searchFilter,
-  clientsData,
-  useRolesColumns,
-} from "~/pages/admin/clients/composables";
-
-import {
-  handleInputSearch,
-  handleChangePage,
-  handleChangePerPage,
-  loadData,
-  handleClickDeleteIcon,
-} from "~/pages/admin/clients/composables/setup";
-import ClientsPanelEdit from "~/pages/admin/clients/components/ClientsPanelEdit.vue";
-import ClientsPanelAddNew from "~/pages/admin/clients/components/ClientsPanelAddNew.vue";
-import UiIconEdit from "~/components/ui/UiIconEdit.vue";
-import UiIconDelete from "~/components/ui/UiIconDelete.vue";
+import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
+import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
+import ClientsPanelSearch from "~/pages/admin/clients/components/ClientsPanelSearch.vue";
+import {navigateTo} from "nuxt/app";
+import UiIconUser from "~/components/ui/UiIconUser.vue";
 
-const { t } = useI18n();
-const rolesColumns = useRolesColumns();
-const { openModal } = inject("modalControl") as { openModal: Function };
+const { t } = useI18n({ useScope: "global" });
+const appCore = useAppCore();
 
-const handleClickAddRole = () =>
-  openModal(ClientsPanelAddNew, {
-    title: t("admin.clients.components.clients-panel.addTitle"),
-  });
-const handleClickEditIcon = (id: string) =>
-  openModal(ClientsPanelEdit, {
-    title: t("admin.clients.components.clients-panel.editTitle"),
-    id,
-  });
+const isLoading = ref(false);
+const isLoadingSearch = ref(false);
+const perPage = ref(5);
+const page = ref(1);
+const totalRows = ref(0);
+const searchFields = ref([
+  'id',
+  'email',
+  'first_name',
+  'last_name',
+  'phone',
+  'country',
+  'city',
+  'created_at'
+]);
+const searchFilter = ref("");
 
-const extendClientData = () => {
-  clientsData.forEach((client) => {
-    client.options = [
+const adminsColumns = reactive([
+  {
+    title: 'Id',
+    key: "id"
+  },
+  {
+    title: 'Почта',
+    key: "email",
+  },
+  {
+    title: 'Имя',
+    key: "first_name",
+  },
+  {
+    title: 'Фамилия',
+    key: "last_name",
+  },
+  {
+    title: 'Телефон',
+    key: "phone",
+  },
+  {
+    title: 'Страна',
+    key: "country",
+  },
+  {
+    title: 'Город',
+    key: "city",
+  },
+  {
+    title: 'Дата создания',
+    key: "created_at",
+  },
+  {
+    title: '',
+    key: "options",
+  },
+]);
+
+const clientsData = reactive([]);
+
+const loadData = async (isFilterQuery = false) => {
+  const params = {
+    page: isFilterQuery ? 1 : page.value,
+    perPage: perPage.value,
+    searchFilter: searchFilter.value,
+    searchFields: searchFields.value,
+  };
+
+  const response = await appCore.adminModules.clients.get(params);
+
+  totalRows.value = response.data.data.total;
+
+  let responseClientData = response.data.data.data;
+  responseClientData.forEach((user: any) => {
+    // user.id = [
+    //   {
+    //     is: UiTextParagraph,
+    //     props: {},
+    //     events: { click: () => console.log(user.id) },
+    //     slot: user.id,
+    //   },
+    // ];
+
+    user.options = [
       {
         isIcon: true,
-        is: UiIconEdit,
+        is: UiIconUser,
         props: {},
-        events: { click: () => handleClickEditIcon(client.id) },
-      },
-      {
-        isIcon: true,
-        is: UiIconDelete,
-        props: {},
-        events: { click: () => handleClickDeleteIcon(client.id) },
+        events: { click: () => handleOpenClientPage(user.id) },
       },
     ];
   });
+
+  isLoading.value = false;
+  clientsData.splice(0, clientsData.length, ...responseClientData);
 };
 
-const data = computed(() => {
-  extendClientData();
-  Object.assign(clientsData, clientsData);
+const handleOpenClientPage = (id: string) => {
+  navigateTo(`/admin/clients/${id}`);
+};
 
-  return clientsData;
-});
+const handleChangePerPage = async (value: number) => {
+  page.value = 1;
+  perPage.value = value;
+  await loadData();
+};
+
+const handleChangePage = async (value: number) => {
+  page.value = value;
+  await loadData();
+};
+
+const handleInputSearch = debounce(async (value: any) => {
+  try {
+    isLoadingSearch.value = true;
+    searchFilter.value = value;
+    await loadData(true);
+  } finally {
+    isLoadingSearch.value = false;
+  }
+}, 300);
 
 onMounted(async () => {
+  isLoading.value = true;
   await loadData();
-  useEventBus.on("loadDataForUsers", loadData);
+  useEventBus.on("loadDataForAdmins", loadData);
 });
 </script>
 
 <style lang="scss" scoped>
+
+.clients-panel {
+  padding: 20px;
+
+  .panel-search {
+    margin-bottom: 20px;
+    width: 400px;
+
+    &__input {
+      border: none;
+
+      &.input {
+        padding: 0 !important;
+      }
+    }
+  }
+}
+
 .add-btn {
-  background-color: var(--color-secondary);
+  background-color: var(--color-stroke-ui-dark);
   height: 30px;
   width: 30px;
   display: flex;

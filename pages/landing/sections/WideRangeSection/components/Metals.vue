@@ -1,26 +1,30 @@
 <template>
   <div class="metals">
     <UiContainer
-      class="wrapper"
-      :class="{ 'light-theme': themeStore.currentTheme === 'light' }"
+        class="wrapper"
+        :class="{ 'light-theme': themeStore.currentTheme === 'light' }"
     >
       <div class="metals__content">
         <UiTextH3 class="metals__title">
-          {{ t("landing.sections.wide_range_tabs.Metals.title") }}</UiTextH3
+          {{ t("landing.sections.wide_range_tabs.Metals.title") }}
+        </UiTextH3
         >
         <UiTextH5 class="metals__text">
           {{ t("landing.sections.wide_range_tabs.Metals.description") }}
         </UiTextH5>
         <div>
-          <UiButtonDefault state="primary">
-            {{
-              t("landing.sections.wide_range_tabs.Metals.btn")
-            }}</UiButtonDefault
-          >
+          <Nuxt-Link to="market-instruments?index=1">
+            <UiButtonDefault state="primary">
+              {{
+                t("landing.sections.wide_range_tabs.Metals.btn")
+              }}
+            </UiButtonDefault
+            >
+          </Nuxt-Link>
         </div>
       </div>
-
-      <UiImage src="static/metals_image.webp" class="metals__img" />
+      
+      <img src="/static/metals_image.webp" class="metals__img"/>
     </UiContainer>
   </div>
 </template>
@@ -32,9 +36,10 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiImage from "~/components/ui/UiImage.vue";
 import UiContainer from "~/components/ui/UiContainer.vue";
 
-import { useI18n } from "vue-i18n";
-import { useThemeStore } from "~/stores/themeStore";
-const { t } = useI18n();
+import {useI18n} from "vue-i18n";
+import {useThemeStore} from "~/stores/themeStore";
+
+const {t} = useI18n();
 
 const themeStore = useThemeStore();
 </script>
@@ -73,7 +78,7 @@ const themeStore = useThemeStore();
     border: 1px solid var(--ui-stroke);
     overflow: hidden;
     box-shadow: inset 0 -50px 50px -20px var(--ui-background),
-      inset 0 50px 50px -20px var(--ui-background);
+    inset 0 50px 50px -20px var(--ui-background);
 
     &::after {
       content: "";
@@ -87,7 +92,7 @@ const themeStore = useThemeStore();
       z-index: 1;
       animation: pulse 3s infinite alternate ease-in-out;
       box-shadow: inset 0 -50px 50px -20px var(--ui-background),
-        inset 0 50px 50px -20px var(--ui-background);
+      inset 0 50px 50px -20px var(--ui-background);
     }
 
     &::before {
@@ -102,7 +107,7 @@ const themeStore = useThemeStore();
       z-index: 1;
       animation: pulse 3s infinite alternate ease-in-out;
       box-shadow: inset 0 -50px 50px -20px var(--ui-background),
-        inset 0 50px 50px -20px var(--ui-background);
+      inset 0 50px 50px -20px var(--ui-background);
     }
   }
 

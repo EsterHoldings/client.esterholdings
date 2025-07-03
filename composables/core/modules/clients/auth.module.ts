@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/stores/authStore";
-import {AuthModuleInterface, BasicModuleInterface} from "../module.interface";
+import { AuthModuleInterface, BasicModuleInterface } from "../module.interface";
 import AuthService from "~/composables/core/modules/clients/auth.service";
 
 interface ResponseDTO {
@@ -30,10 +30,22 @@ export class AuthModule implements AuthModuleInterface {
   }
 
   doRegistration(data: any): Promise<any> {
-    return undefined;
+    return this.authService.registration(data);
   }
   async getAuthUser() {
-    return await this.authService.authUser()
+    return await this.authService.authUser();
+  }
+
+  doSocialLogin(data: any): Promise<any> {
+    return this.authService.postSocialLogin(data);
+  }
+
+  async doCheckIsAuth(): Promise<any> {
+    return await this.authService.checkIsAuth()
+  }
+
+  async doRefresh(): Promise<any> {
+    return await this.authService.refresh()
   }
 }
 

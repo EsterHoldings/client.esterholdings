@@ -13,3 +13,10 @@
     />
   </svg>
 </template>
+
+<style lang="scss" scoped>
+svg {
+  width: 18px;
+  cursor: pointer;
+}
+</style>

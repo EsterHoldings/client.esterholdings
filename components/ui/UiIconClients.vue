@@ -61,6 +61,6 @@
 svg {
   height: 20px;
   width: 20px;
-  stroke: white;
+  stroke: currentColor;
 }
 </style>

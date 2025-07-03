@@ -1,7 +1,7 @@
 <template>
   <section class="features_section">
     <UiTextH3 class="features_section_title">{{
-      t("landing.feature__title")
+      t("landing.sections.feature__title")
     }}</UiTextH3>
     <div class="features_container">
       <div

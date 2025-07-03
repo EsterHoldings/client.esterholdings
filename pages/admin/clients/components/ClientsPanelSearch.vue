@@ -1,29 +1,28 @@
 <template>
   <div class="panel-search">
     <UiInput
-      class="panel-search__input"
-      :placeholder="
-        t('admin.clients.components.clients-panel-search.placeholder')
-      "
-      @input="handleInputSearch"
-      :borderNone="true"
-      :paddingNone="true"
-      :isLoading="isLoadingSearch"
-      :value="searchFilter"
+        class="panel-search__input"
+        :placeholder="t('admin.access.components.admins-panel-search.placeholder')"
+        @input="handleInputSearch"
+        :borderNone="true"
+        :paddingNone="true"
+        :isLoading="isLoadingSearch"
+        :value="searchFilter"
     >
       <template #icon-left>
-        <UiIconSearch />
+        <UiIconSearch/>
       </template>
     </UiInput>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiIconSearch from "~/components/ui/UiIconSearch.vue";
 
-const { t } = useI18n();
+const {t} = useI18n({useScope: "global"});
+
 const emit = defineEmits(["input"]);
 const props = defineProps({
   searchFilter: {
@@ -35,18 +34,20 @@ const props = defineProps({
     default: false,
   },
 });
-const handleInputSearch = (event) => emit("input", event);
+const handleInputSearch = (value: string) => emit("input", value);
 </script>
 
 <style lang="scss" scoped>
 .panel-search {
   border: none;
-  border-radius: 0;
-  border-top: 1px solid var(--color-secondary);
   margin-bottom: 0;
+  border-radius: 10px;
+  background-color: var(--ui-background);
 
   &__input {
-    border: none;
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 10px;
+    overflow: hidden;
   }
 }
 </style>

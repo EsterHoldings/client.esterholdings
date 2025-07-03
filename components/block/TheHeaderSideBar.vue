@@ -2,28 +2,31 @@
   <header class="header" :class="{ 'is-open': isOpen }">
     <div class="header__top">
       <div class="header__top-left" :class="{ 'is-not-open': !isOpen }">
-        <UiIconLogo/>
+        <UiIconLogo />
       </div>
 
       <div class="header__top-right">
         <UiIconArrowsLeft
-            :rotateToRight="!isOpen"
-            @click="handleClickOpenCloseSideBar"
+          :rotateToRight="!isOpen"
+          @click="handleClickOpenCloseSideBar"
         />
       </div>
     </div>
 
-    <TheHeaderSideBarMenu :sideBarIsOpen="isOpen"/>
+    <TheHeaderSideBarMenu :sideBarIsOpen="isOpen" />
 
     <div class="header__bottom">
       <div class="header__bottom-left" :class="{ 'is-not-open': !isOpen }">
-        <UiImageCircle/>
+        <UiImageCircle />
       </div>
 
       <div class="header__bottom-right" :class="{ 'is-not-open': !isOpen }">
-        <div class="header__bottom-right__wrapper" @click="handleClickLogoutButton">
+        <div
+          class="header__bottom-right__wrapper"
+          @click="handleClickLogoutButton"
+        >
           <span>Logout</span>
-          <UiIconLogout/>
+          <UiIconLogout />
         </div>
       </div>
     </div>
@@ -32,12 +35,12 @@
 
 <script lang="ts" setup>
 import useAppCore from "~/composables/useAppCore";
-import {ref, onMounted, computed} from "vue";
-import {useRoute} from "vue-router";
-import {navigateTo} from "nuxt/app";
-import {useAuthStore} from "~/stores/authStore";
+import { ref, onMounted, computed } from "vue";
+import { useRoute } from "vue-router";
+import { navigateTo } from "nuxt/app";
+import { useAuthStore } from "~/stores/authStore";
 
-import {ROUTE_AUTH_LOGIN} from "~/constants/routes";
+import { ROUTE_AUTH_LOGIN } from "~/constants/routes";
 
 import TheHeaderSideBarMenu from "~/components/block/TheHeaderSideBarMenu.vue";
 import UiIconArrowsLeft from "~/components/ui/UiIconArrowsLeft.vue";
@@ -64,11 +67,9 @@ const handleClickOpenCloseSideBar = () => {
 
 const handleClickLogoutButton = async () => {
   await appCore.auth.doLogout();
-  authStore.setAccessToken('');
-  authStore.setRefreshToken('');
-  navigateTo(ROUTE_AUTH_LOGIN)
-}
-
+  authStore.setAccessToken("");
+  navigateTo(ROUTE_AUTH_LOGIN);
+};
 </script>
 
 <style scoped lang="scss">

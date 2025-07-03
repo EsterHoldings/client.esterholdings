@@ -36,7 +36,7 @@ const props = defineProps({
     default: false,
   },
 });
-const handleInputSearch = (event) => emit("input", event);
+const handleInputSearch = (value) => emit("input", value);
 </script>
 
 <style lang="scss" scoped>

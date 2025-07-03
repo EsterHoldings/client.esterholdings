@@ -6,17 +6,25 @@ export class AuthModule {
   constructor() {
     this.authService = new AuthService();
   }
-  async doRegister(params: {}):Promise<any> {
+  async doRegister(params: {}): Promise<any> {
     return new Promise((res, rej) => res(true));
   }
-  async doLogin(params: {}):Promise<any> {
+  async doLogin(params: {}): Promise<any> {
     return await this.authService.postLogin(params);
   }
-  async doLogout(params: {}):Promise<any> {
+  async doLogout(params: {}): Promise<any> {
     return await this.authService.postLogout();
   }
-  async doForgotPass(params: {}):Promise<any> {
+  async doForgotPass(params: {}): Promise<any> {
     return new Promise(() => {});
+  }
+
+  async doSocialLogin(params: {}): Promise<any> {
+    return await this.authService.postSocialLogin(params);
+  }
+
+  async doCheckIsAuth(): Promise<any> {
+    return await this.authService.postCheckIsAuth()
   }
 }
 export default AuthModule;

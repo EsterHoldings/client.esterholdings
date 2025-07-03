@@ -1,7 +1,7 @@
 <template>
   <div class="access-page">
     <div class="access-page__title">
-      <UiTextH3>{{ t("admin.access.index.title") }}</UiTextH3>
+      <UiTextH4>{{ t("admin.access.index.title") }}</UiTextH4>
       <UiTextParagraph>
         {{ t("admin.access.index.subtitle") }}
       </UiTextParagraph>
@@ -31,7 +31,7 @@ import AdminsPanel from "~/pages/admin/access/components/AdminsPanel.vue";
 import RolesPanel from "~/pages/admin/access/components/RolesPanel.vue";
 import PermissionsPanel from "~/pages/admin/access/components/PermissionsPanel.vue";
 import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
-import UiTextH3 from "~/components/ui/UiTextH3.vue";
+import UiTextH4 from "~/components/ui/UiTextH4.vue";
 
 definePageMeta({
   middleware: ["admin-middleware"],
@@ -49,6 +49,7 @@ const { t } = useI18n({ useScope: "global" });
 
     &__title {
       margin-bottom: 20px;
+      color: var(--ui-text-main);
     }
 
     &__content {

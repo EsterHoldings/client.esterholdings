@@ -17,34 +17,30 @@
                   {{ t("cabinet.dashboard.accountVerification.subtitle") }}
                 </div>
               </div>
-              <UiButtonDefault state="primary">{{
-                t("cabinet.dashboard.accountVerification.profileButton")
-              }}</UiButtonDefault>
+
+              <NuxtLink to="/profile">
+                <UiButtonDefault state="primary">{{ t("cabinet.dashboard.accountVerification.profileButton") }}</UiButtonDefault>
+              </NuxtLink>
             </div>
             <ul class="card__list">
               <li>
                 <UiIconFailed />
-                <span>{{
-                  t("cabinet.dashboard.accountVerification.addressFailed")
-                }}</span>
+                <span>{{t("cabinet.dashboard.accountVerification.addressFailed") }}</span>
               </li>
+
               <li>
                 <UiIconSuccess />
-                <span>{{
-                  t("cabinet.dashboard.accountVerification.documentVerified")
-                }}</span>
+                <span>{{t("cabinet.dashboard.accountVerification.documentVerified") }}</span>
               </li>
+
               <li>
                 <UiIconWarning />
-                <span>{{
-                  t("cabinet.dashboard.accountVerification.paymentInProgress")
-                }}</span>
+                <span>{{t("cabinet.dashboard.accountVerification.paymentInProgress") }}</span>
               </li>
+
               <li>
                 <UiIconWarning />
-                <span>{{
-                  t("cabinet.dashboard.accountVerification.profileInProgress")
-                }}</span>
+                <span>{{t("cabinet.dashboard.accountVerification.profileInProgress") }}</span>
               </li>
             </ul>
           </div>
@@ -54,13 +50,15 @@
         <PanelDefault>
           <div class="card">
             <div class="card__actions">
-              <UiButtonDefault state="success">{{
-                t("cabinet.dashboard.actions.newDeposit")
-              }}</UiButtonDefault>
-              <UiButtonDefault state="primary">{{
-                t("cabinet.dashboard.actions.newWithdrawal")
-              }}</UiButtonDefault>
+              <NuxtLink to="/payments/create">
+                <UiButtonDefault state="success">{{t("cabinet.dashboard.actions.newDeposit")}}</UiButtonDefault>
+              </NuxtLink>
+
+              <NuxtLink to="/payments/create">
+                <UiButtonDefault state="primary">{{t("cabinet.dashboard.actions.newWithdrawal") }}</UiButtonDefault>
+              </NuxtLink>
             </div>
+
             <div class="chart-placeholder">
               {{ t("cabinet.dashboard.actions.chartPlaceholder") }}
             </div>
@@ -74,10 +72,11 @@
               <div class="card__title">
                 {{ t("cabinet.dashboard.mt4.title") }}
               </div>
+
               <div class="card__options">
-                <UiButtonDefault state="primary">{{
-                  t("cabinet.dashboard.mt4.openNewAccount")
-                }}</UiButtonDefault>
+                <NuxtLink to="/accounts">
+                  <UiButtonDefault state="primary">{{t("cabinet.dashboard.mt4.openNewAccount") }}</UiButtonDefault>
+                </NuxtLink>
               </div>
             </div>
             <table class="table">
@@ -89,15 +88,14 @@
                   <th>{{ t("cabinet.dashboard.mt4.table.status") }}</th>
                 </tr>
               </thead>
+
               <tbody>
                 <tr>
                   <td>123456</td>
                   <td>Real</td>
                   <td>$5,000.00</td>
                   <td>
-                    <span class="status status--active">{{
-                      t("cabinet.dashboard.mt4.table.active")
-                    }}</span>
+                    <span class="status status--active">{{t("cabinet.dashboard.mt4.table.active") }}</span>
                   </td>
                 </tr>
                 <tr>
@@ -105,9 +103,7 @@
                   <td>Real</td>
                   <td>$5,000.00</td>
                   <td>
-                    <span class="status status--active">{{
-                      t("cabinet.dashboard.mt4.table.active")
-                    }}</span>
+                    <span class="status status--active">{{t("cabinet.dashboard.mt4.table.active") }}</span>
                   </td>
                 </tr>
                 <tr>
@@ -115,9 +111,7 @@
                   <td>Demo</td>
                   <td>$10,000.00</td>
                   <td>
-                    <span class="status status--inactive">{{
-                      t("cabinet.dashboard.mt4.table.inactive")
-                    }}</span>
+                    <span class="status status--inactive">{{ t("cabinet.dashboard.mt4.table.inactive") }}</span>
                   </td>
                 </tr>
               </tbody>
@@ -137,11 +131,10 @@ import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
 import UiIconFailed from "~/components/ui/UiIconFailed.vue";
 import UiIconWarning from "~/components/ui/UiIconWarning.vue";
 
-definePageMeta({ layout: "cabinet", middleware: ["auth-client"] });
+definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
 import { useI18n } from "vue-i18n";
 import UiContainer from "~/components/ui/UiContainer.vue";
-import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 const { locale, t } = useI18n({ useScope: "global" });
@@ -150,11 +143,14 @@ const { locale, t } = useI18n({ useScope: "global" });
 <style lang="scss" scoped>
 .dashboard {
   color: #ffffff;
+  padding-bottom: 40px;
 
   &__title {
-    //font-size: 24px;
-    //font-weight: bold;
     margin-bottom: 24px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
   }
 
   &__grid {
@@ -206,6 +202,7 @@ const { locale, t } = useI18n({ useScope: "global" });
   &__title {
     font-size: 18px;
     font-weight: 600;
+    color: var(--ui-text-main);
   }
 
   &__options {
@@ -213,7 +210,7 @@ const { locale, t } = useI18n({ useScope: "global" });
 
   &__subtitle {
     font-size: 14px;
-    color: #a3aed0;
+    color: var(--ui-text-secondary);
   }
 
   &__list {
@@ -221,7 +218,7 @@ const { locale, t } = useI18n({ useScope: "global" });
     padding-left: 0;
     margin-top: 12px;
     font-size: 14px;
-    color: #e4e9f2;
+    color: var(--ui-text-secondary);
     margin-bottom: 20px;
 
     li {
@@ -245,12 +242,12 @@ const { locale, t } = useI18n({ useScope: "global" });
 
 .chart-placeholder {
   height: 160px;
-  background-color: #1a1d3b;
+  background-color: var(--ui-background-sidebar-link);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  color: #a3aed0;
+  color: var(--ui-text-main);
   font-size: 14px;
 }
 
@@ -263,12 +260,13 @@ const { locale, t } = useI18n({ useScope: "global" });
   th {
     text-align: left;
     padding-bottom: 8px;
-    color: #a3aed0;
+    color: var(--ui-text-secondary);
   }
 
   td {
     padding: 8px 0;
     border-top: 1px solid #2e335a;
+    color: var(--ui-text-secondary);
   }
 }
 

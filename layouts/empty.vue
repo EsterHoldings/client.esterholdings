@@ -1,13 +1,14 @@
 <template>
   <div class="page__wrapper">
     <div class="page">
-      askdjnaskdjaskdjn
       <slot />
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import UiImage from "~/components/ui/UiImage.vue";
+</script>
 
 <style lang="scss" scoped>
 .page {
@@ -16,7 +17,7 @@
   overflow: hidden;
 
   &__wrapper {
-    background-color: var(--ui-background);
+    background-color: var(--ui-background-admin);
   }
 }
 </style>

@@ -1,110 +1,94 @@
 <template>
-  <div class="table-container">
-    <table class="table">
-      <thead>
-        <tr v-if="columns.length > 0">
-          <th
-            v-for="(col, index) in columns"
-            :key="'head-' + index"
-            class="table__header"
-          >
-            {{ col.title }}
-          </th>
-        </tr>
-        <tr v-if="columns?.length === 0">
-          <th class="table__header">{{ isLoading ? "..." : "---" }}</th>
-        </tr>
-      </thead>
+  <div class="cards-container">
+    <!-- Загрузка -->
+    <div
+        v-if="isLoading"
+        v-for="n in rowsPerPage"
+        :key="'loader-'+n"
+        class="card card--loading"
+    >
+      <UiLoaderPlaceholder class="card__loader"/>
+    </div>
 
-      <tbody class="table__body">
-        <tr v-if="!isLoading && data.length === 0">
-          <td>{{ t("ui-components.tables.table-default") }}</td>
-        </tr>
+    <!-- Пусто -->
+    <div
+        v-else-if="!isLoading && data.length === 0"
+        class="card card--empty"
+    >
+      {{ t("ui-components.tables.table-default") }}
+    </div>
 
-        <tr
-          v-if="isLoading"
-          v-for="rowIndex in rowsPerPage"
-          :key="'loader-row-' + rowIndex"
-        >
-          <td
+    <!-- Данные -->
+    <div
+        v-else
+        v-for="(row, rowIndex) in data"
+        :key="'card-'+rowIndex"
+        class="card"
+    >
+      <!-- вместо inline-style -->
+      <div class="card-grid">
+        <div
             v-for="(col, colIndex) in columns"
-            :key="'loader-cell-' + rowIndex + '-' + colIndex"
-            class="table__body__loader"
-          >
-            <UiLoaderPlaceholder />
-          </td>
-        </tr>
-
-        <tr
-          v-if="!isLoading"
-          v-for="(row, rowIndex) in data"
-          :key="'row-' + rowIndex"
-          class="table__row"
+            :key="'cell-'+rowIndex+'-'+colIndex"
+            class="card-cell"
         >
-          <td
-            v-for="(col, colIndex) in columns"
-            :key="'cell-' + rowIndex + '-' + colIndex"
-            :class="[
-              'table__cell',
-              { 'table__cell--icons': col.key === 'options' },
-            ]"
-          >
-            <!-- Логіка для isIcon (залишаємо без змін) -->
+          <div class="card-cell__title">{{ col.title }}</div>
+          <div class="card-cell__value">
+            <!-- Іконки -->
             <template
-              v-if="Array.isArray(row[col.key]) && row[col.key][0]?.isIcon"
+                v-if="Array.isArray(row[col.key]) && row[col.key][0]?.isIcon"
             >
               <div
-                v-for="(icon, iconIndex) in row[col.key]"
-                :key="'icon-' + rowIndex + '-' + colIndex + '-' + iconIndex"
-                :class="{ 'icon-container': icon.isIcon }"
+                  v-for="(icon, iconIndex) in row[col.key]"
+                  :key="iconIndex"
+                  class="icon-container"
               >
                 <component
-                  v-if="icon.is"
-                  :is="icon.is"
-                  v-bind="icon.props"
-                  v-on="icon.events"
+                    :is="icon.is"
+                    v-bind="icon.props"
+                    v-on="icon.events"
                 >
                   <template v-if="icon.slot">
-                    <component :is="icon.slot" />
+                    <component :is="icon.slot"/>
                   </template>
                 </component>
               </div>
             </template>
 
-            <!-- Нова логіка для відображення компоненту або рядка, переданого через slot -->
+            <!-- Кастомні компоненти -->
             <template
-              v-else-if="
-                Array.isArray(row[col.key]) &&
-                row[col.key].length &&
-                row[col.key][0].is
-              "
+                v-else-if="
+                  Array.isArray(row[col.key]) &&
+                  row[col.key].length &&
+                  row[col.key][0]?.is
+                "
             >
               <div class="custom-component-wrapper">
                 <component
-                  v-for="(compData, compIndex) in row[col.key]"
-                  :key="'comp-' + rowIndex + '-' + colIndex + '-' + compIndex"
-                  :is="compData.is"
-                  v-bind="compData.props"
-                  v-on="compData.events"
+                    v-for="(compData, compIndex) in row[col.key]"
+                    :key="compIndex"
+                    :is="compData.is"
+                    v-bind="compData.props"
+                    v-on="compData.events"
                 >
                   <template v-if="compData.slot">
                     <template
-                      v-if="
-                        typeof compData.slot === 'string' ||
-                        typeof compData.slot === 'number'
-                      "
+                        v-if="
+                          typeof compData.slot === 'string' ||
+                          typeof compData.slot === 'number'
+                        "
                     >
                       {{ compData.slot }}
                     </template>
                     <template v-else>
-                      <component :is="compData.slot" />
+                      <component :is="compData.slot"/>
                     </template>
                   </template>
                 </component>
               </div>
             </template>
 
-            <!-- Якщо масив, але не містить об'єктів з компонентами -->
+            <!-- Масив простих значень -->
             <span v-else-if="Array.isArray(row[col.key])">
               {{ row[col.key].join(", ") }}
             </span>
@@ -113,24 +97,23 @@
             <span v-else>
               {{ row[col.key] !== undefined ? row[col.key] : "-" }}
             </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 import UiLoaderPlaceholder from "~/components/ui/UiLoaderPlaceholder.vue";
 
-const { t } = useI18n();
+const {t} = useI18n();
+
 const props = defineProps({
   columns: {
-    type: Array as () => {
-      title: string;
-      key: string;
-    }[],
+    type: Array as () => { title: string; key: string }[],
     default: () => [],
   },
   data: {
@@ -149,82 +132,325 @@ const props = defineProps({
 </script>
 
 <style lang="scss" scoped>
-.table-container {
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
-  overflow-x: auto;
 }
 
-.table {
+.card {
+  background-color: var(--ui-background-panel);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   width: 100%;
-  border-collapse: collapse;
-  background-color: var(--ui-background);
-  font-family: Montserrat, sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
-.table th {
-  padding: 5px 10px;
-  text-align: left;
+.card-grid {
+  display: grid;
+  /* щоб браузер «щільно» заповнював рядки, навіть якщо ми вручну зсуваємо клітинку */
+  grid-auto-flow: row dense;
+  gap: 12px;
+  /* адаптивні колонки, мінімум 120px, рівномірно ділить простір */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
-.table td {
-  padding: 10px;
-  text-align: left;
+/* Зсуваємо останню клітинку (options) завжди в останню колонку */
+.card-grid > .card-cell:last-child {
+  grid-column: -1;
+  align-self: center;
+  justify-self: center;
+  background-color: var(--ui-background-panel);
+  padding: 5px;
+  border-radius: 8px;
 }
 
-.table__header {
-  background-color: var(--ui-background);
+/* І вирівнюємо її вміст вправо */
+.card-grid > .card-cell:last-child .card-cell__value {
+  justify-content: flex-end;
+}
+
+/* Текст у клітинці може переноситися */
+.card-cell__value {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* інше без змін… */
+.card-cell__title {
+  font-weight: 600;
+  color: #6b6b6b;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+}
+
+.card-cell__value {
+  font-size: 0.95rem;
+  color: var(--ui-text-main);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Состояние загрузки */
+.card--loading {
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+}
+
+.card__loader {
+  width: 100%;
+  height: 100%;
+}
+
+/* Пустая карточка */
+.card--empty {
+  text-align: center;
   color: #a2a2a2;
-  font-weight: 500;
-  border: 1px solid var(--color-stroke-ui-dark);
+  font-style: italic;
 }
 
-.table__body {
-  &__loader {
-    background-color: rgba(183, 182, 182, 0.29);
-  }
-}
-
-.table__row:nth-child(even) {
-  background-color: var(--color-stroke-ui-dark);
-}
-
-.table__row:hover {
-  background-color: var(--ui-background);
-}
-
-.table__cell:last-child {
-  text-align: center;
-}
-
-.table__cell--icons {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
+/* Иконки */
 .icon-container {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
-  transition: 0.1s;
-  margin-right: 5px;
-  height: 22px;
-  width: 22px;
+  width: 24px;
+  height: 24px;
+}
 
-  &:last-child {
-    margin-right: 0;
-  }
-
-  &:active {
-    background-color: #8f8f8f;
-    transition: 0.1s;
-  }
-
-  &:hover {
-    background-color: var(--color-stroke-ui-dark);
-    transition: 0.1s;
-  }
+/* Кастомные компоненты в ячейке */
+.custom-component-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 </style>
+
+
+<!--<template>-->
+<!--  <div class="cards-container">-->
+<!--    &lt;!&ndash; Завантаження &ndash;&gt;-->
+<!--    <div-->
+<!--        v-if="isLoading"-->
+<!--        v-for="n in rowsPerPage"-->
+<!--        :key="'loader-'+n"-->
+<!--        class="card card&#45;&#45;loading"-->
+<!--    >-->
+<!--      <UiLoaderPlaceholder class="card__loader" />-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Порожній стан &ndash;&gt;-->
+<!--    <div-->
+<!--        v-else-if="!isLoading && data.length === 0"-->
+<!--        class="card card&#45;&#45;empty"-->
+<!--    >-->
+<!--      {{ t("ui-components.tables.table-default") }}-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Дані: кожен рядок — окрема картка &ndash;&gt;-->
+<!--    <div-->
+<!--        v-else-->
+<!--        v-for="(row, rowIndex) in data"-->
+<!--        :key="'card-'+rowIndex"-->
+<!--        class="card"-->
+<!--    >-->
+<!--      <div-->
+<!--          class="card-grid"-->
+<!--          :style="{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }"-->
+<!--      >-->
+<!--        <div-->
+<!--            v-for="(col, colIndex) in columns"-->
+<!--            :key="'cell-'+rowIndex+'-'+colIndex"-->
+<!--            class="card-cell"-->
+<!--        >-->
+<!--          <div class="card-cell__title">{{ col.title }}</div>-->
+<!--          <div class="card-cell__value">-->
+<!--            &lt;!&ndash; Іконки &ndash;&gt;-->
+<!--            <template-->
+<!--                v-if="Array.isArray(row[col.key]) && row[col.key][0]?.isIcon"-->
+<!--            >-->
+<!--              <div-->
+<!--                  v-for="(icon, iconIndex) in row[col.key]"-->
+<!--                  :key="iconIndex"-->
+<!--                  class="icon-container"-->
+<!--              >-->
+<!--                <component-->
+<!--                    :is="icon.is"-->
+<!--                    v-bind="icon.props"-->
+<!--                    v-on="icon.events"-->
+<!--                >-->
+<!--                  <template v-if="icon.slot">-->
+<!--                    <component :is="icon.slot" />-->
+<!--                  </template>-->
+<!--                </component>-->
+<!--              </div>-->
+<!--            </template>-->
+
+<!--            &lt;!&ndash; Кастомні компоненти &ndash;&gt;-->
+<!--            <template-->
+<!--                v-else-if="-->
+<!--                Array.isArray(row[col.key]) &&-->
+<!--                row[col.key].length &&-->
+<!--                row[col.key][0].is-->
+<!--              "-->
+<!--            >-->
+<!--              <div class="custom-component-wrapper">-->
+<!--                <component-->
+<!--                    v-for="(compData, compIndex) in row[col.key]"-->
+<!--                    :key="compIndex"-->
+<!--                    :is="compData.is"-->
+<!--                    v-bind="compData.props"-->
+<!--                    v-on="compData.events"-->
+<!--                >-->
+<!--                  <template v-if="compData.slot">-->
+<!--                    <template-->
+<!--                        v-if="-->
+<!--                        typeof compData.slot === 'string' ||-->
+<!--                        typeof compData.slot === 'number'-->
+<!--                      "-->
+<!--                    >-->
+<!--                      {{ compData.slot }}-->
+<!--                    </template>-->
+<!--                    <template v-else>-->
+<!--                      <component :is="compData.slot" />-->
+<!--                    </template>-->
+<!--                  </template>-->
+<!--                </component>-->
+<!--              </div>-->
+<!--            </template>-->
+
+<!--            &lt;!&ndash; Масив простих значень &ndash;&gt;-->
+<!--            <span v-else-if="Array.isArray(row[col.key])">-->
+<!--              {{ row[col.key].join(", ") }}-->
+<!--            </span>-->
+
+<!--            &lt;!&ndash; За замовчуванням &ndash;&gt;-->
+<!--            <span v-else>-->
+<!--              {{ row[col.key] !== undefined ? row[col.key] : "-" }}-->
+<!--            </span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</template>-->
+
+<!--<script lang="ts" setup>-->
+<!--import { useI18n } from "vue-i18n";-->
+<!--import UiLoaderPlaceholder from "~/components/ui/UiLoaderPlaceholder.vue";-->
+
+<!--const { t } = useI18n();-->
+
+<!--const props = defineProps({-->
+<!--  columns: {-->
+<!--    type: Array as () => { title: string; key: string }[],-->
+<!--    default: () => [],-->
+<!--  },-->
+<!--  data: {-->
+<!--    type: Array as () => Record<string, any>[],-->
+<!--    default: () => [],-->
+<!--  },-->
+<!--  isLoading: {-->
+<!--    type: Boolean,-->
+<!--    default: false,-->
+<!--  },-->
+<!--  rowsPerPage: {-->
+<!--    type: Number,-->
+<!--    default: 4,-->
+<!--  },-->
+<!--});-->
+<!--</script>-->
+
+<!--<style lang="scss" scoped>-->
+<!--.cards-container {-->
+<!--  display: flex;-->
+<!--  flex-direction: column;-->
+<!--  gap: 16px;-->
+<!--  width: 100%;-->
+<!--}-->
+
+<!--.card {-->
+<!--  background-color: var(&#45;&#45;ui-background-panel);-->
+<!--  border-radius: 8px;-->
+<!--  padding: 16px;-->
+<!--  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);-->
+<!--  width: 100%;-->
+<!--  display: flex;-->
+<!--  flex-direction: column;-->
+<!--}-->
+
+<!--/* Грід всередині картки */-->
+<!--.card-grid {-->
+<!--  display: grid;-->
+<!--  gap: 12px;-->
+<!--}-->
+
+<!--/* Окрема клітинка */-->
+<!--.card-cell {-->
+<!--  display: flex;-->
+<!--  flex-direction: column;-->
+<!--}-->
+
+<!--.card-cell__title {-->
+<!--  font-weight: 600;-->
+<!--  color: #6b6b6b;-->
+<!--  margin-bottom: 4px;-->
+<!--  font-size: 0.85rem;-->
+<!--}-->
+
+<!--.card-cell__value {-->
+<!--  font-size: 0.95rem;-->
+<!--  color: var(&#45;&#45;ui-text-main);-->
+<!--  display: flex;-->
+<!--  align-items: center;-->
+<!--  flex-wrap: wrap;-->
+<!--}-->
+
+<!--/* Лоадер */-->
+<!--.card&#45;&#45;loading {-->
+<!--  align-items: center;-->
+<!--  justify-content: center;-->
+<!--  height: 150px;-->
+<!--}-->
+
+<!--.card__loader {-->
+<!--  width: 100%;-->
+<!--  height: 100%;-->
+<!--}-->
+
+<!--.card&#45;&#45;empty {-->
+<!--  text-align: center;-->
+<!--  color: #a2a2a2;-->
+<!--  font-style: italic;-->
+<!--}-->
+
+<!--/* Іконки */-->
+<!--.icon-container {-->
+<!--  display: inline-flex;-->
+<!--  align-items: center;-->
+<!--  justify-content: center;-->
+<!--  margin-right: 8px;-->
+<!--  width: 24px;-->
+<!--  height: 24px;-->
+<!--}-->
+
+<!--/* Кастомні компоненти */-->
+<!--.custom-component-wrapper {-->
+<!--  display: flex;-->
+<!--  align-items: center;-->
+<!--  gap: 8px;-->
+<!--}-->
+
+<!--/* Адаптація для малих екранів */-->
+<!--@media (max-width: 768px) {-->
+<!--  .card-grid {-->
+<!--    grid-template-columns: 1fr !important;-->
+<!--  }-->
+<!--}-->
+<!--</style>-->

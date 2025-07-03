@@ -1,22 +1,22 @@
 <template>
-  <NuxtLink :to="props.path" class="header__link" :class="linkClass">
+  <div class="header__link" :class="linkClass">
     <UiTextH5 :class="textClass">{{ props.name }}</UiTextH5>
 
-    <UiIconChevronUp v-if="isActive" :class="iconUpClass" />
+    <UiIconChevronUp v-if="isActive" :class="iconUpClass"/>
 
-    <UiIconChevronDown v-else :class="iconDownClass" />
-  </NuxtLink>
+    <UiIconChevronDown v-else :class="iconDownClass"/>
+    
+  </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import {computed} from "vue";
 import UiIconChevronDown from "~/components/ui/UiIconChevronDown.vue";
 import UiIconChevronUp from "~/components/ui/UiIconChevronUp.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 
 const props = defineProps({
   name: String,
-  path: String,
   activeLink: String,
   isInvertColor: Boolean,
 });
@@ -30,6 +30,7 @@ const linkClass = computed(() => ({
 const textClass = computed(() => ({
   "active-link": isActive.value,
   "is-theme-light": props.isInvertColor,
+  'text-white': !props.isInvertColor,
 }));
 
 const iconUpClass = computed(() => ({
@@ -49,6 +50,8 @@ const iconDownClass = computed(() => ({
   gap: 10px;
   color: white;
   text-decoration: none;
+  cursor: pointer;
+
 
   &:hover {
     color: #f75709;
@@ -68,11 +71,15 @@ const iconDownClass = computed(() => ({
 }
 
 .svg-fill {
-  color: black;
+  color: var(--ui-text-main);
   fill: currentColor;
 }
 
 .is-theme-light {
-  color: #151515;
+  color: var(--ui-text-main);
+}
+
+.text-white {
+  color: white
 }
 </style>

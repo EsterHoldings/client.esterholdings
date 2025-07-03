@@ -38,10 +38,10 @@
             "items": [
               "Forex",
               "Metals",
-              "Stock CFDs",
               "Crypto CFDs",
-              "Commodities",
               "Indices",
+              "Shares",
+              "Energy",
               "ETFs"
             ]
           },
@@ -62,8 +62,24 @@
             "items": ["For trader", "For investor"]
           }
         ],
-        "Partnership": {},
-        "Company": {}
+        "Partnership": [
+          {
+            "section": "Partnership",
+            "items": ["Register IB/ Partnership", "How IB generate income"]
+          }
+        ],
+        "Company": [
+          {
+            "section": "Company",
+            "items": [
+              "About the company",
+              "Documents",
+              "Company news",
+              "Contacts",
+              "Career"
+            ]
+          }
+        ]
       }
     },
 
@@ -530,6 +546,18 @@
         "actions": {
           "submit": "Open new account"
         }
+      }
+    },
+
+    "referrals": {
+      "components": {},
+      "index": {
+        "tabs": {
+          "general": "General",
+          "settings": "Settings",
+          "terms": "Terms"
+        },
+        "title": "Referral system"
       }
     }
   },

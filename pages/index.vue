@@ -3,6 +3,7 @@
     <div ref="welcomeRef">
       <WelcomeSection />
     </div>
+
     <AdvantagesSection />
     <TradingPlatformSection />
     <FeaturesSection />
@@ -33,7 +34,6 @@ import LatestUpdatesSection from "~/pages/landing/sections/LatestUpdatesSection.
 import CookieModal from "~/components/block/modals/CookieModal.vue";
 
 definePageMeta({
-  // middleware: ["not-auth-client"],
   layout: "main",
 });
 

@@ -3,51 +3,67 @@
     <UiTextH3 class="login-form__title">Login</UiTextH3>
 
     <UiFormControl
-      class="login-form__field"
-      label="Email"
-      :errors="validatorLoginForm.errorsFormData.email.errors"
+        class="login-form__field"
+        label="Email"
+        :errors="validatorLoginForm.errorsFormData.email.errors"
     >
       <UiInput
-        type="text"
-        placeholder="example@test.com"
-        :value="props.formData.email"
-        :isDirty="validatorLoginForm.errorsFormData.email.isDirty"
-        :isInvalid="validatorLoginForm.errorsFormData.email.errors.length > 0"
-        @input="
+          type="text"
+          placeholder="example@test.com"
+          :value="props.formData.email"
+          :isDirty="validatorLoginForm.errorsFormData.email.isDirty"
+          :isInvalid="validatorLoginForm.errorsFormData.email.errors.length > 0"
+          @input="
           validatorLoginForm.doValidateField('email', $event.target.value)
         "
-        @blur="validatorLoginForm.doValidateField('email', $event.target.value)"
+          @blur="validatorLoginForm.doValidateField('email', $event.target.value)"
       />
     </UiFormControl>
 
     <UiFormControl
-      class="login-form__field"
-      label="Password"
-      :errors="validatorLoginForm.errorsFormData.password.errors"
+        class="login-form__field"
+        label="Password"
+        :errors="validatorLoginForm.errorsFormData.password.errors"
     >
       <UiInput
-        type="password"
-        placeholder="********"
-        :value="props.formData.password"
-        :isDirty="validatorLoginForm.errorsFormData.password.isDirty"
-        :isInvalid="
+          type="password"
+          placeholder="********"
+          :value="props.formData.password"
+          :isDirty="validatorLoginForm.errorsFormData.password.isDirty"
+          :isInvalid="
           validatorLoginForm.errorsFormData.password.errors.length > 0
         "
-        @input="
+          @input="
           validatorLoginForm.doValidateField('password', $event.target.value)
         "
-        @blur="
+          @blur="
           validatorLoginForm.doValidateField('password', $event.target.value)
         "
       />
     </UiFormControl>
 
+    <UiFormControl
+        class="login-form__field"
+        label="2Fa code"
+        :errors="twoFaErrors"
+        v-if="twoFaEnabled"
+    >
+      <UiInput
+          type="text"
+          placeholder="********"
+          :value="props.formData.twoFaCode"
+          :isDirty="twoFaErrors.length > 0"
+          :isInvalid="twoFaErrors.length > 0"
+          @input="handleTwoFaCodeInput"
+      />
+    </UiFormControl>
+
     <UiButtonDefault
-      type="submit"
-      state="primary"
-      class="login-form__btn"
-      :isLoading="isLoading"
-      @click="validateLoginForm(doSendForm)"
+        type="submit"
+        state="primary"
+        class="login-form__btn"
+        :isLoading="isLoading"
+        @click="validateLoginForm(doSendForm)"
     >
       Login
     </UiButtonDefault>
@@ -60,25 +76,39 @@
         <NuxtLink to="/auth/forgot">Forgot password</NuxtLink>
       </div>
     </div>
+
+    <div class="login-form__social-links">
+      <GoogleLogin/>
+      <FacebookLogin/>
+      <LinkedInLogin/>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { navigateTo } from "nuxt/app";
-import { useAuthStore } from "~/stores/authStore";
-import { useAppCore } from "~/composables/useAppCore";
+import {reactive, ref} from "vue";
+import {navigateTo} from "nuxt/app";
+import {useAuthStore} from "~/stores/authStore";
+import {useAppCore} from "~/composables/useAppCore";
 
 import UiInput from "~/components/ui/UiInput.vue";
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 
+import GoogleLogin from "./GoogleLogin.vue";
+import FacebookLogin from "./FacebookLogin.vue";
+import LinkedInLogin from "./LinkedInLogin.vue";
+
+import {useToast} from "vue-toastification";
+
 import {
   validatorLoginForm,
   validateLoginForm,
   resetValidationLoginForm,
 } from "@/pages/auth/login/composables/validation";
+import {formData} from "~/pages/auth/login/composables";
+import UiButtonPrimary from "~/components/ui/UiButtonPrimary.vue";
 
 const props = defineProps({
   formData: {
@@ -87,29 +117,44 @@ const props = defineProps({
   },
 });
 
+// const {$recaptcha} = useNuxtApp()
+const isRecaptchaValid = ref(false)
 const isLoading = ref(false);
+const twoFaEnabled = ref(false);
 const appCore = useAppCore();
+const toast = useToast();
+const emit = defineEmits(['input2Fa'])
+
+let twoFaErrors = reactive([])
+
+const handleTwoFaCodeInput = (value: string) => {
+  emit('input2Fa', value);
+}
 
 const doSendForm = async () => {
   try {
     isLoading.value = true;
     const authStore = useAuthStore();
-
     const response = await appCore.auth.doLogin(props.formData);
-
-    const accessToken = response.data.data.access_token;
-    const refreshToken = response.data.data.refresh_token;
-
-    localStorage.setItem("user_access_token", accessToken);
-    localStorage.setItem("user_refresh_token", refreshToken);
-
+    const accessToken = response.data.access_token;
     authStore.setAccessToken(accessToken);
-    authStore.setRefreshToken(refreshToken);
-
+    toast.success("Successfully!");
     navigateTo("/dashboard");
-    console.log("DO REDIRECT TO DASHBOARD");
   } catch (e: any) {
-    console.log("LoginForm -> doSendForm -> catch", e.message);
+    if (e.status === 401) {
+      if (e.response.data?.data?.two_fa_is_required) {
+        if (!twoFaEnabled.value) {
+          toast.info(e.response.data.message)
+          twoFaEnabled.value = true;
+        } else {
+          twoFaErrors = [e.response.data.message]
+        }
+      } else {
+        toast.error("Invalid credentials");
+      }
+    } else {
+      toast.error("Invalid credentials");
+    }
   } finally {
     resetValidationLoginForm();
     setTimeout(() => {
@@ -124,13 +169,21 @@ onUnmounted(() => resetValidationLoginForm());
 
 <style lang="scss" scoped>
 .login-form {
-  color: #c4c4c4;
+  color: var(--ui-text-main);
   display: flex;
   justify-content: center;
   flex-direction: column;
 
   &__link {
     margin-bottom: 10px;
+
+    a {
+      color: var(--ui-text-main);
+
+      &:hover {
+        color: var(--ui-text-secondary);
+      }
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -142,6 +195,23 @@ onUnmounted(() => resetValidationLoginForm());
     display: flex;
     align-items: center;
     flex-direction: column;
+  }
+
+  &__social-links {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  &__social-link {
+    display: flex;
+    place-content: center;
+    padding: 3px;
+    background: white;
+
+    border-radius: 100%;
   }
 
   &__title {

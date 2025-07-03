@@ -1,24 +1,32 @@
 <template>
-  <footer class="footer">
-    <UiTextH1>EsterHoldings</UiTextH1>
-  </footer>
+  <div class="footer__wrapper">
+    <UiContainer>
+      <footer class="footer">
+          <UiTextSmall>Copyright © Ester Holdings Inc. All rights reserved</UiTextSmall>
+      </footer>
+    </UiContainer>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import UiTextH1 from "~/components/ui/UiTextH1.vue";
+import UiTextSmall from "~/components/ui/UiTextSmall.vue";
+import UiContainer from "~/components/ui/UiContainer.vue";
 </script>
 
 <style lang="scss" scoped>
 .footer {
-  background-color: #3c4248;
-  color: white;
+  color: var(--ui-text-main);
+  padding: 0 20px;
 
   width: 100%;
-  height: 150px;
+  height: 100px;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  &__wrapper {
+    padding-left: 100px;
+  }
 }
 </style>

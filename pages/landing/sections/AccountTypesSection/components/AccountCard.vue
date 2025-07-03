@@ -45,8 +45,6 @@
 import { useI18n } from "vue-i18n";
 import { computed, ref, watchEffect } from "vue";
 
-import { currentTab } from "../composables/index";
-
 import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
@@ -55,6 +53,7 @@ import UiIconArrowRight from "~/components/ui/UiIconArrowRight.vue";
 const { t, tm } = useI18n();
 
 const accountsMap = ref<Record<string, any>>({});
+const currentTab = ref(0);
 
 watchEffect(() => {
   const array = tm("landing.sections.accounts__options") || [];

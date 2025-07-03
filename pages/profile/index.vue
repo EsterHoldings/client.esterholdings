@@ -2,9 +2,8 @@
   <UiContainer>
     <div class="profile">
       <div class="profile__title">
-        <!-- <UiTextH4>Profile</UiTextH4> -->
-
         <UiTextH4>{{ t("cabinet.profile.index.title") }}</UiTextH4>
+
         <TabsDefault
           :tabsList="tabsList"
           @selectTab="handleActiveTab"
@@ -32,23 +31,16 @@ import TabUserPhoto from "~/pages/profile/components/TabUserPhoto.vue";
 import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
 import TabUserDocuments from "~/pages/profile/components/TabUserDocuments.vue";
 import TabChangePassword from "~/pages/profile/components/TabChangePassword.vue";
+import TabUserVerification from "~/pages/profile/components/TabUserVerification.vue";
 
 definePageMeta({
   layout: "cabinet",
-  middleware: ["auth-client"],
+  middleware: ["auth-client", "client-check-auth"],
 });
 const { t } = useI18n();
 
 const STORAGE_KEY = "profileActiveTab";
 const activeTabIndex = ref(0);
-
-// const tabsList = reactive([
-//   { label: "General", component: TabGeneral },
-//   { label: "User photo", component: TabUserPhoto },
-//   { label: "Documents", component: TabUserDocuments },
-//   { label: "Verification", component: TabUserPhoto },
-//   { label: "Change password", component: TabChangePassword },
-// ]);
 
 const tabsList = computed(() => {
   return [
@@ -60,7 +52,7 @@ const tabsList = computed(() => {
     },
     {
       label: t("cabinet.profile.index.tabs.verification"),
-      component: TabUserPhoto,
+      component: TabUserVerification,
     },
     {
       label: t("cabinet.profile.index.tabs.change_password"),
@@ -91,6 +83,10 @@ const handleActiveTab = (tabIndex: number) => {
 
   &__title {
     margin-bottom: 20px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
 
     display: flex;
     align-items: center;

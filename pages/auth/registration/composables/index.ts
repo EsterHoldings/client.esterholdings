@@ -1,3 +1,5 @@
+import {reactive} from "vue";
+
 export interface IFormDataDto {
   email: String;
   password?: String;

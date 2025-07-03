@@ -4,6 +4,7 @@
       <div class="payments-details__title">
         <UiTextH4>{{ t("cabinet.payments.title") }}</UiTextH4>
       </div>
+
       <PanelDefault>
         <div class="payments-details__content">
           <div class="payments-details__content__payment_item__options">
@@ -71,20 +72,13 @@
               />
             </div>
 
-            <!--            <div class="payments-details__content__payment_item__data-wrapper&#45;&#45;header__cell">-->
-            <!--              <span  @click="handleOrderByAndDirection('amount')">Amount</span>-->
-            <!--              <UiIconSort :active="orderBy === 'amount'"-->
-            <!--                          :direction="orderDirection"-->
-            <!--                          @click="handleOrderByAndDirection('amount')"-->
-            <!--              />-->
-            <!--            </div>-->
-
             <div
               class="payments-details__content__payment_item__data-wrapper--header__cell"
             >
               <span @click="handleOrderByAndDirection('created_at')">
                 {{ t("cabinet.payments.columns.createdAt") }}
               </span>
+
               <UiIconSort
                 :active="orderBy === 'created_at'"
                 :direction="orderDirection"
@@ -114,15 +108,10 @@
               <div
                 class="payments-details__content__payment_item__data-wrapper"
               >
-                <!--                <div @click="copyToClipboard(payment.id)"-->
-                <!--                     style="display: flex;"-->
-                <!--                >-->
-                <!--                  <UiIconCopy />-->
-                <!--                </div>-->
                 <div>{{ payment.payment_system }}</div>
                 <div>{{ payment.status }}</div>
                 <div>{{ payment.currency }}</div>
-                <!--                <div :class="[Math.random() < 0.5 ? 'withdrawal' : 'deposit']">{{ payment.amount }}</div>-->
+
                 <div class="date">
                   {{ new Date(payment.created_at).toLocaleString() }}
                 </div>
@@ -211,7 +200,7 @@ const { t } = useI18n({ useScope: "global" });
 
 definePageMeta({
   layout: "cabinet",
-  middleware: ["auth-client"],
+  middleware: ["auth-client", "client-check-auth"],
 });
 
 const appCore = useAppCore();
@@ -280,8 +269,8 @@ const onIconAnimationEnd = () => {
   spinIcon.value = false;
 };
 
-const handleInputSearch = async (event) => {
-  search.value = event.target.value;
+const handleInputSearch = async (value) => {
+  search.value = value;
   currentPage.value = 1;
   await loadData();
 };
@@ -414,6 +403,10 @@ onMounted(async () => {
 
   &__title {
     margin-bottom: 20px;
+
+    h4 {
+      color: var(--ui-text-main);
+    }
   }
 
   &__content {
@@ -428,7 +421,6 @@ onMounted(async () => {
 
     &__payment_item__data-wrapper--header {
       display: grid;
-      //grid-template-columns: 80px 1fr 1fr 1fr 1fr 1fr 1fr;
       grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
       column-gap: 20px;
       row-gap: 10px;
@@ -445,6 +437,7 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         justify-content: flex-start;
+        color: var(--ui-text-main);
 
         span {
           cursor: default;
@@ -459,15 +452,15 @@ onMounted(async () => {
     &__payment_item {
       padding: 20px;
       width: 100%;
-      border-bottom: 1px solid var(--color-stroke-ui-dark);
+      border-bottom: 1px solid var(--ui-background-sidebar-link);
 
       &:last-child {
         border-bottom: none;
       }
 
       &:hover {
-        background-color: var(--color-stroke-ui-dark);
-        border-bottom: 1px solid var(--color-ui-primary);
+        background-color: var(--ui-background-sidebar-link);
+        border-bottom: 1px solid var(--ui-primary-main);
       }
 
       &__options {
@@ -489,11 +482,11 @@ onMounted(async () => {
 
       &__data-wrapper {
         display: grid;
-        //grid-template-columns: 80px 1fr 1fr 1fr 1fr 1fr 1fr;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
         column-gap: 20px;
         row-gap: 10px;
         align-items: center;
+        color: var(--ui-text-main);
 
         > div:first-child {
           color: var(--color-ui-accent);
@@ -501,6 +494,7 @@ onMounted(async () => {
         }
 
         > div:last-child {
+          color: var(--ui-text-main);
           text-align: right;
           font-size: 20px;
           font-weight: bold;
@@ -518,11 +512,11 @@ onMounted(async () => {
       .page-btn,
       .page-link {
         border: 1px solid var(--color-ui-border);
-        background: var(--color-ui-background);
+        background: var(--ui-background);
         cursor: pointer;
         font-size: 14px;
         border-radius: 5px;
-        color: white;
+        color: var(--ui-text-main);
         height: 22px;
         min-width: 22px;
         padding: 0 5px;
