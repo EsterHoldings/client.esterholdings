@@ -2,6 +2,7 @@ import AccountsModule from "~/composables/core/modules/accounts/accounts.module"
 import AdminsModule from "~/composables/core/modules/admins/admins.module";
 import Auth2faModule from "~/composables/core/modules/auth2fa/auth2fa.module";
 import AuthModule from "~/composables/core/modules/auth/auth.module";
+import DepositModule from "~/composables/core/modules/deposit/deposit.module";
 import DocumentsModule from "~/composables/core/modules/documents/documents.module";
 import HelperModule from "~/composables/core/modules/helper/helper.module";
 import ItemsModule from "~/composables/core/modules/items/items.module";
@@ -26,6 +27,7 @@ export interface ICoreModules {
     auth: AuthModule;
     auth2fa: Auth2faModule;
     clients: AuthModule;
+    deposit: DepositModule;
     documents: DocumentsModule;
     items: ItemsModule;
     roles: RolesModule;
@@ -54,6 +56,7 @@ export const useAppCore = (): ICoreModules => {
         auth2fa: new Auth2faModule(),
         auth: new AuthModule(),
         clients: new AuthModule(), // TODO :: Fix (Or remove)
+        deposit: new DepositModule(),
         documents: new DocumentsModule(),
         helper: new HelperModule(),
         items: new ItemsModule(),

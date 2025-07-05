@@ -59,7 +59,7 @@ const handleSelectPaymentSystem = (index: number = 0) => {
 
       &__loader-wrapper {
         position: absolute;
-        background-color: var(--ui-background-secondary);
+        background-color: var(--ui-background);
         top: 0;
         left: 0;
         right: 0;

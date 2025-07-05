@@ -3,35 +3,29 @@
     <div
       ref="body"
       class="select__body"
-      :class="{ 'is-open': isOpen }"
+      :class="{ 'is-open': isOpen, 'is-invalid': props.isDirty && props.isInvalid }"
       @click="toggle"
-    >
-      {{ displayText }}
-    </div>
+      v-html="displayText"
+    ></div>
 
     <div v-if="isOpen" class="select__options">
       <div
         class="select__option no-select"
         :class="{ active: internalValue === null }"
         @click="choose(null)"
-      >
-        {{ t("ui-components.ui-select") }}
-      </div>
+      >{{ t("ui-components.ui-select") }}</div>
       <div
         v-for="item in data"
         :key="item.value"
         class="select__option"
         :class="{ active: internalValue === item.value }"
         @click="choose(item)"
-      >
-        {{ item.text }}
-      </div>
+        v-html="item.text"
+      ></div>
     </div>
 
     <select v-model="internalValue" hidden>
-      <option v-for="item in data" :key="item.value" :value="item.value">
-        {{ item.text }}
-      </option>
+      <option v-for="item in data" :key="item.value" :value="item.value" v-html="item.text"></option>
     </select>
   </div>
 </template>
@@ -46,7 +40,21 @@ interface Option {
   text: string;
 }
 const { t } = useI18n({ useScope: "global" });
-const props = defineProps<{ data: Option[]; value?: string | null }>();
+
+interface Props {
+  data: Option[]
+  value?: string | null
+  isDirty?: boolean
+  isInvalid?: boolean
+}
+
+const props = withDefaults(
+    defineProps<Props>(),
+    {
+      isDirty: false,
+      isInvalid: false,
+    }
+)
 const emit = defineEmits(["change"]);
 const data = props.data;
 
@@ -83,6 +91,7 @@ function calcDropup() {
 
 function choose(item: Option | null) {
   internalValue.value = item?.value ?? null;
+  console.log('-=-=-=-=-=-', item?.value, internalValue.value);
   emit("change", internalValue.value);
   isOpen.value = false;
 }
@@ -121,6 +130,9 @@ function choose(item: Option | null) {
   &.is-open {
     border-bottom: none;
     border-radius: 10px 10px 0 0;
+  }
+  &.is-invalid {
+    border-color: var(--color-danger);
   }
 }
 

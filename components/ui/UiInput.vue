@@ -166,15 +166,15 @@ input {
 }
 
 .input .is-invalid {
-  border-color: red;
+  border-color: var(--color-danger);
 }
 
 .input .is-valid {
-  border-color: green;
+  border-color: var(--color-success);
 }
 
 .input .disabled {
-  background-color: #e5e5e5;
+  background-color: var(--color-text-muted);
 }
 
 .password-eye {

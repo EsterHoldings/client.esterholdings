@@ -40,12 +40,13 @@ const handleSelect = () => emit('select');
   font-size: 12px;
 
   &.active {
-    background-color: var(--ui-background-secondary);
-    border: 1px solid var(--ui-primary-main);
+    background-color: var(--color-stroke-ui-dark);
+    border: 1px solid var(--color-ui-accent);
   }
 
   &:hover {
-    background-color: var(--ui-background-secondary);
+    background-color: var(--color-stroke-ui-dark);
+    opacity: .7;
   }
 
   &:active {

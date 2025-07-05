@@ -42,13 +42,7 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["click"]);
-const handleClick = (): void => {
-  console.log('CLICK - CLICK - CLICK');
-  console.log('CLICK - CLICK - CLICK');
-  console.log('CLICK - CLICK - CLICK');
-  console.log('CLICK - CLICK - CLICK');
-  emit("click");
-}
+const handleClick = (): void => emit("click");
 </script>
 
 <style lang="scss" scoped>
