@@ -12,7 +12,7 @@ export const useThemeStore = defineStore("theme", () => {
     "--ui-background-sidebar": "#f9f9f9",
     "--ui-background-sidebar-link": "#9CA9B3",
 
-    "--ui-primary-main": "#ffffff",
+    "--ui-primary-main": "#4b70c8",
     "--ui-primary-accent": "#f75709",
 
     "--ui-text-main": "#151515",
@@ -21,7 +21,7 @@ export const useThemeStore = defineStore("theme", () => {
     "--ui-sticker-success": "#03c11f",
     "--ui-sticker-danger": "#d93025",
 
-    "--color-stroke-ui-dark": "#b9b9bd",
+    "--color-stroke-ui-dark": "#e4e4e7",
     "--color-stroke-ui": "#b8b8c3",
   };
 

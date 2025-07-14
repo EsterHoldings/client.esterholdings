@@ -2,6 +2,8 @@
   <div class="page__wrapper">
     <TheCabinetSideBar/>
     <UiImage class="bg-image" src="/space.gif"/>
+<!--    <UiCanvasRain/>-->
+<!--    <UiCanvasFly />-->
     <Transition name="fade" mode="out-in">
       <div class="page__wrapper_scroll">
         <div class="page" :key="route.fullPath">
@@ -19,6 +21,8 @@ import {useRoute} from "vue-router";
 import TheCabinetSideBar from "~/components/block/TheCabinetSideBar.vue";
 import TheFooter from "~/components/block/TheFooter.vue";
 import UiImage from "~/components/ui/UiImage.vue";
+import UiCanvasRain from "~/components/ui/UiCanvasRain.vue";
+import UiCanvasFly from "~/components/ui/UiCanvasFly.vue";
 
 const route = useRoute();
 </script>
@@ -37,7 +41,7 @@ const route = useRoute();
 }
 
 .page__wrapper {
-  background-color: var(--ui-background-admin);
+  background-color: var(--color-ui-background-opacity-95);
   height: 100vh;
   overflow: hidden;
 
@@ -68,6 +72,6 @@ const route = useRoute();
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 150ms ease;
+  transition: opacity 100ms ease;
 }
 </style>

@@ -133,7 +133,7 @@ const doSendForm = async () => {
     const response = await appCore.auth.doLogin(props.formData);
     const accessToken = response.data.access_token;
     authStore.setAccessToken(accessToken);
-    toast.success("Successfully!");
+    toast.success("Welcome!");
     navigateTo("/dashboard");
   } catch (e: any) {
     if (e.status === 401) {

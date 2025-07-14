@@ -93,13 +93,13 @@
   position: relative;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 80px;
+  width: 30px;
+  height: 55px;
 
   svg {
     vector-effect: non-scaling-stroke;
-    width: 60px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
     stroke-width: 1px;
 
     path,

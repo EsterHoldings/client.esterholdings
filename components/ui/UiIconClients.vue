@@ -30,9 +30,8 @@
           stroke-opacity="1"
           stroke="currentColor"
           fill="none"
-          stroke-width="1.2999999523162842"
-          stroke-linecap="ROUND"
           stroke-linejoin="round"
+          stroke-width="2"
         />
       </g>
       <g>
@@ -62,5 +61,6 @@ svg {
   height: 20px;
   width: 20px;
   stroke: currentColor;
+  stroke-width: 1px;
 }
 </style>

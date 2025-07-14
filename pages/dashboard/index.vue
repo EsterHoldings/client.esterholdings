@@ -5,6 +5,26 @@
         <UiTextH4>{{ t("cabinet.dashboard.title") }}</UiTextH4>
       </div>
       <div class="dashboard__grid">
+
+        <!-- Deposit & Withdraw -->
+        <PanelDefault>
+          <div class="card">
+            <div class="card__actions">
+              <NuxtLink to="/payments/create">
+                <UiButtonDefault state="success">{{t("cabinet.dashboard.actions.newDeposit")}}</UiButtonDefault>
+              </NuxtLink>
+
+              <NuxtLink to="/payments/create">
+                <UiButtonDefault state="primary">{{t("cabinet.dashboard.actions.newWithdrawal") }}</UiButtonDefault>
+              </NuxtLink>
+            </div>
+
+            <div class="chart-placeholder">
+              {{ t("cabinet.dashboard.actions.chartPlaceholder") }}
+            </div>
+          </div>
+        </PanelDefault>
+
         <!-- Account Verification -->
         <PanelDefault>
           <div class="card">
@@ -47,25 +67,6 @@
                 <span>{{t("cabinet.dashboard.accountVerification.profileInProgress") }}</span>
               </li>
             </ul>
-          </div>
-        </PanelDefault>
-
-        <!-- Deposit & Withdraw -->
-        <PanelDefault>
-          <div class="card">
-            <div class="card__actions">
-              <NuxtLink to="/payments/create">
-                <UiButtonDefault state="success">{{t("cabinet.dashboard.actions.newDeposit")}}</UiButtonDefault>
-              </NuxtLink>
-
-              <NuxtLink to="/payments/create">
-                <UiButtonDefault state="primary">{{t("cabinet.dashboard.actions.newWithdrawal") }}</UiButtonDefault>
-              </NuxtLink>
-            </div>
-
-            <div class="chart-placeholder">
-              {{ t("cabinet.dashboard.actions.chartPlaceholder") }}
-            </div>
           </div>
         </PanelDefault>
 
@@ -122,6 +123,7 @@
             </table>
           </div>
         </PanelDefault>
+
       </div>
     </div>
   </UiContainer>

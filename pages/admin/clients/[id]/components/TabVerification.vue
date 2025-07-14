@@ -18,75 +18,100 @@
           <ul class="user-verification__left__verification-list">
 
             <li>
-              <span>Email</span>
-              <UiIconSuccess v-if="emailStatus === 'approved'"/>
-              <UiIconWarning v-if="emailStatus === 'pending'"/>
-              <UiIconFailed v-if="emailStatus === 'rejected'"/>
-              <span v-if="emailStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-              <span v-if="emailStatus === 'pending'">{{ 'Ожидает подтверждения!' }}</span>
-              <span v-if="emailStatus === 'rejected'">{{ 'Отклонено!' }}</span>
-              <span class="spacer"></span>
+              <span class="user-verification__left__verification-list_item">
+                <UiIconSuccess v-if="emailStatus === 'approved'"/>
+                <UiIconWarning v-if="emailStatus === 'pending'"/>
+                <UiIconFailed v-if="emailStatus === 'rejected'"/>
+                <span>Email</span>
+              </span>
+              <span class="user-verification__left__verification-list_item">
+                <span v-if="emailStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
+                <span v-if="emailStatus === 'pending'">{{ 'Ожидает подтверждения!' }}</span>
+                <span v-if="emailStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span class="spacer"></span>
+              </span>
             </li>
 
             <li>
-              <span>Фото профиля</span>
-              <UiIconSuccess v-if="photoStatus === 'approved'"/>
-              <UiIconWarning v-if="photoStatus === 'pending'"/>
-              <UiIconFailed v-if="photoStatus === 'rejected'"/>
-              <span v-if="photoStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-              <span v-if="photoStatus === 'pending'">{{ 'Не загружено!' }}</span>
-              <span v-if="photoStatus === 'rejected'">{{ 'Отклонено!' }}</span>
-              <span class="spacer"></span>
+              <span class="user-verification__left__verification-list_item">
+                <UiIconSuccess v-if="photoStatus === 'approved'"/>
+                <UiIconWarning v-if="photoStatus === 'pending'"/>
+                <UiIconFailed v-if="photoStatus === 'rejected'"/>
+                <span>Фото профиля</span>
+              </span>
+              <span class="user-verification__left__verification-list_item">
+                <span v-if="photoStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
+                <span v-if="photoStatus === 'pending'">{{ 'Не загружено!' }}</span>
+                <span v-if="photoStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span class="spacer"></span>
+              </span>
             </li>
 
             <li>
-              <span>Адрес</span>
-              <UiIconSuccess v-if="addressStatus === 'approved'"/>
-              <UiIconWarning v-if="addressStatus === 'pending'"/>
-              <UiIconFailed v-if="addressStatus === 'rejected'"/>
-              <span v-if="addressStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-              <span v-if="addressStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
-              <span v-if="addressStatus === 'rejected'">{{ 'Отклонено!' }}</span>
-              <VerificationActions
-                  :enable-comment="true"
-                  :comment="addressComment"
-                  :status="addressStatus"
-                  @update-status="handleVerificationAddress"
-              />
+              <span class="user-verification__left__verification-list_item">
+                <UiIconSuccess v-if="addressStatus === 'approved'"/>
+                <UiIconWarning v-if="addressStatus === 'pending'"/>
+                <UiIconFailed v-if="addressStatus === 'rejected'"/>
+                <span>Адрес</span>
+              </span>
+              <span class="user-verification__left__verification-list_option">
+                <span v-if="addressStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
+                <span v-if="addressStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
+                <span v-if="addressStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <VerificationActions
+                    :enable-comment="true"
+                    :comment="addressComment"
+                    :status="addressStatus"
+                    @update-status="handleVerificationAddress"
+                />
+              </span>
             </li>
             <li>
-              <span>Документы</span>
-              <UiIconSuccess v-if="documentsStatus === 'approved'"/>
-              <UiIconWarning v-if="documentsStatus === 'pending'"/>
-              <UiIconFailed v-if="documentsStatus === 'rejected'"/>
-              <span v-if="documentsStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-              <span v-if="documentsStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
-              <span v-if="documentsStatus === 'rejected'">{{ 'Отклонено!' }}</span>
-              <VerificationActions
-                  :enable-comment="true"
-                  :comment="documentsComment"
-                  :status="documentsStatus"
-                  @update-status="handleVerificationDocuments"
-              />
+              <span class="user-verification__left__verification-list_item">
+                <UiIconSuccess v-if="documentsStatus === 'approved'"/>
+                <UiIconWarning v-if="documentsStatus === 'pending'"/>
+                <UiIconFailed v-if="documentsStatus === 'rejected'"/>
+                <span>Документы</span>
+              </span>
+              <span class="user-verification__left__verification-list_option">
+                <span v-if="documentsStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
+                <span v-if="documentsStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
+                <span v-if="documentsStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <VerificationActions
+                    :enable-comment="true"
+                    :comment="documentsComment"
+                    :status="documentsStatus"
+                    @update-status="handleVerificationDocuments"
+                />
+              </span>
             </li>
             <li>
-              <span>1-й Депозит</span>
-              <UiIconSuccess v-if="depositStatus === 'approved'"/>
-              <UiIconWarning v-if="depositStatus === 'pending'"/>
-              <UiIconFailed v-if="depositStatus === 'rejected'"/>
-              <span v-if="depositStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-              <span v-if="depositStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
-              <span v-if="depositStatus === 'rejected'">{{ 'Отклонено!' }}</span>
-              <span class="spacer"></span>
+              <span class="user-verification__left__verification-list_item">
+                <UiIconSuccess v-if="depositStatus === 'approved'"/>
+                <UiIconWarning v-if="depositStatus === 'pending'"/>
+                <UiIconFailed v-if="depositStatus === 'rejected'"/>
+                <span>1-й Депозит</span>
+              </span>
+              <span class="user-verification__left__verification-list_option">
+                <span v-if="depositStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
+                <span v-if="depositStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
+                <span v-if="depositStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span class="spacer"></span>
+              </span>
             </li>
             <li>
-              <span>Профиль</span>
-              <UiIconSuccess v-if="infoStatus === 'approved'"/>
-              <UiIconWarning v-if="infoStatus === 'pending'"/>
-              <UiIconFailed v-if="infoStatus === 'rejected'"/>
-              <span v-if="infoStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-              <span v-if="infoStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
-              <span v-if="infoStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+              <span class="user-verification__left__verification-list_item">
+                <UiIconSuccess v-if="infoStatus === 'approved'"/>
+                <UiIconWarning v-if="infoStatus === 'pending'"/>
+                <UiIconFailed v-if="infoStatus === 'rejected'"/>
+                <span>Профиль</span>
+              </span>
+              <span class="user-verification__left__verification-list_option">
+                <span v-if="infoStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
+                <span v-if="infoStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
+                <span v-if="infoStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span class="spacer"></span>
+              </span>
             </li>
           </ul>
           <div class="user-verification__left__verification-list--is-loading" v-if="isLoading">
@@ -447,6 +472,21 @@ onMounted(async () => {
           position: relative;
         }
 
+        &_item {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 10px;
+        }
+
+        &_option {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 20px;
+          flex-direction: column;
+        }
+
         &--is-loading {
           display: flex;
           align-items: center;
@@ -470,8 +510,10 @@ onMounted(async () => {
           display: grid;
           align-items: center;
           border-bottom: 1px solid var(--color-stroke-ui-dark);
-          grid-template-columns: 110px 60px 1fr 140px;
+          grid-template-columns: 140px 1fr 140px;
+          row-gap: 10px;
           padding: 10px 20px;
+
 
           &:last-child {
             border-bottom: none;

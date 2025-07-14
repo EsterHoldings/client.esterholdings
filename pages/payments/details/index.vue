@@ -452,21 +452,20 @@ onMounted(async () => {
     &__payment_item {
       padding: 20px;
       width: 100%;
-      border-bottom: 1px solid var(--ui-background-sidebar-link);
-
-      &:last-child {
-        border-bottom: none;
-      }
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background-color: var(--ui-background-panel);
+      border: 1px solid var(--color-stroke-ui-dark);
 
       &:hover {
-        background-color: var(--ui-background-sidebar-link);
-        border-bottom: 1px solid var(--ui-primary-main);
+        background-color: var(--color-stroke-ui-dark);
       }
 
       &__options {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        margin-bottom: 20px;
 
         &__search {
           .input {
@@ -517,12 +516,12 @@ onMounted(async () => {
         font-size: 14px;
         border-radius: 5px;
         color: var(--ui-text-main);
-        height: 22px;
-        min-width: 22px;
         padding: 0 5px;
         display: flex;
         align-items: center;
         justify-content: center;
+        height: 30px;
+        min-width: 30px;
       }
 
       .page-link.active {

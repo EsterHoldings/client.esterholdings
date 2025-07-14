@@ -41,10 +41,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['select']);
-
-const handleSelectPaymentSystem = (index: number = 0) => {
-  emit('select', index);
-}
+const handleSelectPaymentSystem = (index: number = 0) => emit('select', index);
 </script>
 
 <style lang="scss" scoped>
@@ -53,9 +50,9 @@ const handleSelectPaymentSystem = (index: number = 0) => {
     &s {
       position: relative;
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 20px;
-      min-height: 400px;
+      align-items: center;
+      grid-template-columns: 1fr;
+      gap: 10px;
 
       &__loader-wrapper {
         position: absolute;

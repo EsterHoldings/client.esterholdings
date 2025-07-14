@@ -13,7 +13,7 @@
   --color-contrast: #3e3939; // TODO :: Deprecated - will remove
   --color-default: gainsboro; // TODO :: Deprecated - will remove
   --color-primary: blue; // TODO :: Deprecated - will remove
-  --color-info: lightblue; // TODO :: Deprecated - will remove
+  --color-info: #123e9c; // TODO :: Deprecated - will remove
   --color-success: green; // TODO :: Deprecated - will remove
   --color-warning: #da7a1c; // TODO :: Deprecated - will remove
   --color-danger: #af160e; // TODO :: Deprecated - will remove
@@ -23,7 +23,8 @@
   //-------- UI -------- //
 
   --color-ui-background: rgba(0, 0, 40, 0.95);
-  --color-ui-background-opacity-80: rgba(0, 0, 40, 0.33);
+  --color-ui-background-opacity-80: rgba(0, 0, 40, 0.82);
+  --color-ui-background-opacity-95: rgba(0, 0, 40, 0.95);
 
   --color-ui-primary: #0051ff;
   --color-ui-primary-defalt: #858282;
@@ -62,7 +63,7 @@
   --ui-background-secondary: #031743;
   --ui-background-panel: #011644b5;
   --ui-background-card: #01014e;
-  --ui-background-admin: rgba(0, 0, 40, 0.95);
+  --ui-background-admin: rgba(0, 0, 40, 0.78);
   --ui-background-sidebar: rgba(0, 0, 40, 0.95);
   --ui-background-sidebar-link: #011644;
 

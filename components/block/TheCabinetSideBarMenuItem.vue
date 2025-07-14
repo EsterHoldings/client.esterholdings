@@ -75,10 +75,13 @@ const handleClickMenuItem = (event: Event) => emit("click", props.to);
 
   &:hover {
     transition: 0.3s;
+    background-color: var(--color-stroke-ui-dark);
+    opacity: .8;
   }
 
   &.active {
-    border-right: 1px solid var(--ui-stroke);
+    background-color: var(--color-stroke-ui-dark);
+    border-right: 1px solid var(--color-primary);
   }
 
   &__indicator {
@@ -88,7 +91,7 @@ const handleClickMenuItem = (event: Event) => emit("click", props.to);
     width: 1px;
     height: 100%;
 
-    background-color: var(--ui-stroke);
+    background-color: var(--color-stroke-ui-dark);
 
     &.active {
       background-color: var(--color-ui-primary);

@@ -80,6 +80,9 @@ export default defineNuxtConfig({
 
     app: {
         head: {
+            link: [
+                { rel: 'icon', type: 'image/x-icon', href: '/favicon/favicon.ico' }
+            ],
             script: [
                 {
                     src: "https://accounts.google.com/gsi/client",

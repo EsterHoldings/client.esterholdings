@@ -130,9 +130,14 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .active {
   background-color: var(--ui-text-secondary);
+  border: 1px solid var(--ui-primary-accent);
+
+  svg {
+    stroke: var(--ui-primary-accent);
+  }
 }
 
 .doc-actions {
@@ -142,6 +147,12 @@ onMounted(() => {
   padding: 3px;
   border-radius: 10px;
   width: min-content;
+
+  &:hover {
+    &>svg {
+      stroke: white;
+    }
+  }
 }
 
 .doc-actions__btn--comment  {

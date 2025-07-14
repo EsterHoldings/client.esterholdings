@@ -2,8 +2,6 @@
   <UiContainer>
     <div class="traders-blog">
       <UiTextH3 class="traders-blog__title">Traders Blog</UiTextH3>
-      <div class="traders-blog__img"></div>
-
       <div class="traders-blog__wrapper">
         <BlogCard
             v-for="card in blogEntries"
@@ -69,24 +67,14 @@ const blogEntries = ref([
 .traders-blog {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding: 40px;
 
   &__title {
     color: var(--ui-text-main);
     text-align: center;
-    margin-top: 50px;
-  }
-
-  &__img {
-    background: linear-gradient(rgba(21, 21, 21, 0.6), rgba(21, 21, 21, 0.6)),
-    url("/static/trader's-blogBg.jpg") center / cover no-repeat;
-    min-height: 500px;
-    border-radius: 15px;
   }
 
   &__wrapper {
-    margin-top: 50px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: baseline;

@@ -32,10 +32,15 @@ const handleSelect = () => emit('select');
 
 <style lang="scss" scoped>
 .payment-system-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   padding: 20px;
   border-radius: 10px;
-  height: 160px;
+  height: 60px;
   width: 100%;
+  background-color: var(--color-stroke-ui-dark);
   border: 1px solid var(--color-stroke-ui-dark);
   font-size: 12px;
 
@@ -45,7 +50,7 @@ const handleSelect = () => emit('select');
   }
 
   &:hover {
-    background-color: var(--color-stroke-ui-dark);
+    background-color: var(--ui-background-panel);
     opacity: .7;
   }
 
@@ -57,12 +62,12 @@ const handleSelect = () => emit('select');
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 20px;
-    height: 80px;
+    height: 40px;
+    width: 40px;
 
     svg {
-      height: 80px;
-      width: 80px;
+      height: 40px;
+      width: 40px;
 
       stroke-width: 1px;
 

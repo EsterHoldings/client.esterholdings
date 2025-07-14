@@ -9,8 +9,9 @@
 
 <style lang="scss" scoped>
 svg {
-  height: 20px;
-  width: 20px;
+  height: 24px;
+  width: 24px;
   stroke: var(--ui-text-main);
+  stroke-width: 2px;
 }
 </style>

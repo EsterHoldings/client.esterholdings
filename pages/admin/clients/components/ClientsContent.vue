@@ -125,9 +125,9 @@ const getTwoCharsByFullName = (firstName: string, lastName: string): string => {
   }
 
   &_row {
-    padding: 20px;
+    padding: 10px;
     border: 1px solid var(--color-stroke-ui-dark);
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border-radius: 10px;
 
     display: grid;

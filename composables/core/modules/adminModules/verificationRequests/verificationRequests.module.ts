@@ -20,6 +20,10 @@ export class VerificationRequestsModule {
     return await this.verificationRequestsService.get(clientId);
   }
 
+  async getAll(data:any) {
+    return await this.verificationRequestsService.getAll(data);
+  }
+
   async getById(id:any): Promise<any> {
     return await this.verificationRequestsService.getById(id);
   }

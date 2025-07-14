@@ -65,6 +65,8 @@ const handleClick = (): void => emit("click");
   border: none;
   font-weight: 600;
 
+  color: var(--ui-text-main);
+
   &--info {
     background-color: #719edf;
     color: white;
@@ -124,9 +126,9 @@ const handleClick = (): void => emit("click");
         border: 1px solid var(--color-stroke-ui-dark);
         background-color: transparent;
         height: 32px;
-        width: 32px;
+        min-width: 32px;
         border-radius: 8px;
-        padding: 0;
+        padding: 0 10px;
       }
 
       &:hover {

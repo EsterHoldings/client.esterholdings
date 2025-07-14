@@ -21,7 +21,7 @@
 
             <div class="payments__content__option">
               <NuxtLink to="/payments/create">
-                <UiButtonDefault state="success">{{ t("cabinet.billing.create") }}</UiButtonDefault>
+                <UiButtonDefault state="success--outline">{{ t("cabinet.billing.create") }}</UiButtonDefault>
               </NuxtLink>
 
             </div>
@@ -36,6 +36,17 @@
                   :active="orderBy === 'id'"
                   :direction="orderDirection"
                   @click="handleOrderByAndDirection('id')"
+              />
+            </div>
+
+            <div class="payments__content__payment_item__data-wrapper--header__cell">
+              <span @click="handleOrderByAndDirection('account_number')">
+                Номер счета
+              </span>
+              <UiIconSort
+                  :active="orderBy === 'account_number'"
+                  :direction="orderDirection"
+                  @click="handleOrderByAndDirection('account_number')"
               />
             </div>
 
@@ -95,7 +106,7 @@
             </div>
 
             <div class="payments__content__payment_item__data-wrapper--header__cell">
-              <span @click="handleOrderByAndDirection('created_at')"></span>
+              <span>...</span>
             </div>
           </div>
 
@@ -113,11 +124,9 @@
                 :key="payment.id"
             >
               <div class="payments__content__payment_item__data-wrapper">
-                <div @click="copyToClipboard(payment.id)" style="display: flex">
-                  <UiIconCopy/>
-                  <span style="margin-left: 5px; font-size: 12px">{{ shortId(payment.id) }}</span>
-                </div>
-                <div>{{ payment.payment_system }}</div>
+                <div @click="copyToClipboard(payment.id)"><UiIconCopy/></div>
+                <div>{{ payment.account_number }}</div>
+                <div>{{ payment.payment_system_name }}</div>
                 <div>{{ payment.status }}</div>
                 <div>{{ payment.currency }}</div>
                 <div :class="[Math.random() < 0.5 ? 'withdrawal' : 'deposit']">
@@ -445,7 +454,7 @@ onMounted(async () => {
 
     &__payment_item__data-wrapper--header {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 50px 1fr 1fr 1fr 1fr 1fr 1fr 50px;
       column-gap: 20px;
       row-gap: 10px;
       padding: 20px;
@@ -483,7 +492,6 @@ onMounted(async () => {
       }
 
       &__options {
-        // code...
         &.input {
           border-radius: var(--ui-border--raduis);
         }
@@ -491,7 +499,7 @@ onMounted(async () => {
 
       &__data-wrapper {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-columns: 50px 1fr 1fr 1fr 1fr 1fr 1fr 50px;
         column-gap: 20px;
         row-gap: 10px;
         align-items: center;

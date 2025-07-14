@@ -84,7 +84,7 @@ const props = defineProps({
   },
 });
 
-const perPageData = [3, 5, 10, 15, 20, 25, 50, 100];
+const perPageData = [1,2, 3, 5, 8, 10, 15, 20, 25, 50, 100];
 
 const totalPages = computed(() => Math.ceil(props.totalRows / props.perPage));
 const visiblePages = computed(() => {
@@ -143,9 +143,10 @@ const handleOnChangePerPage = (event: any) => {
 .custom-select {
   padding: 5px;
   border: 1px solid var(--color-stroke-ui-dark);
-  border-radius: 3px;
-  background-color: var(--ui-background);
-  color: #b0b0b0;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--ui-text-main);
+  height: 30px;
 }
 
 .pagination {
@@ -158,7 +159,7 @@ const handleOnChangePerPage = (event: any) => {
   &__item-dot {
     font-size: 20px;
     font-weight: bold;
-    color: gray;
+    color: var(--ui-text-main);
     cursor: default;
     pointer-events: none;
   }
@@ -204,7 +205,7 @@ const handleOnChangePerPage = (event: any) => {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid var(--color-stroke-ui-dark);
+    background-color: var(--color-stroke-ui-dark);
     border-radius: 3px;
 
     height: 30px;
@@ -222,7 +223,7 @@ const handleOnChangePerPage = (event: any) => {
     }
 
     &.active {
-      background-color: var(--color-stroke-ui-dark);
+      border: 1px solid var(--ui-primary-accent);
       font-weight: bold;
     }
   }

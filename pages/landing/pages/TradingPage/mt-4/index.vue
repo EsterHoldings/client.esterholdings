@@ -23,20 +23,39 @@
 
       <ul class="mt4_list">
         <li>
-          easy and understandable interface with a variety of tools of technical
-          analysis;
+          <UiIconSuccess />
+          <span>
+            easy and understandable interface with a variety of tools of technical
+            analysis;
+          </span>
         </li>
-        <li>opportunity to trade from smart phones, Ipads and PDAs;</li>
         <li>
-          built-in programming language MQL4, allowing to create own trade
-          advisors and indicators;
+          <UiIconSuccess />
+          <span>
+            opportunity to trade from smart phones, Ipads and PDAs;
+          </span>
+        </li>
+        <li>
+          <UiIconSuccess />
+          <span>
+            built-in programming language MQL4, allowing to create own trade
+            advisors and indicators;
+          </span>
         </li>
 
         <li>
-          access to intebank liquidity with the help of the technology МТ4
-          Bridge, execution without re-quotes (No Dealing Desk);
+          <UiIconSuccess />
+          <span>
+            access to intebank liquidity with the help of the technology МТ4
+            Bridge, execution without re-quotes (No Dealing Desk);
+          </span>
         </li>
-        <li>financial news from Dow Jones</li>
+        <li>
+          <UiIconSuccess />
+          <span>
+            financial news from Dow Jones
+          </span>
+        </li>
       </ul>
 
       <div class="mt4_footer">
@@ -60,6 +79,7 @@ import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
+import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
 
 definePageMeta({
   layout: "main",
@@ -69,12 +89,11 @@ definePageMeta({
 
 <style lang="scss">
 .mt4 {
-  padding: 40px;
   min-height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 20px;
 
   &_img {
     padding: 40px;
@@ -84,14 +103,13 @@ definePageMeta({
     background: linear-gradient(rgba(21, 21, 21, 0.6), rgba(21, 21, 21, 0.6)),
       url("/static/mt4Bg.jpeg") center / cover no-repeat;
     border-radius: 15px;
-    min-height: 500px;
+    min-height: 200px;
     justify-content: end;
   }
 
   &_title {
     text-align: center;
     color: var(--ui-text-main);
-    margin-top: 20px;
 
     &-platform {
       color: var(--ui-text-main);
@@ -108,7 +126,15 @@ definePageMeta({
 
   &_list {
     color: var(--ui-text-main);
-    padding-left: 20px;
+    list-style: none;
+
+    li {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 20px;
+    }
   }
 
   &_footer {

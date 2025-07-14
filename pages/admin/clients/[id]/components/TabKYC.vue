@@ -154,7 +154,7 @@ onMounted(async () => {
   display: flex;
   gap: 20px;
 
-  @media (max-width: 1058px) {
+  @media (min-width: 1px) {
     flex-direction: column;
 
     .profile__tab--kyc__left {
