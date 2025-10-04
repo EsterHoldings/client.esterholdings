@@ -1,48 +1,54 @@
 // plugins/echo.client.ts
 import Echo from 'laravel-echo'
+import type EchoType from 'laravel-echo'
 import Pusher from 'pusher-js'
-import { defineNuxtPlugin, useRuntimeConfig } from 'nuxt/app'
+import {defineNuxtPlugin, useRuntimeConfig} from "nuxt/app";
+import {USER_ACCESS_TOKEN} from "~/constants/auth";
 
-export default defineNuxtPlugin((nuxtApp) => {
+declare global { interface Window { Pusher: any; Echo: EchoType<any> } }
+
+export default defineNuxtPlugin(() => {
     const cfg = useRuntimeConfig().public as {
-            reverbKey?: string
-            reverbHost?: string
-            reverbPort?: string | number
-            reverbScheme?: string
-        }
+        apiBase?: string
+        reverbKey?: string
+        reverbHost?: string
+        reverbPort?: string | number
+        reverbScheme?: string
+    }
 
-        // зробимо доступним глобально (якщо десь є старий код, що покладається на window.Pusher)
-    ;(globalThis as any).Pusher = Pusher
-
-    const secure = (cfg.reverbScheme ?? 'https') === 'https'
-    const port = Number(cfg.reverbPort) || (secure ? 443 : 80)
-
-    const echo = new Echo({
-        broadcaster: 'reverb',               // якщо використовуєш Reverb
-        key: cfg.reverbKey!,
-        wsHost: cfg.reverbHost || window.location.hostname,
-        wsPort: port,
-        wssPort: port,
-        forceTLS: secure,
-        enabledTransports: ['ws', 'wss'],
-        disableStats: true,
-
-        // ГОЛОВНЕ: явно передаємо клієнт
-        client: Pusher,
-
-        // Якщо приватні/присутні канали — кастомний authorizer, щоб летіли cookies
-        authorizer: (channel: any) => ({
-            authorize: (socketId: string, callback: any) => {
-                $fetch('/broadcasting/auth', {
-                    method: 'POST',
-                    credentials: 'include',
-                    body: { socket_id: socketId, channel_name: channel.name },
-                })
-                    .then((res) => callback(false, res))
-                    .catch((err) => callback(true, err))
-            },
-        }),
+    console.table({
+        reverbKey: cfg.reverbKey,
+        reverbHost: cfg.reverbHost,
+        reverbPort: cfg.reverbPort,
+        reverbScheme: cfg.reverbScheme,
     })
 
-    nuxtApp.provide('echo', echo)
+    const apiBase = cfg.apiBase + '/api' || 'http://localhost:8000'
+    window.Pusher = Pusher
+
+    const token = localStorage.getItem(USER_ACCESS_TOKEN) || ''
+
+    const xsrf = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/)?.[1] ?? ''
+    const echo = new Echo({
+        broadcaster: 'reverb',
+        key: cfg.reverbKey,
+        wsHost: cfg.reverbHost,
+        wsPort: Number(cfg.reverbPort),
+        wssPort: Number(cfg.reverbPort),
+        forceTLS: false,
+        enabledTransports: ['ws'],
+        authEndpoint: `${apiBase}/broadcasting/auth`,
+        withCredentials: true,
+        auth: {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-XSRF-TOKEN': decodeURIComponent(xsrf)
+            }
+        },
+    })
+
+    // @ts-ignore
+    window.Echo = echo
+    return { provide: { echo } }
 })
