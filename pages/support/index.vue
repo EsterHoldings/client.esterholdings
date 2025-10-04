@@ -64,7 +64,7 @@
           <UiIconSpinnerDefault/>
         </div>
 
-        <div class="overflow-scroll rounded-lg">
+        <div class="overflow-scroll no-scrollbar rounded-lg">
           <table class="w-full text-sm">
             <thead class="bg-[var(--color-stroke-ui-light)] h-[46px]">
             <tr class="text-left">
