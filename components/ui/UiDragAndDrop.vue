@@ -12,8 +12,8 @@
     <UiIconDocuments class="w-6 h-6 mb-2 text-[var(--ui-text-main)]" />
 
     <div class="text-base leading-tight">
-      <span class="opacity-90">Drag and Drop</span>
-      <span class="opacity-90"> or </span>
+      <span class="opacity-90 text-[var(--ui-text-main)]">Drag and Drop</span>
+      <span class="opacity-90 text-[var(--ui-text-main)]"> or </span>
       <button
           type="button"
           class="underline decoration-2 underline-offset-4 text-orange-500 hover:opacity-80"

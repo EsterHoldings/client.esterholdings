@@ -11,7 +11,8 @@
     <WideRangeSection />
     <FourStepsSection />
     <BannerSection />
-    <LatestUpdatesSection />
+    <!-- <LatestUpdatesSection /> -->
+    <FAQsSection />
 
     <CookieModal />
   </main>
@@ -30,7 +31,8 @@ import WideRangeSection from "~/pages/landing/sections/WideRangeSection";
 import FourStepsSection from "~/pages/landing/sections/FourStepsSection.vue";
 import BannerSection from "~/pages/landing/sections/BannerSection.vue";
 import TradingPlatformSection from "~/pages/landing/sections/TradingPlatformSection.vue";
-import LatestUpdatesSection from "~/pages/landing/sections/LatestUpdatesSection.vue";
+// import LatestUpdatesSection from "~/pages/landing/sections/LatestUpdatesSection.vue";
+import FAQsSection from "~/pages/landing/sections/FAQsSection.vue";
 import CookieModal from "~/components/block/modals/CookieModal.vue";
 
 definePageMeta({
