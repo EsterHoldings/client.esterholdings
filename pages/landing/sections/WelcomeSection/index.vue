@@ -4,7 +4,7 @@
       class="welcome__slider"
       :images="images"
       :components="components"
-      :autoPlayInterval="10000"
+      :autoPlayInterval="100000"
     />
   </section>
 </template>

@@ -10,7 +10,7 @@
         </div>
       </div>
 
-      <UiTextH2 class="slide-10__subtitle">
+      <UiTextH2 class="slide-10__subtitle !text-[--ui-text-invert]">
         {{ $t("landing.slider.ten_years_slide.title.after") }}
       </UiTextH2>
 

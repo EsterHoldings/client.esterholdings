@@ -5,21 +5,12 @@
       <div class="welcome__content">
         <UiTextH1>
           {{ $t("welcome-title.before") }}
-          <span class="welcome__title--highlight">{{
-            $t("welcome-title.highlight")
-          }}</span
-          >,<br />
-          {{ $t("welcome-title.after") }}
-          <img class="rocket" src="/static/rocket.png" alt="Rocket" />
+          <span class="welcome__title--highlight">{{ $t("welcome-title.highlight") }}</span>,<br />
+          {{ $t("welcome-title.after") }}<img class="rocket" src="/static/rocket.png" alt="Rocket" />
         </UiTextH1>
-
-        <UiTextH5 class="welcome__text">
-          {{ $t("welcome__text") }}
-        </UiTextH5>
+        <UiTextH5 class="welcome__text">{{ $t("welcome__text") }}</UiTextH5>
         <div>
-          <UiButtonDefault state="primary">{{
-            $t("welcome-btn")
-          }}</UiButtonDefault>
+          <UiButtonDefault state="primary">{{ $t("welcome-btn") }}</UiButtonDefault>
         </div>
       </div>
       <div class="welcome__running-line-default">

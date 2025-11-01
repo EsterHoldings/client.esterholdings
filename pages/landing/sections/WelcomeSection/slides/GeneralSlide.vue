@@ -2,7 +2,7 @@
   <section class="slide-welcome">
     <UiContainer>
       <div class="slide-welcome__content">
-        <UiTextH1>
+        <UiTextH1 class="!text-[var(--ui-text-invert)]">
           {{ $t("landing.slider.general-slide.title.before") }}
           <span class="slide-welcome__title--highlight">
             {{ $t("landing.slider.general-slide.title.highlight") }} </span
@@ -62,6 +62,7 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 }
 
 .rocket {
+  display: inline;
   height: 48px;
   width: 48px;
 }

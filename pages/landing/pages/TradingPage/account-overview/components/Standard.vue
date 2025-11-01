@@ -1,24 +1,32 @@
 <template>
-  <div
-      class="account-card"
-      :data-text="t(`landing.sections.accounts__options[0].title`)"
-  >
-    <div class="account-content">
-      <UiTextH3 class="account-title bold">
-        {{ t(`landing.sections.accounts__options[0].title`) }}
+  <div :data-text="t(`landing.sections.accounts__options[0].title`)" class="w-full">
+    <div class="">
 
-        <UiTextH5 class="account-subtitle">
-          {{ t(`landing.sections.accounts__options[0].label`) }}
-        </UiTextH5>
-      </UiTextH3>
+      <div class="w-full h-[300px] relative flex items-center justify-center">
+        <div class="flex items-center justify-center flex-col">
+          <UiTextH3 class="bold z-10 flex items-center justify-center flex-col">
+            {{ t(`landing.sections.accounts__options[0].title`) }}
 
-      <UiTextH5 class="account-description">
-        {{ t(`landing.sections.accounts__options[0].description`) }}
-      </UiTextH5>
+            <UiTextH5>
+              {{ t(`landing.sections.accounts__options[0].label`) }}
+            </UiTextH5>
+          </UiTextH3>
 
-      <UiButtonDefault state="primary">
-        {{ t("landing.sections.accounts__btn") }}
-      </UiButtonDefault>
+          <UiButtonDefault state="primary" class="mt-5 z-10">
+            {{ t("landing.sections.accounts__btn") }}
+          </UiButtonDefault>
+        </div>
+
+        <UiImage src="/static/standardBgCard.jpeg" class="!absolute !top-0 !bottom-0 !left-0 !right-0 !rounded-lg" />
+      </div>
+
+      <div>
+        <div class="max-w-[600px] w-full m-auto mt-5">
+          <UiTextH5 class="!text-[var(--ui-text-main)] text-center">
+            {{ t(`landing.sections.accounts__options[0].description`) }}
+          </UiTextH5>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -31,6 +39,7 @@ import UiTextH3 from "~/components/ui/UiTextH3.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiIconArrowRight from "~/components/ui/UiIconArrowRight.vue";
+import UiImage from "~/components/ui/UiImage.vue";
 
 const {t, tm} = useI18n();
 </script>
@@ -53,23 +62,6 @@ const {t, tm} = useI18n();
   gap: 20px;
   max-width: 1100px;
   width: 100%;
-}
-
-.account-card {
-  background: linear-gradient(rgba(21, 21, 21, 0.6), rgba(21, 21, 21, 0.6)),
-  url("/static/standardBgCard.jpeg") center / cover no-repeat;
-
-  flex: 1;
-  min-height: 500px;
-  min-width: 100%;
-  border-radius: 15px;
-  border: 1px solid var(--ui-stroke);
-  cursor: pointer;
-  transition: flex 0.3s ease-in-out, transform 0.1s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
 }
 
 .account-card.active {
@@ -128,45 +120,45 @@ const {t, tm} = useI18n();
     min-width: 353px;
   }
 }
-
-.account-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 47px;
-  width: 80%;
-  color: white;
-}
-
-.account-title {
-  font-weight: bold;
-}
-
-.account-subtitle {
-  margin-top: 5px;
-  color: #b8b8c3;
-}
-
-.account-description {
-  margin-top: 10px;
-  color: #b8b8c3;
-}
-
-.account-mini {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-
-  &_title {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-    height: 144px;
-  }
-}
+//
+//.account-content {
+//  display: flex;
+//  flex-direction: column;
+//  align-items: center;
+//  gap: 47px;
+//  width: 80%;
+//  color: white;
+//}
+//
+//.account-title {
+//  font-weight: bold;
+//}
+//
+//.account-subtitle {
+//  margin-top: 5px;
+//  color: #b8b8c3;
+//}
+//
+//.account-description {
+//  margin-top: 10px;
+//  color: #b8b8c3;
+//}
+//
+//.account-mini {
+//  display: flex;
+//  flex-direction: column;
+//  align-items: center;
+//  font-size: 16px;
+//  font-weight: bold;
+//  color: white;
+//
+//  &_title {
+//    writing-mode: vertical-rl;
+//    text-orientation: mixed;
+//    transform: rotate(180deg);
+//    height: 144px;
+//  }
+//}
 
 .arrow {
   margin-top: 50px;
