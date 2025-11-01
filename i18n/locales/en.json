@@ -7,7 +7,6 @@
         "btn-negative": "Decline"
       }
     },
-
     "lines": {
       "running-line-btn": "Trade"
     },
@@ -31,7 +30,12 @@
         "Trading": [
           {
             "section": "Account overview",
-            "items": ["Standard", "Pro", "Islamic", "Demo"]
+            "items": [
+              "Standard",
+              "Pro",
+              "Islamic",
+              "Demo"
+            ]
           },
           {
             "section": "Market Instruments",
@@ -47,25 +51,41 @@
           },
           {
             "section": "Platform",
-            "items": ["MT4 Desktop", "MT 4 Mobile"]
+            "items": [
+              "MT4 Desktop",
+              "MT 4 Mobile"
+            ]
           },
           {
             "section": "Trading conditions",
-            "items": ["Account replenishment", "Withdrawal of funds"]
+            "items": [
+              "Account replenishment",
+              "Withdrawal of funds"
+            ]
           },
           {
             "section": "Trader's HUB",
-            "items": ["Trader's blog", "Economic calendar", "Market news"]
+            "items": [
+              "Trader's blog",
+              "Economic calendar",
+              "Market news"
+            ]
           },
           {
             "section": "TANDEM trading",
-            "items": ["For trader", "For investor"]
+            "items": [
+              "For trader",
+              "For investor"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "Partnership",
-            "items": ["Register IB/ Partnership", "How IB generate income"]
+            "items": [
+              "Register IB/ Partnership",
+              "How IB generate income"
+            ]
           }
         ],
         "Company": [
@@ -82,7 +102,6 @@
         ]
       }
     },
-
     "slider": {
       "general-slide": {
         "title": {
@@ -93,7 +112,6 @@
         "text": "Access global markets, including Forex, Stocks, and CFDs, with \nfast execution, low spreads, and real-time market analysis.",
         "btn": "Trade Now"
       },
-
       "top-trader-slide": {
         "title": {
           "before": "Copy Strategies",
@@ -103,7 +121,6 @@
         "text": "Gain access to real deals from professionals and improve your trading.",
         "btn": "Start"
       },
-
       "ten_years_slide": {
         "title": {
           "highlight": "Years",
@@ -113,7 +130,6 @@
         "btn": "Join in Us"
       }
     },
-
     "sections": {
       "advantages": [
         {
@@ -129,9 +145,7 @@
           "label": "Customer service"
         }
       ],
-
       "platform__title": "Legendary platform for successful\nForex and CFD trading",
-
       "platform__features": [
         {
           "title": "Trading Platform",
@@ -150,7 +164,6 @@
           "text": "Works even on weak PCs."
         }
       ],
-
       "feature__title": "Why Choose Us?",
       "features__items": [
         {
@@ -184,52 +197,128 @@
           "icon": "/static/L-Shield Done.png"
         }
       ],
-
       "account_types__categories": [
-        { "id": "Standard", "label": "Standard" },
-        { "id": "Pro", "label": "Pro" },
-        { "id": "Tandem", "label": "Tandem" },
-        { "id": "Islamic", "label": "Islamic" }
+        {
+          "id": "Standard",
+          "label": "Standard"
+        },
+        {
+          "id": "Pro",
+          "label": "Pro"
+        },
+        {
+          "id": "Tandem",
+          "label": "Tandem"
+        },
+        {
+          "id": "Islamic",
+          "label": "Islamic"
+        }
       ],
-
       "accounts__title": "Explore Our Trading Account Options",
       "accounts__btn": "Open Account",
       "accounts__options": [
         {
-          "id": "Standard",
+          "id": "demo",
+          "type": "demo",
+          "title": "Demo",
+          "subtitle": "account",
+          "description": "Risk-free trading with virtual funds, perfect for beginners to explore markets.",
+          "features": [
+            "Leverage up to 1:500",
+            "Spreads from 0.0 pips",
+            "No deposit required"
+          ],
+          "buttonText": "Try Demo Now",
+          "isRecommended": true
+        },
+        {
+          "id": "standard",
+          "type": "standard",
           "title": "Standard",
-          "label": "account",
-          "description": "Test trading strategies risk-free."
+          "subtitle": "account",
+          "description": "Easy access to spot markets with low fees and — ideal for beginners and active traders.",
+          "features": [
+            "Leverage up to 1:500",
+            "Spreads from 1.2 pips",
+            "First deposit of $50"
+          ],
+          "buttonText": "Open Standard Account",
+          "isRecommended": false
         },
         {
-          "id": "Pro",
+          "id": "pro",
+          "type": "pro",
           "title": "Pro",
-          "label": "account",
-          "description": "Test trading strategies risk-free."
+          "subtitle": "account",
+          "description": "Experience tight spreads, higher leverage, and full control over every trade.",
+          "features": [
+            "Leverage up to 1:500",
+            "Spreads from 0.0 pips",
+            "First deposit of $1000"
+          ],
+          "buttonText": "Trade Like a Pro",
+          "isRecommended": false
         },
         {
-          "id": "Islamic",
-          "title": "Islamic",
-          "label": "account",
-          "description": "Test trading strategies risk-free."
-        },
-        {
-          "id": "Tandem",
+          "id": "tandem",
+          "type": "tandem",
           "title": "Tandem",
-          "label": "account",
-          "description": "Test trading strategies risk-free."
+          "subtitle": "account",
+          "description": "Pair with a partner, mentor, or co-trader and grow together with synchronized strategies.",
+          "features": [
+            "Leverage up to 1:200",
+            "Shared account access",
+            "Real-time trade mirroring"
+          ],
+          "buttonText": "Trade Together",
+          "isRecommended": false
+        },
+        {
+          "id": "islamic",
+          "type": "islamic",
+          "title": "Islamic",
+          "subtitle": "account",
+          "description": "Swap-free. Shariah-compliant. Trade without interest, with full platform access.",
+          "features": [
+            "Leverage up to 1:500",
+            "No swap / interest fees",
+            "Access to all trading instruments"
+          ],
+          "buttonText": "Open Islamic Account",
+          "isRecommended": false
         }
       ],
-
       "wide_range__title": "Wide Range of Products",
       "wide_range__categories": [
-        { "id": "forex", "label": "Forex" },
-        { "id": "metals", "label": "Metals" },
-        { "id": "cryptocurrency CDs", "label": "Cryptocurrency CDs" },
-        { "id": "indices", "label": "Indices" },
-        { "id": "shares", "label": "Shares" },
-        { "id": "energy", "label": "Energy" },
-        { "id": "ETFS", "label": "ETFS" }
+        {
+          "id": "forex",
+          "label": "Forex"
+        },
+        {
+          "id": "metals",
+          "label": "Metals"
+        },
+        {
+          "id": "cryptocurrency CDs",
+          "label": "Cryptocurrency CDs"
+        },
+        {
+          "id": "indices",
+          "label": "Indices"
+        },
+        {
+          "id": "shares",
+          "label": "Shares"
+        },
+        {
+          "id": "energy",
+          "label": "Energy"
+        },
+        {
+          "id": "ETFS",
+          "label": "ETFS"
+        }
       ],
       "wide_range_tabs": {
         "Forex": {
@@ -237,44 +326,37 @@
           "description": "Trade 70 major, minor & exotic currency pairs\n with competitive trading conditions.",
           "btn": "Trade Forex"
         },
-
         "Metals": {
           "title": "Metals",
           "description": "Trade metal commodities such as Gold,\n Silver & Platinum.",
           "btn": "Trade Metals"
         },
-
         "CryptocurrencyCDs": {
           "title": "Cryptocurrency CDs",
           "description": "Trade Bitcoin CFD, Ether CFD, Doge CFD\n & more crypto CDs & altcoin CFDs ",
           "btn": "Trade Cryptocurrency CFDs"
         },
-
         "Indices": {
           "title": "Indices",
           "description": "Trade major and minor Index CDs Spot and\nFutures from around the globe.",
           "btn": "Trade Indices"
         },
-
         "Shares": {
           "title": "Shares",
           "description": "Thousands of public companies from the US,\n UK & EU available to trade.",
           "btn": "Trade Shares"
         },
-
         "Energy": {
           "title": "Energy",
           "description": "Discover opportunities on UK & US Crude Oil\n and Natural Gas Spot and Future contracts.",
           "btn": "Trade Energy"
         },
-
         "ETFS": {
           "title": "ETFs",
           "description": "Access a World of Markets with ETF CFDs-From\n Bonds to Commodities, Real Estate to Volatility.",
           "btn": "Trade ETFs"
         }
       },
-
       "four_steps_section": {
         "title": {
           "before": "Open an account in",
@@ -300,17 +382,295 @@
           }
         ]
       },
-
       "banner_section": {
-        "title": "Trade the Markets Like a Pro!",
+        "title": "Trade the Markets",
+        "title_highlight": "Like a Pro!",
         "subtitle": "Whether you're a beginner or a pro, our advanced tools and resources help you make informed trading decisions.",
-        "button": "Start trading today!"
+        "button_primary": "Start trading",
+        "button_secondary": "Try Demo Account"
       },
-
+      "latest_updates__title": "Latest updates",
+      "latest_updates__items": [
+        {
+          "title": "NVIDIA shares soared 15% after the report",
+          "subtitle": "Chipmaker NVIDIA (NVDA) presented a quarterly report that exceeded all Wall Street expectations...",
+          "time": "15 min"
+        },
+        {
+          "title": "Tesla announced a 1:10 stock split – quotes rose by 12%",
+          "subtitle": "The news sent shares up 12%, with Tesla now trading at $1,180 per share.",
+          "time": "30 min"
+        },
+        {
+          "title": "Bitcoin crashes 12% after SEC announces ban on stablecoins",
+          "subtitle": "The US Securities and Exchange Commission (SEC) made a surprise announcement introducing new...",
+          "time": "1 hour ago"
+        }
+      ],
+      "faqs__form_title": "Need Help?",
+      "faqs__form_subtitle": "We'll get back to you within a day.",
+      "faqs__form_placeholders": {
+        "name": "Your Name",
+        "email": "Your Email",
+        "description": "Describe your question..."
+      },
+      "faqs__form_button": "Send",
+      "faqs__items": [
+        {
+          "title": "How do I open a trading account?",
+          "description": "To open a trading account, simply sign up, verify your identity, and choose your preferred account type."
+        },
+        {
+          "title": "What is the minimum deposit required?",
+          "description": "The minimum deposit varies depending on your account type. Please check our account types section for specific details."
+        },
+        {
+          "title": "Can I try the platform without risk?",
+          "description": "Yes, we offer demo accounts where you can practice trading with virtual funds before committing real money."
+        },
+        {
+          "title": "Is my money safe with your platform?",
+          "description": "Absolutely. We use industry-standard security measures and keep client funds in segregated accounts."
+        },
+        {
+          "title": "What trading instruments are available?",
+          "description": "We offer a wide range of instruments including Forex, CFDs, commodities, indices, and cryptocurrencies."
+        }
+      ],
+      "accounts__badge_recommended": "Recommended",
       "helpSection": "Need Help? Visit our",
       "helpLinkText": "Help Section"
     },
-
+    "pages": {
+      "company": {
+        "about": {
+          "title": "About the company",
+          "intro_1": {
+            "highlight": "The International financial holding Ester Holdings Inc.",
+            "text": "— is a stable company highly efficient management."
+          },
+          "intro_2": "Company Ester, opened for everything new, is a leader in forming and supporting high standards of work for all financial market.",
+          "intro_3": "Our peculiarity — profitable trading conditions, high quality of servicing and legal security.",
+          "intro_4": "In the first place company puts successful activity of its customers. It is the main criteria of our success.",
+          "intro_5": {
+            "highlight": "Mission of the company Ester",
+            "text": "— to provide its customers with knowledge and advisory services which guarantee them welfare. We are the universal financial company, which supports high quality of our work on a stable base."
+          },
+          "business_model_title": "Business-model",
+          "business_model_subtitle": "Business-model of the company is built on transparent and trusting relationships with a client.",
+          "business_model_list": [
+            "The company receives quotes on ECN-platforms from the leading banks-suppliers of liquidity and from the best prices forms quotes currents for customers.",
+            "In the trading terminal a customer can see and trade at the best prices bid and ask by each financial tool.",
+            "As a result of customer's order the prices of that supplier of liquidity are executed, who offers at the present moment the best price of purchase or sale.",
+            "Our Prime Broker makes clearing (mutual recognition of liabilities) between the Company and banks-suppliers of liquidity."
+          ],
+          "activity_title": "Activity area",
+          "activity_list": [
+            "Providing access to the customers to conduct trading operations with foreign currencies and other financial tools through Internet.",
+            "Consultations on issues of management of investors assets and investment activity.",
+            "Informational and analytical services.",
+            "Qualified trading training."
+          ]
+        },
+        "career": {
+          "title": "Career",
+          "subtitle": "At the present moment the company is seeking the following specialists:",
+          "positions": [
+            "SALES MANAGER",
+            "HEADMASTER OF THE DEPARTMENT OF ANALYTICS"
+          ],
+          "cta": "IF YOU ARE READY TO DYNAMIC GROWTH, YOU ARE AMBITIOUS AND TALENTLY, SEND YOUR SUMMARY.",
+          "button": "SEND CV"
+        },
+        "news": {
+          "title": "Company News",
+          "items": [
+            {
+              "title": "NVIDIA shares soared 15% after the report",
+              "subtitle": "Chipmaker NVIDIA (NVDA) presented a quarterly report that exceeded all Wall Street expectations...",
+              "time": "15 min"
+            },
+            {
+              "title": "Tesla announced a 1:10 stock split – quotes rose by 12%",
+              "subtitle": "The news sent shares up 12%, with Tesla now trading at $1,180 per share.",
+              "time": "30 min"
+            },
+            {
+              "title": "Bitcoin crashes 12% after SEC announces ban on stablecoins",
+              "subtitle": "The US Securities and Exchange Commission (SEC) made a surprise announcement introducing new...",
+              "time": "1 hour ago"
+            },
+            {
+              "title": "Trading strategies",
+              "subtitle": "Sorry, this entry is only available in Russian.",
+              "time": "17.04.2024 | 04:04 PM"
+            }
+          ],
+          "button": "Learn more"
+        },
+        "contacts": {
+          "title": "Contacts",
+          "office_title": "Head Office",
+          "office_name": "Ester Holdings Ltd",
+          "office_address": "Ground Floor, The Sotheby Building, Rodney Village, Rodney Bay, Gros-Islet, Saint Lucia",
+          "office_registration": "Under registered number 2023-00477",
+          "support_label": "Service of technical support:",
+          "support_email": "support{'@'}esterholdings.com",
+          "finance_label": "Financial service:",
+          "finance_email": "finance{'@'}esterholdings.com",
+          "marketing_label": "Marketing service:",
+          "marketing_email": "marketing{'@'}esterholdings.com"
+        },
+        "documents": {
+          "title": "Documents",
+          "intro": "All interaction process with Ester Holdings Inc. is regulated by standard documents",
+          "regulations_title": "QUOTES REGULATIONS",
+          "regulations_subtitle": "Regulations fix:",
+          "regulations_list": [
+            "terms, used in trading operations of the customer;",
+            "principles of margin trading;",
+            "rules of positions opening/closing, arrangement/removal, changing and fulfillment of pending orders;",
+            "order of the customer authorization, as well as order of protocolling of Customer operations in the trading system MetaTrader 4;",
+            "procedure for setting disputes, etc."
+          ],
+          "contract_title": "Contract",
+          "contract_description": "Contract contain rules of cooperation of the customer and Ester Holdings Inc. Parties liabilities as for fulfillment of their obligations are defined in it.",
+          "button": "DOWNLOAD"
+        }
+      },
+      "partnership": {
+        "title": "Partnership",
+        "subtitle": "Variants of partnership",
+        "button_agent": "AGENT PROGRAM",
+        "button_franchising": "FRANCHISING",
+        "intro_1": {
+          "highlight": "Become a partner of Ester and get income together with brand"
+        },
+        "intro_2": {
+          "highlight": "Ester Holdings Inc.",
+          "text": "— stable company with highly efficient management. Company Ester Holdings is open to everything new, is a leader in formation and supporting high standards of work for the whole financial market."
+        },
+        "intro_3": "We offer the opportunity to build own business under brand of the International company Ester Holdings in the sphere of internet-trading. Hurry up to be the first in your city, open the office of Ester Holdings, and get the most profitable conditions of cooperation, and the main important, high level of income.",
+        "offer_title": "We offer you",
+        "offer_list": [
+          "to work under our brand;",
+          "ready-made model, giving income;",
+          "technical solutions for comfortable work;",
+          "profitable conditions of cooperation;",
+          "technical support by opening representative offices;",
+          "24/7 support from our best specialists."
+        ],
+        "agent_title": "Agent program",
+        "agent_description": "Get income from trading activity of involved customers! It is easy nowadays, thanks to dynamically growing number of Internet users. The most important priority of the Company Ester Holdings by that is high level of servicing quality and forming of long term relations. That is what will allow you not being a participant of the market Forex, to get constant income as commissions from trading activity of the involved members.",
+        "agent_how_title": "How does it work?",
+        "agent_how_list": [
+          "Bring new customers to us",
+          "They are registered and will earn money",
+          "You will get commissions from their profit"
+        ],
+        "agent_how_cta": "MORE CUSTOMERS – MORE PROFIT",
+        "franchising_title": "Franchising",
+        "franchising_description_1": "Partners of the company Ester Holdings receive comprehensive support and individual approach from the side of our experienced specialists. We can select solutions corresponding to your actual necessities and personal goals. Remember, that positive image and impeccable reputation of our Company also work for you.",
+        "franchising_description_2": "Franchising with Ester Holdings – is a opportunity to open an office of the company in your city and work under the brand of one of the biggest brokers in the world. You will get developed business technology and comprehensive support of our specialists.",
+        "franchising_business_title": "Opening your business with Ester Holdings:",
+        "franchising_business_list": [
+          "Company receives spread by realizing trading operations. You will % of spread of your customers.",
+          "Plus you will get all income from providing informational and advisory services, submitted in your office."
+        ],
+        "franchising_how_title": "How to do this?",
+        "franchising_how_list": [
+          "Send an application",
+          "We select for you the best solution",
+          "We help to introduce it",
+          "Conduct training and give support"
+        ],
+        "button_receive": "RECEIVE FRANCHISE",
+        "generate_income_title": "How IB generate income",
+        "register_ib_title": "Register IB/ Partnership"
+      },
+      "trading": {
+        "account_overview_title": "Account overview",
+        "account_replenishment_title": "Account replenishment",
+        "economic_calendar_title": "Economic Calendar",
+        "for_investor_title": "For investor",
+        "for_trader_title": "For trader",
+        "market_instruments_title": "Tools",
+        "market_instruments_text": [
+          "All currency pairs spreads in trading terminal of Ester Holdings company are interbank. Spreads are formed with the help of the trading aggregator, which chooses the best prices, from liquidity providers at each current moment. We provide the very best liquidity at Forex market. Swap means a payment by market participants to roll a position over to the next day.",
+          "The process of transfer of open positions to the next day is carried out for all positions that remain open at the 23:59:59 to 00:00:00 time as measured by the Company server. For the transfer of a position to the next day, the Customer account may be credited or debited swaps on such positions.",
+          "The sizes of the swaps and the method of their crediting/debiting are stipulated in the respective specifications.",
+          "During the bankroller period from 23:55 to 00:05 (time GMT) liquidity is reduced, it is possible to increase the spread and the processing time of the client's orders.",
+          "Your access to and use of the website and/or platform constitutes your acceptance of these Trading Conditions and any other legal notices and statements contained on same. Ester may modify these Trading Conditions at any time and without prior notice. Your continued access to and use of the website and/or platform constitutes your acceptance of these Trading Conditions as modified."
+        ],
+        "market_news_title": "Market News",
+        "market_news_items": [
+          {
+            "title": "How to Effectively Manage Risks in Trading",
+            "subtitle": "Trading is undeniably an exciting and potentially profitable activity. However, success in this field requires not only the ability to analyze the market and …",
+            "time": "4.06.2024 | 01:40 PM"
+          },
+          {
+            "title": "When to switch from demo to real account?",
+            "subtitle": "Sorry, this entry is only available in Russian.",
+            "time": "17.05.2024 | 11:00 AM"
+          },
+          {
+            "title": "Legendary investor Warren Buffett",
+            "subtitle": "Sorry, this entry is only available in Russian.",
+            "time": "5.05.2024 | 11:00 AM"
+          },
+          {
+            "title": "Trading strategies",
+            "subtitle": "Sorry, this entry is only available in Russian.",
+            "time": "17.04.2024 | 04:04 PM"
+          }
+        ],
+        "mt4_title": "МТ4",
+        "mt4_subtitle": "Download trading terminal and start earning",
+        "mt4_button": "DOWNLOAD MT-4",
+        "mt4_about_title": "About platform",
+        "mt4_about_text": "MetaTrader 4 – the most popular trading platform in the world. Thanks to many years' experience of work with this platform and active participation in its development, we provide you with the most profitable and comfortable conditions.",
+        "mt4_about_highlight": "Because MetaTrader 4 is:",
+        "mt4_features": [
+          "easy and understandable interface with a variety of tools of technical analysis;",
+          "opportunity to trade from smart phones, Ipads and PDAs;",
+          "built-in programming language MQL4, allowing to create own trade advisors and indicators;",
+          "access to intebank liquidity with the help of the technology МТ4 Bridge, execution without re-quotes (No Dealing Desk);",
+          "financial news from Dow Jones"
+        ],
+        "mt4_requirements_title": "SYSTEM REQUIREMENTS:",
+        "mt4_requirements_text": "Windows XP and higher.",
+        "mt4_requirements_link": "Instructions for Mac OS",
+        "platform_title": "Platform",
+        "traders_blog_title": "Traders Blog",
+        "traders_blog_items": [
+          {
+            "title": "How to Effectively Manage Risks in Trading",
+            "subtitle": "Trading is undeniably an exciting and potentially profitable activity. However, success in this field requires not only the ability to analyze the market and …",
+            "time": "4.06.2024 | 01:40 PM"
+          },
+          {
+            "title": "When to switch from demo to real account?",
+            "subtitle": "Sorry, this entry is only available in Russian.",
+            "time": "17.05.2024 | 11:00 AM"
+          },
+          {
+            "title": "Legendary investor Warren Buffett",
+            "subtitle": "Sorry, this entry is only available in Russian.",
+            "time": "5.05.2024 | 11:00 AM"
+          },
+          {
+            "title": "Trading strategies",
+            "subtitle": "Sorry, this entry is only available in Russian.",
+            "time": "17.04.2024 | 04:04 PM"
+          }
+        ],
+        "trading_conditions_title": "Trading Conditions",
+        "trading_hub_title": "Tradings HUB",
+        "tandem_trading_title": "Tandem Trading",
+        "withdrawal_funds_title": "Withdrawal of funds"
+      }
+    },
     "footer": {
       "description": "The main goal of Ester is to create the best and most transparent conditions for retail and corporate traders.",
       "trading": {
@@ -325,7 +685,10 @@
       },
       "partnership": {
         "title": "Partnership",
-        "items": ["Register IB/ Partnership", "How IB generate income"]
+        "items": [
+          "Register IB/ Partnership",
+          "How IB generate income"
+        ]
       },
       "company": {
         "title": "Company",
@@ -348,7 +711,6 @@
       }
     }
   },
-
   "cabinet": {
     "menu": {
       "dashboard": "Dashboard",
@@ -359,7 +721,6 @@
       "support": "Support",
       "settings": "Settings"
     },
-
     "dashboard": {
       "title": "Dashboard",
       "accountVerification": {
@@ -389,7 +750,6 @@
         }
       }
     },
-
     "billing": {
       "title": "Billing",
       "create": "Create new payment",
@@ -409,7 +769,6 @@
       },
       "panel-title": "Add new Admin"
     },
-
     "payments": {
       "title": "Payment details",
       "search": "Search",
@@ -426,7 +785,6 @@
         "next": "Next"
       }
     },
-
     "profile": {
       "components": {
         "tab-change-password": {
@@ -443,7 +801,6 @@
           "button": "Save new password",
           "success": "Password was successfully updated!"
         },
-
         "tab-general": {
           "labels": {
             "email": "Email",
@@ -458,7 +815,6 @@
             "address": "Address",
             "postal_code": "Postal code"
           },
-
           "placeholders": {
             "email": "example1test.com",
             "first_name": "John",
@@ -475,7 +831,6 @@
           "button": "Save and send to verification",
           "success": "User data successfully updated and sent for verification!"
         },
-
         "tab-user-documents": {
           "buttons": {
             "choose": "Choose file",
@@ -491,7 +846,6 @@
             "size": "Max size is 2MB"
           }
         },
-
         "tab-user-photo": {
           "buttons": {
             "choose": "Choose file",
@@ -520,7 +874,6 @@
         "title": "Profile"
       }
     },
-
     "accounts": {
       "account": {
         "title": "Account"
@@ -541,7 +894,6 @@
         "prev": "Prev",
         "next": "Next"
       },
-
       "accounts-form": {
         "title": "Open new account",
         "fields": {
@@ -554,7 +906,6 @@
         }
       }
     },
-
     "referrals": {
       "components": {},
       "index": {
@@ -567,7 +918,6 @@
       }
     }
   },
-
   "admin": {
     "menu": {
       "dashboard": "Dashboard",
@@ -582,7 +932,6 @@
       "mail": "Mails",
       "access": "Access"
     },
-
     "access": {
       "components": {
         "admins-panel": {
@@ -687,7 +1036,6 @@
         "subtitle": "( Roles and Permissions )"
       }
     },
-
     "accounts": {
       "components": {
         "accounts-panel": {
@@ -751,14 +1099,12 @@
         "subtitle": "List of accounts"
       }
     },
-
     "clients": {
       "components": {
         "clients-panel": {
           "title": "# Clients",
           "addTitle": "Add new Client",
           "editTitle": "Edit Client",
-
           "columns": {
             "id": "ID",
             "email": "Email",
@@ -769,7 +1115,6 @@
             "options": "Actions"
           }
         },
-
         "clients-panel-add-new": {
           "labels": {
             "email": "Email",
@@ -798,7 +1143,6 @@
           },
           "submit": "Create new & Save"
         },
-
         "clients-panel-edit": {
           "labels": {
             "name": "Name",
@@ -810,24 +1154,18 @@
           },
           "submit": "Update & Save"
         },
-
         "clients-panel-search": {
           "placeholder": "Search clients..."
         }
       },
-
       "index": {
         "title": "Clients",
         "subtitle": "List of clients"
       }
     },
-
     "dashboard": {},
-
     "profile": {},
-
     "referral": {},
-
     "settings": {
       "title": "Settings",
       "tabs": {
@@ -848,13 +1186,11 @@
           "key": "Key",
           "value": "Value (Seconds)"
         },
-
         "general": {
           "button": "Upload"
         }
       }
     },
-
     "support": {
       "title": "Support"
     }
