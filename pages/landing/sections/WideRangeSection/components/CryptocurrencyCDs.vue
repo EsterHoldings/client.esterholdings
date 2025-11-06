@@ -2,21 +2,30 @@
   <div class="cryptocurrency h-[366px]">
     <UiContainer class="border !p-0 h-full">
       <div
-          class="wrapper rounded-[10px] h-full"
-          :class="{ 'light-theme': themeStore.currentTheme === 'light' }"
-      >
+        class="wrapper rounded-[10px] h-full"
+        :class="{ 'light-theme': themeStore.currentTheme === 'light' }">
         <div class="cryptocurrency__content p-10">
-          <UiTextH3 class="cryptocurrency__title">{{ t("landing.sections.wide_range_tabs.CryptocurrencyCDs.title") }}</UiTextH3>
-          <UiTextH5 class="cryptocurrency__text">{{ t("landing.sections.wide_range_tabs.CryptocurrencyCDs.description") }}</UiTextH5>
+          <UiTextH3 class="cryptocurrency__title">{{
+            t("landing.sections.wide_range_tabs.CryptocurrencyCDs.title")
+          }}</UiTextH3>
+          <UiTextH5 class="cryptocurrency__text">{{
+            t("landing.sections.wide_range_tabs.CryptocurrencyCDs.description")
+          }}</UiTextH5>
           <div>
             <Nuxt-Link to="market-instruments?index=0">
-              <UiButtonDefault state="primary">{{ t("landing.sections.wide_range_tabs.CryptocurrencyCDs.btn") }}</UiButtonDefault>
+              <UiButtonDefault state="primary">{{
+                t("landing.sections.wide_range_tabs.CryptocurrencyCDs.btn")
+              }}</UiButtonDefault>
             </Nuxt-Link>
           </div>
         </div>
 
         <div class="cryptocurrency__img-wrapper">
-          <UiImage :fitContain="true" :fitPosition="'right'" src="/static/bitcion_image.webp" class="cryptocurrency__img" />
+          <UiImage
+            :fitContain="true"
+            :fitPosition="'right'"
+            src="/static/bitcion_image.webp"
+            class="cryptocurrency__img" />
         </div>
       </div>
     </UiContainer>
@@ -24,174 +33,189 @@
 </template>
 
 <script setup lang="ts">
-import UiTextH3 from "~/components/ui/UiTextH3.vue";
-import UiTextH5 from "~/components/ui/UiTextH5.vue";
-import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import UiImage from "~/components/ui/UiImage.vue";
-import UiContainer from "~/components/ui/UiContainer.vue";
+  import UiTextH3 from "~/components/ui/UiTextH3.vue";
+  import UiTextH5 from "~/components/ui/UiTextH5.vue";
+  import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+  import UiImage from "~/components/ui/UiImage.vue";
+  import UiContainer from "~/components/ui/UiContainer.vue";
 
-import { useI18n } from "vue-i18n";
-import { useThemeStore } from "~/stores/themeStore";
-const { t } = useI18n();
+  import { useI18n } from "vue-i18n";
+  import { useThemeStore } from "~/stores/themeStore";
+  const { t } = useI18n();
 
-const themeStore = useThemeStore();
+  const themeStore = useThemeStore();
 </script>
 
 <style lang="scss" scoped>
-.cryptocurrency {
-  padding: 10px;
-  width: 100%;
+  .cryptocurrency {
+    padding: 10px;
+    width: 100%;
 
-  &__img {
-    position: relative;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    object-fit: contain;
-    width: 585px;
-    z-index: 10;
-    border-radius: 13px;
+    &__img {
+      position: relative;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      object-fit: contain;
+      width: 585px;
+      z-index: 10;
+      border-radius: 13px;
 
-    &-wrapper {
+      &-wrapper {
+        overflow: hidden;
+      }
+    }
+
+    &__content {
+      max-width: 500px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .border {
+      width: auto;
+      border: 2px solid transparent;
+      border-radius: 14px;
+      background:
+        linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+        linear-gradient(135deg, #1b63ff 0%, #011644 100%) border-box;
+    }
+
+    .wrapper {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      background-color: var(--ui-background);
+      border: 2px solid transparent;
+      border-radius: 13px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 350px;
+        height: 350px;
+        background: rgba(247, 87, 9, 0.9);
+        filter: blur(100px);
+        top: 270px;
+        right: -200px;
+        z-index: 1;
+        animation: pulse 3s infinite alternate ease-in-out;
+        box-shadow:
+          inset 0 -50px 50px -20px var(--ui-background),
+          inset 0 50px 50px -20px var(--ui-background);
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 350px;
+        height: 350px;
+        background: rgba(0, 55, 174, 0.9);
+        filter: blur(100px);
+        top: 140px;
+        right: 260px;
+        z-index: 1;
+        animation: pulse 3s infinite alternate ease-in-out;
+        box-shadow:
+          inset 0 -50px 50px -20px var(--ui-background),
+          inset 0 50px 50px -20px var(--ui-background);
+      }
+    }
+
+    &__title {
+      color: var(--ui-text-main);
+    }
+
+    &__text {
+      color: var(--ui-text-secondary);
+      white-space: pre-line;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.1;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+  }
+
+  @media (max-width: 1199px) {
+    .wrapper {
+      //padding: 40px !important;
+    }
+    .cryptocurrency__img {
+      //width: 68%;
+      //top: 0;
+      //right: -50px;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .cryptocurrency {
+      padding: 0 !important;
+      height: auto !important;
+    }
+
+    .border {
+      // border-left: none !important;
+      // border-right: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+    }
+
+    .cryptocurrency__title {
+      font-size: 26px;
+    }
+
+    .cryptocurrency__text {
+      font-size: 14px;
+      br {
+        display: none;
+      }
+    }
+    .wrapper {
+      padding: 0 !important;
+      display: flex;
+      flex-direction: column;
+      gap: 0 !important;
+      border-radius: 0 !important;
+
+      &::after {
+        display: none;
+      }
+
+      &::before {
+        display: none;
+      }
+    }
+
+    .cryptocurrency__content {
+      order: 2;
+      z-index: 1;
+      background: var(--ui-background);
+      max-width: 100%;
+    }
+
+    .cryptocurrency__img-wrapper {
+      order: 1;
+      width: 100%;
+      height: 280px;
       overflow: hidden;
     }
-  }
 
-  &__content {
-    max-width: 500px;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-  }
-
-  .border {
-    width: auto;
-    border: 2px solid transparent;
-    border-radius: 14px;
-    background:
-        linear-gradient(#0b0f1a, #0b0f1a) padding-box,
-        linear-gradient(135deg, #1B63FF 0%, #011644 100%) border-box;
-  }
-
-  .wrapper {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    background-color: var(--ui-background);
-    border: 2px solid transparent;
-    border-radius: 13px;
-
-    &::after {
-      content: "";
-      position: absolute;
-      width: 350px;
-      height: 350px;
-      background: rgba(247, 87, 9, 0.9);
-      filter: blur(100px);
-      top: 270px;
-      right: -200px;
-      z-index: 1;
-      animation: pulse 3s infinite alternate ease-in-out;
-      box-shadow: inset 0 -50px 50px -20px var(--ui-background),
-      inset 0 50px 50px -20px var(--ui-background);
-    }
-
-    &::before {
-      content: "";
-      position: absolute;
-      width: 350px;
-      height: 350px;
-      background: rgba(0, 55, 174, 0.9);
-      filter: blur(100px);
-      top: 140px;
-      right: 260px;
-      z-index: 1;
-      animation: pulse 3s infinite alternate ease-in-out;
-      box-shadow: inset 0 -50px 50px -20px var(--ui-background),
-      inset 0 50px 50px -20px var(--ui-background);
+    .cryptocurrency__img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
+      position: relative;
     }
   }
-
-  &__title {
-    color: var(--ui-text-main);
-  }
-
-  &__text {
-    color: var(--ui-text-secondary);
-    white-space: pre-line;
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.1;
-  }
-  100% {
-    transform: scale(1.2);
-    opacity: 0.8;
-  }
-}
-
-@media (max-width: 1199px) {
-  .wrapper {
-    //padding: 40px !important;
-  }
-  .cryptocurrency__img {
-    //width: 68%;
-    //top: 0;
-    //right: -50px;
-  }
-}
-
-@media (max-width: 991px) {
-  .cryptocurrency {
-    padding: 0 !important;
-  }
-
-  .cryptocurrency__title {
-    font-size: 26px;
-  }
-
-  .cryptocurrency__text {
-    br {
-      display: none;
-    }
-  }
-  .wrapper {
-    padding: 0 !important;
-    display: flex;
-    flex-direction: column;
-    gap: 25px !important;
-
-    &::after {
-      top: 0 !important;
-      width: 200px !important;
-      height: 200px !important;
-    }
-
-    &::before {
-      top: 0 !important;
-      width: 200px !important;
-      height: 200px !important;
-    }
-  }
-
-  .cryptocurrency__content {
-    order: 2;
-    backdrop-filter: blur(3px);
-  }
-
-  .cryptocurrency__img {
-    z-index: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-  }
-}
 </style>
-
