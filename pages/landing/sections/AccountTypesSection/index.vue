@@ -1,129 +1,121 @@
 <template>
   <section class="py-10 md:py-16">
-    <div class="w-full max-w-[1400px] mx-auto">
-      <UiTextH3
-          class="text-[var(--ui-text-main)] text-center mb-10 md:mb-[70px]"
-      >
-        {{ t('landing.sections.accounts__title') }}
+    <div class="w-full max-w-[1400px] mx-auto px-4">
+      <UiTextH3 class="text-[var(--ui-text-main)] text-center mb-10 md:mb-[70px]">
+        {{ t("landing.sections.accounts__title") }}
       </UiTextH3>
 
-      <div class="relative">
-        <div class="px-10 sm:px-6">
-          <div class="px-10">
-            <div
-                ref="scrollRef"
-                class="flex items-center gap-3 sm:gap-4 md:gap-6
-                   overflow-x-auto pb-5 sm:pb-6
-                   snap-x snap-mandatory scroll-smooth
-                   hide-scrollbar
-                   touch-pan-y overscroll-x-contain"
-                tabindex="0"
-                aria-label="Account cards horizontal scroll"
-                @wheel="onWheel"
-            >
-              <TheCard
-                  :class="{
-                    'ml-10': index === 0,
-                    'mr-10': index === accountCards.length - 1,
-                  }"
-                  v-for="(card, index) in accountCards"
-                  :key="index"
-                  :type="card.type"
-                  :title="card.title"
-                  :subtitle="card.subtitle"
-                  :description="card.description"
-                  :features="card.features"
-                  :button-text="card.buttonText"
-                  :is-recommended="card.isRecommended"
-                  class="snap-start shrink-0"
-              />
-            </div>
-          </div>
-        </div>
+      <div class="swiper-container-wrapper">
+        <swiper
+          :slides-per-view="1.15"
+          :initial-slide="0"
+          :breakpoints="breakpoints"
+          class="account-cards-swiper">
+          <swiper-slide
+            v-for="(card, index) in accountCards"
+            :key="index">
+            <TheCard
+              :type="card.type"
+              :title="card.title"
+              :subtitle="card.subtitle"
+              :description="card.description"
+              :features="card.features"
+              :button-text="card.buttonText"
+              :is-recommended="card.isRecommended" />
+          </swiper-slide>
+        </swiper>
       </div>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import {useI18n} from 'vue-i18n'
-import {computed, ref, onMounted, onBeforeUnmount} from 'vue'
-import UiTextH3 from '~/components/ui/UiTextH3.vue'
-import UiContainer from '~/components/ui/UiContainer.vue'
-import TheCard from '~/components/block/TheCard.vue'
+  import { useI18n } from "vue-i18n";
+  import { computed } from "vue";
+  import { Swiper, SwiperSlide } from "swiper/vue";
+  import "swiper/css";
+  import UiTextH3 from "~/components/ui/UiTextH3.vue";
+  import TheCard from "~/pages/landing/sections/AccountTypesSection/components/TheCard.vue";
 
-// <!--      [mask-image:linear-gradient(to_right,_transparent_0,_#000_32px,_#000_calc(100%_-_32px),_transparent_100%)]-->
-// <!--      [-webkit-mask-image:linear-gradient(to_right,_transparent_0,_#000_32px,_#000_calc(100%_-_32px),_transparent_100%)]"-->
+  const { t, tm } = useI18n();
 
-const {t, tm} = useI18n()
+  const breakpoints = {
+    320: {
+      slidesPerView: 1.15,
+    },
+    640: {
+      slidesPerView: 2.15,
+    },
+    768: {
+      slidesPerView: 2.2,
+    },
+    1024: {
+      slidesPerView: 3.2,
+    },
+    1280: {
+      slidesPerView: 4.2,
+    },
+  };
 
-const accountCards = computed(() => {
-  const options = tm('landing.sections.accounts__options') as any[]
-  return Array.isArray(options)
+  const accountCards = computed(() => {
+    const options = tm("landing.sections.accounts__options") as any[];
+    return Array.isArray(options)
       ? options.map((option: any, index: number) => ({
-        type: t(`landing.sections.accounts__options[${index}].type`) as
-            | 'demo'
-            | 'standard'
-            | 'pro'
-            | 'tandem'
-            | 'islamic',
-        title: t(`landing.sections.accounts__options[${index}].title`),
-        subtitle: t(`landing.sections.accounts__options[${index}].subtitle`),
-        description: t(
-            `landing.sections.accounts__options[${index}].description`,
-        ),
-        features: (tm(
-            `landing.sections.accounts__options[${index}].features`,
-        ) as any[]).map((_, fIndex) =>
-            t(
-                `landing.sections.accounts__options[${index}].features[${fIndex}]`,
-            ),
-        ),
-        buttonText: t(
-            `landing.sections.accounts__options[${index}].buttonText`,
-        ),
-        isRecommended: Boolean(option.isRecommended),
-      }))
-      : []
-})
-
-const scrollRef = ref<HTMLElement | null>(null)
-
-function onWheel(e: WheelEvent) {
-  const el = e.currentTarget as HTMLElement
-  const mainlyVertical = Math.abs(e.deltaY) > Math.abs(e.deltaX)
-  if (!mainlyVertical) return
-
-  const maxScrollLeft = el.scrollWidth - el.clientWidth
-  const atStart = el.scrollLeft <= 0
-  const atEnd = el.scrollLeft >= maxScrollLeft
-
-  if ((e.deltaY < 0 && !atStart) || (e.deltaY > 0 && !atEnd)) {
-    e.preventDefault()
-    el.scrollLeft += e.deltaY
-  }
-}
-
-onMounted(() => {
-  const el = scrollRef.value
-  if (!el) return
-  el.addEventListener('wheel', onWheel as EventListener, {passive: false})
-})
-
-onBeforeUnmount(() => {
-  const el = scrollRef.value
-  if (!el) return
-  el.removeEventListener('wheel', onWheel as EventListener)
-})
+          type: t(`landing.sections.accounts__options[${index}].type`) as
+            | "demo"
+            | "standard"
+            | "pro"
+            | "tandem"
+            | "islamic",
+          title: t(`landing.sections.accounts__options[${index}].title`),
+          subtitle: t(`landing.sections.accounts__options[${index}].subtitle`),
+          description: t(`landing.sections.accounts__options[${index}].description`),
+          features: (tm(`landing.sections.accounts__options[${index}].features`) as any[]).map((_, fIndex) =>
+            t(`landing.sections.accounts__options[${index}].features[${fIndex}]`)
+          ),
+          buttonText: t(`landing.sections.accounts__options[${index}].buttonText`),
+          isRecommended: Boolean(option.isRecommended),
+        }))
+      : [];
+  });
 </script>
 
 <style scoped>
-.hide-scrollbar {
-  scrollbar-width: none;
-}
+  .swiper-container-wrapper {
+    position: relative;
+    width: 100%;
+  }
 
-.hide-scrollbar::-webkit-scrollbar {
-  height: 0;
-  width: 0;
-}
+  .swiper-container-wrapper::before,
+  .swiper-container-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .swiper-container-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, #000b1f 0%, transparent 100%);
+  }
+
+  .swiper-container-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, #000b1f 0%, transparent 100%);
+  }
+
+  .account-cards-swiper {
+    width: 100%;
+  }
+
+  :deep(.swiper-slide) {
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1px !important;
+  }
 </style>
