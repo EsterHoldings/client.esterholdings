@@ -1,6 +1,6 @@
 <template>
   <section class="wide_range_section">
-    <UiTextH3>{{ t('landing.sections.wide_range__title') }}</UiTextH3>
+    <UiTextH3>{{ t("landing.sections.wide_range__title") }}</UiTextH3>
 
     <div class="wide_range_section__tabs">
       <TabsDefault
@@ -22,52 +22,52 @@
 </template>
 
 <script setup lang="ts">
-  import { useI18n } from 'vue-i18n';
-  import { computed, ref } from 'vue';
+  import { useI18n } from "vue-i18n";
+  import { computed, ref } from "vue";
   const { t } = useI18n();
 
-  import UiTextH3 from '~/components/ui/UiTextH3.vue';
+  import UiTextH3 from "~/components/ui/UiTextH3.vue";
 
-  import TabsDefault from '~/components/block/tabs/TabsDefault.vue';
+  import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
 
-  import Forex from './components/Forex.vue';
-  import ETFS from './components/ETFS.vue';
-  import Energy from './components/Energy.vue';
-  import CryptocurrencyCDs from './components/CryptocurrencyCDs.vue';
-  import Indices from './components/Indices.vue';
-  import Shares from './components/Shares.vue';
-  import Metals from './components/Metals.vue';
+  import Forex from "./components/Forex.vue";
+  import ETFS from "./components/ETFS.vue";
+  import Energy from "./components/Energy.vue";
+  import CryptocurrencyCDs from "./components/CryptocurrencyCDs.vue";
+  import Indices from "./components/Indices.vue";
+  import Shares from "./components/Shares.vue";
+  import Metals from "./components/Metals.vue";
 
   const activeTabIndex = ref(0);
 
   const tabsList = computed(() => {
     return [
       {
-        label: t('landing.sections.wide_range__categories[0].label'),
+        label: t("landing.sections.wide_range__categories[0].label"),
         component: Forex,
       },
       {
-        label: t('landing.sections.wide_range__categories[1].label'),
+        label: t("landing.sections.wide_range__categories[1].label"),
         component: Metals,
       },
       {
-        label: t('landing.sections.wide_range__categories[2].label'),
+        label: t("landing.sections.wide_range__categories[2].label"),
         component: CryptocurrencyCDs,
       },
       {
-        label: t('landing.sections.wide_range__categories[3].label'),
+        label: t("landing.sections.wide_range__categories[3].label"),
         component: Indices,
       },
       {
-        label: t('landing.sections.wide_range__categories[4].label'),
+        label: t("landing.sections.wide_range__categories[4].label"),
         component: Shares,
       },
       {
-        label: t('landing.sections.wide_range__categories[5].label'),
+        label: t("landing.sections.wide_range__categories[5].label"),
         component: Energy,
       },
       {
-        label: t('landing.sections.wide_range__categories[6].label'),
+        label: t("landing.sections.wide_range__categories[6].label"),
         component: ETFS,
       },
     ];
@@ -99,7 +99,9 @@
 
   .slide-short-enter-active,
   .slide-short-leave-active {
-    transition: opacity 0.1s ease, transform 0.1s ease;
+    transition:
+      opacity 0.1s ease,
+      transform 0.1s ease;
   }
 
   .slide-short-enter-from {
@@ -134,6 +136,8 @@
 
       &__content {
         margin-top: 24px;
+        margin-left: -20px;
+        margin-right: -20px;
       }
     }
   }
@@ -161,7 +165,6 @@
 
   @media (max-width: 575px) {
     .wide_range_section__content {
-      padding: 10px;
     }
   }
 
