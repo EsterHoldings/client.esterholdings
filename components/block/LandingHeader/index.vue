@@ -110,7 +110,6 @@
                 :key="`${link.key}-${activeLink}`"
                 :name="link.name"
                 :linkKey="link.key"
-                :path="link.path"
                 :headerItems="headerItems"
                 :activeLink="activeLink"
                 @click="handleClick(link.key)" />
@@ -205,6 +204,13 @@
 
   const activeLink = ref("");
   provide("stateLink", activeLink);
+  const closeMobileMenu = () => {
+    isMobileMenuOpen.value = false;
+    document.body.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.width = "";
+  };
+  provide("closeMobileMenu", closeMobileMenu);
   const headerItems = ref();
   const isMobileMenuOpen = ref(false);
   const menuRef = ref(null);

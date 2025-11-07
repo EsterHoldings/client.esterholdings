@@ -3,24 +3,23 @@
     <UiTextH6
       class="menu-category_title"
       :class="{ 'menu-category_title_mobile': props.isMobile }"
-      @click="activeLink = ''"
-    >
+      @click="handleLinkClick">
       <NuxtLink :to="props.titles.path">
         {{ props.titles.name }}
       </NuxtLink>
       <div
         class="menu-category_line"
-        :class="{ 'menu-category_line_mobile': props.isMobile }"
-      ></div>
+        :class="{ 'menu-category_line_mobile': props.isMobile }"></div>
     </UiTextH6>
 
     <UiTextH5
       class="menu-category_link"
       :class="{ 'menu-category_link_mobile': props.isMobile }"
       v-for="link in props.items"
-      :key="link.name"
-    >
-      <NuxtLink :to="link.path" @click="activeLink = ''">
+      :key="link.name">
+      <NuxtLink
+        :to="link.path"
+        @click="handleLinkClick">
         {{ link.name }}
       </NuxtLink>
     </UiTextH5>
@@ -28,71 +27,79 @@
 </template>
 
 <script setup>
-import { inject } from "vue";
-import UiTextH6 from "~/components/ui/UiTextH6.vue";
-import UiTextH5 from "~/components/ui/UiTextH5.vue";
+  import { inject } from "vue";
+  import UiTextH6 from "~/components/ui/UiTextH6.vue";
+  import UiTextH5 from "~/components/ui/UiTextH5.vue";
 
-const props = defineProps({
-  titles: Object,
-  items: Array,
-  isMobile: {
-    type: Boolean,
-    default: false,
-  },
-});
+  const props = defineProps({
+    titles: Object,
+    items: Array,
+    isMobile: {
+      type: Boolean,
+      default: false,
+    },
+  });
 
-const activeLink = inject("stateLink");
+  const activeLink = inject("stateLink");
+  const closeMobileMenu = inject("closeMobileMenu", () => {});
+
+  const handleLinkClick = () => {
+    activeLink.value = "";
+    if (props.isMobile) {
+      closeMobileMenu();
+    }
+  };
 </script>
 
 <style lang="scss" scoped>
-.menu-category {
-  &_mobile {
-    width: 100%;
-  }
-
-  &_title {
-    color: #b8b8c3;
-
-    a {
-      color: inherit;
-    }
-
+  .menu-category {
     &_mobile {
-      color: var(--ui-primary-accent);
       width: 100%;
-      padding-top: 18px;
-      padding-bottom: 12px;
+    }
+
+    &_title {
+      color: #b8b8c3;
+
+      a {
+        color: inherit;
+      }
+
+      &_mobile {
+        color: var(--ui-primary-accent);
+        width: 100%;
+        padding-top: 18px;
+        padding-bottom: 12px;
+      }
+    }
+
+    &_line {
+      margin-top: 10px;
+      margin-bottom: 14px;
+      width: 180px;
+      height: 1px;
+      background: var(--color-stroke-ui);
+
+      &_mobile {
+        display: none;
+      }
+    }
+
+    &_link {
+      color: var(--ui-text-main);
+      margin-bottom: 8px;
+
+      a {
+        color: inherit;
+      }
+
+      &:hover {
+        transition: all 0.2s ease;
+        color: var(--ui-primary-accent);
+      }
+
+      &_mobile {
+        padding-left: 23px;
+      }
     }
   }
-
-  &_line {
-    margin-top: 10px;
-    margin-bottom: 14px;
-    width: 180px;
-    height: 1px;
-    background: var(--color-stroke-ui);
-
-    &_mobile {
-      display: none;
-    }
-  }
-
-  &_link {
-    color: var(--ui-text-main);
-    margin-bottom: 8px;
-
-    a {
-      color: inherit;
-    }
-
-    &:hover {
-      transition: all 0.2s ease;
-      color: var(--ui-primary-accent);
-    }
-
-    &_mobile {
-      padding-left: 23px;
-    }
-  }
-}
 </style>

@@ -1,14 +1,13 @@
 <template>
   <div class="header-mobile">
-    <NuxtLink
-      :to="props.path"
+    <div
       class="header__link"
       :class="{ header__link_active: props.linkKey === props.activeLink }">
       <UiTextH5>{{ props.name }}</UiTextH5>
 
       <UiIconChevronUp v-if="props.linkKey === props.activeLink" />
       <UiIconChevronDown v-else />
-    </NuxtLink>
+    </div>
 
     <div class="header__underline"></div>
 
@@ -33,17 +32,16 @@
 </template>
 
 <script setup>
-  import UiIconChevronDown from '~/components/ui/UiIconChevronDown.vue';
-  import UiIconChevronUp from '~/components/ui/UiIconChevronUp.vue';
-  import UiTextH5 from '~/components/ui/UiTextH5.vue';
-  import TradingMenu from './TradingMenu.vue';
-  import PartnershipMenu from './PartnershipMenu.vue';
-  import CompanyMenu from './CompanyMenu.vue';
+  import UiIconChevronDown from "~/components/ui/UiIconChevronDown.vue";
+  import UiIconChevronUp from "~/components/ui/UiIconChevronUp.vue";
+  import UiTextH5 from "~/components/ui/UiTextH5.vue";
+  import TradingMenu from "./TradingMenu.vue";
+  import PartnershipMenu from "./PartnershipMenu.vue";
+  import CompanyMenu from "./CompanyMenu.vue";
 
   const props = defineProps({
     name: String,
     linkKey: String,
-    path: String,
     headerItems: {
       type: Object,
       default: () => ({}),
