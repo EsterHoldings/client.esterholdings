@@ -131,18 +131,24 @@
             }
         },
         "sections": {
+            "advantages_title_before": "트레이더가",
+            "advantages_title_accent": "우리를 선택하는 이유",
             "advantages": [
                 {
                     "value": "10+",
                     "label": "업계 경력 연수"
                 },
                 {
-                    "value": "1,160,000+",
+                    "value": "1 160 000+",
                     "label": "고객"
                 },
                 {
                     "value": "5성급 평가",
                     "label": "고객 서비스"
+                },
+                {
+                    "value": "24/7",
+                    "label": "지원"
                 }
             ],
             "platform__title": "성공적인 외환 및 CFD 거래를 위한\n전설적인 플랫폼",

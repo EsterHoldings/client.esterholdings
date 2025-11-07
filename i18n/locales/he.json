@@ -131,18 +131,24 @@
             }
         },
         "sections": {
+            "advantages_title_before": "למה סוחרים",
+            "advantages_title_accent": "בוחרים בנו",
             "advantages": [
                 {
                     "value": "10+",
                     "label": "שנות ניסיון בתחום"
                 },
                 {
-                    "value": "1,160,000+",
+                    "value": "1 160 000+",
                     "label": "לקוחות"
                 },
                 {
                     "value": "דירוג 5*",
                     "label": "שירות לקוחות"
+                },
+                {
+                    "value": "24/7",
+                    "label": "תמיכה"
                 }
             ],
             "platform__title": "פלטפורמה אגדית למסחר\nמוצלח במט\"ח ו-CFD",

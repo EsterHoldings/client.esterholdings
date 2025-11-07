@@ -131,6 +131,8 @@
       }
     },
     "sections": {
+      "advantages_title_before": "Почему трейдеры",
+      "advantages_title_accent": "выбирают нас",
       "advantages": [
         {
           "value": "10+",
@@ -143,6 +145,10 @@
         {
           "value": "Рейтинг 5*",
           "label": "Служба поддержки"
+        },
+        {
+          "value": "24/7",
+          "label": "Поддержка"
         }
       ],
       "platform__title": "Легендарная платформа для успешной торговли на\n Forex и CFD",

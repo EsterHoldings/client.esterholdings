@@ -131,18 +131,24 @@
             }
         },
         "sections": {
+            "advantages_title_before": "व्यापारी",
+            "advantages_title_accent": "हमें क्यों चुनते हैं",
             "advantages": [
                 {
                     "value": "10+",
                     "label": "क्षेत्र में अनुभव के वर्ष"
                 },
                 {
-                    "value": "1,160,000+",
+                    "value": "1 160 000+",
                     "label": "ग्राहक"
                 },
                 {
                     "value": "5* रेटेड",
                     "label": "ग्राहक सेवा"
+                },
+                {
+                    "value": "24/7",
+                    "label": "समर्थन"
                 }
             ],
             "platform__title": "सफल विदेशी मुद्रा और CFD व्यापार के लिए\nप्रसिद्ध प्लेटफॉर्म",

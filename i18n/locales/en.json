@@ -131,18 +131,24 @@
       }
     },
     "sections": {
+      "advantages_title_before": "Why Traders",
+      "advantages_title_accent": "Choose Us",
       "advantages": [
         {
           "value": "10+",
           "label": "Years of experience in field"
         },
         {
-          "value": "1,160,000+",
+          "value": "1 160 000+",
           "label": "Clients"
         },
         {
           "value": "5* Rated",
           "label": "Customer service"
+        },
+        {
+          "value": "24/7",
+          "label": "Support"
         }
       ],
       "platform__title": "Legendary platform for successful\nForex and CFD trading",

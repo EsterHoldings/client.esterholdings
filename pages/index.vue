@@ -68,7 +68,7 @@
 
     display: flex;
     flex-direction: column;
-    gap: 150px;
+    gap: 60px;
   }
 
   @media (max-width: 991px) {

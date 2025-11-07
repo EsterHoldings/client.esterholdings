@@ -131,18 +131,24 @@
             }
         },
         "sections": {
+            "advantages_title_before": "Yatırımcılar neden",
+            "advantages_title_accent": "bizi seçiyor",
             "advantages": [
                 {
                     "value": "10+",
                     "label": "Alandaki deneyim yılı"
                 },
                 {
-                    "value": "1,160,000+",
+                    "value": "1 160 000+",
                     "label": "Müşteriler"
                 },
                 {
                     "value": "5* Derecelendirildi",
                     "label": "Müşteri hizmeti"
+                },
+                {
+                    "value": "24/7",
+                    "label": "Destek"
                 }
             ],
             "platform__title": "Başarılı Forex ve CFD işlemi için\nefsanevi platform",
