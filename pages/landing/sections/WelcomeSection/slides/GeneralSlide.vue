@@ -5,13 +5,12 @@
         <UiTextH1 class="!text-[var(--ui-text-invert)]">
           {{ $t("landing.slider.general-slide.title.before") }}
           <span class="slide-welcome__title--highlight">
-            {{ $t("landing.slider.general-slide.title.highlight") }} </span
-          >,<br />
+            {{ $t("landing.slider.general-slide.title.highlight") }} </span>,<br />
           {{ $t("landing.slider.general-slide.title.after") }}
           <img class="rocket" src="/static/rocket.png" alt="Rocket" />
         </UiTextH1>
 
-        <UiTextH5 class="slide-welcome__text !max-w-[500px]">
+        <UiTextH5 class="slide-welcome__text !max-w-[500px] !text-[var(--ui-text-invert)]">
           {{ $t("landing.slider.general-slide.text") }}
         </UiTextH5>
 
@@ -43,7 +42,7 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   &__content {
     max-width: 800px;
     width: 100%;
-    color: #fff;
+    color: var(--ui-text-main);
     display: flex;
     flex-direction: column;
     gap: 25px;

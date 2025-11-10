@@ -6,7 +6,9 @@
     <img
         :class="{
           '!object-contain !h-full':fitContain,
-          '!object-right' : fitPosition,
+          '!object-right' : fitPosition === 'right',
+          '!object-left' : fitPosition === 'left',
+          '!object-center' : fitPosition === 'center',
         }"
         @click="handleClick"
         v-show="loaded"

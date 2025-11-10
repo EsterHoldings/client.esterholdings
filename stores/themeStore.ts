@@ -15,7 +15,7 @@ export const useThemeStore = defineStore("theme", () => {
     "--ui-primary-main": "#4b70c8",
     "--ui-primary-accent": "#f75709",
 
-    "--ui-text-invert": "#f1eded",
+    "--ui-text-invert": "#faf9f9",
     "--ui-text-main": "#151515",
     "--ui-text-secondary": "#3C3C3C",
 
@@ -39,7 +39,7 @@ export const useThemeStore = defineStore("theme", () => {
     "--ui-primary-main": "#0051ff",
     "--ui-primary-accent": "#f75709",
 
-    "--ui-text-invert": "#999fab",
+    "--ui-text-invert": "#eeeeef",
     "--ui-text-main": "#ffffff",
     "--ui-text-secondary": "#b8b8c3",
 

@@ -9,6 +9,7 @@
             :class="{ active: index === currentSlide }"
         >
           <UiImage
+              fitPosition="center"
               v-if="images[index] && images[index].src"
               :src="images[index].src"
               :alt="images[index].alt"
