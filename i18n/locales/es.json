@@ -231,7 +231,7 @@
                     "subtitle": "cuenta",
                     "description": "Trading sin riesgo con fondos virtuales, perfecto para principiantes para explorar mercados.",
                     "features": [
-                        "Apalancamiento hasta 1:500",
+                        "Apalancamiento hasta 1:100",
                         "Spreads desde 0.0 pips",
                         "No se requiere depósito"
                     ],
@@ -245,7 +245,7 @@
                     "subtitle": "cuenta",
                     "description": "Fácil acceso a mercados spot con tarifas bajas — ideal para principiantes y traders activos.",
                     "features": [
-                        "Apalancamiento hasta 1:500",
+                        "Apalancamiento hasta 1:100",
                         "Spreads desde 1.2 pips",
                         "Primer depósito de $50"
                     ],
@@ -259,7 +259,7 @@
                     "subtitle": "cuenta",
                     "description": "Experimenta spreads ajustados, mayor apalancamiento y control total sobre cada operación.",
                     "features": [
-                        "Apalancamiento hasta 1:500",
+                        "Apalancamiento hasta 1:100",
                         "Spreads desde 0.0 pips",
                         "Primer depósito de $1000"
                     ],
@@ -273,7 +273,7 @@
                     "subtitle": "cuenta",
                     "description": "Asóciate con un compañero, mentor o co-trader y crece junto con estrategias sincronizadas.",
                     "features": [
-                        "Apalancamiento hasta 1:200",
+                        "Apalancamiento hasta 1:100",
                         "Acceso compartido a la cuenta",
                         "Reflejo de operaciones en tiempo real"
                     ],
@@ -287,7 +287,7 @@
                     "subtitle": "cuenta",
                     "description": "Sin swap. Compatible con Sharia. Opera sin intereses, con acceso completo a la plataforma.",
                     "features": [
-                        "Apalancamiento hasta 1:500",
+                        "Apalancamiento hasta 1:100",
                         "Sin tarifas de swap / intereses",
                         "Acceso a todos los instrumentos de trading"
                     ],

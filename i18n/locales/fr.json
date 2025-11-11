@@ -231,7 +231,7 @@
                     "subtitle": "compte",
                     "description": "Trading sans risque avec des fonds virtuels, parfait pour les débutants pour explorer les marchés.",
                     "features": [
-                        "Effet de levier jusqu'à 1:500",
+                        "Effet de levier jusqu'à 1:100",
                         "Spreads à partir de 0,0 pips",
                         "Aucun dépôt requis"
                     ],
@@ -245,7 +245,7 @@
                     "subtitle": "compte",
                     "description": "Accès facile aux marchés spot avec des frais faibles — idéal pour les débutants et les traders actifs.",
                     "features": [
-                        "Effet de levier jusqu'à 1:500",
+                        "Effet de levier jusqu'à 1:100",
                         "Spreads à partir de 1,2 pips",
                         "Premier dépôt de 50$"
                     ],
@@ -259,7 +259,7 @@
                     "subtitle": "compte",
                     "description": "Découvrez des spreads serrés, un effet de levier plus élevé et un contrôle total sur chaque transaction.",
                     "features": [
-                        "Effet de levier jusqu'à 1:500",
+                        "Effet de levier jusqu'à 1:100",
                         "Spreads à partir de 0,0 pips",
                         "Premier dépôt de 1000$"
                     ],
@@ -273,7 +273,7 @@
                     "subtitle": "compte",
                     "description": "Associez-vous avec un partenaire, mentor ou co-trader et grandissez ensemble avec des stratégies synchronisées.",
                     "features": [
-                        "Effet de levier jusqu'à 1:200",
+                        "Effet de levier jusqu'à 1:100",
                         "Accès partagé au compte",
                         "Miroir de trading en temps réel"
                     ],
@@ -287,7 +287,7 @@
                     "subtitle": "compte",
                     "description": "Sans swap. Conforme à la Charia. Tradez sans intérêts, avec un accès complet à la plateforme.",
                     "features": [
-                        "Effet de levier jusqu'à 1:500",
+                        "Effet de levier jusqu'à 1:100",
                         "Aucun frais de swap / intérêts",
                         "Accès à tous les instruments de trading"
                     ],

@@ -231,7 +231,7 @@
           "subtitle": "account",
           "description": "Risk-free trading with virtual funds, perfect for beginners to explore markets.",
           "features": [
-            "Leverage up to 1:500",
+            "Leverage up to 1:100",
             "Spreads from 0.0 pips",
             "No deposit required"
           ],
@@ -245,7 +245,7 @@
           "subtitle": "account",
           "description": "Easy access to spot markets with low fees and — ideal for beginners and active traders.",
           "features": [
-            "Leverage up to 1:500",
+            "Leverage up to 1:100",
             "Spreads from 1.2 pips",
             "First deposit of $50"
           ],
@@ -259,7 +259,7 @@
           "subtitle": "account",
           "description": "Experience tight spreads, higher leverage, and full control over every trade.",
           "features": [
-            "Leverage up to 1:500",
+            "Leverage up to 1:100",
             "Spreads from 0.0 pips",
             "First deposit of $1000"
           ],
@@ -273,7 +273,7 @@
           "subtitle": "account",
           "description": "Pair with a partner, mentor, or co-trader and grow together with synchronized strategies.",
           "features": [
-            "Leverage up to 1:200",
+            "Leverage up to 1:100",
             "Shared account access",
             "Real-time trade mirroring"
           ],
@@ -287,7 +287,7 @@
           "subtitle": "account",
           "description": "Swap-free. Shariah-compliant. Trade without interest, with full platform access.",
           "features": [
-            "Leverage up to 1:500",
+            "Leverage up to 1:100",
             "No swap / interest fees",
             "Access to all trading instruments"
           ],
@@ -710,12 +710,12 @@
         "company_name": "Ester Holdings Ltd.,",
         "company_address": "Ground Floor, The Sotheby Building, Rodney Village, Rodney Bay, Gros-Islet, Saint Lucia, under registered number 2023-00477",
         "support_service_label": "Support service:",
-                "support_service_email": "support{'@'}esterholdings.com",
-                "support_telegram": "Support EsterHoldings",
-                "finance_service_label": "Financial service:",
-                "finance_service_email": "finance{'@'}esterholdings.com",
-                "marketing_service_label": "Marketing service:",
-                "marketing_service_email": "marketing{'@'}esterholdings.com",
+        "support_service_email": "support{'@'}esterholdings.com",
+        "support_telegram": "Support EsterHoldings",
+        "finance_service_label": "Financial service:",
+        "finance_service_email": "finance{'@'}esterholdings.com",
+        "marketing_service_label": "Marketing service:",
+        "marketing_service_email": "marketing{'@'}esterholdings.com",
         "risk_warning": "Investors carry a high level of risk and trading in financial markets may not be suitable for all investors, as loss of all invested capital may occur.",
         "restricted_info": "Information on this site is not directed at residents in any country or jurisdiction where such distribution or use would be contrary to local law or regulation.",
         "restricted_countries": "Residents and citizens of USA, Iran, North Korea and Russia can not use the services of the site.",

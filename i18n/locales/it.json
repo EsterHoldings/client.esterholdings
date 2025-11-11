@@ -231,7 +231,7 @@
                     "subtitle": "account",
                     "description": "Trading senza rischi con fondi virtuali, perfetto per i principianti per esplorare i mercati.",
                     "features": [
-                        "Leva fino a 1:500",
+                        "Leva fino a 1:100",
                         "Spread da 0,0 pip",
                         "Nessun deposito richiesto"
                     ],
@@ -245,7 +245,7 @@
                     "subtitle": "account",
                     "description": "Facile accesso ai mercati spot con commissioni basse — ideale per principianti e trader attivi.",
                     "features": [
-                        "Leva fino a 1:500",
+                        "Leva fino a 1:100",
                         "Spread da 1,2 pip",
                         "Primo deposito di $50"
                     ],
@@ -259,7 +259,7 @@
                     "subtitle": "account",
                     "description": "Sperimenta spread stretti, leva più elevata e controllo completo su ogni operazione.",
                     "features": [
-                        "Leva fino a 1:500",
+                        "Leva fino a 1:100",
                         "Spread da 0,0 pip",
                         "Primo deposito di $1000"
                     ],
@@ -273,7 +273,7 @@
                     "subtitle": "account",
                     "description": "Associati con un partner, mentore o co-trader e cresci insieme con strategie sincronizzate.",
                     "features": [
-                        "Leva fino a 1:200",
+                        "Leva fino a 1:100",
                         "Accesso condiviso all'account",
                         "Mirroring delle operazioni in tempo reale"
                     ],
@@ -287,7 +287,7 @@
                     "subtitle": "account",
                     "description": "Senza swap. Conforme alla Sharia. Fai trading senza interessi, con accesso completo alla piattaforma.",
                     "features": [
-                        "Leva fino a 1:500",
+                        "Leva fino a 1:100",
                         "Nessuna commissione swap / interessi",
                         "Accesso a tutti gli strumenti di trading"
                     ],

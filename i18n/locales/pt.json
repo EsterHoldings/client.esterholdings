@@ -231,7 +231,7 @@
                     "subtitle": "conta",
                     "description": "Negociação sem risco com fundos virtuais, perfeito para iniciantes explorarem os mercados.",
                     "features": [
-                        "Alavancagem até 1:500",
+                        "Alavancagem até 1:100",
                         "Spreads a partir de 0,0 pips",
                         "Nenhum depósito necessário"
                     ],
@@ -245,7 +245,7 @@
                     "subtitle": "conta",
                     "description": "Acesso fácil aos mercados à vista com taxas baixas — ideal para iniciantes e traders ativos.",
                     "features": [
-                        "Alavancagem até 1:500",
+                        "Alavancagem até 1:100",
                         "Spreads a partir de 1,2 pips",
                         "Primeiro depósito de $50"
                     ],
@@ -259,7 +259,7 @@
                     "subtitle": "conta",
                     "description": "Experimente spreads apertados, maior alavancagem e controle total sobre cada negociação.",
                     "features": [
-                        "Alavancagem até 1:500",
+                        "Alavancagem até 1:100",
                         "Spreads a partir de 0,0 pips",
                         "Primeiro depósito de $1000"
                     ],
@@ -273,7 +273,7 @@
                     "subtitle": "conta",
                     "description": "Associe-se com um parceiro, mentor ou co-trader e cresça junto com estratégias sincronizadas.",
                     "features": [
-                        "Alavancagem até 1:200",
+                        "Alavancagem até 1:100",
                         "Acesso compartilhado à conta",
                         "Espelhamento de negociações em tempo real"
                     ],
@@ -287,7 +287,7 @@
                     "subtitle": "conta",
                     "description": "Sem swap. Compatível com a Sharia. Negocie sem juros, com acesso completo à plataforma.",
                     "features": [
-                        "Alavancagem até 1:500",
+                        "Alavancagem até 1:100",
                         "Sem taxas de swap / juros",
                         "Acesso a todos os instrumentos de negociação"
                     ],

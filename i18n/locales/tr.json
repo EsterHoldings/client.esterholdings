@@ -231,7 +231,7 @@
                     "subtitle": "hesap",
                     "description": "Sanal fonlarla risksiz işlem, piyasaları keşfetmek isteyen yeni başlayanlar için mükemmel.",
                     "features": [
-                        "1:500'e kadar kaldıraç",
+                        "1:100'e kadar kaldıraç",
                         "0,0 pip'ten itibaren spreadler",
                         "Depozito gerekmez"
                     ],
@@ -245,7 +245,7 @@
                     "subtitle": "hesap",
                     "description": "Düşük ücretlerle spot piyasalara kolay erişim — yeni başlayanlar ve aktif trader'lar için ideal.",
                     "features": [
-                        "1:500'e kadar kaldıraç",
+                        "1:100'e kadar kaldıraç",
                         "1,2 pip'ten itibaren spreadler",
                         "İlk depozito $50"
                     ],
@@ -259,7 +259,7 @@
                     "subtitle": "hesap",
                     "description": "Dar spreadleri, daha yüksek kaldıracı ve her işlem üzerinde tam kontrolü deneyimleyin.",
                     "features": [
-                        "1:500'e kadar kaldıraç",
+                        "1:100'e kadar kaldıraç",
                         "0,0 pip'ten itibaren spreadler",
                         "İlk depozito $1000"
                     ],
@@ -273,7 +273,7 @@
                     "subtitle": "hesap",
                     "description": "Bir ortak, mentor veya ortak trader ile işbirliği yapın ve senkronize stratejilerle birlikte büyüyün.",
                     "features": [
-                        "1:200'e kadar kaldıraç",
+                        "1:100'e kadar kaldıraç",
                         "Paylaşımlı hesap erişimi",
                         "Gerçek zamanlı işlem yansıtma"
                     ],
@@ -287,7 +287,7 @@
                     "subtitle": "hesap",
                     "description": "Swap yok. Şeriata uygun. Tam platform erişimiyle faizsiz işlem yapın.",
                     "features": [
-                        "1:500'e kadar kaldıraç",
+                        "1:100'e kadar kaldıraç",
                         "Swap / faiz ücreti yok",
                         "Tüm işlem araçlarına erişim"
                     ],

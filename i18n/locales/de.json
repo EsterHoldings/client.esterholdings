@@ -231,7 +231,7 @@
                     "subtitle": "Konto",
                     "description": "Risikofreier Handel mit virtuellen Geldern, perfekt für Anfänger zur Erkundung der Märkte.",
                     "features": [
-                        "Hebel bis zu 1:500",
+                        "Hebel bis zu 1:100",
                         "Spreads ab 0,0 Pips",
                         "Keine Einzahlung erforderlich"
                     ],
@@ -245,7 +245,7 @@
                     "subtitle": "Konto",
                     "description": "Einfacher Zugang zu Spotmärkten mit niedrigen Gebühren – ideal für Anfänger und aktive Trader.",
                     "features": [
-                        "Hebel bis zu 1:500",
+                        "Hebel bis zu 1:100",
                         "Spreads ab 1,2 Pips",
                         "Ersteinzahlung von 50 $"
                     ],
@@ -259,7 +259,7 @@
                     "subtitle": "Konto",
                     "description": "Erleben Sie enge Spreads, höheren Hebel und volle Kontrolle über jeden Trade.",
                     "features": [
-                        "Hebel bis zu 1:500",
+                        "Hebel bis zu 1:100",
                         "Spreads ab 0,0 Pips",
                         "Ersteinzahlung von 1000 $"
                     ],
@@ -273,7 +273,7 @@
                     "subtitle": "Konto",
                     "description": "Arbeiten Sie mit einem Partner, Mentor oder Co-Trader zusammen und wachsen Sie gemeinsam mit synchronisierten Strategien.",
                     "features": [
-                        "Hebel bis zu 1:200",
+                        "Hebel bis zu 1:100",
                         "Gemeinsamer Kontozugriff",
                         "Echtzeit-Trade-Spiegelung"
                     ],
@@ -287,7 +287,7 @@
                     "subtitle": "Konto",
                     "description": "Swap-frei. Scharia-konform. Handeln Sie ohne Zinsen mit vollem Plattformzugriff.",
                     "features": [
-                        "Hebel bis zu 1:500",
+                        "Hebel bis zu 1:100",
                         "Keine Swap-/Zinsgebühren",
                         "Zugriff auf alle Handelsinstrumente"
                     ],
