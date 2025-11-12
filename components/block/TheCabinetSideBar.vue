@@ -240,6 +240,12 @@
     height: 22px;
   }
 
+  /* приховати UiSpacer на мобільній версії */
+  .mobile-bottom-menu :deep(.w-full.flex.items-center.justify-center.h-\[40px\]),
+  .mobile-bottom-menu :deep(.w-full.flex.items-center.justify-center.h-\[4px\]) {
+    display: none !important;
+  }
+
   /* додатково: якщо в меню є підписи — ховаємо їх */
   .mobile-bottom-menu :deep(span),
   .mobile-bottom-menu :deep(.label),
