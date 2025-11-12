@@ -8,15 +8,16 @@
       </div>
 
       <PanelDefault>
-        <div class="grid grid-cols-[240px_1fr] max-lg:grid-cols-[70px_1fr]">
-          <div class="border-r border-[var(--ui-primary-main)] p-5 max-lg:p-2">
+        <div class="flex flex-row max-lg:flex-col">
+          <div
+            class="w-[240px] max-lg:w-full border-r max-lg:border-r-0 max-lg:border-b border-[var(--ui-primary-main)] p-5 max-lg:p-2">
             <TabsAsList
               :tabsList="tabsList"
               @selectTab="handleActiveTab"
               :activeTabIndex="activeTabIndex" />
           </div>
 
-          <div>
+          <div class="flex-1">
             <Transition
               enter-active-class="transition ease-linear duration-100"
               enter-from-class="opacity-0 translate-x-4"

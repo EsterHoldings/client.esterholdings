@@ -34,6 +34,11 @@
     flex-direction: column;
     gap: 5px;
 
+    @media (max-width: 1023px) {
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
     .tab {
       gap: 10px;
       display: flex;
