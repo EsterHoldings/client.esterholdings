@@ -90,166 +90,180 @@
 
 <template>
   <header
-    class="h-[60px] flex items-center justify-end border-b border-[--color-stroke-ui-light] ml-[240px] pl-5 pr-5 gap-4">
-    <div class="h-[60px] flex items-center justify-center">
-      <LanguageSwitcher
-        isSidebar
-        :isInvert="isThemeLight"
-        class="icon" />
+    class="h-[60px] flex items-center justify-between lg:justify-end border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
+    <!-- Logo for mobile -->
+
+    <div class="lg:hidden">
+      <NuxtLink to="/"
+        ><UiIconLogo
+          :class="{
+            'svg-invert': isThemeLight,
+          }"
+      /></NuxtLink>
     </div>
-
-    <div
-      ref="notificationsRef"
-      class="relative flex items-center justify-center">
-      <button
-        class="relative"
-        @click="handleClickNotifications"
-        aria-label="Notifications">
-        <UiIconBell />
-        <span
-          class="absolute -top-2 -right-2 h-5 w-5 text-[10px] font-bold rounded-full bg-[var(--color-warning)] text-[var(--ui-text-main)] flex items-center justify-center"
-          >4</span
-        >
-      </button>
-
-      <div
-        v-if="isOpen"
-        class="absolute top-9 right-0 z-50 w-[400px] max-h-[600px] rounded-xl !bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)] flex flex-col">
-        <div class="flex items-center justify-between p-5 flex-shrink-0">
-          <span class="text-[var(--ui-text-main)]">Notifications</span>
-          <div>
-            <UiTextSmall
-              state="info--outline--small"
-              class="cursor-pointer"
-              >Mark all read</UiTextSmall
-            >
-          </div>
-        </div>
-
-        <UiSpacer :heightNone="true" />
-
-        <div class="p-5 overflow-y-auto flex-1">
-          <div
-            v-for="notification in notifications"
-            :key="notification.message"
-            :class="[
-              'relative mb-2.5 p-3 rounded-xl bg-[var(--color-stroke-ui-light)] border border-[var(--color-stroke-ui-light)]',
-              notification.type === 'info' ? 'text-[var(--ui-text-main)]' : '',
-              notification.type === 'success' ? 'text-[var(--color-success)]' : '',
-              notification.type === 'warning' ? 'text-[var(--color-warning)]' : '',
-              notification.type === 'danger' ? 'text-[var(--color-danger)]' : '',
-              notification.wasRead ? 'opacity-30 hover:opacity-100' : '',
-            ]">
-            <UiIconSuccessFull
-              v-if="notification.type === 'success'"
-              class="absolute top-3 left-3" />
-            <UiIconWarningFull
-              v-if="notification.type === 'warning'"
-              class="absolute top-3 left-3" />
-            <UiIconDangerFull
-              v-if="notification.type === 'danger'"
-              class="absolute top-3 left-3" />
-            <UiIconInfoFull
-              v-if="notification.type === 'info'"
-              class="absolute top-3 left-3" />
-            <div class="ml-10">
-              <div>{{ notification.title }}</div>
-              <div>{{ notification.message }}</div>
-              <div></div>
-            </div>
-            <UiIconDelete class="absolute top-3 right-3 opacity-50 hover:opacity-100" />
-          </div>
-
-          <div
-            v-if="!isLoading && notifications.length === 0"
-            class="h-[200px] rounded-xl flex flex-col items-center justify-center gap-4">
-            <UiIconBell />
-            <span>You have no notifications yet</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      ref="profileContainerRef"
-      class="flex items-center justify-end gap-4 cursor-pointer"
-      @click="handleClickProfileMenu">
-      <div
-        :class="[
-          'mx-auto h-[32px] w-[32px] rounded-full flex items-center justify-center overflow-hidden',
-          isProfileRoute ? 'ring-2 ring-[var(--ui-primary-main)]' : 'ring-2 ring-[var(--ui-text-main)]',
-        ]">
-        <UiIconUser
-          v-if="!authStore.photoUrl"
-          class="text-[--ui-text-main]" />
-        <img
-          v-else
-          :src="authStore.photoUrl"
-          alt="User Photo"
-          class="h-[32px] w-[32px] object-cover rounded-full" />
+    <div class="flex items-center justify-end gap-4">
+      <div class="h-[60px] flex items-center justify-center">
+        <LanguageSwitcher
+          isSidebar
+          :isInvert="isThemeLight"
+          class="icon" />
       </div>
 
-      <div class="text-[var(--ui-text-main)] flex items-center justify-center gap-2 relative">
-        <span>John Connor</span>
-        <UiIconArrowDown :class="{ 'rotate-180': profileMenuIsOpen }" />
+      <div
+        ref="notificationsRef"
+        class="relative flex items-center justify-center">
+        <button
+          class="relative"
+          @click="handleClickNotifications"
+          aria-label="Notifications">
+          <UiIconBell />
+          <span
+            class="absolute -top-2 -right-2 h-5 w-5 text-[10px] font-bold rounded-full bg-[var(--color-warning)] text-[var(--ui-text-main)] flex items-center justify-center"
+            >4</span
+          >
+        </button>
 
         <div
-          ref="profileMenuRef"
-          class="w-fit absolute top-9 right-0 bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)] rounded-md z-10"
-          v-if="profileMenuIsOpen">
-          <NuxtLink
-            to="/ru/profile"
-            aria-label="Profile">
-            <div
-              class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md">
-              <UiIconSetting />
-              <UiTextSmall class="w-full whitespace-nowrap">Account Settings</UiTextSmall>
+          v-if="isOpen"
+          class="fixed sm:absolute top-[80px] sm:top-9 left-5 right-5 sm:left-auto sm:right-0 z-50 sm:w-[320px] md:w-[360px] lg:w-[400px] max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] rounded-xl !bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)] flex flex-col">
+          <div class="flex items-center justify-between p-3 sm:p-4 lg:p-5 flex-shrink-0">
+            <span class="text-[var(--ui-text-main)]">Notifications</span>
+            <div>
+              <UiTextSmall
+                state="info--outline--small"
+                class="cursor-pointer"
+                >Mark all read</UiTextSmall
+              >
             </div>
-          </NuxtLink>
-
-          <NuxtLink aria-label="Toggle theme">
-            <div
-              @click="themeStore.toggleTheme()"
-              class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md cursor-pointer">
-              <transition
-                name="fade"
-                mode="out-in">
-                <UiIconSun
-                  v-if="themeStore.currentTheme === 'dark'"
-                  :key="'sun'" />
-                <UiIconMoon
-                  v-else
-                  :key="'moon'" />
-              </transition>
-              <UiTextSmall class="w-full whitespace-nowrap">
-                {{ themeStore.currentTheme === "dark" ? "Switch to Light" : "Switch to Dark" }}
-              </UiTextSmall>
-            </div>
-          </NuxtLink>
+          </div>
 
           <UiSpacer :heightNone="true" />
 
-          <NuxtLink
-            to="/ru/support"
-            aria-label="Help Center">
+          <div class="p-3 sm:p-4 lg:p-5 overflow-y-auto flex-1">
             <div
-              class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md">
-              <UiIconSupport />
-              <UiTextSmall class="w-full whitespace-nowrap">Help Center</UiTextSmall>
+              v-for="notification in notifications"
+              :key="notification.message"
+              :class="[
+                'relative mb-2.5 p-2 sm:p-3 rounded-xl bg-[var(--color-stroke-ui-light)] border border-[var(--color-stroke-ui-light)]',
+                notification.type === 'info' ? 'text-[var(--ui-text-main)]' : '',
+                notification.type === 'success' ? 'text-[var(--color-success)]' : '',
+                notification.type === 'warning' ? 'text-[var(--color-warning)]' : '',
+                notification.type === 'danger' ? 'text-[var(--color-danger)]' : '',
+                notification.wasRead ? 'opacity-30 hover:opacity-100' : '',
+              ]">
+              <UiIconSuccessFull
+                v-if="notification.type === 'success'"
+                class="absolute top-2 left-2 sm:top-3 sm:left-3" />
+              <UiIconWarningFull
+                v-if="notification.type === 'warning'"
+                class="absolute top-2 left-2 sm:top-3 sm:left-3" />
+              <UiIconDangerFull
+                v-if="notification.type === 'danger'"
+                class="absolute top-2 left-2 sm:top-3 sm:left-3" />
+              <UiIconInfoFull
+                v-if="notification.type === 'info'"
+                class="absolute top-2 left-2 sm:top-3 sm:left-3" />
+              <div class="ml-8 sm:ml-10">
+                <div>{{ notification.title }}</div>
+                <div>{{ notification.message }}</div>
+                <div></div>
+              </div>
+              <UiIconDelete class="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-50 hover:opacity-100" />
             </div>
-          </NuxtLink>
 
-          <UiSpacer :heightNone="true" />
-
-          <NuxtLink
-            @click="handleClickLogout()"
-            aria-label="Log Out">
             <div
-              class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md">
-              <UiIconLogout />
-              <UiTextSmall class="w-full whitespace-nowrap">Log Out</UiTextSmall>
+              v-if="!isLoading && notifications.length === 0"
+              class="h-[150px] sm:h-[200px] rounded-xl flex flex-col items-center justify-center gap-4">
+              <UiIconBell />
+              <span>You have no notifications yet</span>
             </div>
-          </NuxtLink>
+          </div>
+        </div>
+      </div>
+
+      <div
+        ref="profileContainerRef"
+        class="flex items-center justify-end gap-4 cursor-pointer"
+        @click="handleClickProfileMenu">
+        <div
+          :class="[
+            'mx-auto h-[32px] w-[32px] rounded-full flex items-center justify-center overflow-hidden',
+            isProfileRoute ? 'ring-2 ring-[var(--ui-primary-main)]' : 'ring-2 ring-[var(--ui-text-main)]',
+          ]">
+          <UiIconUser
+            v-if="!authStore.photoUrl"
+            class="text-[--ui-text-main]" />
+          <img
+            v-else
+            :src="authStore.photoUrl"
+            alt="User Photo"
+            class="h-[32px] w-[32px] object-cover rounded-full" />
+        </div>
+
+        <div class="text-[var(--ui-text-main)] flex items-center justify-center gap-2 relative">
+          <span class="hidden sm:inline">John Connor</span>
+          <UiIconArrowDown
+            :class="{ 'rotate-180': profileMenuIsOpen, 'sm:block': true }"
+            class="hidden" />
+
+          <div
+            ref="profileMenuRef"
+            class="fixed sm:absolute top-[80px] sm:top-9 left-5 right-5 sm:left-auto sm:right-0 sm:w-fit bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)] rounded-md z-10"
+            v-if="profileMenuIsOpen">
+            <NuxtLink
+              to="/ru/profile"
+              aria-label="Profile">
+              <div
+                class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md">
+                <UiIconSetting />
+                <UiTextSmall class="w-full whitespace-nowrap">Account Settings</UiTextSmall>
+              </div>
+            </NuxtLink>
+
+            <NuxtLink aria-label="Toggle theme">
+              <div
+                @click="themeStore.toggleTheme()"
+                class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md cursor-pointer">
+                <transition
+                  name="fade"
+                  mode="out-in">
+                  <UiIconSun
+                    v-if="themeStore.currentTheme === 'dark'"
+                    :key="'sun'" />
+                  <UiIconMoon
+                    v-else
+                    :key="'moon'" />
+                </transition>
+                <UiTextSmall class="w-full whitespace-nowrap">
+                  {{ themeStore.currentTheme === "dark" ? "Switch to Light" : "Switch to Dark" }}
+                </UiTextSmall>
+              </div>
+            </NuxtLink>
+
+            <UiSpacer :heightNone="true" />
+
+            <NuxtLink
+              to="/ru/support"
+              aria-label="Help Center">
+              <div
+                class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md">
+                <UiIconSupport />
+                <UiTextSmall class="w-full whitespace-nowrap">Help Center</UiTextSmall>
+              </div>
+            </NuxtLink>
+
+            <UiSpacer :heightNone="true" />
+
+            <NuxtLink
+              @click="handleClickLogout()"
+              aria-label="Log Out">
+              <div
+                class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md">
+                <UiIconLogout />
+                <UiTextSmall class="w-full whitespace-nowrap">Log Out</UiTextSmall>
+              </div>
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>
