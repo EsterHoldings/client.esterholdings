@@ -3,20 +3,18 @@
     <div class="mt4">
       <UiTextH3 class="mt4_title">{{ t('landing.pages.trading.mt4_title') }}</UiTextH3>
 
-      <PanelDefault class="p-4 mt-5">
-        <UiTextH4 class="mt4_subtitle">{{ t('landing.pages.trading.mt4_subtitle') }}</UiTextH4>
-        <div class="mt-5">
-          <UiButtonDefault state="warning">{{ t('landing.pages.trading.mt4_button') }}</UiButtonDefault>
-        </div>
-      </PanelDefault>
+      <UiTextH4 class="mt4_subtitle mt-8 text-center">{{ t('landing.pages.trading.mt4_subtitle') }}</UiTextH4>
+      <div class="mt-5 w-full flex justify-center items-center">
+        <UiButtonDefault state="warning">{{ t('landing.pages.trading.mt4_button') }}</UiButtonDefault>
+      </div>
 
-      <PanelDefault class="p-4 mt-5">
-        <UiTextH4 class="mt4_title-platform">{{ t('landing.pages.trading.mt4_about_title') }}</UiTextH4>
+      <UiTextH4 class="mt4_title-platform mt-8">{{ t('landing.pages.trading.mt4_about_title') }}</UiTextH4>
+      <UiTextParagraph class="mt4_text mb-5">
+        {{ t('landing.pages.trading.mt4_about_text') }}
+        <strong>{{ t('landing.pages.trading.mt4_about_highlight') }}</strong>
+      </UiTextParagraph>
 
-        <UiTextParagraph class="mt4_text mb-5">
-          {{ t('landing.pages.trading.mt4_about_text') }}
-          <strong>{{ t('landing.pages.trading.mt4_about_highlight') }}</strong>
-        </UiTextParagraph>
+      <PanelDefault class="p-4">
 
         <ul class="mt4_list">
           <li

@@ -2,6 +2,11 @@
   <div class="generate-income">
     <UiContainer>
       <UiTextH3 class="generate-income_title">{{ t('landing.pages.partnership.generate_income_title') }}</UiTextH3>
+
+      <UiTextH4 class="text-center mt-5 mb-5">Раздел находиться на стадии тестирования и скоро будет доступен!</UiTextH4>
+      <PanelDefault class="mt-5">
+        <UiTextParagraph class="p-8">Мы отправим сообщение вам на почту - когда данный раздел станет доступным!</UiTextParagraph>
+      </PanelDefault>
     </UiContainer>
   </div>
 </template>
@@ -11,6 +16,9 @@
   import { useI18n } from 'vue-i18n';
   import UiContainer from '~/components/ui/UiContainer.vue';
   import UiTextH3 from '~/components/ui/UiTextH3.vue';
+  import PanelDefault from "~/components/block/panels/PanelDefault.vue";
+  import UiTextH4 from "~/components/ui/UiTextH4.vue";
+  import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 
   definePageMeta({
     layout: 'main',
