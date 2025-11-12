@@ -105,8 +105,8 @@
 
       <div
         v-if="isOpen"
-        class="absolute top-9 right-0 z-50 w-[400px] min-h-[300px] max-h-[600px] rounded-xl !bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)]">
-        <div class="flex items-center justify-between p-5">
+        class="absolute top-9 right-0 z-50 w-[400px] max-h-[600px] rounded-xl !bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)] flex flex-col">
+        <div class="flex items-center justify-between p-5 flex-shrink-0">
           <span class="text-[var(--ui-text-main)]">Notifications</span>
           <div>
             <UiTextSmall
@@ -119,7 +119,7 @@
 
         <UiSpacer :heightNone="true" />
 
-        <div class="p-5 overflow-y-scroll">
+        <div class="p-5 overflow-y-auto flex-1">
           <div
             v-for="notification in notifications"
             :key="notification.message"
