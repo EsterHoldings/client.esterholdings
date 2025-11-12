@@ -6,139 +6,137 @@
     <div
       :class="{ blurred: isBlurred, 'nav--open': isMobileMenuOpen }"
       class="header__wrapper">
-      <UiContainer>
-        <header
-          class="header"
-          :class="{ 'header-is-open-menu ': isMobileMenuOpen }">
-          <div class="logo">
-            <NuxtLink to="/">
-              <UiIconLogo
+      <header
+        class="header"
+        :class="{ 'header-is-open-menu ': isMobileMenuOpen }">
+        <div class="logo">
+          <NuxtLink to="/">
+            <UiIconLogo
+              :class="{
+                'svg-invert': isThemeLight || isWithPicture || forceSvgInvert,
+              }" />
+          </NuxtLink>
+        </div>
+
+        <div
+          class="burger-menu"
+          :class="{
+            'burger-menu--open': isMobileMenuOpen,
+            'is-theme-light': isThemeLight || isWithPicture || forceSvgInvert,
+          }"
+          @click="toggleMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <nav
+          class="nav"
+          :class="{ 'nav--open': isMobileMenuOpen }">
+          <HeaderLink
+            v-for="link in linksList"
+            :key="link.key"
+            :name="link.name"
+            :path="link.path"
+            :activeLink="activeLink"
+            @click.stop="handleClick(link.key)"
+            :isInvertColor="isThemeLight || isWithPicture || forceSvgInvert" />
+        </nav>
+
+        <div
+          class="actions-wrapper"
+          :class="{ 'is-menu-open': isMobileMenuOpen }">
+          <div class="actions">
+            <NuxtLink to="/auth/login">
+              <UiButtonDefault
+                state="link"
+                class="login"
                 :class="{
-                  'svg-invert': isThemeLight || isWithPicture || forceSvgInvert,
-                }" />
+                  'is-theme-light': isThemeLight || isWithPicture || forceSvgInvert,
+                }">
+                {{ t("landing.header.auth.login") }}
+              </UiButtonDefault>
             </NuxtLink>
-          </div>
 
-          <div
-            class="burger-menu"
-            :class="{
-              'burger-menu--open': isMobileMenuOpen,
-              'is-theme-light': isThemeLight || isWithPicture || forceSvgInvert,
-            }"
-            @click="toggleMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+            <nuxt-link
+              to="/auth/registration"
+              class="register">
+              <UiButtonDefault
+                state="primary"
+                v-if="!isMobileMenuOpen">
+                {{ t("landing.header.auth.register") }}
+              </UiButtonDefault>
+            </nuxt-link>
 
-          <nav
-            class="nav"
-            :class="{ 'nav--open': isMobileMenuOpen }">
-            <HeaderLink
+            <div class="actions-icons">
+              <LanguageSwitcher
+                class="icon"
+                :isInvert="isThemeLight || isWithPicture || forceSvgInvert" />
+
+              <transition
+                name="fade"
+                mode="out-in">
+                <span
+                  :key="themeStore.currentTheme"
+                  @click="themeStore.toggleTheme()"
+                  class="icon mt-[1px]">
+                  <UiIconMoon
+                    v-if="themeStore.currentTheme === 'dark'"
+                    :class="{
+                      'svg-invert': isThemeLight || isWithPicture || forceSvgInvert,
+                    }" />
+
+                  <UiIconSun
+                    :class="{
+                      'svg-invert': !(isThemeLight || isWithPicture || forceSvgInvert),
+                    }"
+                    v-else />
+                </span>
+              </transition>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <transition name="fade">
+        <div
+          v-if="isMobileMenuOpen"
+          :class="{ 'nav--open': isMobileMenuOpen }"
+          class="mobile-nav">
+          <nav>
+            <HeaderMobileLink
               v-for="link in linksList"
-              :key="link.key"
+              :key="`${link.key}-${activeLink}`"
               :name="link.name"
-              :path="link.path"
+              :linkKey="link.key"
+              :headerItems="headerItems"
               :activeLink="activeLink"
-              @click.stop="handleClick(link.key)"
-              :isInvertColor="isThemeLight || isWithPicture || forceSvgInvert" />
-          </nav>
+              @click="handleClick(link.key)" />
 
-          <div
-            class="actions-wrapper"
-            :class="{ 'is-menu-open': isMobileMenuOpen }">
-            <div class="actions">
-              <NuxtLink to="/auth/login">
-                <UiButtonDefault
-                  state="link"
-                  class="login"
-                  :class="{
-                    'is-theme-light': isThemeLight || isWithPicture || forceSvgInvert,
-                  }">
-                  {{ t("landing.header.auth.login") }}
-                </UiButtonDefault>
-              </NuxtLink>
-
+            <div class="mobile-acions">
               <nuxt-link
                 to="/auth/registration"
                 class="register">
                 <UiButtonDefault
                   state="primary"
-                  v-if="!isMobileMenuOpen">
+                  v-if="isMobileMenuOpen">
                   {{ t("landing.header.auth.register") }}
                 </UiButtonDefault>
               </nuxt-link>
 
-              <div class="actions-icons">
-                <LanguageSwitcher
-                  class="icon"
-                  :isInvert="isThemeLight || isWithPicture || forceSvgInvert" />
-
-                <transition
-                  name="fade"
-                  mode="out-in">
-                  <span
-                    :key="themeStore.currentTheme"
-                    @click="themeStore.toggleTheme()"
-                    class="icon mt-[1px]">
-                    <UiIconMoon
-                      v-if="themeStore.currentTheme === 'dark'"
-                      :class="{
-                        'svg-invert': isThemeLight || isWithPicture || forceSvgInvert,
-                      }" />
-
-                    <UiIconSun
-                      :class="{
-                        'svg-invert': !(isThemeLight || isWithPicture || forceSvgInvert),
-                      }"
-                      v-else />
-                  </span>
-                </transition>
-              </div>
+              <UiButtonDefault
+                state="link"
+                :class="{ 'is-theme-light': isThemeLight }">
+                {{ t("landing.header.auth.login") }}
+              </UiButtonDefault>
             </div>
-          </div>
-        </header>
 
-        <transition name="fade">
-          <div
-            v-if="isMobileMenuOpen"
-            :class="{ 'nav--open': isMobileMenuOpen }"
-            class="mobile-nav">
-            <nav>
-              <HeaderMobileLink
-                v-for="link in linksList"
-                :key="`${link.key}-${activeLink}`"
-                :name="link.name"
-                :linkKey="link.key"
-                :headerItems="headerItems"
-                :activeLink="activeLink"
-                @click="handleClick(link.key)" />
-
-              <div class="mobile-acions">
-                <nuxt-link
-                  to="/auth/registration"
-                  class="register">
-                  <UiButtonDefault
-                    state="primary"
-                    v-if="isMobileMenuOpen">
-                    {{ t("landing.header.auth.register") }}
-                  </UiButtonDefault>
-                </nuxt-link>
-
-                <UiButtonDefault
-                  state="link"
-                  :class="{ 'is-theme-light': isThemeLight }">
-                  {{ t("landing.header.auth.login") }}
-                </UiButtonDefault>
-              </div>
-
-              <div class="mobile-banner">
-                <UiTextH6>BANNER</UiTextH6>
-              </div>
-            </nav>
-          </div>
-        </transition>
-      </UiContainer>
+            <div class="mobile-banner">
+              <UiTextH6>BANNER</UiTextH6>
+            </div>
+          </nav>
+        </div>
+      </transition>
     </div>
 
     <transition
@@ -330,6 +328,14 @@
     z-index: 9999;
   }
 
+  .header__wrapper {
+    padding: 25px;
+
+    @media (max-width: 991px) {
+      padding: 25px 5px 30px 25px;
+    }
+  }
+
   .header {
     position: relative;
     display: flex;
@@ -341,6 +347,7 @@
       backdrop-filter 0.3s ease,
       background-color 0.3s ease;
     z-index: 9999;
+    width: 100%;
 
     &__wrapper {
       position: fixed;
