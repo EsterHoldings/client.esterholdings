@@ -123,12 +123,13 @@
                   {{ t("landing.header.auth.register") }}
                 </UiButtonDefault>
               </nuxt-link>
-
-              <UiButtonDefault
-                state="link"
-                :class="{ 'is-theme-light': isThemeLight }">
-                {{ t("landing.header.auth.login") }}
-              </UiButtonDefault>
+              <NuxtLink to="/auth/login">
+                <UiButtonDefault
+                  state="link"
+                  :class="{ 'is-theme-light': isThemeLight }">
+                  {{ t("landing.header.auth.login") }}
+                </UiButtonDefault>
+              </NuxtLink>
             </div>
 
             <div class="mobile-banner">

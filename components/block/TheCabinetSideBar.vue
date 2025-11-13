@@ -4,6 +4,7 @@
     <!-- Top -->
     <div class="w-full flex flex-col items-start">
       <div class="h-[100px] flex items-center justify-start pl-5">
+        <!-- не працює на десктопі, іконка біла на білому фоні -->
         <NuxtLink
           to="/"
           class="logo text-[var(--ui-text-main)]">
@@ -25,8 +26,13 @@
     </button> -->
   </aside>
 
+  <!-- ===== 
+  Немає сенсу в ще одному хедері для мобільної версії, тому що він дублює функціонал компонента TheCabinetHeader,
+ можна зробити за допомогою компонента TheCabinetHeader звичайною адаптацією для мобільної версії і зберегти весь функціонал без дублів 
+ ===== -->
+
   <!-- ===== Mobile header (lg-) ===== -->
-  <header
+  <!-- <header
     class="lg:hidden fixed top-0 inset-x-0 z-50 h-14 bg-[var(--ui-background-sidebar)]/78 backdrop-blur-xl text-[var(--ui-text-main)] shadow-[0_6px_24px_-12px_rgba(0,0,0,.6)]">
     <div class="h-full px-4 flex items-center justify-between">
       <NuxtLink
@@ -91,7 +97,6 @@
           </PanelDefault>
         </div>
 
-        <!-- Logout у хедері мобільної версії -->
         <button
           class="h-10 w-10 rounded-2xl flex items-center justify-center bg-[var(--color-stroke-ui-dark)]/60 hover:bg-[var(--color-stroke-ui-dark)] active:bg-[var(--ui-background-panel)]/80"
           @click="handleClickLogout"
@@ -118,7 +123,7 @@
         </NuxtLink>
       </div>
     </div>
-  </header>
+  </header> -->
 
   <!-- ===== Mobile bottom nav (lg-) ===== -->
   <nav
@@ -238,6 +243,12 @@
   .mobile-bottom-menu :deep(svg) {
     width: 22px;
     height: 22px;
+  }
+
+  /* приховати UiSpacer на мобільній версії */
+  .mobile-bottom-menu :deep(.w-full.flex.items-center.justify-center.h-\[40px\]),
+  .mobile-bottom-menu :deep(.w-full.flex.items-center.justify-center.h-\[4px\]) {
+    display: none !important;
   }
 
   /* додатково: якщо в меню є підписи — ховаємо їх */
