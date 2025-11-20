@@ -4,7 +4,7 @@
     :class="isActive ? 'bg-[var(--color-ui-primary)]' : 'hover:bg-[var(--color-stroke-ui-dark)] hover:opacity-80'"
     @click="handleClickMenuItem">
     <div class="text-[var(--ui-text-main)] flex items-center justify-center h-full w-[60px] max-sm:w-[50px] relative">
-      <component :is="icon" />
+      <component :class="{'text-[var(--ui-text-invert)]': isActive}" :is="icon" />
       <span
         class="absolute top-1 right-2 min-h-[16px] min-w-[16px] bg-[var(--ui-sticker-danger)] flex items-center justify-center rounded-full text-sm"
         v-if="notificationsCount > 0">
@@ -13,8 +13,13 @@
     </div>
 
     <div
+      :class="{
+        '!text-[--ui-text-invert]': isActive,
+        'opacity-100': props.sideBarIsOpen,
+        'opacity-0 lg:w-0': !props.sideBarIsOpen,
+      }"
       class="hidden lg:flex items-center justify-start w-full h-full text-[var(--ui-text-main)] text-[14px] font-medium whitespace-pre-wrap overflow-hidden transition-all duration-300"
-      :class="props.sideBarIsOpen ? 'opacity-100' : 'opacity-0 lg:w-0'">
+    >
       {{ title }}
     </div>
   </li>

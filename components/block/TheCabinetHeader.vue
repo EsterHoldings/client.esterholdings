@@ -23,6 +23,7 @@
   import UiIconDangerFull from "~/components/ui/UiIconDangerFull.vue";
   import UiIconInfoFull from "~/components/ui/UiIconInfoFull.vue";
   import UiIconSupport from "~/components/ui/UiIconSupport.vue";
+  import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 
   const authStore = useAuthStore();
   const themeStore = useThemeStore();
@@ -94,12 +95,9 @@
     <!-- Logo for mobile -->
 
     <div class="lg:hidden">
-      <NuxtLink to="/"
-        ><UiIconLogo
-          :class="{
-            'svg-invert': isThemeLight,
-          }"
-      /></NuxtLink>
+      <NuxtLink to="/">
+        <UiIconLogo :lightTheme="isThemeLight" />
+      </NuxtLink>
     </div>
     <div class="flex items-center justify-end gap-4">
       <div class="h-[60px] flex items-center justify-center">

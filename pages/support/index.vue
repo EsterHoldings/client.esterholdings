@@ -70,18 +70,17 @@
             <thead class="bg-[var(--color-stroke-ui-light)] h-[46px]">
             <tr class="text-left">
               <th class="px-4 font-semibold w-[40px]">
-                <UiTextSmall class="!text-[var(--ui-text-invert)]">ID</UiTextSmall>
+                <UiTextSmall>ID</UiTextSmall>
               </th>
               <th class="px-4 font-semibold w-full">
-                <UiTextSmall class="!text-[var(--ui-text-invert)]">Subject of the appeal</UiTextSmall>
+                <UiTextSmall>Subject of the appeal</UiTextSmall>
               </th>
               <th class="px-4 font-semibold">
                 <div class="flex items-center justify-start gap-2">
-                  <UiTextSmall @click="handleOrderByAndDirection('last_message_at')" class="!text-[var(--ui-text-invert)]">
+                  <UiTextSmall @click="handleOrderByAndDirection('last_message_at')" class="whitespace-nowrap">
                     Last Update
                   </UiTextSmall>
                   <UiIconSort
-                      class="!text-[var(--ui-text-invert)]"
                       :active="orderBy === 'last_message_at'"
                       :direction="orderDirection"
                       @click="handleOrderByAndDirection('last_message_at')"
@@ -90,18 +89,17 @@
               </th>
               <th class="px-4 font-semibold">
                 <div class="flex items-center justify-start gap-2">
-                  <UiTextSmall @click="handleOrderByAndDirection('status')" class="!text-[var(--ui-text-invert)]">
+                  <UiTextSmall @click="handleOrderByAndDirection('status')">
                     Status
                   </UiTextSmall>
                   <UiIconSort
-                      class="!text-[var(--ui-text-invert)]"
                       :active="orderBy === 'status'"
                       :direction="orderDirection"
                       @click="handleOrderByAndDirection('status')"
                   />
                 </div>
               </th>
-              <th class="px-2 font-semibold !text-[var(--ui-text-invert)]">...</th>
+              <th class="px-2 font-semibold">...</th>
             </tr>
             </thead>
 <!--            <tbody v-if="!isLoading && tickets.length > 0" class="divide-y divide-[var(&#45;&#45;color-stroke-ui-dark)]">-->
@@ -265,6 +263,7 @@ import {definePageMeta, useAuthStore} from '~/.nuxt/imports'
 import {ref, computed, nextTick, onMounted, onBeforeUnmount, computed as vComputed, reactive, inject} from 'vue'
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
+import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 
 type Status = 'resolved' | 'in_progress' | 'cancelled'
 

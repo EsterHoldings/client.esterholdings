@@ -3,17 +3,17 @@
     class="hidden lg:flex fixed inset-y-0 left-0 w-[240px] flex-col items-center justify-between bg-[var(--ui-background-sidebar)]/82 backdrop-blur-md text-[var(--ui-text-main)] z-40 shadow-[0_0_5px_-1px_rgba(255,249,249,.1)] border-r border-r-[var(--color-stroke-ui-light)]">
     <!-- Top -->
     <div class="w-full flex flex-col items-start">
-      <div class="h-[100px] flex items-center justify-start pl-5">
+      <div class="h-[60px] flex items-center justify-center pl-5 mb-10">
         <!-- не працює на десктопі, іконка біла на білому фоні -->
         <NuxtLink
           to="/"
-          class="logo text-[var(--ui-text-main)]">
-          <UiIconLogo class="w-24 h-6" />
+          class="logo">
+          <UiIconLogo :lightTheme="isThemeLight" />
         </NuxtLink>
       </div>
     </div>
 
-    <div class="flex-1 w-full flex items-start justify-center">
+    <div class="flex-1 w-full flex items-start justify-center p-2">
       <TheCabinetSideBarMenu />
     </div>
 
@@ -26,9 +26,9 @@
     </button> -->
   </aside>
 
-  <!-- ===== 
+  <!-- =====
   Немає сенсу в ще одному хедері для мобільної версії, тому що він дублює функціонал компонента TheCabinetHeader,
- можна зробити за допомогою компонента TheCabinetHeader звичайною адаптацією для мобільної версії і зберегти весь функціонал без дублів 
+ можна зробити за допомогою компонента TheCabinetHeader звичайною адаптацією для мобільної версії і зберегти весь функціонал без дублів
  ===== -->
 
   <!-- ===== Mobile header (lg-) ===== -->
