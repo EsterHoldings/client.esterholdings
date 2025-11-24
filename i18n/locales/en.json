@@ -1,4 +1,9 @@
 {
+  "ui": {
+    "pagination": {
+      "perPage": "Per page"
+    }
+  },
   "ui-components": {
     "modals": {
       "cookie-modal": {

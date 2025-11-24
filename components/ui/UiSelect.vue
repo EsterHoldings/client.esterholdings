@@ -6,6 +6,7 @@
         class="select outline-none inline-flex h-10 w-full items-center justify-start gap-2 rounded-xl border bg-[var(--color-stroke-ui-dark)] px-5 text-[var(--color-ui-text)] transition
            border-[var(--color-stroke-ui-light)]
         "
+        :class="{'!border-none !bg-[transparent]':withoutOverlay}"
         :data-open="isOpen || null"
         :data-open-up="dropup || null"
         :data-invalid="(props.isDirty && props.isInvalid) || null"
@@ -89,12 +90,14 @@ interface Props {
   isDirty?: boolean
   isInvalid?: boolean
   withoutNoSelect?: boolean
+  withoutOverlay?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   isDirty: false,
   isInvalid: false,
   withoutNoSelect: false,
+  withoutOverlay: false,
 })
 const emit = defineEmits<{
   (e: 'change', v: string | null): void

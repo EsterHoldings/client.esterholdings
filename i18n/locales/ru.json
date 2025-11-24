@@ -1,4 +1,9 @@
 {
+  "ui": {
+    "pagination": {
+      "perPage": "На странице"
+    }
+  },
   "ui-components": {
     "modals": {
       "cookie-modal": {

@@ -13,6 +13,7 @@
       'btn--info--outline--small': props.state === 'info--outline--small',
       'btn--info--outline': props.state === 'info--outline',
       'btn--info--small': props.state === 'info--small',
+      'btn--pagination--small': props.state === 'pagination--small',
       'btn--success--outline--small': props.state === 'success--outline--small',
       'btn--success--outline': props.state === 'success--outline',
       'btn--success--small': props.state === 'success--small',
@@ -222,6 +223,55 @@
       }
     }
 
+    &--pagination {
+      background-color: var(--ui-primary-main);
+      color: white;
+
+      &--small {
+        border: 1px solid var(--color-stroke-ui-light);
+        background-color: var(--color-stroke-ui-dark);
+        height: 32px;
+        min-width: 32px;
+        border-radius: 8px;
+        padding: 0 10px;
+
+        &:hover {
+          opacity: 0.7;
+          background-color: var(--color-stroke-ui-dark) !important;
+        }
+      }
+
+      &--outline {
+        border: 1px solid var(--ui-primary-main);
+        background-color: transparent;
+        color: var(--ui-primary-main);
+
+        &--small {
+          border: 1px solid var(--ui-primary-main);
+          background-color: transparent;
+          height: 32px;
+          min-width: 32px;
+          border-radius: 8px;
+          padding: 0 10px;
+
+          &:hover {
+            opacity: 0.7;
+            border-color: var(--ui-primary-main) !important;
+            background-color: transparent !important;
+          }
+
+          &:active {
+            opacity: 0.5;
+            background-color: var(--color-stroke-ui-dark) !important;
+          }
+        }
+
+        &:hover {
+          background: var(--ui-primary-main) !important;
+        }
+      }
+    }
+
     &--success {
       background-color: var(--ui-sticker-success);
       color: white;
@@ -331,16 +381,16 @@
     }
 
     @media (max-width: 1160px) {
-      height: 40px;
-      padding: 10px 16px;
+      //height: 40px;
+      padding: 0 10px;
       font-size: 13px;
 
       &--info--small,
       &--success--small,
       &--danger--small,
       &--default--small {
-        height: 28px;
-        min-width: 28px;
+        //height: 28px;
+        //min-width: 28px;
         padding: 0 8px;
         font-size: 12px;
       }
