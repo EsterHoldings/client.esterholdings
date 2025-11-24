@@ -798,6 +798,11 @@
         "currency": "Para birimi",
         "createdAt": "Oluşturulma tarihi"
       },
+      "details": {
+        "createNew": {
+          "title": "Yeni ödeme detayı oluştur"
+        }
+      },
       "nothingToShow": "Gösterilecek bir şey yok =(",
       "pagination": {
         "prev": "Önceki",

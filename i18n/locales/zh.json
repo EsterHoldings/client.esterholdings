@@ -798,6 +798,11 @@
         "currency": "货币",
         "createdAt": "创建时间"
       },
+      "details": {
+        "createNew": {
+          "title": "创建新的支付详情"
+        }
+      },
       "nothingToShow": "无数据显示 =(",
       "pagination": {
         "prev": "上一页",

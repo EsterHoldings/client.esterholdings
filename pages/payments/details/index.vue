@@ -7,7 +7,7 @@
           {{ t("cabinet.payments.title") }}
         </UiTextH4>
 
-        <UiButtonDefault state="info">
+        <UiButtonDefault state="info" @click="handleClickCreateNewPaymentDetail">
           <UiIconPlus class="mr-2" />
           <span>{{ t("cabinet.payments.create") }}</span>
         </UiButtonDefault>
@@ -289,8 +289,12 @@ import UiIconTrash from "~/components/ui/UiIconTrash.vue";
 import UiIconEye from "~/components/ui/UiIconEye.vue";
 import UiIconConfirm from "~/components/ui/UiIconConfirm.vue";
 import UiIconSearch from "~/components/ui/UiIconSearch.vue";
+import CreateNewDeposit from "~/pages/payments/create/index.vue";
+import CreateNewPaymentDetail from "~/pages/payments/details/components/CreateNewPaymentDetail.vue";
+import PaymentDetailsCreateNew from "~/pages/payments/details/components/PaymentDetailsCreateNew.vue";
 
 const { t } = useI18n({ useScope: "global" });
+const { openModal } = inject("modalControl") as { openModal: Function };
 
 definePageMeta({
   layout: "cabinet",
@@ -482,9 +486,6 @@ const copyToClipboard = (paymentId: string) => {
   if (id) navigator.clipboard.writeText(id);
 };
 
-const { openModal } = inject("modalControl") as { openModal: Function };
-// const handleClickCreateNewAccount = () => openModal(AdminsPanelAddNew, { title: "Add new Admin" });
-
 const handleChangePerPage = async (newPerPage: number) => {
   perPage.value = newPerPage;
   await loadData();
@@ -504,13 +505,18 @@ const handleClickUpdate = async () => {
   await loadData();
 };
 
+const handleClickCreateNewPaymentDetail = async () => {
+  openModal(PaymentDetailsCreateNew, {
+    title: t("cabinet.payments.details.createNew.title"),
+  });
+};
+
 onMounted(async () => {
   await loadData();
 
-  // слухачі
   window.addEventListener("resize", recalcActiveMenu, { passive: true });
   window.addEventListener("scroll", recalcActiveMenu, { passive: true, capture: true });
-  // якщо скролимо сам контейнер таблиці
+
   scrollArea.value?.addEventListener("scroll", recalcActiveMenu, { passive: true });
 
   window.addEventListener("mousedown", onClickOutside, true);

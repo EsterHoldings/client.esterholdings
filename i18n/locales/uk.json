@@ -798,6 +798,11 @@
         "currency": "Валюта",
         "createdAt": "Створено"
       },
+      "details": {
+        "createNew": {
+          "title": "Створити новий реквізит"
+        }
+      },
       "nothingToShow": "Нічого показати =(",
       "pagination": {
         "prev": "Попер",

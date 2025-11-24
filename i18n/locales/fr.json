@@ -798,6 +798,11 @@
         "currency": "Devise",
         "createdAt": "Créé le"
       },
+      "details": {
+        "createNew": {
+          "title": "Créer un nouveau détail de paiement"
+        }
+      },
       "nothingToShow": "Rien à afficher =(",
       "pagination": {
         "prev": "Préc",

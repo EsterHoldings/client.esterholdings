@@ -798,6 +798,11 @@
         "currency": "Валюта",
         "createdAt": "Дата создания"
       },
+      "details": {
+        "createNew": {
+          "title": "Создать новый реквизит"
+        }
+      },
       "nothingToShow": "Нет данных =(",
       "pagination": {
         "prev": "Назад",

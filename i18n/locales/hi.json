@@ -798,6 +798,11 @@
         "currency": "मुद्रा",
         "createdAt": "बनाया गया"
       },
+      "details": {
+        "createNew": {
+          "title": "नया भुगतान विवरण बनाएँ"
+        }
+      },
       "nothingToShow": "दिखाने के लिए कुछ नहीं =(",
       "pagination": {
         "prev": "पिछला",

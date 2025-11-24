@@ -798,6 +798,11 @@
         "currency": "Valuta",
         "createdAt": "Creato il"
       },
+      "details": {
+        "createNew": {
+          "title": "Crea un nuovo dettaglio di pagamento"
+        }
+      },
       "nothingToShow": "Niente da mostrare =(",
       "pagination": {
         "prev": "Prec",

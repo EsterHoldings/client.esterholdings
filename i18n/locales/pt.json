@@ -798,6 +798,11 @@
         "currency": "Moeda",
         "createdAt": "Criado em"
       },
+      "details": {
+        "createNew": {
+          "title": "Criar novo detalhe de pagamento"
+        }
+      },
       "nothingToShow": "Nada a mostrar =(",
       "pagination": {
         "prev": "Ant",

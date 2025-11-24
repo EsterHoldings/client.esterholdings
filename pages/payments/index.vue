@@ -231,7 +231,6 @@
 </template>
 
 <script lang="ts" setup>
-import AccountsCreateNew from "~/pages/accounts/components/AccountsCreateNew.vue";
 import PageStructureContent from '~/components/block/pages/PageStructureContent.vue'
 import PageStructureDefault from '~/components/block/pages/PageStructureDefault.vue'
 import PaginationMain from '~/components/block/paginations/PaginationMain.vue'
@@ -361,7 +360,6 @@ const copyToClipboard = (paymentId: string) => {
 }
 
 const handleClickCreateNewDeposit = async () => {
-  console.log('clickCreateNewDeposit')
   openModal(CreateNewDeposit, {
     title: t("cabinet.accounts.accounts-form.title"),
   });

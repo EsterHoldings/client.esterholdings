@@ -798,6 +798,11 @@
         "currency": "通貨",
         "createdAt": "作成日時"
       },
+      "details": {
+        "createNew": {
+          "title": "新しい支払い詳細を作成"
+        }
+      },
       "nothingToShow": "表示するものがありません =(",
       "pagination": {
         "prev": "前へ",

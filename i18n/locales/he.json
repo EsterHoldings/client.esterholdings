@@ -798,6 +798,11 @@
         "currency": "מטבע",
         "createdAt": "נוצר ב"
       },
+      "details": {
+        "createNew": {
+          "title": "צור פרטי תשלום חדשים"
+        }
+      },
       "nothingToShow": "אין מה להציג =(",
       "pagination": {
         "prev": "קודם",

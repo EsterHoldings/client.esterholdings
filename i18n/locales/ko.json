@@ -798,6 +798,11 @@
         "currency": "통화",
         "createdAt": "생성일"
       },
+      "details": {
+        "createNew": {
+          "title": "새 결제 세부정보 만들기"
+        }
+      },
       "nothingToShow": "표시할 내용이 없습니다 =(",
       "pagination": {
         "prev": "이전",
