@@ -4,40 +4,43 @@
       <UiTextH4>{{ props.title }}</UiTextH4>
     </div>
 
-    <div
-        class="accounts__edit__content"
-        :class="{ 'without-top': !props.title }"
-    >
+    <div class="accounts__edit__content" :class="{ 'without-top': !props.title }">
       <div class="accounts__edit__content__fields">
         <UiFormControl
-            :label="t('cabinet.accounts.accounts-form.fields.accountType')"
-            :errors="validatorAccountForm?.errorsFormData?.accountType?.errors"
+            :label="'Payment detail name'"
+            :errors="validatorPaymentDetailForm?.errorsFormData?.name?.errors"
         >
-          <UiSelect
-              :without-no-select="true"
-              :data="accountTypes"
-              :value="formData.accountType"
-              @change="handleChangeSelectAccountType"
-              :isDirty="validatorAccountForm?.errorsFormData?.accountType?.isDirty"
-              :isInvalid="validatorAccountForm?.errorsFormData?.accountType?.errors?.length > 0"
-              @blur="validatorAccountForm?.doValidateField('accountType',$event)"
+          <UiInput
+              placeholder="Payment detail name"
+              :value="formData.name"
+              :isDirty="validatorPaymentDetailForm?.errorsFormData?.name?.isDirty"
+              :isInvalid="validatorPaymentDetailForm?.errorsFormData?.name?.errors?.length > 0"
+              @blur="validatorPaymentDetailForm?.doValidateField('name',$event.target.value)"
+              @input="validatorPaymentDetailForm?.doValidateField('name',$event.target.value)"
           />
         </UiFormControl>
 
         <UiFormControl
-            :label="t('cabinet.accounts.accounts-form.fields.phonePassword')"
-            :errors="validatorAccountForm?.errorsFormData?.phonePassword?.errors"
+            :label="t('cabinet.accounts.accounts-form.fields.accountType')"
+            :errors="validatorPaymentDetailForm?.errorsFormData?.paymentSystemId?.errors"
         >
-          <UiInput
-              type="password"
-              :placeholder="t('cabinet.accounts.accounts-form.fields.phonePasswordPlaceholder')"
-              :value="formData.phonePassword"
-              :isDirty="validatorAccountForm?.errorsFormData?.phonePassword?.isDirty"
-              :isInvalid="validatorAccountForm?.errorsFormData?.phonePassword?.errors?.length > 0"
-              @blur="validatorAccountForm?.doValidateField('phonePassword',$event.target.value)"
-              @input="validatorAccountForm?.doValidateField('phonePassword',$event.target.value)"
+          <UiSelect
+              :without-no-select="true"
+              :data="paymentTypes"
+              :value="formData.paymentSystemId"
+              @change="handleChangeSelectPaymentType"
+              :isDirty="validatorPaymentDetailForm?.errorsFormData?.paymentSystemId?.isDirty"
+              :isInvalid="validatorPaymentDetailForm?.errorsFormData?.paymentSystemId?.errors?.length > 0"
+              @blur="validatorPaymentDetailForm?.doValidateField('paymentSystemId',$event)"
           />
         </UiFormControl>
+
+        <!-- ... -->
+
+        <div v-if="hasSelectedPaymentSystem">
+          <pre>{{ selectedPaymentSystem }}</pre>
+        </div>
+        <div v-else>HAVE NOT SELECTED</div>
       </div>
     </div>
   </div>
@@ -57,15 +60,15 @@
 
 <script lang="ts" setup>
 import {useI18n} from "vue-i18n";
-import {reactive, inject, onMounted, ref} from "vue";
+import {reactive, inject, onMounted, ref, computed} from "vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
 import UiInput from "~/components/ui/UiInput.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import {
-  validateAccountForm,
-  validatorAccountForm,
-} from "~/pages/accounts/composables/validation";
-import {formData} from "~/pages/accounts/composables";
+  validatePaymentDetailForm,
+  validatorPaymentDetailForm,
+} from "~/pages/payments/details/composables/validation";
+import {formData} from "~/pages/payments/details/composables";
 import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
@@ -82,49 +85,72 @@ const props = defineProps({
   },
 });
 
-const toast = useToast();
-let rolesData = reactive([]);
-let accountTypes = reactive([]);
-
 const app = useAppCore();
-
 const {closeModal} = inject("modalControl") as { closeModal: Function };
 
-const handleChangeSelectAccountType = (val) => {
-  console.log("handleChangeSelectAccountType", val);
-  validatorAccountForm.doValidateField("accountType", val);
-  formData.accountType = val;
-};
+const toast = useToast();
+let paymentTypes = reactive([]);
+let paymentSystems = reactive([]);
+let selectedPaymentSystem = reactive({});
 
-const getAccountTypes = async () => {
-  const response = await app.accountTypes.get({perPage: 20});
-  accountTypes.splice(0, accountTypes.length,
-      ...response.data.data.data.map(({ id, name }) => ({
+const hasSelectedPaymentSystem = computed(() => Object.keys(selectedPaymentSystem).length > 0)
+
+function replaceReactiveObject(target, source) {
+  for (const k of Object.keys(target)) delete target[k]
+  if (source && typeof source === 'object') Object.assign(target, source)
+}
+
+const handleChangeSelectPaymentType = (val) => {
+  validatorPaymentDetailForm.doValidateField('paymentSystemId', val)
+  formData.paymentSystemId = val
+
+  const ps = paymentSystems.find(x => x.id === val) || null
+
+  replaceReactiveObject(selectedPaymentSystem, ps)
+
+  console.log('selectedPaymentSystem', selectedPaymentSystem)
+}
+
+const getPaymentTypes = async () => {
+  const response = await app.paymentSystems.get();
+  paymentTypes.splice(0, paymentTypes.length,
+      ...response.data.map(({ id, name }) => ({
         id: String(id),
         value: String(id),
         text: String(name),
       }))
   );
+  paymentSystems.splice(0, paymentTypes.length,
+      ...response.data.map(({ id, name, pdfc }) => ({
+        id: String(id),
+        name: String(name),
+        pdfc: pdfc,
+      }))
+  );
+
+  console.log('*** *** ***');
+  console.log(paymentSystems);
+  console.log('*** *** ***');
 };
 
 const handleSubmitForm = async () => {
-  validateAccountForm(async () => {
+  validatePaymentDetailForm(async () => {
     try {
       isLoading.value = true;
-      const response = await app.accounts.post(formData);
+      const response = await app.paymentDetails.post(formData);
       closeModal();
-      useEventBus.emit("loadDataForAccounts");
+      useEventBus.emit("loadDataForPaymentDetails");
       toast.success(response.data.message);
     } catch (errorResponse) {
       console.log("handleSubmitForm -> errorResponse", errorResponse);
     } finally {
-      // isLoading.value = false;
+      isLoading.value = false;
     }
   });
 };
 
 onMounted(async () => {
-  await getAccountTypes();
+  await getPaymentTypes();
 });
 </script>
 

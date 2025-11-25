@@ -102,7 +102,6 @@ export const useValidation = (
   }
 
   const doValidateField = (fieldName: String, value: any = null) => {
-      console.log('DO DO DO', value);
     if (value !== null) formData[fieldName as keyof typeof formData] = value
     setIsDirty(fieldName)
     validateField(

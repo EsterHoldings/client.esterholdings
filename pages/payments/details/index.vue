@@ -9,7 +9,7 @@
 
         <UiButtonDefault state="info" @click="handleClickCreateNewPaymentDetail">
           <UiIconPlus class="mr-2" />
-          <span>{{ t("cabinet.payments.create") }}</span>
+          <span>{{ t("cabinet.payments.details.createNew.title") }}</span>
         </UiButtonDefault>
       </div>
 

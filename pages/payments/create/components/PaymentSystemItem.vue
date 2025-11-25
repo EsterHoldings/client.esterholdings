@@ -1,11 +1,24 @@
 <template>
 <div class="payment-system-item" :class="{'active': props.isActive}" @click="handleSelect">
-  <span class="payment-system-item__logo">
-    <component :is="props.icon" />
-  </span>
-  <span class="payment-system-item__name">
-    {{ props.name }}
-  </span>
+  <div class="flex items-center justify-center gap-5">
+    <span class="payment-system-item__logo">
+      <component :is="props.icon" />
+    </span>
+    <span class="payment-system-item__name">
+      {{ props.name }}
+    </span>
+  </div>
+  <div class="flex items-center justify-center">
+    <div
+        class="h-[16px] w-[16px] rounded-full flex items-center justify-center border border-[var(--color-stroke-ui-light)]"
+        :class="{'border-[var(--color-ui-accent)]': props.isActive}"
+    >
+      <div
+          class="h-[10px] w-[10px] rounded-full"
+          :class="{'bg-[var(--color-ui-accent)]': props.isActive}"
+      ></div>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -62,12 +75,12 @@ const handleSelect = () => emit('select');
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 40px;
-    width: 40px;
+    height: 20px;
+    width: 20px;
 
     svg {
-      height: 40px;
-      width: 40px;
+      height: 20px;
+      width: 20px;
 
       stroke-width: 1px;
 
