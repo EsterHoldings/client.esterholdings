@@ -180,6 +180,7 @@
           :errors="validatorUsdtTrcDataForm?.errorsFormData?.accountId?.errors"
       >
         <UiSelect
+            :without-no-select="true"
             :data="accounts"
             :isDirty="validatorUsdtTrcDataForm.errorsFormData?.accountId?.isDirty"
             :isInvalid="validatorUsdtTrcDataForm.errorsFormData?.accountId?.errors?.length > 0"
