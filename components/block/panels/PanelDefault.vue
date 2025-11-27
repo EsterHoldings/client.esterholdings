@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[var(--ui-background-panel)] border border-[var(--ui-primary-main)] rounded-[10px]">
+  <div class="bg-[var(--ui-background-panel)] border border-[var(--color-stroke-ui-light)] rounded-[10px]">
     <div
       v-if="title.length > 0"
       class="px-[10px] h-10 flex items-center font-semibold">
