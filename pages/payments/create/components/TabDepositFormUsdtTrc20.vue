@@ -222,7 +222,8 @@
       </UiFormControl>
 
       <UiButtonDefault state="info--outline" @click="validateUsdtTrcDataForm(handleSubmit)">
-        Создать депозит
+        <UiIconSpinnerDefault v-if="isLoadingSubmitBtn" />
+        <span v-else>Создать депозит</span>
       </UiButtonDefault>
     </div>
   </div>
@@ -231,7 +232,7 @@
 <script lang="ts" setup>
 import useAppCore from "~/composables/useAppCore";
 import { formData } from "~/pages/payments/create/composables/TabDepositFormUsdtTrc20";
-import { onMounted, ref } from "vue";
+import {inject, onMounted, ref} from "vue";
 import {
   resetFormData,
   resetValidationUsdtTrcDataForm,
@@ -247,6 +248,8 @@ import UiTextH5 from "~/components/ui/UiTextH5.vue";
 import UiTextarea from "~/components/ui/UiTextarea.vue";
 import { useToast } from "vue-toastification";
 import { navigateTo } from "nuxt/app";
+import useEventBus from "~/composables/useEventBus";
+import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
 const props = defineProps({
   paymentSystem: {
@@ -255,24 +258,34 @@ const props = defineProps({
   }
 });
 
+const { closeModal } = inject("modalControl");
+
 const toast = useToast();
 const appCore = useAppCore();
+
 
 const accounts = ref<any[]>([]);
 const loadAccountsPage = ref(1);
 const loadAccountsPerPage = ref(10);
+const isLoadingSubmitBtn = ref(false);
 const isLoadingAccounts = ref(false);
 const hasMoreAccounts = ref(true);
 
 const handleSubmit = async () => {
   try {
+    isLoadingSubmitBtn.value = true;
     formData.paymentSystemId = props.paymentSystem.id;
     const response: any = await appCore.deposit.post(formData);
     const redirectUrl = response.data.data.redirectUrl;
-    window.open(redirectUrl, "_blank", "noopener");
     navigateTo("/payments");
+    closeModal();
+    useEventBus.emit("loadDataForPayments");
+    window.open(redirectUrl, "_blank", "noopener");
   } catch (e) {
     toast.error("Oops =( We have some problems.");
+    closeModal();
+  } finally {
+    isLoadingSubmitBtn.value = false;
   }
 };
 

@@ -231,6 +231,7 @@
 </template>
 
 <script lang="ts" setup>
+import CreateNewDeposit from '~/pages/payments/create/index.vue'
 import PageStructureContent from '~/components/block/pages/PageStructureContent.vue'
 import PageStructureDefault from '~/components/block/pages/PageStructureDefault.vue'
 import PaginationMain from '~/components/block/paginations/PaginationMain.vue'
@@ -243,8 +244,9 @@ import UiIconSpinnerDefault from '~/components/ui/UiIconSpinnerDefault.vue'
 import UiIconUpdate from '~/components/ui/UiIconUpdate.vue'
 import UiInput from '~/components/ui/UiInput.vue'
 import UiTextH4 from '~/components/ui/UiTextH4.vue'
-import CreateNewDeposit from '~/pages/payments/create/index.vue'
 import useAppCore from '~/composables/useAppCore'
+import useEventBus from "~/composables/useEventBus";
+
 import { definePageMeta } from '~/.nuxt/imports'
 import { useI18n } from 'vue-i18n'
 import {computed, inject, onMounted, reactive, ref} from 'vue'
@@ -376,6 +378,7 @@ const handleSetPerPage = async (value: number) => {
 }
 
 onMounted(async () => {
+  useEventBus.on("loadDataForPayments", loadData);
   await loadData()
 })
 </script>
