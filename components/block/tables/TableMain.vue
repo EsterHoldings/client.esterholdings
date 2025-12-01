@@ -2,11 +2,9 @@
 </script>
 
 <template>
-  <div class="overflow-x-auto relative">
-    <table
-        class="w-full text-[var(--ui-text-main)] text-sm border-separate border-spacing-0"
-    >
-      <thead class="h-46px">
+  <div class="overflow-x-auto relative rounded-t-lg rounded-b-none">
+    <table class="w-full text-[var(--ui-text-main)] text-sm border-separate border-spacing-0">
+      <thead class="h-[46px]">
       <slot name="thead" />
       </thead>
 
@@ -26,13 +24,13 @@
   background: var(--color-stroke-ui-light);
 }
 
-:deep(thead tr th:first-child) {
-  border-top-left-radius: 10px;
-}
-
-:deep(thead tr th:last-child) {
-  border-top-right-radius: 10px;
-}
+//:deep(thead tr th:first-child) {
+//  border-top-left-radius: 10px;
+//}
+//
+//:deep(thead tr th:last-child) {
+//  border-top-right-radius: 10px;
+//}
 
 :deep(tbody tr) {
   height: 54px;

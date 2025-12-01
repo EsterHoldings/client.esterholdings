@@ -158,10 +158,11 @@
             <template #tbody>
               <div
                   class="backdrop-blur-[2px] w-full absolute bottom-0 top-[45px] flex items-center justify-center z-10"
-                  v-if="isLoading"
+                  v-if="isLoading && !isInitialLoading"
               >
                 <UiIconSpinnerDefault/>
               </div>
+
               <template v-if="payments.length">
                 <tr
                     v-for="payment in payments"
@@ -169,12 +170,8 @@
                     class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
                 >
                   <td class="px-2 py-3 font-bold flex justify-center items-center">
-                    <button
-                        @click="copyToClipboard(payment.id)"
-                        class="cursor-pointer"
-                        aria-label="Copy id"
-                    >
-                      <UiIconCopy/>
+                    <button class="cursor-pointer" aria-label="Copy id">
+                      <UiIconCopy :text="payment.id" />
                     </button>
                   </td>
 
@@ -213,36 +210,41 @@
                 </tr>
               </template>
             </template>
-
-            <template #empty>
-              <template v-if="payments.length === 0">
-                <div class="h-[40vh] flex items-center justify-center">
-                  <span v-if="!isLoading" class="text-[var(--ui-text-main)]">
-                    {{ t('cabinet.billing.nothingToShow') }}
-                  </span>
-                  <UiIconSpinnerDefault v-else/>
-                </div>
-              </template>
-            </template>
-
-            <template #pagination>
-              <PaginationMain
-                  class="px-5 py-2"
-                  :current-page="currentPage"
-                  :total-pages="totalPages"
-                  :total="total"
-                  :per-page="perPage"
-                  :visible-pages="visiblePages"
-                  :per-page-options="[1,2,3,4,5,6,7,8,9,10,15,20,25,50,100]"
-                  @go-prev="goPrev"
-                  @go-next="goNext"
-                  @set-page="setPage"
-                  @set-per-page="handleSetPerPage"
-              />
-            </template>
           </TableMain>
         </template>
       </PageStructureContent>
+
+      <template v-if="isInitialLoading">
+        <div class="flex min-h-[55vh] w-full flex-col items-center justify-center">
+          <UiIconLogo class="mb-4 h-[44px] w-[44px]" />
+          <UiIconSpinnerDefault class="h-[44px] w-[44px]" />
+        </div>
+      </template>
+
+      <template v-if="!isInitialLoading && payments.length === 0">
+        <div class="h-[40vh] flex items-center justify-center">
+                <span v-if="!isLoading" class="text-[var(--ui-text-main)]">
+                  {{ t('cabinet.billing.nothingToShow') }}
+                </span>
+          <UiIconSpinnerDefault v-else/>
+        </div>
+      </template>
+
+      <PaginationMain
+          v-if="!isInitialLoading && payments.length > 0"
+          class="px-5 py-2"
+          :current-page="currentPage"
+          :total-pages="totalPages"
+          :total="total"
+          :per-page="perPage"
+          :visible-pages="visiblePages"
+          :per-page-options="[1,2,3,4,5,6,7,8,9,10,15,20,25,50,100]"
+          @go-prev="goPrev"
+          @go-next="goNext"
+          @set-page="setPage"
+          @set-per-page="handleSetPerPage"
+      />
+
     </template>
   </PageStructureDefault>
 </template>
@@ -268,6 +270,7 @@ import {definePageMeta} from '~/.nuxt/imports'
 import {useI18n} from 'vue-i18n'
 import {computed, inject, onMounted, reactive, ref} from 'vue'
 import UiBadge from "~/components/ui/UiBadge.vue";
+import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 
 definePageMeta({
   layout: 'cabinet',
@@ -289,6 +292,7 @@ const currentPage = ref(1)
 const orderBy = ref<string>('created_at')
 const orderDirection = ref<string>(ORDER_DIRECTION_DESC)
 const isLoading = ref(false)
+const isInitialLoading = ref(true)
 
 const payments = reactive<any[]>([])
 const spinIcon = ref(false)
@@ -386,6 +390,7 @@ const loadData = async () => {
 
   payments.splice(0, payments.length, ...paymentsData)
   isLoading.value = false
+  isInitialLoading.value = false
 }
 
 const shortId = (uuid: string) => uuid.split('-').pop()
