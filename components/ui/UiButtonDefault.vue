@@ -127,7 +127,7 @@
     }
 
     &--default {
-      background-color: var(--ui-primary-main);
+      background-color: var(--color-stroke-ui-light);
       color: white;
 
       &--small {
@@ -145,12 +145,12 @@
       }
 
       &--outline {
-        border: 1px solid var(--ui-primary-main);
+        border: 1px solid var(--color-stroke-ui-light);
         background-color: transparent;
         color: var(--ui-primary-main);
 
         &--small {
-          border: 1px solid var(--ui-primary-main);
+          border: 1px solid var(--color-stroke-ui-light);
           background-color: transparent;
           height: 32px;
           min-width: 32px;
@@ -169,7 +169,7 @@
         }
 
         &:hover {
-          background: var(--ui-primary-main) !important;
+          background: var(--color-stroke-ui-light) !important;
         }
       }
     }
