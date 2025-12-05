@@ -201,7 +201,7 @@
         </div>
 
         <div class="text-[var(--ui-text-main)] flex items-center justify-center gap-2 relative">
-          <span class="hidden sm:inline">John Connor</span>
+          <span class="hidden sm:inline">Родіон Максименко</span>
           <UiIconArrowDown
             :class="{ 'rotate-180': profileMenuIsOpen, 'sm:block': true }"
             class="hidden" />

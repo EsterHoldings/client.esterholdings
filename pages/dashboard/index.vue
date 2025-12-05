@@ -31,7 +31,7 @@
 
               <div class="flex items-center justify-end">
                 <div class="flex flex-col mr-3">
-                  <UiTextH5 class="flex justify-end items-center">Test User</UiTextH5>
+                  <UiTextH5 class="flex justify-end items-center">Родіон Максименко</UiTextH5>
                   <UiTextParagraph class="flex justify-end items-center">
                     <strong>test@gmail.com</strong>
                   </UiTextParagraph>
