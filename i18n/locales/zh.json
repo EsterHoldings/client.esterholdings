@@ -749,6 +749,7 @@
         "documentVerified": "文件已成功验证！",
         "paymentInProgress": "支付验证进行中！",
         "profileInProgress": "个人资料验证进行中！",
+        "profilePhoto": "头像照片正在审核中！",
         "profileButton": "个人资料"
       },
       "actions": {

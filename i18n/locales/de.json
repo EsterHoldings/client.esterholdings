@@ -749,6 +749,7 @@
         "documentVerified": "Dokument erfolgreich verifiziert!",
         "paymentInProgress": "Zahlungsverifizierung läuft!",
         "profileInProgress": "Profilverifizierung läuft!",
+        "profilePhoto": "Die Verifizierung des Profilfotos ist in Bearbeitung!",
         "profileButton": "Profil"
       },
       "actions": {

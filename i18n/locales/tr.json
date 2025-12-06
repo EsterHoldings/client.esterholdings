@@ -749,6 +749,7 @@
         "documentVerified": "Belge başarıyla doğrulandı!",
         "paymentInProgress": "Ödeme doğrulaması devam ediyor!",
         "profileInProgress": "Profil doğrulaması devam ediyor!",
+        "profilePhoto": "Profil fotoğrafı doğrulaması devam ediyor!",
         "profileButton": "Profil"
       },
       "actions": {

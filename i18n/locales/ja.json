@@ -749,6 +749,7 @@
         "documentVerified": "文書が正常に確認されました！",
         "paymentInProgress": "支払い確認進行中！",
         "profileInProgress": "プロフィール確認進行中！",
+        "profilePhoto": "プロフィール写真の確認は進行中です！",
         "profileButton": "プロフィール"
       },
       "actions": {

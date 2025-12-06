@@ -749,6 +749,7 @@
         "documentVerified": "מסמך אומת בהצלחה!",
         "paymentInProgress": "אימות תשלום בתהליך!",
         "profileInProgress": "אימות פרופיל בתהליך!",
+        "profilePhoto": "אימות תמונת הפרופיל נמצא בתהליך!",
         "profileButton": "פרופיל"
       },
       "actions": {

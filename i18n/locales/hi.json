@@ -749,6 +749,7 @@
         "documentVerified": "दस्तावेज़ सफलतापूर्वक सत्यापित!",
         "paymentInProgress": "भुगतान सत्यापन प्रगति में!",
         "profileInProgress": "प्रोफ़ाइल सत्यापन प्रगति में!",
+        "profilePhoto": "प्रोफ़ाइल फ़ोटो का सत्यापन प्रगति में है!",
         "profileButton": "प्रोफ़ाइल"
       },
       "actions": {

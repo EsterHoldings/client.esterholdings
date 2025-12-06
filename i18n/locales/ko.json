@@ -749,6 +749,7 @@
         "documentVerified": "문서가 성공적으로 인증되었습니다!",
         "paymentInProgress": "결제 인증 진행 중!",
         "profileInProgress": "프로필 인증 진행 중!",
+        "profilePhoto": "프로필 사진 인증이 진행 중입니다!",
         "profileButton": "프로필"
       },
       "actions": {

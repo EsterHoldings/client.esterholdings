@@ -745,10 +745,23 @@
       "accountVerification": {
         "title": "Account Verification",
         "subtitle": "Verification in progress",
-        "addressFailed": "Address verification failed!",
+
         "documentVerified": "Document successfully verified!",
+        "documentInProgress": "Document in progress!",
+        "documentRejected": "Document was rejected!",
+
+        "paymentVerified": "Payment successfully verified!",
         "paymentInProgress": "Payment verification in progress!",
+        "paymentRejected": "Payment was rejected!",
+
+        "profileVerified": "Profile successfully verified!",
         "profileInProgress": "Profile verification in progress!",
+        "profileRejected": "Profile was rejected!",
+
+        "profilePhotoVerified": "Profile photo verification in progress!",
+        "profilePhotoInProgress": "Profile photo in progress!",
+        "profilePhotoRejected": "Profile photo photo rejected!",
+
         "profileButton": "Profile"
       },
       "actions": {
