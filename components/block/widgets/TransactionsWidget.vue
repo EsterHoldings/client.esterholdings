@@ -24,16 +24,14 @@ let searchTimer: number | undefined;
 const ORDER_DIRECTION_ASC = "asc";
 const ORDER_DIRECTION_DESC = "desc";
 
-const sortByFilterData = reactive(
-    [
-      { id: "created_at", value: "created_at", text: "Створено" },
-      { id: "amount", value: "amount", text: "Сума" },
-      { id: "currency", value: "currency", text: "Валюта" },
-      { id: "status", value: "status", text: "Статус" },
-      { id: "type", value: "type", text: "Тип" },
-      { id: "account_number", value: "account_number", text: "MT4 рахунок" }
-    ]
-);
+const sortByFilterData = computed(() => [
+  { id: "created_at", value: "created_at", text: t("cabinet.dashboard.transactions.sort.createdAt") },
+  { id: "amount", value: "amount", text: t("cabinet.dashboard.transactions.sort.amount") },
+  { id: "currency", value: "currency", text: t("cabinet.dashboard.transactions.sort.currency") },
+  { id: "status", value: "status", text: t("cabinet.dashboard.transactions.sort.status") },
+  { id: "type", value: "type", text: t("cabinet.dashboard.transactions.sort.type") },
+  { id: "account_number", value: "account_number", text: t("cabinet.dashboard.transactions.sort.accountNumber") },
+]);
 
 const orderBy = ref<string>("created_at");
 const orderDirection = ref<"asc" | "desc">(ORDER_DIRECTION_DESC);
@@ -94,7 +92,7 @@ const loadPaymentsData = async () => {
     page.value = meta?.current_page ?? page.value;
     perPage.value = meta?.per_page ?? perPage.value;
   } catch (e: any) {
-    errorMsg.value = e?.message ?? "Не вдалося завантажити платежі";
+    errorMsg.value = e?.message ?? t("cabinet.dashboard.transactions.errorLoad");
   } finally {
     isLoading.value = false;
   }
@@ -162,7 +160,7 @@ onBeforeUnmount(() => {});
     <div class="relative rounded-2xl p-3 sm:p-4">
       <div class="flex flex-col gap-3">
         <div class="flex items-center justify-between gap-3">
-          <UiTextH5 class="!text-[var(--ui-text-main)]">Deposit</UiTextH5>
+          <UiTextH5 class="!text-[var(--ui-text-main)]">{{ t("cabinet.dashboard.transactions.title") }}</UiTextH5>
           <NuxtLink to="/payments/create" class="shrink-0">
             <UiButtonDefault state="success">
               {{ t("cabinet.dashboard.actions.newDeposit") }}
@@ -179,7 +177,7 @@ onBeforeUnmount(() => {});
               <input
                   v-model="searchInput"
                   type="text"
-                  placeholder="Пошук платежів…"
+                  :placeholder="t('cabinet.dashboard.transactions.searchPlaceholder')"
                   class="w-full bg-transparent outline-none text-sm placeholder:text-slate-500"
               />
             </div>
@@ -216,7 +214,9 @@ onBeforeUnmount(() => {});
               <div class="hidden md:grid grid-cols-[1.2fr_1fr_0.8fr_1fr_1.1fr] items-center gap-3">
                 <div class="flex min-w-0 items-center gap-3">
                   <div class="min-w-0">
-                    <div class="text-[11px] text-[var(--ui-text-secondary)]">MT4 рахунок</div>
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">
+                    {{ t("cabinet.dashboard.transactions.accountNumber") }}
+                  </div>
                     <div class="min-w-0 max-w-[260px] overflow-hidden text-ellipsis whitespace-nowrap font-medium" :title="payment.account_number">
                       {{ payment.account_number }}
                     </div>
@@ -233,25 +233,25 @@ onBeforeUnmount(() => {});
                   </span>
                 </div>
                 <div class="min-w-0">
-                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Сума</div>
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.amount") }}</div>
                   <div class="whitespace-nowrap font-semibold tabular-nums" :class="amountClass(payment)">
                     {{ payment.amount }}
                   </div>
                 </div>
                 <div class="min-w-0">
-                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Валюта</div>
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.currency") }}</div>
                   <div class="max-w-[80px] truncate whitespace-nowrap uppercase tracking-wide text-[var(--ui-text-main)]">
                     {{ payment.currency }}
                   </div>
                 </div>
                 <div class="min-w-0">
-                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Тип</div>
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.type") }}</div>
                   <div class="max-w-[140px] truncate whitespace-nowrap capitalize" :title="payment.type">
                     {{ payment.type }}
                   </div>
                 </div>
                 <div class="min-w-0 text-right">
-                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Створено</div>
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.createdAt") }}</div>
                   <div class="inline-block max-w-[220px] truncate whitespace-nowrap text-[var(--ui-text-main)] tabular-nums" :title="payment.created_at">
                     <UiTextSmall>{{ payment.created_at }}</UiTextSmall>
                   </div>
@@ -261,7 +261,9 @@ onBeforeUnmount(() => {});
               <div class="md:hidden">
                 <div class="flex items-start justify-between gap-2">
                   <div class="min-w-0">
-                    <div class="text-[11px] text-[var(--ui-text-secondary)]">MT4 рахунок</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">
+                      {{ t("cabinet.dashboard.transactions.accountNumber") }}
+                    </div>
                     <div class="max-w-[220px] truncate font-medium" :title="payment.account_number">{{ payment.account_number }}</div>
                   </div>
                   <span
@@ -277,21 +279,21 @@ onBeforeUnmount(() => {});
                 </div>
                 <div class="mt-3 flex items-center justify-between gap-2">
                   <div>
-                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Сума</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.amount") }}</div>
                     <div class="font-semibold tabular-nums" :class="amountClass(payment)">{{ payment.amount }}</div>
                   </div>
                   <div class="text-right">
-                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Валюта</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.currency") }}</div>
                     <div class="ml-auto max-w-[80px] truncate uppercase tracking-wide text-[var(--ui-text-main)]">{{ payment.currency }}</div>
                   </div>
                 </div>
                 <div class="mt-3 grid grid-cols-2 gap-3 border-t border-[var(--color-stroke-ui-light)] pt-2">
                   <div>
-                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Тип</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.type") }}</div>
                     <div class="max-w-[140px] truncate capitalize" :title="payment.type">{{ payment.type }}</div>
                   </div>
                   <div class="text-right">
-                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Створено</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.createdAt") }}</div>
                     <div class="ml-auto max-w-[220px] truncate tabular-nums text-[var(--ui-text-main)]" :title="payment.created_at">{{ payment.created_at }}</div>
                   </div>
                 </div>
@@ -302,14 +304,14 @@ onBeforeUnmount(() => {});
             v-else
             class="mt-4 flex flex-col items-center justify-center gap-2 rounded-xl border border-[var(--color-stroke-ui-light)] bg-[--color-stroke-ui-dark] p-6 text-center text-[var(--ui-text-main)]"
           >
-            <UiTextH5>Записів поки немає.</UiTextH5>
+            <UiTextH5>{{ t("cabinet.dashboard.transactions.empty") }}</UiTextH5>
             <UiIconSpinnerDefault />
           </div>
         </div>
 
         <div v-if="total > 0" class="mt-5 flex flex-col md:flex-row items-center justify-between gap-3 px-1">
           <div class="order-2 md:order-1 flex items-center gap-2 rounded-xl border border-[var(--color-stroke-ui-light)] bg-[--color-stroke-ui-dark] px-3 py-2">
-            <span class="text-xs text-[var(--ui-text-secondary)]">Показати</span>
+            <span class="text-xs text-[var(--ui-text-secondary)]">{{ t("cabinet.dashboard.transactions.show") }}</span>
             <select v-model="perPage" class="bg-transparent text-sm outline-none">
               <option :value="5">5</option>
               <option :value="10">10</option>
@@ -318,15 +320,15 @@ onBeforeUnmount(() => {});
             </select>
           </div>
           <div class="order-1 md:order-2 text-center text-xs text-[var(--ui-text-main)]">
-            Показано {{ fromItem }}–{{ toItem }} з {{ total }}
+            {{ t("cabinet.dashboard.transactions.shownRange", { from: fromItem, to: toItem, total }) }}
           </div>
           <div class="order-3 flex items-center gap-1">
             <button
                 class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page <= 1"
                 @click="goToPage(1)"
-                aria-label="Перша сторінка"
-                title="Перша"
+                :aria-label="t('cabinet.dashboard.transactions.firstPage')"
+                :title="t('cabinet.dashboard.transactions.firstPage')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path d="M13.707 15.707a1 1 0 0 1-1.414 0l-5-5a1 1 0 0 1 0-1.414l5-5a1 1 0 1 1 1.414 1.414L9.414 10l4.293 4.293a1 1 0 0 1 0 1.414Z"/>
@@ -337,8 +339,8 @@ onBeforeUnmount(() => {});
                 class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page <= 1"
                 @click="prevPage"
-                aria-label="Попередня сторінка"
-                title="Попередня"
+                :aria-label="t('cabinet.dashboard.transactions.prevPage')"
+                :title="t('cabinet.dashboard.transactions.prevPage')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M12.707 15.707a1 1 0 0 1-1.414 0l-5-5a1 1 0 0 1 0-1.414l5-5a1 1 0 1 1 1.414 1.414L8.414 10l4.293 4.293a1 1 0 0 1 0 1.414Z"/>
@@ -361,8 +363,8 @@ onBeforeUnmount(() => {});
                 class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page >= lastPage"
                 @click="nextPage"
-                aria-label="Наступна сторінка"
-                title="Наступна"
+                :aria-label="t('cabinet.dashboard.transactions.nextPage')"
+                :title="t('cabinet.dashboard.transactions.nextPage')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M7.293 4.293a1 1 0 0 1 1.414 0L13.707 9.293a1 1 0 0 1 0 1.414L8.707 15.707a1 1 0 0 1-1.414-1.414L10.586 10 7.293 6.707a1 1 0 0 1 0-1.414Z"/>
@@ -372,8 +374,8 @@ onBeforeUnmount(() => {});
                 class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page >= lastPage"
                 @click="goToPage(lastPage)"
-                aria-label="Остання сторінка"
-                title="Остання"
+                :aria-label="t('cabinet.dashboard.transactions.lastPage')"
+                :title="t('cabinet.dashboard.transactions.lastPage')"
             >
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path d="M6.293 4.293a1 1 0 0 1 1.414 0l5 5a1 1 0 0 1 0 1.414l-5 5a1 1 0 1 1-1.414-1.414L10.586 10 6.293 5.707a1 1 0 0 1 0-1.414Z"/>

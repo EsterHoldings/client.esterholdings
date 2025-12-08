@@ -2,11 +2,11 @@
   <UiContainer>
     <div class="space-y-5 text-[var(--ui-text-main)]">
       <div class="my-5 flex items-center justify-between w-full text-[var(--ui-text-main)]">
-        <UiTextH4>Support Page</UiTextH4>
+        <UiTextH4>{{ t("support.page.title") }}</UiTextH4>
 
         <UiButtonDefault state="info" @click="handleClickCreateNewTicket">
           <UiIconPlus class="mr-2 fill-[var(--ui-text-main)]"/>
-          <span>New ticket</span>
+          <span>{{ t("support.page.newTicket") }}</span>
         </UiButtonDefault>
       </div>
 
@@ -16,7 +16,7 @@
               class="w-full max-w-[240px]"
               @input="handleInputSearch"
               :value="search"
-              :placeholder="'Search'"
+              :placeholder="t('support.page.searchPlaceholder')"
           >
             <template #icon-left>
               <UiIconSearch/>
@@ -73,13 +73,13 @@
                 <UiTextSmall>ID</UiTextSmall>
               </th>
               <th class="px-4 font-semibold w-full">
-                <UiTextSmall>Subject of the appeal</UiTextSmall>
+                <UiTextSmall>{{ t("support.page.subject") }}</UiTextSmall>
               </th>
               <th class="px-4 font-semibold">
                 <div class="flex items-center justify-start gap-2">
-                  <UiTextSmall @click="handleOrderByAndDirection('last_message_at')" class="whitespace-nowrap">
-                    Last Update
-                  </UiTextSmall>
+              <UiTextSmall @click="handleOrderByAndDirection('last_message_at')" class="whitespace-nowrap">
+                    {{ t("support.page.lastUpdate") }}
+              </UiTextSmall>
                   <UiIconSort
                       :active="orderBy === 'last_message_at'"
                       :direction="orderDirection"
@@ -90,7 +90,7 @@
               <th class="px-4 font-semibold">
                 <div class="flex items-center justify-start gap-2">
                   <UiTextSmall @click="handleOrderByAndDirection('status')">
-                    Status
+                    {{ t("support.page.status") }}
                   </UiTextSmall>
                   <UiIconSort
                       :active="orderBy === 'status'"
@@ -151,7 +151,7 @@
           <div v-if="tickets.length === 0" class="w-full h-[50vh] flex items-center justify-center">
             <UiButtonDefault state="info" @click="handleClickCreateNewTicket">
               <UiIconPlus class="mr-2 fill-[var(--ui-text-main)]"/>
-              <span>New ticket</span>
+              <span>{{ t("support.page.newTicket") }}</span>
             </UiButtonDefault>
           </div>
         </div>
@@ -161,7 +161,7 @@
       <!-- Пагінація -->
       <div class="px-5 h-[50px] mt-2 flex items-center justify-between">
         <div class="p-0 flex items-center justify-center [&>div]:h-[33px] [&>div]:w-[33px]">
-          <UiTextSmall class="mr-2">Per page:</UiTextSmall>
+          <UiTextSmall class="mr-2">{{ t("support.page.perPage") }}</UiTextSmall>
           <UiSelect
               class="!w-min flex items-center justify-center !h-[32px]"
               :data="perPageList"

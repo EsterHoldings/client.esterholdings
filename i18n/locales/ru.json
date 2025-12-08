@@ -750,7 +750,16 @@
         "paymentInProgress": "Проверка платежа в процессе!",
         "profileInProgress": "Проверка профиля в процессе!",
         "profilePhoto": "Проверка фото профиля в процессе!",
-        "profileButton": "Профиль"
+        "profileButton": "Профиль",
+        "documentInProgress": "Проверка документа в процессе!",
+        "documentRejected": "Документ отклонен!",
+        "paymentVerified": "Платеж успешно проверен!",
+        "paymentRejected": "Платеж отклонен!",
+        "profileVerified": "Профиль успешно проверен!",
+        "profileRejected": "Профиль отклонен!",
+        "profilePhotoVerified": "Фото профиля успешно проверено!",
+        "profilePhotoInProgress": "Проверка фото профиля в процессе!",
+        "profilePhotoRejected": "Фото профиля отклонено!"
       },
       "actions": {
         "newDeposit": "Новый депозит",
@@ -768,6 +777,31 @@
           "active": "Активен",
           "inactive": "Неактивен"
         }
+      },
+      "transactions": {
+        "title": "Пополнение",
+        "sort": {
+          "createdAt": "Создано",
+          "amount": "Сумма",
+          "currency": "Валюта",
+          "status": "Статус",
+          "type": "Тип",
+          "accountNumber": "MT4 аккаунт"
+        },
+        "accountNumber": "MT4 аккаунт",
+        "amount": "Сумма",
+        "currency": "Валюта",
+        "type": "Тип",
+        "createdAt": "Создано",
+        "searchPlaceholder": "Поиск платежей…",
+        "errorLoad": "Не удалось загрузить платежи",
+        "empty": "Записей пока нет.",
+        "show": "Показать",
+        "shownRange": "Показано {from}–{to} из {total}",
+        "firstPage": "Первая страница",
+        "prevPage": "Предыдущая страница",
+        "nextPage": "Следующая страница",
+        "lastPage": "Последняя страница"
       }
     },
     "billing": {
@@ -938,11 +972,67 @@
       "components": {},
       "index": {
         "tabs": {
-          "general": "Общие",
+          "general": "Общее",
           "settings": "Настройки",
           "terms": "Условия"
         },
         "title": "Реферальная система"
+      },
+      "general": {
+        "linkTitle": "Реферальная ссылка",
+        "linkHint": "Делитесь ссылкой и зарабатывайте. Пока это демо-ссылка.",
+        "copy": "Скопировать ссылку",
+        "copyButton": "Скопировать ссылку",
+        "share": "Поделиться в Telegram",
+        "shareText": "Присоединяйся по моей реферальной ссылке",
+        "qrHint": "Сканируйте или делитесь через QR",
+        "summaryTitle": "Сводка",
+        "totalEarned": "Всего заработано",
+        "activeReferrals": "Активных рефералов",
+        "pendingPayouts": "В ожидании выплат",
+        "conversion": "Конверсия",
+        "levelsTitle": "Уровни и награды",
+        "levelHint": "Демо-данные — позже придут с бэкенда",
+        "level": "Уровень {level}",
+        "listTitle": "Рефералы",
+        "searchPlaceholder": "Поиск рефералов по имени или email",
+        "referralsCount": "Приглашено",
+        "earned": "Заработано",
+        "tier": "Статус",
+        "filter": {
+          "all": "Все",
+          "active": "Активные",
+          "pending": "В ожидании",
+          "blocked": "Заблокированные"
+        },
+        "status": {
+          "active": "Активен",
+          "pending": "В ожидании",
+          "blocked": "Заблокирован"
+        },
+        "empty": "Пока нет рефералов",
+        "copied": "Ссылка скопирована",
+        "copyError": "Не удалось скопировать ссылку"
+      },
+      "settings": {
+        "title": "Настройки рефералок",
+        "description": "Настройте, как обрабатывать награды, когда подключим бэкенд.",
+        "autoWithdraw": "Автовывод наград",
+        "autoWithdrawHint": "Автоматически отправлять награды на баланс",
+        "notify": "Уведомления",
+        "notifyHint": "Получать оповещения о регистрации/депозите реферала",
+        "soon": "Скоро",
+        "enabledDemo": "Включено (демо)",
+        "payoutThreshold": "Порог выплаты",
+        "payoutThresholdHint": "Минимальная сумма перед отправкой наград"
+      },
+      "terms": {
+        "title": "Условия и заметки",
+        "subtitle": "Черновик — заменить юридическим текстом.",
+        "rule1": "Награды начисляются после верификации приглашённого пользователя.",
+        "rule2": "Мошеннические или дублирующие аккаунты могут быть отклонены.",
+        "rule3": "Проценты и уровни — заглушки до реальных данных.",
+        "rule4": "Пишите в поддержку, если реферал не засчитан."
       }
     }
   },
@@ -1221,6 +1311,52 @@
     },
     "support": {
       "title": "Поддержка"
+    }
+  },
+  "support": {
+    "tickets": {
+      "subjectLabel": "Название (тема)",
+      "subjectPlaceholder": "Например: Проблемы с пополнением",
+      "messageLabel": "Текст заявки",
+      "messagePlaceholder": "Опишите проблему, например: Не получается пополнить счёт [номер]; пробую через [метод, например USDT-TRC20]",
+      "createButton": "Создать новую заявку",
+      "createdSuccess": "Тикет успешно создан!"
+    },
+    "page": {
+      "title": "Страница поддержки",
+      "newTicket": "Новый тикет",
+      "searchPlaceholder": "Поиск",
+      "subject": "Тема обращения",
+      "lastUpdate": "Последнее обновление",
+      "status": "Статус",
+      "perPage": "На странице:"
+    }
+  },
+  "cabinetExtra": {
+    "transactions": {
+      "title": "Deposit",
+      "sort": {
+        "createdAt": "Created",
+        "amount": "Amount",
+        "currency": "Currency",
+        "status": "Status",
+        "type": "Type",
+        "accountNumber": "MT4 account"
+      },
+      "accountNumber": "MT4 account",
+      "amount": "Amount",
+      "currency": "Currency",
+      "type": "Type",
+      "createdAt": "Created",
+      "searchPlaceholder": "Search payments…",
+      "errorLoad": "Failed to load payments",
+      "empty": "No records yet.",
+      "show": "Show",
+      "shownRange": "Showing {from}–{to} of {total}",
+      "firstPage": "First page",
+      "prevPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
     }
   }
 }

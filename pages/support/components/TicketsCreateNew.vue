@@ -10,28 +10,28 @@
     >
       <div class="accounts__edit__content__fields">
         <UiFormControl
-            :label="'Название (Тема)'"
+            :label="t('support.tickets.subjectLabel')"
             :errors="validatorTicketForm?.errorsFormData?.subject?.errors"
         >
           <UiInput
               type="text"
-              :placeholder="'Например: Проблемы с пополнением'"
+              :placeholder="t('support.tickets.subjectPlaceholder')"
               :value="formData.subject"
               :isDirty="validatorTicketForm?.errorsFormData?.subject?.isDirty"
               :isInvalid="validatorTicketForm?.errorsFormData?.subject?.errors?.length > 0"
               @blur="validatorTicketForm?.doValidateField('subject',$event.target.value)"
               @input="validatorTicketForm?.doValidateField('subject',$event.target.value)"
-          />
+        />
         </UiFormControl>
 
         <UiFormControl
-            :label="'Текст заявки'"
+            :label="t('support.tickets.messageLabel')"
             :errors="validatorTicketForm?.errorsFormData?.message?.errors"
         >
           <UiTextarea
               class="!h-[calc(100vh_-_350px)] w-full"
               type="text"
-              :placeholder="'Суть вашей проблемы, например: У меня не получается пополнить счет <номер счета>, я пытаюсь пополнить через <платежный метод, например: USDT-TRC20>'"
+              :placeholder="t('support.tickets.messagePlaceholder')"
               :value="formData.message"
               :isDirty="validatorTicketForm?.errorsFormData?.message?.isDirty"
               :isInvalid="validatorTicketForm?.errorsFormData?.message?.errors?.length > 0"
@@ -49,7 +49,7 @@
         state="secondary"
         @click="handleSubmitForm"
     >
-      <span v-if="!isLoading">{{ 'Создать новую заявку' }}</span>
+      <span v-if="!isLoading">{{ t('support.tickets.createButton') }}</span>
       <UiIconSpinnerDefault v-if="isLoading"/>
     </UiButtonDefault
     >
@@ -107,7 +107,7 @@ const handleSubmitForm = async () => {
       await app.tickets.post(formData);
       closeModal();
       useEventBus.emit("loadDataForSupport");
-      toast.success('Тикет успешно создан!');
+      toast.success(t("support.tickets.createdSuccess"));
     } catch (errorResponse) {
       console.log("handleSubmitForm -> errorResponse", errorResponse);
     } finally {

@@ -750,7 +750,16 @@
         "paymentInProgress": "Перевірка платежу в процесі!",
         "profileInProgress": "Перевірка профілю в процесі!",
         "profilePhoto": "Перевірка фото профілю триває!",
-        "profileButton": "Профіль"
+        "profileButton": "Профіль",
+        "documentInProgress": "Перевірка документа триває!",
+        "documentRejected": "Документ відхилено!",
+        "paymentVerified": "Платіж успішно перевірено!",
+        "paymentRejected": "Платіж відхилено!",
+        "profileVerified": "Профіль успішно перевірено!",
+        "profileRejected": "Профіль відхилено!",
+        "profilePhotoVerified": "Фото профілю успішно перевірено!",
+        "profilePhotoInProgress": "Перевірка фото профілю триває!",
+        "profilePhotoRejected": "Фото профілю відхилено!"
       },
       "actions": {
         "newDeposit": "Новий депозит",
@@ -768,6 +777,31 @@
           "active": "Активний",
           "inactive": "Неактивний"
         }
+      },
+      "transactions": {
+        "title": "Депозит",
+        "sort": {
+          "createdAt": "Створено",
+          "amount": "Сума",
+          "currency": "Валюта",
+          "status": "Статус",
+          "type": "Тип",
+          "accountNumber": "MT4 рахунок"
+        },
+        "accountNumber": "MT4 рахунок",
+        "amount": "Сума",
+        "currency": "Валюта",
+        "type": "Тип",
+        "createdAt": "Створено",
+        "searchPlaceholder": "Пошук платежів…",
+        "errorLoad": "Не вдалося завантажити платежі",
+        "empty": "Записів поки немає.",
+        "show": "Показати",
+        "shownRange": "Показано {from}–{to} з {total}",
+        "firstPage": "Перша сторінка",
+        "prevPage": "Попередня сторінка",
+        "nextPage": "Наступна сторінка",
+        "lastPage": "Остання сторінка"
       }
     },
     "billing": {
@@ -943,6 +977,62 @@
           "terms": "Умови"
         },
         "title": "Реферальна система"
+      },
+      "general": {
+        "linkTitle": "Реферальне посилання",
+        "linkHint": "Діліться посиланням і заробляйте. Поки що це демо-посилання.",
+        "copy": "Скопіювати посилання",
+        "copyButton": "Скопіювати посилання",
+        "share": "Поділитися в Telegram",
+        "shareText": "Приєднуйся за моїм реферальним посиланням",
+        "qrHint": "Скануйте або діліться через QR",
+        "summaryTitle": "Зведення",
+        "totalEarned": "Всього зароблено",
+        "activeReferrals": "Активних рефералів",
+        "pendingPayouts": "Очікує виплати",
+        "conversion": "Конверсія",
+        "levelsTitle": "Рівні та нагороди",
+        "levelHint": "Демо-дані — пізніше оновляться з бекенду",
+        "level": "Рівень {level}",
+        "listTitle": "Реферали",
+        "searchPlaceholder": "Пошук рефералів за імʼям чи email",
+        "referralsCount": "Запрошено",
+        "earned": "Зароблено",
+        "tier": "Статус",
+        "filter": {
+          "all": "Усі",
+          "active": "Активні",
+          "pending": "В очікуванні",
+          "blocked": "Заблоковані"
+        },
+        "status": {
+          "active": "Активний",
+          "pending": "В очікуванні",
+          "blocked": "Заблокований"
+        },
+        "empty": "Рефералів поки немає",
+        "copied": "Посилання скопійовано",
+        "copyError": "Не вдалося скопіювати посилання"
+      },
+      "settings": {
+        "title": "Налаштування рефералок",
+        "description": "Налаштуйте, як обробляти нагороди, коли підʼєднаємо бекенд.",
+        "autoWithdraw": "Автовивід нагород",
+        "autoWithdrawHint": "Автоматично надсилати нагороди на баланс",
+        "notify": "Сповіщення",
+        "notifyHint": "Отримувати сповіщення про реєстрацію/депозит реферала",
+        "soon": "Скоро",
+        "enabledDemo": "Увімкнено (демо)",
+        "payoutThreshold": "Поріг виплати",
+        "payoutThresholdHint": "Мінімальна сума перед відправкою нагород"
+      },
+      "terms": {
+        "title": "Умови та нотатки",
+        "subtitle": "Чернетка — замінити юридичним текстом.",
+        "rule1": "Нагороди нараховуються після верифікації запрошеного користувача.",
+        "rule2": "Шахрайські чи дублікати акаунтів можуть бути відхилені.",
+        "rule3": "Відсотки та рівні — заглушки до реальних даних.",
+        "rule4": "Пишіть у підтримку, якщо реферал не зарахований."
       }
     }
   },
@@ -1221,6 +1311,52 @@
     },
     "support": {
       "title": "Підтримка"
+    }
+  },
+  "support": {
+    "tickets": {
+      "subjectLabel": "Назва (тема)",
+      "subjectPlaceholder": "Наприклад: Проблеми з поповненням",
+      "messageLabel": "Текст заявки",
+      "messagePlaceholder": "Опишіть проблему, наприклад: Не вдається поповнити рахунок [номер]; пробую через [метод, наприклад USDT-TRC20]",
+      "createButton": "Створити нову заявку",
+      "createdSuccess": "Тікет успішно створено!"
+    },
+    "page": {
+      "title": "Сторінка підтримки",
+      "newTicket": "Новий тікет",
+      "searchPlaceholder": "Пошук",
+      "subject": "Тема звернення",
+      "lastUpdate": "Останнє оновлення",
+      "status": "Статус",
+      "perPage": "На сторінці:"
+    }
+  },
+  "cabinetExtra": {
+    "transactions": {
+      "title": "Deposit",
+      "sort": {
+        "createdAt": "Created",
+        "amount": "Amount",
+        "currency": "Currency",
+        "status": "Status",
+        "type": "Type",
+        "accountNumber": "MT4 account"
+      },
+      "accountNumber": "MT4 account",
+      "amount": "Amount",
+      "currency": "Currency",
+      "type": "Type",
+      "createdAt": "Created",
+      "searchPlaceholder": "Search payments…",
+      "errorLoad": "Failed to load payments",
+      "empty": "No records yet.",
+      "show": "Show",
+      "shownRange": "Showing {from}–{to} of {total}",
+      "firstPage": "First page",
+      "prevPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
     }
   }
 }

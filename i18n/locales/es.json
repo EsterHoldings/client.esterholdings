@@ -745,12 +745,21 @@
       "accountVerification": {
         "title": "Verificación de Cuenta",
         "subtitle": "Verificación en progreso",
-        "addressFailed": "¡La verificación de dirección falló!",
+        "addressFailed": "La verificación de la dirección falló",
         "documentVerified": "¡Documento verificado exitosamente!",
         "paymentInProgress": "¡Verificación de pago en progreso!",
         "profileInProgress": "¡Verificación de perfil en progreso!",
-        "profilePhoto": "¡La verificación de la foto de perfil está en curso!",
-        "profileButton": "Perfil"
+        "profilePhoto": "Verificación de la foto de perfil en curso",
+        "profileButton": "Perfil",
+        "documentInProgress": "Verificación del documento en curso",
+        "documentRejected": "El documento fue rechazado",
+        "paymentVerified": "Pago verificado con éxito",
+        "paymentRejected": "El pago fue rechazado",
+        "profileVerified": "Perfil verificado con éxito",
+        "profileRejected": "El perfil fue rechazado",
+        "profilePhotoVerified": "Foto de perfil verificada con éxito",
+        "profilePhotoInProgress": "Verificación de la foto de perfil en curso",
+        "profilePhotoRejected": "La foto de perfil fue rechazada"
       },
       "actions": {
         "newDeposit": "Nuevo Depósito",
@@ -768,6 +777,31 @@
           "active": "Activa",
           "inactive": "Inactiva"
         }
+      },
+      "transactions": {
+        "title": "Deposit",
+        "sort": {
+          "createdAt": "Created",
+          "amount": "Amount",
+          "currency": "Currency",
+          "status": "Status",
+          "type": "Type",
+          "accountNumber": "MT4 account"
+        },
+        "accountNumber": "MT4 account",
+        "amount": "Amount",
+        "currency": "Currency",
+        "type": "Type",
+        "createdAt": "Created",
+        "searchPlaceholder": "Search payments…",
+        "errorLoad": "Failed to load payments",
+        "empty": "No records yet.",
+        "show": "Show",
+        "shownRange": "Showing {from}–{to} of {total}",
+        "firstPage": "First page",
+        "prevPage": "Previous page",
+        "nextPage": "Next page",
+        "lastPage": "Last page"
       }
     },
     "billing": {
@@ -939,10 +973,66 @@
       "index": {
         "tabs": {
           "general": "General",
-          "settings": "Configuración",
-          "terms": "Términos"
+          "settings": "Settings",
+          "terms": "Terms"
         },
-        "title": "Sistema de referidos"
+        "title": "Referral system"
+      },
+      "general": {
+        "linkTitle": "Referral link",
+        "linkHint": "Share your link to earn rewards. This link is just a demo for now.",
+        "copy": "Copy link",
+        "copyButton": "Copy link",
+        "share": "Share via Telegram",
+        "shareText": "Join via my referral link",
+        "qrHint": "Scan or share via QR",
+        "summaryTitle": "Summary",
+        "totalEarned": "Total earned",
+        "activeReferrals": "Active referrals",
+        "pendingPayouts": "Pending payouts",
+        "conversion": "Conversion",
+        "levelsTitle": "Levels & rewards",
+        "levelHint": "Demo data — will be updated from backend later",
+        "level": "Level {level}",
+        "listTitle": "Referrals",
+        "searchPlaceholder": "Search referrals by name or email",
+        "referralsCount": "Invited",
+        "earned": "Earned",
+        "tier": "Tier",
+        "filter": {
+          "all": "All",
+          "active": "Active",
+          "pending": "Pending",
+          "blocked": "Blocked"
+        },
+        "status": {
+          "active": "Active",
+          "pending": "Pending",
+          "blocked": "Blocked"
+        },
+        "empty": "No referrals yet",
+        "copied": "Link copied",
+        "copyError": "Could not copy link"
+      },
+      "settings": {
+        "title": "Referral settings",
+        "description": "Configure how rewards will be handled once backend is connected.",
+        "autoWithdraw": "Auto-withdraw rewards",
+        "autoWithdrawHint": "Send referral rewards automatically to your balance",
+        "notify": "Notifications",
+        "notifyHint": "Get updates when a referral registers or makes a deposit",
+        "soon": "Soon",
+        "enabledDemo": "Enabled (demo)",
+        "payoutThreshold": "Payout threshold",
+        "payoutThresholdHint": "Choose a minimum amount before payouts are sent"
+      },
+      "terms": {
+        "title": "Terms & notes",
+        "subtitle": "Draft copy — replace with legal text once ready.",
+        "rule1": "Rewards are credited after a referred user completes verification.",
+        "rule2": "Fraud or duplicate accounts may be declined.",
+        "rule3": "Percentages and levels are placeholders until backend delivers real values.",
+        "rule4": "Contact support if you think a referral was missed."
       }
     }
   },
@@ -1221,6 +1311,52 @@
     },
     "support": {
       "title": "Soporte"
+    }
+  },
+  "support": {
+    "tickets": {
+      "subjectLabel": "Subject (topic)",
+      "subjectPlaceholder": "For example: Funding issues",
+      "messageLabel": "Ticket text",
+      "messagePlaceholder": "Describe your issue, e.g.: I cannot top up account [account number]; trying via [payment method, e.g., USDT-TRC20]",
+      "createButton": "Create new ticket",
+      "createdSuccess": "Ticket created successfully!"
+    },
+    "page": {
+      "title": "Support Page",
+      "newTicket": "New ticket",
+      "searchPlaceholder": "Search",
+      "subject": "Subject of the appeal",
+      "lastUpdate": "Last Update",
+      "status": "Status",
+      "perPage": "Per page:"
+    }
+  },
+  "cabinetExtra": {
+    "transactions": {
+      "title": "Deposit",
+      "sort": {
+        "createdAt": "Created",
+        "amount": "Amount",
+        "currency": "Currency",
+        "status": "Status",
+        "type": "Type",
+        "accountNumber": "MT4 account"
+      },
+      "accountNumber": "MT4 account",
+      "amount": "Amount",
+      "currency": "Currency",
+      "type": "Type",
+      "createdAt": "Created",
+      "searchPlaceholder": "Search payments…",
+      "errorLoad": "Failed to load payments",
+      "empty": "No records yet.",
+      "show": "Show",
+      "shownRange": "Showing {from}–{to} of {total}",
+      "firstPage": "First page",
+      "prevPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
     }
   }
 }
