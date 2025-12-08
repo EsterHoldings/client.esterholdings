@@ -666,7 +666,14 @@ onMounted(async () => {
 
 .payment-card__body--row {
   flex-wrap: nowrap;
-  gap: 6px 10px;
+  gap: 6px 12px;
+  align-items: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .payment-card__body--row {
+    flex-wrap: wrap;
+  }
 }
 .card-with-copy {
   padding-right: 36px;
