@@ -12,7 +12,7 @@
     </template>
 
     <template #content>
-      <PageStructureContent>
+      <PageStructureContent :plain="viewMode !== 'table'" v-if="!isInitialLoading">
         <template #top>
           <div class="relative w-full md:w-[420px]">
             <UiInput class="w-full" @input="handleInputSearch" :value="search" :placeholder="t('cabinet.accounts.search')">
@@ -23,32 +23,41 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <UiButtonDefault state="info--small" @click="handleClickUpdate">
-              <UiIconUpdate :spinning="isLoading" />
-            </UiButtonDefault>
-
             <UiSelect
-                class="min-w-[180px]"
-                :value="orderBy"
-                :data="sortByFilterData"
-                :withoutNoSelect="true"
-                @change="handleChangeFilterSortBy"
+              class="hidden sm:block min-w-[180px]"
+              :value="orderBy"
+              :data="sortByFilterData"
+              :withoutNoSelect="true"
+              @change="handleChangeFilterSortBy"
             >
               <template #icon-left>
                 <UiIconSortBy class="!h-4 !w-4" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
               </template>
             </UiSelect>
 
-            <UiButtonDefault state="info--small">
-              <UiIconFilters class="mr-2" />
-              <UiTextSmall>Filters</UiTextSmall>
-              <UiIconArrowDown :rotate180="false" class="ml-2" />
+            <div class="hidden sm:flex items-center gap-2 rounded-lg bg-[var(--color-stroke-ui-dark)] p-1">
+              <button
+                  v-for="option in viewOptions"
+                  :key="option.value"
+                  type="button"
+                  class="view-toggle"
+                  :class="viewMode === option.value ? 'active' : ''"
+                  :aria-label="option.label"
+                  :title="option.label"
+                  @click="viewMode = option.value"
+              >
+                <component :is="option.icon" class="h-4 w-4" />
+              </button>
+            </div>
+
+            <UiButtonDefault state="info--small" @click="handleClickUpdate">
+              <UiIconUpdate :spinning="isLoading" />
             </UiButtonDefault>
           </div>
         </template>
 
         <template #content>
-          <TableMain ref="tableRef">
+          <TableMain v-if="viewMode === 'table'" ref="tableRef">
             <template #thead>
               <tr>
                 <th class="px-5 py-2 text-left font-normal w-[16rem]">
@@ -172,6 +181,84 @@
               </template>
             </template>
           </TableMain>
+
+          <div v-else class="relative">
+            <div
+                class="backdrop-blur-[2px] w-full absolute inset-0 flex items-center justify-center z-10"
+                v-if="isLoading && !isInitialLoading"
+            >
+              <UiIconSpinnerDefault/>
+            </div>
+
+            <div
+                class="grid gap-3"
+                :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'"
+            >
+              <div
+                  v-for="paymentDetail in paymentDetails"
+                  :key="paymentDetail.id"
+                  class="payment-card"
+              >
+                <div class="flex items-start justify-end gap-2">
+                  <button class="cursor-pointer" aria-label="Copy id">
+                    <UiIconCopy :text="paymentDetail.id" />
+                  </button>
+                  <button
+                      type="button"
+                      class="relative flex h-7 w-7 items-center justify-center rounded-md hover:bg-[var(--color-stroke-ui-light)]"
+                      @click.stop="toggleCardMenu(paymentDetail.id)"
+                  >
+                    <UiIconDotsVertical class="h-4 w-4" />
+                    <div
+                        v-if="cardMenuOpenId === paymentDetail.id"
+                        class="absolute right-0 top-8 z-20 min-w-[140px] rounded-md border border-[var(--color-stroke-ui-light)] bg-[var(--color-stroke-ui-dark)] p-2 shadow-lg"
+                    >
+                      <button class="flex w-full items-center justify-center gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.view', 'View')">
+                        <UiIconEye class="h-3.5 w-3.5" />
+                      </button>
+                      <button class="flex w-full items-center justify-center gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.confirm', 'Confirm')">
+                        <UiIconConfirm class="h-3.5 w-3.5" />
+                      </button>
+                      <button class="flex w-full items-center justify-center gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.delete', 'Delete')">
+                        <UiIconTrash class="h-3.5 w-3.5 stroke-[var(--ui-sticker-danger)]" />
+                      </button>
+                    </div>
+                  </button>
+                </div>
+
+                <div class="payment-card__body">
+                  <div class="min-w-[140px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.paymentSystem') ?? 'Платіжна система' }}
+                    </UiTextSmall>
+                    <div class="truncate font-semibold">{{ paymentDetail.payment_system_name }}</div>
+                  </div>
+                  <div class="min-w-[120px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.account') ?? 'Назва' }}
+                    </UiTextSmall>
+                    <div class="truncate">{{ paymentDetail.name }}</div>
+                  </div>
+                  <div class="min-w-[100px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.currency') }}
+                    </UiTextSmall>
+                    <div class="font-semibold">{{ paymentDetail.currency ?? "USD" }}</div>
+                  </div>
+                  <div class="min-w-[120px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.status') }}
+                    </UiTextSmall>
+                    <div class="font-semibold capitalize">{{ paymentDetail.status }}</div>
+                  </div>
+                </div>
+
+                <div class="mt-2 flex items-center justify-between text-xs text-[var(--ui-text-secondary)]">
+                  <span>{{ new Date(paymentDetail.updated_at).toLocaleString() }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </template>
       </PageStructureContent>
 
@@ -219,11 +306,9 @@ import PaginationMain from "~/components/block/paginations/PaginationMain.vue";
 import TableMain from "~/components/block/tables/TableMain.vue";
 
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import UiIconArrowDown from "~/components/ui/UiIconArrowDown.vue";
 import UiIconConfirm from "~/components/ui/UiIconConfirm.vue";
 import UiIconDotsVertical from "~/components/ui/UiIconDotsVertical.vue";
 import UiIconEye from "~/components/ui/UiIconEye.vue";
-import UiIconFilters from "~/components/ui/UiIconFilters.vue";
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 import UiIconPlus from "~/components/ui/UiIconPlus.vue";
 import UiIconSearch from "~/components/ui/UiIconSearch.vue";
@@ -241,7 +326,7 @@ import useAppCore from "~/composables/useAppCore";
 
 import { definePageMeta } from "~/.nuxt/imports";
 import { useI18n } from "vue-i18n";
-import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";
+import { computed, h, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";
 
 definePageMeta({
   layout: "cabinet",
@@ -258,6 +343,8 @@ const ORDER_DIRECTION_DESC = "desc";
 
 const isLoading = ref(false);
 const isInitialLoading = ref(true);
+const viewMode = ref<"table" | "cards" | "full">("table");
+const cardMenuOpenId = ref<string | number | null>(null);
 
 const search = ref("");
 const total = ref(0);
@@ -364,6 +451,84 @@ const sortByFilterData = reactive([
   { id: "updated_at", value: "updated_at", text: "Updated at" },
 ]);
 
+const viewOptions = [
+  {
+    value: "table" as const,
+    label: "Список",
+    icon: {
+      render() {
+        return h(
+          "svg",
+          {
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+          },
+          [
+            h("line", { x1: "8", y1: "6", x2: "21", y2: "6" }),
+            h("line", { x1: "3", y1: "6", x2: "4", y2: "6" }),
+            h("line", { x1: "8", y1: "12", x2: "21", y2: "12" }),
+            h("line", { x1: "3", y1: "12", x2: "4", y2: "12" }),
+            h("line", { x1: "8", y1: "18", x2: "21", y2: "18" }),
+            h("line", { x1: "3", y1: "18", x2: "4", y2: "18" }),
+          ],
+        );
+      },
+    },
+  },
+  {
+    value: "cards" as const,
+    label: "Картки",
+    icon: {
+      render() {
+        return h(
+          "svg",
+          {
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+          },
+          [
+            h("rect", { x: "3", y: "3", width: "7", height: "7", rx: "1" }),
+            h("rect", { x: "14", y: "3", width: "7", height: "7", rx: "1" }),
+            h("rect", { x: "3", y: "14", width: "7", height: "7", rx: "1" }),
+            h("rect", { x: "14", y: "14", width: "7", height: "7", rx: "1" }),
+          ],
+        );
+      },
+    },
+  },
+  {
+    value: "full" as const,
+    label: "На всю ширину",
+    icon: {
+      render() {
+        return h(
+          "svg",
+          {
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+          },
+          [
+            h("rect", { x: "3", y: "6", width: "18", height: "4", rx: "1" }),
+            h("rect", { x: "3", y: "14", width: "18", height: "4", rx: "1" }),
+          ],
+        );
+      },
+    },
+  },
+];
+
 const totalPages = computed(() => Math.ceil(total.value / perPage.value));
 
 const visiblePages = computed(() => {
@@ -411,6 +576,10 @@ const handleOrderByAndDirection = async (value: string) => {
   orderDirection.value = orderDirection.value === ORDER_DIRECTION_ASC ? ORDER_DIRECTION_DESC : ORDER_DIRECTION_ASC;
   orderBy.value = value;
   await loadData();
+};
+
+const toggleCardMenu = (id: string | number) => {
+  cardMenuOpenId.value = cardMenuOpenId.value === id ? null : id;
 };
 
 const handleChangeFilterSortBy = async (value: string) => {
@@ -490,6 +659,54 @@ onBeforeUnmount(() => {
   window.removeEventListener("keydown", onKeydown, true);
 });
 </script>
+
+<style scoped>
+.payment-card {
+  background: var(--color-stroke-ui-dark);
+  border-bottom: 1px solid var(--color-stroke-ui-light);
+  border-radius: 10px;
+  padding: 8px 10px;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.payment-card:hover {
+  background: var(--ui-background-sidebar);
+  opacity: 0.95;
+}
+
+.payment-card__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-top: 4px;
+  color: var(--ui-text-main);
+}
+
+.payment-card__body > div {
+  flex: 1 1 140px;
+}
+
+.view-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  width: 34px;
+  border-radius: 8px;
+  color: var(--ui-text-main);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.view-toggle.active {
+  background: var(--ui-primary-main);
+  color: #fff;
+}
+
+.view-toggle:not(.active):hover {
+  background: var(--color-stroke-ui-light);
+}
+</style>
 
 
 

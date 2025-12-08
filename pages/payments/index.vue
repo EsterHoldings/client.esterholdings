@@ -31,6 +31,18 @@
           </div>
 
           <div class="flex items-center gap-2">
+            <UiSelect
+                class="hidden sm:block min-w-[200px]"
+                :value="orderBy"
+                :data="sortByFilterData"
+                :withoutNoSelect="true"
+                @change="handleOrderByAndDirection"
+            >
+              <template #icon-left>
+                <UiIconSortBy class="!h-4 !w-4" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
+              </template>
+            </UiSelect>
+
             <div class="hidden sm:flex items-center gap-2 rounded-lg bg-[var(--color-stroke-ui-dark)] p-1">
               <button
                   v-for="option in viewOptions"
@@ -200,7 +212,7 @@
                       class="px-4 py-3 truncate max-w-[170px]"
                       :title="payment.payment_system_name"
                   >
-                    <span>TRC-20</span>
+                    <span>{{ payment.payment_system_name || "-" }}</span>
                   </td>
 
                   <td class="px-4 py-3 truncate text-xs text-[var(--ui-primary-main)]">
@@ -238,24 +250,24 @@
             </div>
 
             <div
-                class="grid gap-3"
+                class="grid gap-2"
                 :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'"
             >
               <div
                   v-for="payment in payments"
                   :key="payment.id"
-                  class="payment-card"
+                  class="payment-card card-with-copy"
+                  :class="viewMode === 'full' ? 'payment-card--full' : ''"
               >
-                <div class="flex items-start justify-between gap-2">
-                  <div class="text-xs text-[var(--ui-text-secondary)]">
-                    {{ t('cabinet.billing.columns.id') }}: <strong>{{ shortId(payment.id) }}</strong>
-                  </div>
-                  <button class="cursor-pointer" aria-label="Copy id">
-                    <UiIconCopy :text="payment.id" />
-                  </button>
-                </div>
+                <button
+                    class="copy-btn"
+                    aria-label="Copy id"
+                    @click="copyPaymentId(payment.id)"
+                >
+                  <UiIconCopy />
+                </button>
 
-                <div class="payment-card__body">
+                <div class="payment-card__body" :class="viewMode === 'full' ? 'payment-card__body--row' : ''">
                   <div class="min-w-[140px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
                       № рахунку
@@ -266,7 +278,7 @@
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
                       ПС
                     </UiTextSmall>
-                    <div class="truncate">{{ payment.payment_system_name }}</div>
+                    <div class="truncate">{{ payment.payment_system_name || "-" }}</div>
                   </div>
                   <div class="min-w-[100px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
@@ -280,17 +292,16 @@
                     </UiTextSmall>
                     <div class="font-semibold text-[var(--color-success)]">${{ payment.amount }}</div>
                   </div>
-                  <div class="flex items-center gap-2">
+                  <div class="flex min-w-[140px] items-center gap-2">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
                       {{ t('cabinet.billing.columns.status') }}
                     </UiTextSmall>
-                    <UiBadge state="small">{{ payment.status }}</UiBadge>
+                    <UiBadge state="small" class="capitalize">{{ payment.status }}</UiBadge>
                   </div>
-                </div>
-
-                <div class="mt-2 flex items-center justify-between text-xs text-[var(--ui-text-secondary)]">
-                  <span>{{ new Date(payment.created_at).toLocaleString() }}</span>
-                  <span class="text-[var(--ui-primary-main)]">{{ payment.currency }}</span>
+                  <div class="min-w-[140px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">{{ t('cabinet.billing.columns.createdAt') }}</UiTextSmall>
+                    <div class="footer-item__value">{{ new Date(payment.created_at).toLocaleString() }}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -343,9 +354,15 @@ import UiButtonDefault from '~/components/ui/UiButtonDefault.vue'
 import UiIconCopy from '~/components/ui/UiIconCopy.vue'
 import UiIconSearch from '~/components/ui/UiIconSearch.vue'
 import UiIconSort from '~/components/ui/UiIconSort.vue'
+import UiIconDotsVertical from "~/components/ui/UiIconDotsVertical.vue";
+import UiIconEye from "~/components/ui/UiIconEye.vue";
+import UiIconConfirm from "~/components/ui/UiIconConfirm.vue";
+import UiIconTrash from "~/components/ui/UiIconTrash.vue";
+import UiIconSortBy from "~/components/ui/UiIconSortBy.vue";
 import UiIconSpinnerDefault from '~/components/ui/UiIconSpinnerDefault.vue'
 import UiIconUpdate from '~/components/ui/UiIconUpdate.vue'
 import UiInput from '~/components/ui/UiInput.vue'
+import UiSelect from "~/components/ui/UiSelect.vue";
 import UiTextH4 from '~/components/ui/UiTextH4.vue'
 import useAppCore from '~/composables/useAppCore'
 import useEventBus from "~/composables/useEventBus";
@@ -378,6 +395,12 @@ const orderDirection = ref<string>(ORDER_DIRECTION_DESC)
 const isLoading = ref(false)
 const isInitialLoading = ref(true)
 const viewMode = ref<'table' | 'cards' | 'full'>('table')
+const sortByFilterData = reactive([
+  { id: 'created_at', value: 'created_at', text: 'Created at' },
+  { id: 'amount', value: 'amount', text: 'Amount' },
+  { id: 'status', value: 'status', text: 'Status' },
+  { id: 'payment_system', value: 'payment_system', text: 'Payment system' },
+])
 const viewOptions = [
   {
     value: 'table' as const,
@@ -545,6 +568,12 @@ const handleClickUpdate = async () => {
   await loadData()
 }
 
+const copyPaymentId = async (id: string) => {
+  try {
+    await navigator.clipboard?.writeText(id);
+  } catch {}
+};
+
 const handleSetPerPage = async (value: number) => {
   perPage.value = value
   currentPage.value = 1
@@ -580,11 +609,16 @@ onMounted(async () => {
 }
 
 .payment-card {
+  position: relative;
   background: var(--color-stroke-ui-dark);
   border-bottom: 1px solid var(--color-stroke-ui-light);
   border-radius: 10px;
-  padding: 12px;
+  padding: 10px 14px;
   transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.payment-card--full {
+  padding: 8px 40px 8px 14px;
 }
 
 .payment-card:hover {
@@ -596,13 +630,67 @@ onMounted(async () => {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 16px;
-  margin-top: 6px;
+  gap: 6px 12px;
+  margin-top: 0;
   color: var(--ui-text-main);
 }
 
 .payment-card__body > div {
   flex: 1 1 140px;
+}
+
+.payment-card__footer {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px 12px;
+  margin-top: 4px;
+}
+
+.footer-item {
+  min-width: 120px;
+  flex: 1 1 0;
+}
+
+.footer-item__value {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
+  .payment-card__body {
+    gap: 8px 12px;
+  }
+}
+
+.payment-card__body--row {
+  flex-wrap: nowrap;
+  gap: 6px 10px;
+}
+.card-with-copy {
+  padding-right: 36px;
+}
+
+.card-with-copy .copy-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  width: 28px;
+  border-radius: 8px;
+  color: var(--ui-text-secondary);
+  background: transparent;
+  border: none;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.card-with-copy .copy-btn:hover {
+  color: var(--ui-text-main);
+  transform: translateY(-1px);
 }
 
 .view-toggle {
