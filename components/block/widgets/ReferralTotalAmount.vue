@@ -14,18 +14,23 @@ import PanelDefault from "~/components/block/panels/PanelDefault.vue";
         <UiTextSmall class="!text-[var(--color-success)] text-center sm:text-left">
           Referral total amount
         </UiTextSmall>
-        <UiTextH3 class="!text-[var(--color-success)] text-center sm:text-left">
+        <UiTextH3
+          class="amount-text !text-[var(--color-success)] text-center sm:text-left whitespace-nowrap overflow-hidden text-ellipsis"
+        >
           $ 24.00
         </UiTextH3>
       </div>
-      <div class="flex items-start justify-center gap-2 sm:justify-end">
-        <UiIconWithdraw class="text-[var(--ui-text-main)] !h-4 !w-4 !hover:text-[red] sm:!h-5 sm:!w-5" />
-        <UiIconPayment class="text-[var(--ui-text-main)] !h-4 !w-4 !hover:text-[red] sm:!h-5 sm:!w-5" />
+      <div class="flex w-full items-start justify-end gap-1 pr-3 sm:gap-2 sm:pr-4">
+        <UiIconWithdraw class="shrink-0 text-[var(--ui-text-main)] !h-[14px] !w-[14px] !hover:text-[red] sm:!h-5 sm:!w-5" />
+        <UiIconPayment class="shrink-0 text-[var(--ui-text-main)] !h-[14px] !w-[14px] !hover:text-[red] sm:!h-5 sm:!w-5" />
       </div>
     </div>
   </PanelDefault>
 </template>
 
 <style scoped lang="scss">
-
+.amount-text {
+  font-size: clamp(20px, 4vw, 28px);
+  line-height: 1.1;
+}
 </style>

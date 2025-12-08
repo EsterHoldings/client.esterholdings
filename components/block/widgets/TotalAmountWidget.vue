@@ -12,17 +12,22 @@ import UiTextH3 from "~/components/ui/UiTextH3.vue";
         <UiTextSmall class="!text-[var(--color-success)] text-center sm:text-left">
           Total amount
         </UiTextSmall>
-        <UiTextH3 class="!text-[var(--color-success)] text-center sm:text-left">
+        <UiTextH3
+          class="amount-text !text-[var(--color-success)] text-center sm:text-left whitespace-nowrap overflow-hidden text-ellipsis"
+        >
           $ 4 292.00
         </UiTextH3>
       </div>
-      <div class="flex items-start justify-center sm:justify-end">
-        <UiIconClients class="!h-4 !w-4 sm:!h-5 sm:!w-5" />
+      <div class="flex w-full items-start justify-end pr-3 sm:pr-4">
+        <UiIconClients class="shrink-0 !h-[14px] !w-[14px] sm:!h-5 sm:!w-5" />
       </div>
     </div>
   </PanelDefault>
 </template>
 
 <style scoped lang="scss">
-
+.amount-text {
+  font-size: clamp(20px, 4vw, 28px);
+  line-height: 1.1;
+}
 </style>

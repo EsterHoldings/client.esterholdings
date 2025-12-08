@@ -143,9 +143,23 @@ onMounted(() => {
 onBeforeUnmount(() => {});
 </script>
 
+<style scoped>
+.transaction-row {
+  background: var(--color-stroke-ui-dark);
+  border-bottom: 1px solid var(--color-stroke-ui-light);
+  border-radius: 10px;
+  padding: 14px;
+  transition: opacity 0.2s ease;
+}
+
+.transaction-row:hover {
+  opacity: 0.9;
+}
+</style>
+
 <template>
   <PanelDefault>
-    <div class="card p-4 relative">
+    <div class="relative rounded-2xl p-3 sm:p-4">
       <div class="flex flex-col gap-3">
         <div class="flex items-center justify-between gap-3">
           <UiTextH5 class="!text-[var(--ui-text-main)]">Deposit</UiTextH5>
@@ -158,8 +172,8 @@ onBeforeUnmount(() => {});
 
         <div class="relative">
           <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center rounded-xl border border-slate-700 bg-slate-900/40 px-3 py-2 w-full md:w-96">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="flex w-full items-center rounded-xl border border-[var(--color-stroke-ui-light)] bg-[--color-stroke-ui-dark] px-3 py-2 md:w-96">
+              <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 h-4 w-4 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35m0 0A7.5 7.5 0 1 0 6.5 6.5a7.5 7.5 0 0 0 10.15 10.15Z"/>
               </svg>
               <input
@@ -193,23 +207,23 @@ onBeforeUnmount(() => {});
         <div v-if="isLoading" class="p-6 flex items-center justify-center text-slate-300 absolute left-0 right-0 top-0 bottom-0"><UiIconSpinnerDefault /></div>
         <div v-if="errorMsg" class="p-6 text-center text-red-400">{{ errorMsg }}</div>
         <div v-else>
-          <div v-if="payments && payments.length > 0" class="flex flex-col gap-3">
+          <div v-if="payments && payments.length > 0" class="flex flex-col gap-[6px]">
             <div
-                v-for="(payment, index) in payments"
-                :key="payment.id || index"
-                class="w-full rounded-xl border border-slate-700/60 bg-slate-900/50 hover:bg-slate-900 transition p-4"
+              v-for="(payment, index) in payments"
+              :key="payment.id || index"
+              class="transaction-row"
             >
-              <div class="hidden md:grid grid-cols-12 gap-0 items-stretch">
-                <div class="col-span-4 pr-3 flex items-center gap-3 min-w-0">
+              <div class="hidden md:grid grid-cols-[1.2fr_1fr_0.8fr_1fr_1.1fr] items-center gap-3">
+                <div class="flex min-w-0 items-center gap-3">
                   <div class="min-w-0">
-                    <div class="text-[11px] text-slate-400">MT4 рахунок</div>
-                    <div class="font-medium truncate overflow-hidden text-ellipsis whitespace-nowrap min-w-0 max-w-[260px]" :title="payment.account_number">
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">MT4 рахунок</div>
+                    <div class="min-w-0 max-w-[260px] overflow-hidden text-ellipsis whitespace-nowrap font-medium" :title="payment.account_number">
                       {{ payment.account_number }}
                     </div>
                   </div>
                   <span
-                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset capitalize shrink-0"
-                      :class="{
+                    class="inline-flex shrink-0 items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset capitalize"
+                    :class="{
                       'bg-green-500/10 text-green-400 ring-green-500/30': payment.status === 'success',
                       'bg-yellow-500/10 text-yellow-400 ring-yellow-500/30': payment.status === 'pending',
                       'bg-red-500/10 text-red-400 ring-red-500/30': payment.status === 'failed'
@@ -218,27 +232,27 @@ onBeforeUnmount(() => {});
                     {{ payment.status }}
                   </span>
                 </div>
-                <div class="col-span-2 px-3 border-l border-slate-800">
-                  <div class="text-[11px] text-slate-400">Сума</div>
-                  <div class="font-semibold tabular-nums whitespace-nowrap" :class="amountClass(payment)">
+                <div class="min-w-0">
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Сума</div>
+                  <div class="whitespace-nowrap font-semibold tabular-nums" :class="amountClass(payment)">
                     {{ payment.amount }}
                   </div>
                 </div>
-                <div class="col-span-1 px-3 border-l border-slate-800">
-                  <div class="text-[11px] text-slate-400">Валюта</div>
-                  <div class="uppercase tracking-wide text-slate-300 truncate whitespace-nowrap max-w-[80px]">
+                <div class="min-w-0">
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Валюта</div>
+                  <div class="max-w-[80px] truncate whitespace-nowrap uppercase tracking-wide text-[var(--ui-text-main)]">
                     {{ payment.currency }}
                   </div>
                 </div>
-                <div class="col-span-2 px-3 border-l border-slate-800">
-                  <div class="text-[11px] text-slate-400">Тип</div>
-                  <div class="capitalize truncate whitespace-nowrap max-w-[140px]" :title="payment.type">
+                <div class="min-w-0">
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Тип</div>
+                  <div class="max-w-[140px] truncate whitespace-nowrap capitalize" :title="payment.type">
                     {{ payment.type }}
                   </div>
                 </div>
-                <div class="col-span-3 px-3 border-l border-slate-800 text-right">
-                  <div class="text-[11px] text-slate-400">Створено</div>
-                  <div class="text-slate-300 tabular-nums truncate whitespace-nowrap max-w-[220px] inline-block" :title="payment.created_at">
+                <div class="min-w-0 text-right">
+                  <div class="text-[11px] text-[var(--ui-text-secondary)]">Створено</div>
+                  <div class="inline-block max-w-[220px] truncate whitespace-nowrap text-[var(--ui-text-main)] tabular-nums" :title="payment.created_at">
                     <UiTextSmall>{{ payment.created_at }}</UiTextSmall>
                   </div>
                 </div>
@@ -247,12 +261,12 @@ onBeforeUnmount(() => {});
               <div class="md:hidden">
                 <div class="flex items-start justify-between gap-2">
                   <div class="min-w-0">
-                    <div class="text-[11px] text-slate-400">MT4 рахунок</div>
-                    <div class="truncate font-medium max-w-[220px]" :title="payment.account_number">{{ payment.account_number }}</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">MT4 рахунок</div>
+                    <div class="max-w-[220px] truncate font-medium" :title="payment.account_number">{{ payment.account_number }}</div>
                   </div>
                   <span
-                      class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset capitalize"
-                      :class="{
+                    class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset capitalize"
+                    :class="{
                       'bg-green-500/10 text-green-400 ring-green-500/30': payment.status === 'success',
                       'bg-yellow-500/10 text-yellow-400 ring-yellow-500/30': payment.status === 'pending',
                       'bg-red-500/10 text-red-400 ring-red-500/30': payment.status === 'failed'
@@ -263,36 +277,39 @@ onBeforeUnmount(() => {});
                 </div>
                 <div class="mt-3 flex items-center justify-between gap-2">
                   <div>
-                    <div class="text-[11px] text-slate-400">Сума</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Сума</div>
                     <div class="font-semibold tabular-nums" :class="amountClass(payment)">{{ payment.amount }}</div>
                   </div>
                   <div class="text-right">
-                    <div class="text-[11px] text-slate-400">Валюта</div>
-                    <div class="uppercase tracking-wide text-slate-300 truncate max-w-[80px] ml-auto">{{ payment.currency }}</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Валюта</div>
+                    <div class="ml-auto max-w-[80px] truncate uppercase tracking-wide text-[var(--ui-text-main)]">{{ payment.currency }}</div>
                   </div>
                 </div>
-                <div class="mt-3 grid grid-cols-2 gap-3 pt-2 border-t border-slate-800/60">
+                <div class="mt-3 grid grid-cols-2 gap-3 border-t border-[var(--color-stroke-ui-light)] pt-2">
                   <div>
-                    <div class="text-[11px] text-slate-400">Тип</div>
-                    <div class="capitalize truncate max-w-[140px]" :title="payment.type">{{ payment.type }}</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Тип</div>
+                    <div class="max-w-[140px] truncate capitalize" :title="payment.type">{{ payment.type }}</div>
                   </div>
                   <div class="text-right">
-                    <div class="text-[11px] text-slate-400">Створено</div>
-                    <div class="text-slate-300 tabular-nums truncate max-w-[220px] ml-auto" :title="payment.created_at">{{ payment.created_at }}</div>
+                    <div class="text-[11px] text-[var(--ui-text-secondary)]">Створено</div>
+                    <div class="ml-auto max-w-[220px] truncate tabular-nums text-[var(--ui-text-main)]" :title="payment.created_at">{{ payment.created_at }}</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div v-else class="mt-4 rounded-xl border border-slate-700/60 bg-slate-900/40 p-6 text-center text-slate-300 flex items-center justify-center flex-col gap-2">
+          <div
+            v-else
+            class="mt-4 flex flex-col items-center justify-center gap-2 rounded-xl border border-[var(--color-stroke-ui-light)] bg-[--color-stroke-ui-dark] p-6 text-center text-[var(--ui-text-main)]"
+          >
             <UiTextH5>Записів поки немає.</UiTextH5>
             <UiIconSpinnerDefault />
           </div>
         </div>
 
         <div v-if="total > 0" class="mt-5 flex flex-col md:flex-row items-center justify-between gap-3 px-1">
-          <div class="order-2 md:order-1 flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/40 px-3 py-2">
-            <span class="text-xs text-slate-400">Показати</span>
+          <div class="order-2 md:order-1 flex items-center gap-2 rounded-xl border border-[var(--color-stroke-ui-light)] bg-[--color-stroke-ui-dark] px-3 py-2">
+            <span class="text-xs text-[var(--ui-text-secondary)]">Показати</span>
             <select v-model="perPage" class="bg-transparent text-sm outline-none">
               <option :value="5">5</option>
               <option :value="10">10</option>
@@ -300,12 +317,12 @@ onBeforeUnmount(() => {});
               <option :value="50">50</option>
             </select>
           </div>
-          <div class="order-1 md:order-2 text-xs text-center text-[var(--ui-text-main)]">
+          <div class="order-1 md:order-2 text-center text-xs text-[var(--ui-text-main)]">
             Показано {{ fromItem }}–{{ toItem }} з {{ total }}
           </div>
           <div class="order-3 flex items-center gap-1">
             <button
-                class="px-2 py-2 rounded-lg border border-slate-700 hover:bg-slate-800/60 disabled:opacity-40 text-[var(--ui-text-main)]"
+                class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page <= 1"
                 @click="goToPage(1)"
                 aria-label="Перша сторінка"
@@ -317,7 +334,7 @@ onBeforeUnmount(() => {});
               </svg>
             </button>
             <button
-                class="px-2 py-2 rounded-lg border border-slate-700 hover:bg-slate-800/60 disabled:opacity-40 text-[var(--ui-text-main)]"
+                class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page <= 1"
                 @click="prevPage"
                 aria-label="Попередня сторінка"
@@ -330,9 +347,9 @@ onBeforeUnmount(() => {});
             <template v-for="(p, i) in pageList" :key="i">
               <span v-if="p === '…'" class="px-2 py-2 text-slate-400 select-none">…</span>
               <button
-                  v-else
-                  class="min-w-[36px] h-9 px-2 rounded-lg border border-slate-700 hover:bg-slate-800/60 tabular-nums text-[var(--ui-text-main)]"
-                  :class="{'bg-slate-800 text-white': p === page}"
+                v-else
+                class="h-9 min-w-[36px] rounded-lg border border-[var(--color-stroke-ui-light)] px-2 tabular-nums text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark]"
+                :class="{'bg-[--color-stroke-ui-dark] text-white': p === page}"
                   @click="goToPage(p as number)"
                   :aria-current="p === page ? 'page' : undefined"
                   :title="`Сторінка ${p}`"
@@ -341,7 +358,7 @@ onBeforeUnmount(() => {});
               </button>
             </template>
             <button
-                class="px-2 py-2 rounded-lg border border-slate-700 hover:bg-slate-800/60 disabled:opacity-40 text-[var(--ui-text-main)]"
+                class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page >= lastPage"
                 @click="nextPage"
                 aria-label="Наступна сторінка"
@@ -352,7 +369,7 @@ onBeforeUnmount(() => {});
               </svg>
             </button>
             <button
-                class="px-2 py-2 rounded-lg border border-slate-700 hover:bg-slate-800/60 disabled:opacity-40 text-[var(--ui-text-main)]"
+                class="rounded-lg border border-[var(--color-stroke-ui-light)] px-2 py-2 text-[var(--ui-text-main)] transition hover:bg-[--color-stroke-ui-dark] disabled:opacity-40"
                 :disabled="page >= lastPage"
                 @click="goToPage(lastPage)"
                 aria-label="Остання сторінка"

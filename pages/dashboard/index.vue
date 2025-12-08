@@ -20,8 +20,8 @@
 
           <!-- MT4 accounts -->
           <PanelDefault>
-            <div class="rounded-2xl p-4 sm:p-[1.6rem]">
-              <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <div class="rounded-2xl p-2 sm:p-3">
+              <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                 <div class="text-[18px] font-semibold text-[var(--ui-text-main)]">
                   {{ t("cabinet.dashboard.mt4.title") }}
                 </div>
@@ -34,61 +34,63 @@
               </div>
 
               <div
-                  class="w-full overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                class="w-full overflow-x-auto rounded-xl p-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:p-3"
               >
-                <table class="min-w-[520px] w-full border-collapse text-sm text-white">
-                  <thead>
-                  <tr>
-                    <th class="pb-2 text-left font-normal text-[var(--ui-text-secondary)] whitespace-nowrap">
+                <div class="min-w-[560px] w-full text-sm text-white">
+                  <div class="mb-2 grid grid-cols-[28px_1.1fr_0.9fr_1fr_1fr] items-center px-1 text-[var(--ui-text-secondary)] sm:px-2">
+                    <span class="whitespace-nowrap"></span>
+                    <span class="whitespace-nowrap">
                       {{ t("cabinet.dashboard.mt4.table.account") }}
-                    </th>
-                    <th class="pb-2 text-left font-normal text-[var(--ui-text-secondary)] whitespace-nowrap">
+                    </span>
+                    <span class="whitespace-nowrap">
                       {{ t("cabinet.dashboard.mt4.table.type") }}
-                    </th>
-                    <th class="pb-2 text-left font-normal text-[var(--ui-text-secondary)] whitespace-nowrap">
+                    </span>
+                    <span class="whitespace-nowrap">
                       {{ t("cabinet.dashboard.mt4.table.balance") }}
-                    </th>
-                    <th class="pb-2 text-left font-normal text-[var(--ui-text-secondary)] whitespace-nowrap">
+                    </span>
+                    <span class="whitespace-nowrap">
                       {{ t("cabinet.dashboard.mt4.table.status") }}
-                    </th>
-                  </tr>
-                  </thead>
+                    </span>
+                  </div>
 
-                  <tbody>
-                  <tr>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">123456</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">Real</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">$5,000.00</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">
-                        <span class="font-medium text-[#1cbf73]">
-                          {{ t("cabinet.dashboard.mt4.table.active") }}
-                        </span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">234567</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">Real</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">$5,000.00</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">
-                        <span class="font-medium text-[#1cbf73]">
-                          {{ t("cabinet.dashboard.mt4.table.active") }}
-                        </span>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">345678</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">Demo</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">$10,000.00</td>
-                    <td class="border-t border-[#2e335a] py-2 text-[var(--ui-text-secondary)] whitespace-nowrap">
-                        <span class="font-medium text-[#a3aed0]">
-                          {{ t("cabinet.dashboard.mt4.table.inactive") }}
-                        </span>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
+                  <div class="space-y-[5px]">
+                    <div
+                      v-for="account in mt4Accounts"
+                      :key="account.id"
+                      class="row-item grid grid-cols-[28px_1.1fr_0.9fr_1fr_1fr] items-center gap-2 text-[var(--ui-text-secondary)]"
+                    >
+                      <button
+                        type="button"
+                        class="flex h-8 w-8 items-center justify-center rounded-md transition hover:opacity-80"
+                        :aria-pressed="account.favorite"
+                        :title="account.favorite ? 'Remove from favorites' : 'Add to favorites'"
+                        @click="toggleFavorite(account.id)"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          class="h-4 w-4"
+                          :fill="account.favorite ? '#f5c542' : 'none'"
+                          :stroke="account.favorite ? '#f5c542' : 'var(--color-stroke-ui-light)'"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          aria-hidden="true"
+                        >
+                          <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                        </svg>
+                      </button>
+                      <span class="whitespace-nowrap">{{ account.id }}</span>
+                      <span class="whitespace-nowrap">{{ account.type }}</span>
+                      <span class="whitespace-nowrap">{{ account.balance }}</span>
+                      <span
+                        class="whitespace-nowrap font-medium"
+                        :class="account.status === 'active' ? 'text-[#1cbf73]' : 'text-[#a3aed0]'"
+                      >
+                        {{ statusText[account.status]() }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </PanelDefault>
@@ -124,9 +126,9 @@
 
             <ul class="mt-5 list-none p-0 text-sm text-[var(--ui-text-secondary)]">
               <li
-                  class="mb-2 rounded-sm border-b border-b-[var(--color-stroke-ui-light)] bg-[--color-stroke-ui-dark] p-2 hover:opacity-75 sm:p-3"
+                  class="mb-2 rounded-sm border-b border-b-[var(--color-stroke-ui-light)] bg-[--color-stroke-ui-dark] p-3 hover:opacity-75 sm:p-3"
               >
-                <div class="flex min-h-[35px] items-start gap-3 pb-2 sm:items-center sm:pb-3">
+                <div class="flex min-h-[35px] items-start gap-3 sm:items-center">
                   <span class="w-24 shrink-0 cursor-pointer truncate sm:w-28" title="Фото користувача">
                     Фото користувача
                   </span>
@@ -216,7 +218,7 @@
 <script lang="ts" setup>
 import { definePageMeta } from "~/.nuxt/imports";
 import { useI18n } from "vue-i18n";
-import { onBeforeUnmount, onMounted } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useNuxtApp } from "nuxt/app";
 
 import UiContainer from "~/components/ui/UiContainer.vue";
@@ -257,4 +259,63 @@ onBeforeUnmount(() => {
     $echo.leave("test");
   } catch {}
 });
+
+type Mt4Status = "active" | "inactive";
+
+type Mt4Account = {
+  id: string;
+  type: string;
+  balance: string;
+  status: Mt4Status;
+  favorite: boolean;
+};
+
+const mt4Accounts = ref<Mt4Account[]>([
+  {
+    id: "123456",
+    type: "Real",
+    balance: "$5,000.00",
+    status: "active",
+    favorite: true,
+  },
+  {
+    id: "234567",
+    type: "Real",
+    balance: "$5,000.00",
+    status: "active",
+    favorite: false,
+  },
+  {
+    id: "345678",
+    type: "Demo",
+    balance: "$10,000.00",
+    status: "inactive",
+    favorite: true,
+  },
+]);
+
+const statusText = {
+  active: () => t("cabinet.dashboard.mt4.table.active"),
+  inactive: () => t("cabinet.dashboard.mt4.table.inactive"),
+};
+
+const toggleFavorite = (id: string) => {
+  mt4Accounts.value = mt4Accounts.value.map((account) =>
+    account.id === id ? { ...account, favorite: !account.favorite } : account,
+  );
+};
 </script>
+
+<style scoped>
+.row-item {
+  background: var(--color-stroke-ui-dark);
+  border-bottom: 1px solid var(--color-stroke-ui-light);
+  border-radius: 6px;
+  padding: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.row-item:hover {
+  opacity: 0.85;
+}
+</style>

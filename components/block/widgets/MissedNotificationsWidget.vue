@@ -12,17 +12,22 @@ import UiIconBell from "~/components/ui/UiIconBell.vue";
         <UiTextSmall class="!text-[var(--color-warning)] text-center sm:text-left">
           Missed Notifications
         </UiTextSmall>
-        <UiTextH3 class="!text-[var(--color-warning)] flex items-center justify-center gap-2 px-4 text-center sm:justify-start sm:px-0 sm:text-left">
+        <UiTextH3
+          class="amount-text !text-[var(--color-warning)] flex items-center justify-center gap-2 px-4 text-center sm:justify-start sm:px-0 sm:text-left whitespace-nowrap overflow-hidden text-ellipsis"
+        >
           3
         </UiTextH3>
       </div>
-      <div class="flex items-start justify-center sm:justify-end">
-        <UiIconBell class="!h-4 !w-4 sm:!h-5 sm:!w-5" />
+      <div class="flex w-full items-start justify-end pr-3 sm:pr-4">
+        <UiIconBell class="shrink-0 !h-[14px] !w-[14px] sm:!h-5 sm:!w-5" />
       </div>
     </div>
   </PanelDefault>
 </template>
 
 <style scoped lang="scss">
-
+.amount-text {
+  font-size: clamp(20px, 4vw, 28px);
+  line-height: 1.1;
+}
 </style>

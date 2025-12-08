@@ -9,10 +9,18 @@ html {
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
-  overscroll-behavior: none;
   transition: var(--default-transition);
 }
 
+html,
+body,
+#__nuxt {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: auto; // allow scroll in PWA before reload
+  -webkit-overflow-scrolling: touch;
+}
 
 body {
   color: var(--color-text);
