@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-5">
-    <PanelDefault>
+    <PanelDefault class="border-none bg-transparent shadow-none">
       <div class="grid gap-3 p-4 lg:grid-cols-[2fr_1fr]">
         <div class="flex min-w-0 flex-col gap-3 rounded-xl bg-[var(--color-stroke-ui-dark)] p-3">
           <UiTextH4 class="text-[var(--ui-text-main)]">
@@ -20,7 +20,7 @@
             </UiTextSmall>
             <button
               type="button"
-              class="flex h-[40px] w-[40px] items-center justify-center rounded-lg border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-sidebar)] text-[var(--ui-text-main)] transition hover:bg-[var(--ui-text-main)] hover:text-[var(--ui-background)]"
+              class="flex h-[40px] w-[40px] items-center justify-center rounded-lg bg-[var(--ui-background-sidebar)] text-[var(--ui-text-main)] transition hover:bg-[var(--ui-text-main)] hover:text-[var(--ui-background)]"
               :title="t('cabinet.referrals.general.copyButton')"
               @click="copyReferral"
             >
@@ -28,10 +28,14 @@
             </button>
           </div>
 
-          <div class="mt-3 flex flex-wrap items-center gap-2">
+          <div class="mt-4 flex flex-col items-center gap-3">
+            <UiTextSmall class="text-center text-[var(--ui-text-secondary)]">
+              {{ t("cabinet.referrals.general.shareText") }}
+            </UiTextSmall>
+            <div class="flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
-              class="share-btn"
+              class="share-btn share-btn-lg"
               :title="t('cabinet.referrals.general.shareTelegram')"
               @click="openShare(telegramShareLink)"
             >
@@ -43,7 +47,7 @@
             </button>
             <button
               type="button"
-              class="share-btn"
+              class="share-btn share-btn-lg"
               :title="t('cabinet.referrals.general.shareWhatsApp')"
               @click="openShare(whatsappShareLink)"
             >
@@ -55,7 +59,7 @@
             </button>
             <button
               type="button"
-              class="share-btn"
+              class="share-btn share-btn-lg"
               :title="t('cabinet.referrals.general.shareMessenger')"
               @click="openShare(messengerShareLink)"
             >
@@ -67,7 +71,7 @@
             </button>
             <button
               type="button"
-              class="share-btn"
+              class="share-btn share-btn-lg"
               :title="t('cabinet.referrals.general.shareMail')"
               @click="openShare(mailShareLink)"
             >
@@ -77,6 +81,7 @@
                 />
               </svg>
             </button>
+            </div>
           </div>
         </div>
 
@@ -91,7 +96,7 @@
       </div>
     </PanelDefault>
 
-    <PanelDefault>
+    <PanelDefault class="border-none bg-transparent shadow-none">
       <div class="grid gap-3 p-4 md:grid-cols-2">
         <div class="stat-card">
           <UiTextSmall class="text-[var(--ui-text-secondary)]">
@@ -120,7 +125,7 @@
       </div>
     </PanelDefault>
 
-    <PanelDefault>
+    <PanelDefault class="border-none bg-transparent shadow-none">
       <div class="flex flex-col gap-5 p-4">
         <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <UiTextH4 class="text-[var(--ui-text-main)]">{{ t("cabinet.referrals.general.levelsTitle") }}</UiTextH4>
@@ -142,7 +147,7 @@
       </div>
     </PanelDefault>
 
-    <PanelDefault>
+    <PanelDefault class="border-none bg-transparent shadow-none">
       <div class="flex flex-col gap-4 p-4">
         <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <UiTextH4 class="text-[var(--ui-text-main)]">{{ t("cabinet.referrals.general.listTitle") }}</UiTextH4>
@@ -403,12 +408,17 @@ const statusLabel = (status: string) => {
   border-radius: 10px;
   border: 1px solid var(--color-stroke-ui-light);
   color: var(--ui-text-main);
-  background: var(--ui-background-sidebar);
+  background: var(--color-stroke-ui-dark);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .share-btn:hover {
-  background: var(--ui-text-main);
-  color: var(--ui-background);
+  background: var(--ui-background-sidebar);
+  color: var(--ui-text-main);
+}
+
+.share-btn-lg {
+  height: 44px;
+  width: 44px;
 }
 </style>
