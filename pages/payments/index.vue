@@ -15,7 +15,7 @@
     </template>
 
     <template #content>
-      <PageStructureContent>
+      <PageStructureContent :plain="viewMode !== 'table'">
         <template #top>
           <div class="relative w-full md:w-[420px]">
             <UiInput
@@ -30,13 +30,30 @@
             </UiInput>
           </div>
 
-          <UiButtonDefault state="info--small" @click="handleClickUpdate">
-            <UiIconUpdate :spinning="isLoading"/>
-          </UiButtonDefault>
+          <div class="flex items-center gap-2">
+            <div class="hidden sm:flex items-center gap-2 rounded-lg bg-[var(--color-stroke-ui-dark)] p-1">
+              <button
+                  v-for="option in viewOptions"
+                  :key="option.value"
+                  type="button"
+                  class="view-toggle"
+                  :class="viewMode === option.value ? 'active' : ''"
+                  :aria-label="option.label"
+                  :title="option.label"
+                  @click="viewMode = option.value"
+              >
+                <component :is="option.icon" class="h-4 w-4" />
+              </button>
+            </div>
+
+            <UiButtonDefault state="info--small" @click="handleClickUpdate">
+              <UiIconUpdate :spinning="isLoading"/>
+            </UiButtonDefault>
+          </div>
         </template>
 
         <template #content>
-          <TableMain>
+          <TableMain v-if="viewMode === 'table'">
             <template #thead>
               <tr>
                 <th class="px-4 py-1 text-left font-normal w-[60px]">
@@ -211,6 +228,73 @@
               </template>
             </template>
           </TableMain>
+
+          <div v-else class="relative">
+            <div
+                class="backdrop-blur-[2px] w-full absolute inset-0 flex items-center justify-center z-10"
+                v-if="isLoading && !isInitialLoading"
+            >
+              <UiIconSpinnerDefault/>
+            </div>
+
+            <div
+                class="grid gap-3"
+                :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'"
+            >
+              <div
+                  v-for="payment in payments"
+                  :key="payment.id"
+                  class="payment-card"
+              >
+                <div class="flex items-start justify-between gap-2">
+                  <div class="text-xs text-[var(--ui-text-secondary)]">
+                    {{ t('cabinet.billing.columns.id') }}: <strong>{{ shortId(payment.id) }}</strong>
+                  </div>
+                  <button class="cursor-pointer" aria-label="Copy id">
+                    <UiIconCopy :text="payment.id" />
+                  </button>
+                </div>
+
+                <div class="payment-card__body">
+                  <div class="min-w-[140px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      № рахунку
+                    </UiTextSmall>
+                    <div class="truncate font-semibold">{{ payment.account_number }}</div>
+                  </div>
+                  <div class="min-w-[120px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      ПС
+                    </UiTextSmall>
+                    <div class="truncate">{{ payment.payment_system_name }}</div>
+                  </div>
+                  <div class="min-w-[100px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.currency') }}
+                    </UiTextSmall>
+                    <div class="font-semibold">{{ payment.currency }}</div>
+                  </div>
+                  <div class="min-w-[120px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.amount') }}
+                    </UiTextSmall>
+                    <div class="font-semibold text-[var(--color-success)]">${{ payment.amount }}</div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.status') }}
+                    </UiTextSmall>
+                    <UiBadge state="small">{{ payment.status }}</UiBadge>
+                  </div>
+                </div>
+
+                <div class="mt-2 flex items-center justify-between text-xs text-[var(--ui-text-secondary)]">
+                  <span>{{ new Date(payment.created_at).toLocaleString() }}</span>
+                  <span class="text-[var(--ui-primary-main)]">{{ payment.currency }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </template>
       </PageStructureContent>
 
@@ -268,7 +352,7 @@ import useEventBus from "~/composables/useEventBus";
 
 import {definePageMeta} from '~/.nuxt/imports'
 import {useI18n} from 'vue-i18n'
-import {computed, inject, onMounted, reactive, ref} from 'vue'
+import {computed, h, inject, onMounted, reactive, ref} from 'vue'
 import UiBadge from "~/components/ui/UiBadge.vue";
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
 
@@ -293,6 +377,57 @@ const orderBy = ref<string>('created_at')
 const orderDirection = ref<string>(ORDER_DIRECTION_DESC)
 const isLoading = ref(false)
 const isInitialLoading = ref(true)
+const viewMode = ref<'table' | 'cards' | 'full'>('table')
+const viewOptions = [
+  {
+    value: 'table' as const,
+    label: t('cabinet.billing.view.list') || 'Список',
+    icon: {
+      render() {
+        return h('svg',
+          { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' },
+          [
+            h('line', { x1: '8', y1: '6', x2: '21', y2: '6' }),
+            h('line', { x1: '3', y1: '6', x2: '4', y2: '6' }),
+            h('line', { x1: '8', y1: '12', x2: '21', y2: '12' }),
+            h('line', { x1: '3', y1: '12', x2: '4', y2: '12' }),
+            h('line', { x1: '8', y1: '18', x2: '21', y2: '18' }),
+            h('line', { x1: '3', y1: '18', x2: '4', y2: '18' }),
+          ]);
+      },
+    },
+  },
+  {
+    value: 'cards' as const,
+    label: t('cabinet.billing.view.cards') || 'Картки',
+    icon: {
+      render() {
+        return h('svg',
+          { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' },
+          [
+            h('rect', { x: '3', y: '3', width: '7', height: '7', rx: '1' }),
+            h('rect', { x: '14', y: '3', width: '7', height: '7', rx: '1' }),
+            h('rect', { x: '3', y: '14', width: '7', height: '7', rx: '1' }),
+            h('rect', { x: '14', y: '14', width: '7', height: '7', rx: '1' }),
+          ]);
+      },
+    },
+  },
+  {
+    value: 'full' as const,
+    label: t('cabinet.billing.view.full') || 'На всю ширину',
+    icon: {
+      render() {
+        return h('svg',
+          { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' },
+          [
+            h('rect', { x: '3', y: '6', width: '18', height: '4', rx: '1' }),
+            h('rect', { x: '3', y: '14', width: '18', height: '4', rx: '1' }),
+          ]);
+      },
+    },
+  },
+]
 
 const payments = reactive<any[]>([])
 const spinIcon = ref(false)
@@ -442,5 +577,51 @@ onMounted(async () => {
   100% {
     transform: translateX(0);
   }
+}
+
+.payment-card {
+  background: var(--color-stroke-ui-dark);
+  border-bottom: 1px solid var(--color-stroke-ui-light);
+  border-radius: 10px;
+  padding: 12px;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.payment-card:hover {
+  background: var(--ui-background-sidebar);
+  opacity: 0.95;
+}
+
+.payment-card__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 6px;
+  color: var(--ui-text-main);
+}
+
+.payment-card__body > div {
+  flex: 1 1 140px;
+}
+
+.view-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  width: 34px;
+  border-radius: 8px;
+  color: var(--ui-text-main);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.view-toggle.active {
+  background: var(--ui-primary-main);
+  color: #fff;
+}
+
+.view-toggle:not(.active):hover {
+  background: var(--color-stroke-ui-light);
 }
 </style>
