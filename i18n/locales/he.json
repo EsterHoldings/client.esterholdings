@@ -814,14 +814,22 @@
         "status": "סטטוס",
         "currency": "מטבע",
         "amount": "סכום",
-        "createdAt": "נוצר ב"
+        "createdAt": "נוצר ב",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "אין מה להציג =(",
       "pagination": {
         "prev": "קודם",
         "next": "הבא"
       },
-      "panel-title": "הוסף מנהל חדש"
+      "panel-title": "הוסף מנהל חדש",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "פרטי תשלום",
@@ -839,7 +847,10 @@
           "name": "שם פרטי התשלום",
           "namePlaceholder": "שם פרטי התשלום",
           "recipientAddress": "אנא בחרו מערכת תשלום."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "אין מה להציג =(",
       "pagination": {

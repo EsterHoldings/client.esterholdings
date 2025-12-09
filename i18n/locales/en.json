@@ -808,13 +808,21 @@
       "title": "Billing",
       "create": "Create new payment",
       "search": "Search",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      },
       "columns": {
         "id": "Id",
         "paysystem": "Paysystem",
         "status": "Status",
         "currency": "Currency",
         "amount": "Amount",
-        "createdAt": "Created At"
+        "createdAt": "Created At",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "Nothing to show =(",
       "pagination": {
@@ -839,7 +847,10 @@
           "name": "Payment detail name",
           "namePlaceholder": "Payment detail name",
           "recipientAddress": "Please select a payment system."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "Nothing to show =(",
       "pagination": {

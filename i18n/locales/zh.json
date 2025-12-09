@@ -814,14 +814,22 @@
         "status": "状态",
         "currency": "货币",
         "amount": "金额",
-        "createdAt": "创建时间"
+        "createdAt": "创建时间",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "无数据显示 =(",
       "pagination": {
         "prev": "上一页",
         "next": "下一页"
       },
-      "panel-title": "添加新管理员"
+      "panel-title": "添加新管理员",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "支付详情",
@@ -839,7 +847,10 @@
           "name": "付款详情名称",
           "namePlaceholder": "付款详情名称",
           "recipientAddress": "请选择一个支付系统。"
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "无数据显示 =(",
       "pagination": {

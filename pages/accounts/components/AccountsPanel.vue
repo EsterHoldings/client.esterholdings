@@ -92,7 +92,7 @@
                   class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
               >
                 <td class="px-5 py-3 align-middle">
-                  <div class="text-[var(--color-ui-accent)] font-bold">
+                  <div class="font-bold">
                     {{ account.account_type.name }}
                   </div>
                 </td>

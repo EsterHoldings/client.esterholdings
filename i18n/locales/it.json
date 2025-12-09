@@ -814,14 +814,22 @@
         "status": "Stato",
         "currency": "Valuta",
         "amount": "Importo",
-        "createdAt": "Creato il"
+        "createdAt": "Creato il",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "Niente da mostrare =(",
       "pagination": {
         "prev": "Prec",
         "next": "Succ"
       },
-      "panel-title": "Aggiungi nuovo Admin"
+      "panel-title": "Aggiungi nuovo Admin",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "Dettagli di pagamento",
@@ -839,7 +847,10 @@
           "name": "Nome del dettaglio di pagamento",
           "namePlaceholder": "Nome del dettaglio di pagamento",
           "recipientAddress": "Seleziona un sistema di pagamento."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "Niente da mostrare =(",
       "pagination": {

@@ -14,45 +14,45 @@
     <template #content>
       <PageStructureContent :plain="viewMode !== 'table'" v-if="!isInitialLoading">
         <template #top>
-          <div class="relative w-full md:w-[420px]">
-            <UiInput class="w-full" @input="handleInputSearch" :value="search" :placeholder="t('cabinet.accounts.search')">
-              <template #icon-left>
-                <UiIconSearch />
-              </template>
-            </UiInput>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <UiSelect
-              class="hidden sm:block min-w-[180px]"
-              :value="orderBy"
-              :data="sortByFilterData"
-              :withoutNoSelect="true"
-              @change="handleChangeFilterSortBy"
-            >
-              <template #icon-left>
-                <UiIconSortBy class="!h-4 !w-4" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
-              </template>
-            </UiSelect>
-
-            <div class="hidden sm:flex items-center gap-2 rounded-lg bg-[var(--color-stroke-ui-dark)] p-1">
-              <button
-                  v-for="option in viewOptions"
-                  :key="option.value"
-                  type="button"
-                  class="view-toggle"
-                  :class="viewMode === option.value ? 'active' : ''"
-                  :aria-label="option.label"
-                  :title="option.label"
-                  @click="viewMode = option.value"
+          <div class="flex w-full flex-col gap-2 md:flex-row md:items-center">
+            <div class="flex w-full flex-1 min-w-[260px] items-center gap-2">
+              <UiInput
+                class="w-full"
+                @input="handleInputSearch"
+                :value="search"
+                :placeholder="t('cabinet.accounts.search')"
               >
-                <component :is="option.icon" class="h-4 w-4" />
-              </button>
+                <template #icon-left>
+                  <UiIconSearch />
+                </template>
+              </UiInput>
+
+              <UiButtonDefault state="info--small" class="!w-[44px]" @click="handleClickUpdate">
+                <UiIconUpdate :spinning="isLoading" />
+              </UiButtonDefault>
             </div>
 
-            <UiButtonDefault state="info--small" @click="handleClickUpdate">
-              <UiIconUpdate :spinning="isLoading" />
-            </UiButtonDefault>
+            <div class="flex w-full flex-1 items-center gap-2 md:w-auto md:flex-none md:justify-end">
+              <UiSelect
+                class="min-w-[180px] sm:w-[200px]"
+                :value="orderBy"
+                :data="sortByFilterData"
+                :withoutNoSelect="true"
+                @change="handleChangeFilterSortBy"
+              >
+                <template #icon-left>
+                  <UiIconSortBy class="!h-4 !w-4" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
+                </template>
+              </UiSelect>
+
+              <ViewModeToggle
+                class="w-full sm:w-auto"
+                bordered
+                :modelValue="viewMode"
+                :options="viewOptions"
+                @update:modelValue="viewMode = $event"
+              />
+            </div>
           </div>
         </template>
 
@@ -112,7 +112,7 @@
                     class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
                 >
                   <td
-                      class="px-5 py-3 align-middle font-bold text-[var(--color-ui-accent)] truncate"
+                      class="px-5 py-3 align-middle font-bold truncate"
                       :title="paymentDetail?.name"
                   >
                     {{ paymentDetail?.name }}
@@ -197,30 +197,34 @@
               <div
                   v-for="paymentDetail in paymentDetails"
                   :key="paymentDetail.id"
-                  class="payment-card"
+                  class="payment-card card-with-actions"
               >
-                <div class="flex items-start justify-end gap-2">
-                  <button class="cursor-pointer" aria-label="Copy id">
+                <div class="card-actions" aria-hidden="true">
+                  <button class="copy-btn" aria-label="Copy id">
                     <UiIconCopy :text="paymentDetail.id" />
                   </button>
                   <button
                       type="button"
-                      class="relative flex h-7 w-7 items-center justify-center rounded-md hover:bg-[var(--color-stroke-ui-light)]"
+                      class="action-btn"
                       @click.stop="toggleCardMenu(paymentDetail.id)"
+                      aria-label="Open menu"
                   >
                     <UiIconDotsVertical class="h-4 w-4" />
                     <div
                         v-if="cardMenuOpenId === paymentDetail.id"
-                        class="absolute right-0 top-8 z-20 min-w-[140px] rounded-md border border-[var(--color-stroke-ui-light)] bg-[var(--color-stroke-ui-dark)] p-2 shadow-lg"
+                        class="card-menu"
                     >
-                      <button class="flex w-full items-center justify-center gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.view', 'View')">
-                        <UiIconEye class="h-3.5 w-3.5" />
+                      <button class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.view', 'View')">
+                        <UiIconEye class="!h-4 !w-4 shrink-0" />
+                        <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.payments.details.view') || 'View' }}</UiTextSmall>
                       </button>
-                      <button class="flex w-full items-center justify-center gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.confirm', 'Confirm')">
-                        <UiIconConfirm class="h-3.5 w-3.5" />
+                      <button class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.confirm', 'Confirm')">
+                        <UiIconConfirm class="!h-4 !w-4 shrink-0" />
+                        <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.payments.details.confirm') || 'Confirm' }}</UiTextSmall>
                       </button>
-                      <button class="flex w-full items-center justify-center gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.delete', 'Delete')">
-                        <UiIconTrash class="h-3.5 w-3.5 stroke-[var(--ui-sticker-danger)]" />
+                      <button class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.delete', 'Delete')">
+                        <UiIconTrash class="!h-4 !w-4 shrink-0 stroke-[var(--ui-sticker-danger)]" />
+                        <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.payments.details.delete') || 'Delete' }}</UiTextSmall>
                       </button>
                     </div>
                   </button>
@@ -229,13 +233,13 @@
                 <div class="payment-card__body">
                   <div class="min-w-[140px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t('cabinet.billing.columns.paymentSystem') ?? 'Платіжна система' }}
+                      {{ t('cabinet.billing.columns.paymentSystem') }}
                     </UiTextSmall>
                     <div class="truncate font-semibold">{{ paymentDetail.payment_system_name }}</div>
                   </div>
                   <div class="min-w-[120px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t('cabinet.billing.columns.account') ?? 'Назва' }}
+                      {{ t('cabinet.billing.columns.account') }}
                     </UiTextSmall>
                     <div class="truncate">{{ paymentDetail.name }}</div>
                   </div>
@@ -251,10 +255,14 @@
                     </UiTextSmall>
                     <div class="font-semibold capitalize">{{ paymentDetail.status }}</div>
                   </div>
-                </div>
-
-                <div class="mt-2 flex items-center justify-between text-xs text-[var(--ui-text-secondary)]">
-                  <span>{{ new Date(paymentDetail.updated_at).toLocaleString() }}</span>
+                  <div class="min-w-[160px]">
+                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                      {{ t('cabinet.billing.columns.createdAt') }}
+                    </UiTextSmall>
+                    <div class="text-xs text-[var(--ui-text-main)] whitespace-nowrap">
+                      {{ new Date(paymentDetail.updated_at).toLocaleString() }}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -321,6 +329,7 @@ import UiInput from "~/components/ui/UiInput.vue";
 import UiSelect from "~/components/ui/UiSelect.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import UiTextSmall from "~/components/ui/UiTextSmall.vue";
+import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
 
 import useAppCore from "~/composables/useAppCore";
 
@@ -582,6 +591,15 @@ const toggleCardMenu = (id: string | number) => {
   cardMenuOpenId.value = cardMenuOpenId.value === id ? null : id;
 };
 
+const handleOutsideCardMenu = (event: MouseEvent) => {
+  if (!cardMenuOpenId.value) return;
+  const target = event.target as HTMLElement | null;
+  if (!target) return;
+  if (!target.closest(".card-actions")) {
+    cardMenuOpenId.value = null;
+  }
+};
+
 const handleChangeFilterSortBy = async (value: string) => {
   if (orderBy.value === value) {
     orderDirection.value = orderDirection.value === ORDER_DIRECTION_DESC ? ORDER_DIRECTION_ASC : ORDER_DIRECTION_DESC;
@@ -646,6 +664,7 @@ onMounted(async () => {
 
   window.addEventListener("mousedown", onClickOutside, true);
   window.addEventListener("keydown", onKeydown, true);
+  window.addEventListener("click", handleOutsideCardMenu, true);
 });
 
 onBeforeUnmount(() => {
@@ -657,6 +676,7 @@ onBeforeUnmount(() => {
 
   window.removeEventListener("mousedown", onClickOutside, true);
   window.removeEventListener("keydown", onKeydown, true);
+  window.removeEventListener("click", handleOutsideCardMenu, true);
 });
 </script>
 
@@ -666,6 +686,7 @@ onBeforeUnmount(() => {
   border-bottom: 1px solid var(--color-stroke-ui-light);
   border-radius: 10px;
   padding: 8px 10px;
+  position: relative;
   transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
@@ -687,24 +708,55 @@ onBeforeUnmount(() => {
   flex: 1 1 140px;
 }
 
-.view-toggle {
+.card-with-actions {
+  padding-right: 58px;
+}
+
+.card-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copy-btn,
+.action-btn {
+  height: 28px;
+  width: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 34px;
-  width: 34px;
   border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--ui-text-secondary);
+  transition: color 0.2s ease, transform 0.15s ease;
+  position: relative;
+}
+
+.copy-btn:hover,
+.action-btn:hover {
   color: var(--ui-text-main);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transform: translateY(-1px);
 }
 
-.view-toggle.active {
-  background: var(--ui-primary-main);
-  color: #fff;
+.card-menu {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  z-index: 20;
+  min-width: 160px;
+  border-radius: 10px;
+  border: 1px solid var(--color-stroke-ui-light);
+  background: var(--color-stroke-ui-dark);
+  padding: 8px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
-.view-toggle:not(.active):hover {
-  background: var(--color-stroke-ui-light);
+.card-menu button {
+  height: 34px;
 }
 </style>
 

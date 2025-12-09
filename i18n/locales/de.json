@@ -814,14 +814,22 @@
         "status": "Status",
         "currency": "Währung",
         "amount": "Betrag",
-        "createdAt": "Erstellt am"
+        "createdAt": "Erstellt am",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "Nichts anzuzeigen =(",
       "pagination": {
         "prev": "Zurück",
         "next": "Weiter"
       },
-      "panel-title": "Neuen Admin hinzufügen"
+      "panel-title": "Neuen Admin hinzufügen",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "Zahlungsdetails",
@@ -839,7 +847,10 @@
           "name": "Name des Zahlungsdetails",
           "namePlaceholder": "Name des Zahlungsdetails",
           "recipientAddress": "Bitte wählen Sie ein Zahlungssystem aus."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "Nichts anzuzeigen =(",
       "pagination": {

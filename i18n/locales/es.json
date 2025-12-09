@@ -814,14 +814,22 @@
         "status": "Estado",
         "currency": "Moneda",
         "amount": "Monto",
-        "createdAt": "Creado el"
+        "createdAt": "Creado el",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "Nada que mostrar =(",
       "pagination": {
         "prev": "Anterior",
         "next": "Siguiente"
       },
-      "panel-title": "Agregar nuevo Admin"
+      "panel-title": "Agregar nuevo Admin",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "Detalles de pago",
@@ -839,7 +847,10 @@
           "name": "Nombre del detalle de pago",
           "namePlaceholder": "Nombre del detalle de pago",
           "recipientAddress": "Por favor, selecciona un sistema de pago."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "Nada que mostrar =(",
       "pagination": {

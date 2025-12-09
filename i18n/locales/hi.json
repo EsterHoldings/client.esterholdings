@@ -814,14 +814,22 @@
         "status": "स्थिति",
         "currency": "मुद्रा",
         "amount": "राशि",
-        "createdAt": "बनाया गया"
+        "createdAt": "बनाया गया",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "दिखाने के लिए कुछ नहीं =(",
       "pagination": {
         "prev": "पिछला",
         "next": "अगला"
       },
-      "panel-title": "नया व्यवस्थापक जोड़ें"
+      "panel-title": "नया व्यवस्थापक जोड़ें",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "भुगतान विवरण",
@@ -839,7 +847,10 @@
           "name": "भुगतान विवरण का नाम",
           "namePlaceholder": "भुगतान विवरण का नाम",
           "recipientAddress": "कृपया एक भुगतान प्रणाली चुनें।"
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "दिखाने के लिए कुछ नहीं =(",
       "pagination": {

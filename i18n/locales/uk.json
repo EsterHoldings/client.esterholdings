@@ -808,13 +808,21 @@
       "title": "Виставлення рахунків",
       "create": "Створити новий платіж",
       "search": "Пошук",
+      "view": {
+        "list": "Список",
+        "cards": "Картки",
+        "full": "На всю ширину"
+      },
       "columns": {
         "id": "Id",
         "paysystem": "Платіжна система",
         "status": "Статус",
         "currency": "Валюта",
         "amount": "Сума",
-        "createdAt": "Створено"
+        "createdAt": "Створено",
+        "accountNumber": "Номер рахунку",
+        "paymentSystem": "Платіжна система",
+        "account": "Назва"
       },
       "nothingToShow": "Нічого показати =(",
       "pagination": {
@@ -839,7 +847,10 @@
           "name": "Назва платіжного реквізиту",
           "namePlaceholder": "Назва платіжного реквізиту",
           "recipientAddress": "Будь ласка, оберіть платіжну систему."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "Нічого показати =(",
       "pagination": {

@@ -17,57 +17,48 @@
     <template #content>
       <PageStructureContent v-if="!isInitialLoading" :plain="viewMode !== 'table'">
         <template #top>
-          <div class="flex w-full flex-wrap items-center gap-2 md:flex-nowrap">
-            <div class="relative flex-1 min-w-[220px] sm:min-w-[320px] md:min-w-[360px] order-1 md:order-none flex justify-between items-center gap-2">
-              <div class="w-full">
-                <UiInput
-                    class="w-full"
-                    @input="handleInputSearch"
-                    :value="search"
-                    :placeholder="t('cabinet.accounts.search')"
-                >
-                  <template #icon-left>
-                    <UiIconSearch />
-                  </template>
-                </UiInput>
-              </div>
+          <div class="flex w-full flex-col gap-2 md:flex-row md:items-center">
+            <div class="flex w-full flex-1 min-w-[260px] items-center gap-2">
+              <UiInput
+                class="w-full"
+                @input="handleInputSearch"
+                :value="search"
+                :placeholder="t('cabinet.accounts.search')"
+              >
+                <template #icon-left>
+                  <UiIconSearch />
+                </template>
+              </UiInput>
 
               <UiButtonDefault
-                  state="info--small"
-                  class="order-2 md:order-none !w-[40px]"
-                  @click="handleClickUpdate"
+                state="info--small"
+                class="!w-[44px]"
+                @click="handleClickUpdate"
               >
                 <UiIconUpdate :spinning="isLoading" />
               </UiButtonDefault>
             </div>
 
-            <UiSelect
-              class="order-4 md:order-none min-w-[150px] sm:min-w-[180px] sm:w-[200px]"
-              :value="orderBy"
-              :data="sortByFilterData"
-              :withoutNoSelect="true"
-              @change="handleOrderByAndDirection"
-            >
-              <template #icon-left>
-                <UiIconSortBy class="!h-4 !w-4" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
-              </template>
-            </UiSelect>
-
-            <div
-              class="!h-[40px] overflow-hidden order-3 md:order-none flex flex-wrap items-center justify-start rounded-[8px] border border-[var(--color-stroke-ui-light)] bg-[var(--color-stroke-ui-dark)] sm:flex-nowrap sm:justify-center"
-            >
-              <button
-                v-for="option in viewOptions"
-                :key="option.value"
-                type="button"
-                class="view-toggle !h-[40px] !w-[40px] !rounded-none"
-                :class="viewMode === option.value ? 'active' : ''"
-                :aria-label="option.label"
-                :title="option.label"
-                @click="viewMode = option.value"
+            <div class="flex w-full flex-1 items-center gap-2 md:w-auto md:flex-none md:justify-end">
+              <UiSelect
+                class="min-w-[180px] sm:w-[200px]"
+                :value="orderBy"
+                :data="sortByFilterData"
+                :withoutNoSelect="true"
+                @change="handleOrderByAndDirection"
               >
-                <component :is="option.icon" class="h-4 w-4" />
-              </button>
+                <template #icon-left>
+                  <UiIconSortBy class="!h-4 !w-4" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
+                </template>
+              </UiSelect>
+
+              <ViewModeToggle
+                class="w-full sm:w-auto"
+                bordered
+                :modelValue="viewMode"
+                :options="viewOptions"
+                @update:modelValue="viewMode = $event"
+              />
             </div>
           </div>
         </template>
@@ -277,13 +268,13 @@
                 <div class="payment-card__body" :class="viewMode === 'full' ? 'payment-card__body--row' : ''">
                   <div class="min-w-[140px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      № рахунку
+                      {{ t('cabinet.billing.columns.accountNumber') }}
                     </UiTextSmall>
                     <div class="truncate font-semibold">{{ payment.account_number }}</div>
                   </div>
                   <div class="min-w-[120px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      ПС
+                      {{ t('cabinet.billing.columns.paymentSystem') }}
                     </UiTextSmall>
                     <div class="truncate">{{ payment.payment_system_name || "-" }}</div>
                   </div>
@@ -374,6 +365,7 @@ import UiIconUpdate from '~/components/ui/UiIconUpdate.vue'
 import UiInput from '~/components/ui/UiInput.vue'
 import UiSelect from "~/components/ui/UiSelect.vue";
 import UiTextH4 from '~/components/ui/UiTextH4.vue'
+import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
 import useAppCore from '~/composables/useAppCore'
 import useEventBus from "~/composables/useEventBus";
 
@@ -724,25 +716,5 @@ onMounted(async () => {
 .card-with-copy .copy-btn:hover {
   color: var(--ui-text-main);
   transform: translateY(-1px);
-}
-
-.view-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 34px;
-  width: 34px;
-  border-radius: 8px;
-  color: var(--ui-text-main);
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.view-toggle.active {
-  background: var(--ui-primary-main);
-  color: #fff;
-}
-
-.view-toggle:not(.active):hover {
-  background: var(--color-stroke-ui-light);
 }
 </style>

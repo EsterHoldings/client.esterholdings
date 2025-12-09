@@ -814,14 +814,22 @@
         "status": "ステータス",
         "currency": "通貨",
         "amount": "金額",
-        "createdAt": "作成日時"
+        "createdAt": "作成日時",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "表示するものがありません =(",
       "pagination": {
         "prev": "前へ",
         "next": "次へ"
       },
-      "panel-title": "新しい管理者を追加"
+      "panel-title": "新しい管理者を追加",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "支払詳細",
@@ -839,7 +847,10 @@
           "name": "支払い詳細名",
           "namePlaceholder": "支払い詳細名",
           "recipientAddress": "決済システムを選択してください。"
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "表示するものがありません =(",
       "pagination": {

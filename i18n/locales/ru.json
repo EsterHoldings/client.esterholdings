@@ -808,13 +808,21 @@
       "title": "Платежи",
       "create": "Создать новый платёж",
       "search": "Поиск",
+      "view": {
+        "list": "Список",
+        "cards": "Карточки",
+        "full": "На всю ширину"
+      },
       "columns": {
         "id": "ID",
         "paysystem": "Платёжная система",
         "status": "Статус",
         "currency": "Валюта",
         "amount": "Сумма",
-        "createdAt": "Дата создания"
+        "createdAt": "Дата создания",
+        "accountNumber": "Номер счёта",
+        "paymentSystem": "Платёжная система",
+        "account": "Название"
       },
       "nothingToShow": "Нет данных =(",
       "pagination": {
@@ -839,7 +847,10 @@
           "name": "Название платёжного реквизита",
           "namePlaceholder": "Название платёжного реквизита",
           "recipientAddress": "Пожалуйста, выберите платёжную систему."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "Нет данных =(",
       "pagination": {

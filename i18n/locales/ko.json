@@ -814,14 +814,22 @@
         "status": "상태",
         "currency": "통화",
         "amount": "금액",
-        "createdAt": "생성일"
+        "createdAt": "생성일",
+        "accountNumber": "Account number",
+        "paymentSystem": "Payment system",
+        "account": "Account"
       },
       "nothingToShow": "표시할 내용이 없습니다 =(",
       "pagination": {
         "prev": "이전",
         "next": "다음"
       },
-      "panel-title": "새 관리자 추가"
+      "panel-title": "새 관리자 추가",
+      "view": {
+        "list": "List",
+        "cards": "Cards",
+        "full": "Full width"
+      }
     },
     "payments": {
       "title": "결제 세부정보",
@@ -839,7 +847,10 @@
           "name": "결제 상세 이름",
           "namePlaceholder": "결제 상세 이름",
           "recipientAddress": "결제 시스템을 선택해 주세요."
-        }
+        },
+        "view": "View",
+        "confirm": "Confirm",
+        "delete": "Delete"
       },
       "nothingToShow": "표시할 내용이 없습니다 =(",
       "pagination": {
