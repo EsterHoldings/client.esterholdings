@@ -6,7 +6,7 @@
       :key="tabItem.label"
       :class="{ active: activeTabIndex === index }"
       @click="handleClickTab(index)">
-      <component :is="tabItem.icon" />
+      <component v-if="tabItem.icon" :is="tabItem.icon" class="tab__icon" />
       <span>{{ tabItem.label }}</span>
     </div>
   </div>
@@ -59,8 +59,28 @@
 
       @media (max-width: 1023px) {
         justify-content: center;
-        padding: 10px;
+        padding: 10px 12px;
 
+        span {
+          display: inline;
+          font-size: 12px;
+          max-width: 110px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .tab__icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      @media (max-width: 480px) {
+        .tab__icon {
+          width: 20px;
+          height: 20px;
+        }
         span {
           display: none;
         }
