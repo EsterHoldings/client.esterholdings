@@ -627,7 +627,7 @@ onMounted(async () => {
 
 .payment-card {
   position: relative;
-  background: var(--color-stroke-ui-dark);
+  background: var(--ui-background-panel);
   border-bottom: 1px solid var(--color-stroke-ui-light);
   border-radius: 10px;
   padding: 10px 14px;
@@ -639,8 +639,7 @@ onMounted(async () => {
 }
 
 .payment-card:hover {
-  background: var(--ui-background-sidebar);
-  opacity: 0.95;
+  opacity: 0.6;
 }
 
 .payment-card__body {
