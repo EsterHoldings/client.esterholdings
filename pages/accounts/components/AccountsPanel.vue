@@ -1,42 +1,52 @@
 <!-- pages/accounts/components/AccountsPanel.vue -->
 <template>
   <div>
-    <PageStructureContent v-if="!isInitialLoading">
+    <PageStructureContent v-if="!isInitialLoading" :plain="viewMode !== 'table'">
       <template #top>
-        <div class="relative w-full md:w-[420px]">
-          <UiInput class="w-full" @input="handleInputSearch" :value="search" :placeholder="t('cabinet.accounts.search')">
-            <template #icon-left>
-              <UiIconSearch />
-            </template>
-          </UiInput>
-        </div>
+        <div class="flex w-full flex-col gap-2 md:flex-row md:items-center">
+          <div class="flex w-full flex-1 min-w-[260px] items-center gap-2">
+            <UiInput class="w-full" @input="handleInputSearch" :value="search" :placeholder="t('cabinet.accounts.search')">
+              <template #icon-left>
+                <UiIconSearch />
+              </template>
+            </UiInput>
 
-        <div class="flex items-center justify-center gap-1">
-          <UiButtonDefault state="info--small" class="mr-2" @click="handleClickUpdate">
-            <UiIconUpdate :spinning="isLoading" />
-          </UiButtonDefault>
+            <UiButtonDefault state="info--small" class="!w-[44px]" @click="handleClickUpdate">
+              <UiIconUpdate :spinning="isLoading" />
+            </UiButtonDefault>
+          </div>
 
-          <UiSelect
-              class="mr-2"
-              :value="orderBy"
-              :data="sortByFilterData"
-              :withoutNoSelect="true"
-              @change="handleChangeFilterSortBy"
-          >
-            <template #icon-left>
-              <UiIconSortBy class="mr-2 !w-[16px] !h-[16px]" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
-            </template>
-          </UiSelect>
+          <div class="flex w-full flex-1 items-center gap-2 md:w-auto md:flex-none md:justify-end">
+            <UiSelect
+                class="min-w-[180px] sm:w-[200px]"
+                :value="orderBy"
+                :data="sortByFilterData"
+                :withoutNoSelect="true"
+                @change="handleChangeFilterSortBy"
+            >
+              <template #icon-left>
+                <UiIconSortBy class="mr-2 !w-[16px] !h-[16px]" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
+              </template>
+            </UiSelect>
 
-          <UiButtonDefault state="info--small">
-            <UiIconFilters class="mr-2" />
-            <UiTextSmall>Filters</UiTextSmall>
-          </UiButtonDefault>
+            <ViewModeToggle
+              class="w-full sm:w-auto"
+              bordered
+              :modelValue="viewMode"
+              :options="viewOptions"
+              @update:modelValue="viewMode = $event"
+            />
+
+            <UiButtonDefault state="info--small" class="sm:w-auto">
+              <UiIconFilters class="mr-2" />
+              <UiTextSmall>Filters</UiTextSmall>
+            </UiButtonDefault>
+          </div>
         </div>
       </template>
 
       <template #content>
-        <TableMain ref="tableRef">
+        <TableMain ref="tableRef" v-if="viewMode === 'table'">
           <template #thead>
             <tr>
               <th class="px-5 py-2 text-left font-normal">
@@ -192,6 +202,100 @@
             </template>
           </template>
         </TableMain>
+
+        <div v-else class="relative">
+          <div
+              class="backdrop-blur-[2px] w-full absolute inset-0 flex items-center justify-center z-10"
+              v-if="isLoading && !isInitialLoading"
+          >
+            <UiIconSpinnerDefault />
+          </div>
+
+          <div
+              class="grid gap-3"
+              :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'"
+          >
+            <div
+                v-for="account in accounts"
+                :key="account.id"
+                :class="['account-card card-with-menu', cardMenuOpenId === account.id ? 'card-open' : '']"
+            >
+              <div class="card-menu-actions">
+                <button class="menu-btn" aria-label="Copy number">
+                  <UiIconCopy :text="account.number" />
+                </button>
+                <button
+                    type="button"
+                    class="menu-btn"
+                    @click.stop="toggleCardMenu(account.id)"
+                    :ref="el => (cardMenuTriggerRefs[account.id] = el as HTMLElement | null)"
+                    aria-label="Open menu"
+                >
+                  <UiIconDotsVertical class="h-4 w-4" />
+                </button>
+                <Teleport to="body">
+                  <div
+                      v-if="cardMenuOpenId === account.id"
+                      class="card-menu"
+                      :style="cardMenuStyle"
+                  >
+                    <button class="card-menu__item" type="button">
+                      <UiIconPayment class="!h-4 !w-4 text-[var(--ui-text-main)] stroke-[var(--ui-sticker-success)]" />
+                      <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.accounts.actions.deposit') || 'Deposit' }}</UiTextSmall>
+                    </button>
+                    <button class="card-menu__item" type="button">
+                      <UiIconWithdraw class="!h-4 !w-4 text-[var(--ui-text-main)]" />
+                      <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.accounts.actions.withdraw') || 'Withdraw' }}</UiTextSmall>
+                    </button>
+                    <button class="card-menu__item" type="button" @click="handleClickTransfer(account.id)">
+                      <UiIconTransfer class="!h-4 !w-4 text-[var(--ui-text-main)]" />
+                      <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.accounts.actions.transfer') || 'Transfer' }}</UiTextSmall>
+                    </button>
+                    <button class="card-menu__item" type="button" @click="handleClickHistory(account.id)">
+                      <UiIconHistory class="!h-4 !w-4 text-[var(--ui-text-main)]" />
+                      <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.accounts.actions.history') || 'History' }}</UiTextSmall>
+                    </button>
+                    <button class="card-menu__item" type="button">
+                      <UiIconUpdate class="!h-4 !w-4 text-[var(--ui-text-main)]" />
+                      <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.accounts.actions.changeType') || 'Change type' }}</UiTextSmall>
+                    </button>
+                    <button class="card-menu__item" type="button" @click="handleClickDelete(account.id)">
+                      <UiIconTrash class="!h-4 !w-4 text-[var(--ui-text-main)] stroke-[var(--ui-sticker-danger)]" />
+                      <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.accounts.actions.remove') || 'Remove' }}</UiTextSmall>
+                    </button>
+                  </div>
+                </Teleport>
+              </div>
+
+              <div class="account-card__body" :class="viewMode === 'full' ? 'account-card__body--row' : ''">
+                <div class="min-w-[140px]">
+                  <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                    {{ t('cabinet.accounts.columns.type') }}
+                  </UiTextSmall>
+                  <div class="font-semibold">{{ account.account_type.name }}</div>
+                </div>
+                <div class="min-w-[140px]">
+                  <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                    {{ t('cabinet.accounts.columns.number') }}
+                  </UiTextSmall>
+                  <div class="font-semibold">{{ account.number }}</div>
+                </div>
+                <div class="min-w-[120px]">
+                  <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                    {{ t('cabinet.accounts.columns.leverage') }}
+                  </UiTextSmall>
+                  <div class="font-semibold">1:50</div>
+                </div>
+                <div class="min-w-[140px]">
+                  <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                    {{ t('cabinet.accounts.columns.balance') }}
+                  </UiTextSmall>
+                  <div class="font-semibold text-[var(--color-success)]">${{ account.balance }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </template>
     </PageStructureContent>
 
@@ -241,6 +345,7 @@ import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiIconFilters from "~/components/ui/UiIconFilters.vue";
 import UiIconHistory from "~/components/ui/UiIconHistory.vue";
 import UiIconPayment from "~/components/ui/UiIconPayment.vue";
+import UiIconCopy from "~/components/ui/UiIconCopy.vue";
 import UiIconSort from "~/components/ui/UiIconSort.vue";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
@@ -250,7 +355,7 @@ import UiInput from "~/components/ui/UiInput.vue";
 import UiSelect from "~/components/ui/UiSelect.vue";
 import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
-import { computed, inject, onMounted, reactive, ref, nextTick, onBeforeUnmount } from "vue";
+import { computed, inject, onMounted, reactive, ref, nextTick, onBeforeUnmount, watch, h } from "vue";
 import { navigateTo } from "nuxt/app";
 import { useI18n } from "vue-i18n";
 import { useToast } from "vue-toastification";
@@ -261,6 +366,7 @@ import UiIconDotsVertical from "~/components/ui/UiIconDotsVertical.vue";
 import UiIconWithdraw from "~/components/ui/UiIconWithdraw.vue";
 import UiIconTrash from "~/components/ui/UiIconTrash.vue";
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
+import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
 
 const isInitialLoading = ref(true);
 
@@ -269,6 +375,7 @@ const appCore = useAppCore();
 
 const ORDER_DIRECTION_ASC = "asc";
 const ORDER_DIRECTION_DESC = "desc";
+const VIEW_MODE_STORAGE_KEY = "accountsViewMode";
 
 const toast = useToast();
 
@@ -289,6 +396,87 @@ const sortByFilterData = reactive([
 
 const accounts = reactive<any[]>([]);
 const spinIcon = ref(false);
+const cardMenuOpenId = ref<string | number | null>(null);
+const cardMenuStyle = ref<Record<string, string>>({});
+const cardMenuTriggerRefs = reactive<Record<string | number, HTMLElement | null>>({});
+const viewMode = ref<"table" | "cards" | "full">("table");
+const viewOptions = [
+  {
+    value: "table" as const,
+    label: t("cabinet.billing.view.list") || "List",
+    icon: {
+      render() {
+        return h(
+          "svg",
+          {
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+          },
+          [
+            h("line", { x1: "8", y1: "6", x2: "21", y2: "6" }),
+            h("line", { x1: "3", y1: "6", x2: "4", y2: "6" }),
+            h("line", { x1: "8", y1: "12", x2: "21", y2: "12" }),
+            h("line", { x1: "3", y1: "12", x2: "4", y2: "12" }),
+            h("line", { x1: "8", y1: "18", x2: "21", y2: "18" }),
+            h("line", { x1: "3", y1: "18", x2: "4", y2: "18" }),
+          ]
+        );
+      },
+    },
+  },
+  {
+    value: "cards" as const,
+    label: t("cabinet.billing.view.cards") || "Cards",
+    icon: {
+      render() {
+        return h(
+          "svg",
+          {
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+          },
+          [
+            h("rect", { x: "3", y: "3", width: "7", height: "7", rx: "1" }),
+            h("rect", { x: "14", y: "3", width: "7", height: "7", rx: "1" }),
+            h("rect", { x: "3", y: "14", width: "7", height: "7", rx: "1" }),
+            h("rect", { x: "14", y: "14", width: "7", height: "7", rx: "1" }),
+          ]
+        );
+      },
+    },
+  },
+  {
+    value: "full" as const,
+    label: t("cabinet.billing.view.full") || "Full width",
+    icon: {
+      render() {
+        return h(
+          "svg",
+          {
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round",
+          },
+          [
+            h("rect", { x: "3", y: "6", width: "18", height: "4", rx: "1" }),
+            h("rect", { x: "3", y: "14", width: "18", height: "4", rx: "1" }),
+          ]
+        );
+      },
+    },
+  },
+];
 
 const totalPages = computed(() => Math.ceil(total.value / perPage.value));
 
@@ -392,6 +580,19 @@ const loadData = async () => {
   isInitialLoading.value = false;
 };
 
+const initViewMode = () => {
+  if (typeof window === "undefined") return;
+  const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+  if (saved && ["table", "cards", "full"].includes(saved)) {
+    viewMode.value = saved as typeof viewMode.value;
+  }
+};
+
+watch(viewMode, mode => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
+});
+
 const tableRef = ref<any>(null);
 
 const triggerRefs = ref<(HTMLElement | null)[]>([]);
@@ -423,6 +624,29 @@ const toggleRowOptions = async (index: number) => {
   if (currentRowActiveOptions.value === index) updateMenuPosition(index);
 };
 
+const updateCardMenuPosition = (id: string | number) => {
+  const trigger = cardMenuTriggerRefs[id];
+  if (!trigger) return;
+  const rect = trigger.getBoundingClientRect();
+  const menuWidth = 180;
+  const gap = 8;
+  cardMenuStyle.value = {
+    top: `${rect.bottom + gap + window.scrollY}px`,
+    left: `${rect.right - menuWidth + window.scrollX}px`,
+    width: `${menuWidth}px`,
+  };
+};
+
+const toggleCardMenu = async (id: string | number) => {
+  const willOpen = cardMenuOpenId.value !== id;
+  cardMenuOpenId.value = willOpen ? id : null;
+  cardMenuStyle.value = {};
+  if (willOpen) {
+    await nextTick();
+    updateCardMenuPosition(id);
+  }
+};
+
 const handleClickOutside = (event: MouseEvent) => {
   if (currentRowActiveOptions.value === null) return;
 
@@ -437,11 +661,22 @@ const handleClickOutside = (event: MouseEvent) => {
   closeOptions();
 };
 
+const handleOutsideCardMenu = (event: MouseEvent) => {
+  if (!cardMenuOpenId.value) return;
+  const target = event.target as HTMLElement | null;
+  if (!target) return;
+  if (!target.closest(".card-menu-actions")) {
+    cardMenuOpenId.value = null;
+    cardMenuStyle.value = {};
+  }
+};
+
 const recalc = () => {
   if (currentRowActiveOptions.value != null) updateMenuPosition(currentRowActiveOptions.value);
 };
 
 onMounted(async () => {
+  initViewMode();
   useEventBus.on("loadDataForAccounts", loadData);
   await loadData();
 
@@ -452,6 +687,7 @@ onMounted(async () => {
   el?.addEventListener("scroll", recalc, { passive: true });
 
   document.addEventListener("mousedown", handleClickOutside);
+  window.addEventListener("click", handleOutsideCardMenu, true);
 });
 
 onBeforeUnmount(() => {
@@ -462,6 +698,7 @@ onBeforeUnmount(() => {
   el?.removeEventListener("scroll", recalc);
 
   document.removeEventListener("mousedown", handleClickOutside);
+  window.removeEventListener("click", handleOutsideCardMenu, true);
 });
 
 const { openModal } = inject("modalControl") as { openModal: Function };
@@ -504,6 +741,113 @@ const handleClickCreateNewAccount = () =>
 </script>
 
 <style lang="postcss" scoped>
+.account-card {
+  position: relative;
+  background: var(--ui-background-panel);
+  border-bottom: 1px solid var(--color-stroke-ui-light);
+  border-radius: 10px;
+  padding: 10px 14px;
+  overflow: visible;
+  transition: background-color 0.2s ease;
+}
+
+.account-card:hover:not(.card-open) {
+  background: var(--ui-background-secondary);
+}
+
+.account-card.card-open,
+.account-card.card-open:hover {
+  background: var(--ui-background-panel);
+}
+
+.account-card__body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  color: var(--ui-text-main);
+}
+
+.account-card__body > div {
+  flex: 1 1 140px;
+}
+
+.account-card__body--row {
+  flex-wrap: nowrap;
+  gap: 10px 16px;
+}
+
+@media (max-width: 1024px) {
+  .account-card__body--row {
+    flex-wrap: wrap;
+  }
+}
+
+.card-with-menu {
+  padding-right: 58px;
+}
+
+.card-menu-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-btn {
+  height: 28px;
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--ui-text-secondary);
+  transition: color 0.2s ease, transform 0.15s ease;
+  position: relative;
+}
+
+.menu-btn:hover {
+  color: var(--ui-text-main);
+  transform: translateY(-1px);
+}
+
+.card-menu {
+  position: fixed;
+  z-index: 9999;
+  min-width: 160px;
+  width: 180px;
+  border-radius: 10px;
+  border: 1px solid var(--color-stroke-ui-light);
+  background: var(--ui-background-panel);
+  opacity: 1;
+  pointer-events: auto;
+  padding: 8px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.card-menu-actions {
+  pointer-events: auto;
+}
+
+.card-menu__item {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.card-menu__item:hover {
+  background: var(--color-stroke-ui-light);
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);

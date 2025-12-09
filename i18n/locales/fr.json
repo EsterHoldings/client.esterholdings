@@ -977,6 +977,14 @@
         "actions": {
           "submit": "Ouvrir un nouveau compte"
         }
+      },
+      "actions": {
+        "deposit": "Deposit",
+        "withdraw": "Withdraw",
+        "transfer": "Transfer",
+        "history": "History",
+        "changeType": "Change type",
+        "remove": "Remove"
       }
     },
     "referrals": {

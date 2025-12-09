@@ -977,6 +977,14 @@
         "actions": {
           "submit": "新しい口座を開設"
         }
+      },
+      "actions": {
+        "deposit": "Deposit",
+        "withdraw": "Withdraw",
+        "transfer": "Transfer",
+        "history": "History",
+        "changeType": "Change type",
+        "remove": "Remove"
       }
     },
     "referrals": {
