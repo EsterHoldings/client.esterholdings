@@ -35,7 +35,8 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100dvw; // TODO :: It is Dynamic View Width
+  width: 100%;
+  min-height: 100vh;
 
   &-form {
     &__logo {
@@ -47,11 +48,11 @@ onMounted(() => {
 
     &__wrapper {
       padding: 10px;
-      height: calc(100dvh - 20px); // TODO :: ??? Check it
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: calc(100dvw - 20px);
+      width: 100%;
     }
 
     &__panel-default {
