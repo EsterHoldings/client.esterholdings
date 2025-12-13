@@ -7,7 +7,7 @@
       :class="{ blurred: isBlurred, 'nav--open': isMobileMenuOpen }"
       class="header__wrapper">
 
-      <UiContainer>
+      <UiContainer class="!p-0">
         <header
             class="header"
             :class="{ 'header-is-open-menu ': isMobileMenuOpen }">
