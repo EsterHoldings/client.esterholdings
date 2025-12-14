@@ -1,16 +1,10 @@
 <template>
   <UiContainer>
     <div>
-      <div class="mb-5 flex items-center justify-between">
-        <UiTextH4 class="text-[var(--ui-text-main)]">
-          {{ t("cabinet.referrals.index.title") }}
-        </UiTextH4>
-      </div>
-
-      <PanelDefault>
+      <PanelDefault class="!p-0 overflow-hidden">
         <div class="flex flex-row max-lg:flex-col min-w-0">
           <div
-            class="w-[240px] shrink-0 max-lg:w-full border-[var(--ui-primary-main)] p-2 max-lg:p-2 border-r max-lg:border-r-0 max-lg:border-b"
+            class="w-[240px] shrink-0 max-lg:w-full border-[var(--ui-primary-main)] p-2 max-lg:p-2 border-r max-lg:border-r-0 max-lg:border-b bg-[var(--ui-background)]"
           >
             <TabsAsList
               :tabsList="tabsList"
@@ -31,11 +25,11 @@
             >
               <div class="w-full min-w-0">
                 <div
-                  class="text-[--ui-text-main] h-[66px] w-full px-4 sm:px-5 border-b border-solid border-[var(--ui-primary-main)] flex items-center justify-start"
+                  class="text-[--ui-text-main] h-[66px] w-full px-4 sm:px-5 border-b border-solid border-[var(--ui-primary-main)] flex items-center justify-start bg-[var(--ui-background)]"
                 >
                   {{ tabsList[activeTabIndex].label }}
                 </div>
-                <div class="p-3 sm:p-5 overflow-y-auto min-w-0">
+                <div class="p-3 sm:p-5 overflow-y-auto min-w-0 bg-[var(--ui-background)]">
                   <component
                     :is="tabsList[activeTabIndex].component"
                     :key="activeTabIndex"
