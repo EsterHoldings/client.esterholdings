@@ -873,7 +873,6 @@ async function send() {
 }
 
 .messages {
-  overflow-anchor: none;
   overscroll-behavior: contain;
   scroll-behavior: auto;
 }
