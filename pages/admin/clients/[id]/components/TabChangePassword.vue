@@ -131,6 +131,21 @@ const handleSubmit = async () => {
   }
 }
 
+@media (max-width: 768px) {
+  .change-password__left__panel,
+  .change-password__right__panel {
+    padding: 16px;
+  }
+
+  .change-password__left__form__field__save_btn :deep(button) {
+    width: 100%;
+  }
+
+  .change-password__right__panel .recovery-card__button {
+    width: 100%;
+  }
+}
+
 .change-password {
   display: flex;
   justify-content: space-between;

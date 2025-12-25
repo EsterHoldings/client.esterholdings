@@ -693,4 +693,37 @@ onMounted(async () => {
 
   }
 }
+
+@media (max-width: 768px) {
+  .user-verification__left__verification-list li {
+    grid-template-columns: 1fr;
+    padding: 12px 12px;
+  }
+
+  .user-verification__left__verification-list_item {
+    flex-wrap: wrap;
+  }
+
+  .user-verification__left__verification-list_option {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .user-verification__right .personal-info__item {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    gap: 4px;
+  }
+
+  .user-verification__documents__content .document {
+    min-width: 0;
+  }
+
+  .user-verification__panel__verification-history_log {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
 </style>

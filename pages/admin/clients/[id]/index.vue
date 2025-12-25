@@ -1,24 +1,56 @@
 <template>
-  <div class="client-page">
-    <div class="client-page__title">
-      <UiTextH4>{{ userData.first_name }} {{ userData.last_name }}</UiTextH4>
-      <UiTextParagraph>{{ userData.email }}</UiTextParagraph>
+  <UiContainer>
+    <div>
+      <div class="mb-5">
+        <UiTextH4 class="text-[var(--ui-text-main)]">
+          {{ userData.first_name }} {{ userData.last_name }}
+        </UiTextH4>
+        <UiTextParagraph class="text-[var(--ui-text-secondary)]">{{ userData.email }}</UiTextParagraph>
+      </div>
+
+      <PanelDefault>
+        <div class="flex flex-row max-lg:flex-col">
+          <div
+            class="w-[240px] max-lg:w-full border-r max-lg:border-r-0 max-lg:border-b border-[var(--ui-primary-main)] p-2 max-lg:p-2"
+          >
+            <TabsAsList
+              :tabsList="tabsList"
+              @selectTab="handleActiveTab"
+              :activeTabIndex="activeTabIndex"
+            />
+          </div>
+
+          <div class="flex-1">
+            <Transition
+              enter-active-class="transition ease-linear duration-100"
+              enter-from-class="opacity-0 translate-x-4"
+              enter-to-class="opacity-100 translate-x-0"
+              leave-active-class="transition ease-linear duration-100"
+              leave-from-class="opacity-100 translate-x-0"
+              leave-to-class="opacity-0 -translate-x-4"
+              mode="out-in"
+            >
+              <div>
+                <div
+                  class="text-[--ui-text-main] h-[66px] w-full pl-5 pr-5 border-b border-solid border-[var(--ui-primary-main)] flex items-center justify-start"
+                >
+                  {{ tabsList[activeTabIndex].label }}
+                </div>
+                <div class="p-5 overflow-y-auto">
+                  <component
+                    :is="tabsList[activeTabIndex].component"
+                    :key="activeTabIndex"
+                    :clientId="clientId"
+                    :userData="userData"
+                  />
+                </div>
+              </div>
+            </Transition>
+          </div>
+        </div>
+      </PanelDefault>
     </div>
-    <div class="client-page__content">
-      <TabsDefault
-          class="tabs"
-          :tabsList="tabsList"
-          @selectTab="handleActiveTab"
-          :activeTabIndex="activeTabIndex"
-      />
-      <component
-          :is="tabsList[activeTabIndex].component"
-          :key="activeTabIndex"
-          :clientId="clientId"
-          :userData="userData"
-      />
-    </div>
-  </div>
+  </UiContainer>
 </template>
 
 <script setup lang="ts">
@@ -32,7 +64,9 @@ import TabChangePassword from "~/pages/admin/clients/[id]/components/TabChangePa
 import TabKYC from "~/pages/admin/clients/[id]/components/TabKYC.vue";
 import TabReferrals from "~/pages/admin/clients/[id]/components/TabReferrals.vue";
 import TabVerification from "~/pages/admin/clients/[id]/components/TabVerification.vue";
-import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
+import TabsAsList from "~/components/block/tabs/TabsAsList.vue";
+import PanelDefault from "~/components/block/panels/PanelDefault.vue";
+import UiContainer from "~/components/ui/UiContainer.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
 
@@ -216,25 +250,4 @@ const handleActiveTab = (i: number) => {
 
 <!--</script>-->
 
-<style lang="scss" scoped>
-.client {
-  &-page {
-    height: calc(100vh - 40px);
-    width: 100%;
-    padding: 20px;
-
-    &__title {
-      margin-bottom: 20px;
-      color: var(--ui-text-main);
-    }
-
-    &__content {
-      padding-bottom: 20px;
-
-      .tabs {
-        margin-bottom: 20px;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

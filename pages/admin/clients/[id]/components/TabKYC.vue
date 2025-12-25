@@ -147,7 +147,7 @@ onMounted(async () => {
 }
 
 .profile__tab--kyc {
-  height: 80vh;
+  height: auto;
   width: 100%;
   border-radius: 10px;
 
@@ -259,6 +259,7 @@ onMounted(async () => {
               display: block;
               margin-top: 10px;
               font-size: 14px;
+              word-break: break-word;
             }
           }
 
@@ -322,6 +323,61 @@ onMounted(async () => {
         }
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .profile__tab--kyc {
+    gap: 12px;
+  }
+
+  .profile__tab--kyc__profile-data .actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .profile__tab--kyc__profile-data .actions :deep(button) {
+    width: 100%;
+  }
+
+  .profile__tab--kyc__profile-data__form .title {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .profile__tab--kyc__profile-data__form .profile-data__info {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .profile__tab--kyc__profile-data__form .profile-data__info_photo__wrapper {
+    width: 100%;
+    height: auto;
+  }
+
+  .profile__tab--kyc__profile-data__form .profile-data__info_photo {
+    width: 100%;
+    height: auto;
+    max-height: 280px;
+    object-fit: cover;
+  }
+
+  .profile__tab--kyc__profile-data__form .profile-data__info_personal-info {
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  .profile__tab--kyc__profile-data__form .profile-data__info_personal-info__birthdate,
+  .profile__tab--kyc__profile-data__form .profile-data__info_personal-info__created-at {
+    text-align: left;
+  }
+
+  .profile__tab--kyc__profile-data--additional__form .browsing-history__log {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    height: auto;
+    padding: 8px 0;
   }
 }
 </style>
