@@ -16,9 +16,9 @@
               type="text"
               :placeholder="t('cabinet.profile.components.tab-general.placeholders.email')"
               :value="formData.email"
+              :disabled="true"
               :isDirty="validatorUserDataForm.errorsFormData.email.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.email.errors.length > 0"
-              @input="validatorUserDataForm.doValidateField('email', $event.target.value)"
               @blur="validatorUserDataForm.doValidateField('email', $event.target.value)" />
           </UiFormControl>
 

@@ -1,57 +1,92 @@
 <template>
-  <PanelDefault class="verifications-panel">
+  <div class="verifications-panel">
+    <TableMain v-if="viewMode === 'table'">
+      <template #thead>
+        <tr>
+          <th class="px-4 py-2 text-left font-normal w-[72px]">ID</th>
+          <th class="px-4 py-2 text-left font-normal">User</th>
+          <th class="px-4 py-2 text-left font-normal">Updated</th>
+          <th class="px-4 py-2 text-left font-normal">Status</th>
+        </tr>
+      </template>
+      <template #tbody>
+        <tr
+          v-for="verificationRequest in verificationRequests"
+          :key="verificationRequest.id"
+          class="border-t border-[var(--color-stroke-ui-dark)] hover:bg-[var(--color-stroke-ui-dark)]"
+          @click="handleClickVerificationRequest(verificationRequest['user']['id'])"
+        >
+          <td class="px-4 py-3">
+            <UiImageCircle
+              :src="verificationRequest['user']['photo_url']"
+              :two-chars="verificationRequest['user']['initials']"
+            />
+          </td>
+          <td class="px-4 py-3">
+            <div class="flex flex-col">
+              <span class="font-medium">
+                {{ verificationRequest['user']['first_name'] }} {{ verificationRequest['user']['last_name'] }}
+              </span>
+              <span class="text-[12px] text-[var(--ui-text-secondary)]">
+                {{ verificationRequest['user']['email'] }}
+              </span>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-[var(--ui-text-secondary)]">{{ verificationRequest['updated_at_human'] }}...</td>
+          <td class="px-4 py-3">
+            <VerificationActions :status="verificationRequest['state']" />
+          </td>
+        </tr>
+      </template>
+    </TableMain>
 
-    <div class="verifications-panel__search-wrapper">
-      <VerificationsPanelSearch
-          @input="handleInputSearch"
-          :isLoading="isLoadingSearch"
-          :value="searchFilter"
-      />
-      <div class="verifications-panel__search-wrapper__options">
-        <UiButtonDefault state="info--outline--small">+</UiButtonDefault>
-        <UiButtonDefault state="info--outline--small">-</UiButtonDefault>
-      </div>
-    </div>
-
-    <div class="verifications-panel--items">
-      <div class="verifications-panel--row" v-for="verificationRequest in verificationRequests">
-        <UiImageCircle
+    <div
+      v-else
+      class="verifications-panel--items"
+      :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'"
+    >
+      <div
+        class="verification-card"
+        v-for="verificationRequest in verificationRequests"
+        :key="verificationRequest.id"
+        @click="handleClickVerificationRequest(verificationRequest['user']['id'])"
+      >
+        <div class="flex items-center gap-3">
+          <UiImageCircle
             :src="verificationRequest['user']['photo_url']"
             :two-chars="verificationRequest['user']['initials']"
-            @click="handleClickVerificationRequest(verificationRequest['user']['id'])"
-        />
-        <span class="verifications-panel--row__user-info">
-          <span class="verifications-panel--row__name">
-            {{verificationRequest['user']['first_name']}} {{verificationRequest['user']['last_name']}}
-          </span>
-          <span class="verifications-panel--row__email">
-            {{verificationRequest['user']['email']}}
-          </span>
-        </span>
-        <span>{{verificationRequest['updated_at_human']}}...</span>
-        <VerificationActions :status="verificationRequest['state']" />
+          />
+          <div class="min-w-0">
+            <div class="font-semibold truncate">
+              {{ verificationRequest['user']['first_name'] }} {{ verificationRequest['user']['last_name'] }}
+            </div>
+            <div class="text-[12px] text-[var(--ui-text-secondary)] truncate">
+              {{ verificationRequest['user']['email'] }}
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center justify-between text-sm text-[var(--ui-text-secondary)]">
+          <span>{{ verificationRequest['updated_at_human'] }}...</span>
+          <VerificationActions :status="verificationRequest['state']" />
+        </div>
       </div>
     </div>
 
-<!--    <ClientsContent :data="clientsData" @click="handleOpenClientPage"/>-->
-
     <PaginationDefault
-        :isLoading="isLoading"
-        :perPage="perPage"
-        :page="page"
-        :totalRows="totalRows"
-        @perPageChange="handleChangePerPage"
-        @pageChange="handleChangePage"
+      :isLoading="isLoading"
+      :perPage="perPage"
+      :page="page"
+      :totalRows="totalRows"
+      @perPageChange="handleChangePerPage"
+      @pageChange="handleChangePage"
     />
-  </PanelDefault>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from "vue";
+import {onMounted, reactive, ref, watch, computed} from "vue";
 import {useI18n} from "vue-i18n";
 import {debounce} from "~/utils/helper/debounce";
-import TableDefault from "~/components/block/tables/TableDefault.vue";
-import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import PaginationDefault from "~/components/block/paginations/PaginationDefault.vue";
 
 import useAppCore from "~/composables/useAppCore";
@@ -66,14 +101,13 @@ import VerificationActions from "~/pages/admin/clients/[id]/components/Verificat
 import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import UiTextH5 from "~/components/ui/UiTextH5.vue";
-import VerificationsPanelSearch from "~/pages/admin/verifications/components/VerificationsPanelSearch.vue";
-import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+import TableMain from "~/components/block/tables/TableMain.vue";
 
 const {t} = useI18n({useScope: "global"});
 const appCore = useAppCore();
 
 const isLoading = ref(false);
-const isLoadingSearch = ref(false);
+const emit = defineEmits(["loading"]);
 const perPage = ref(5);
 const page = ref(1);
 const totalRows = ref(0);
@@ -85,15 +119,22 @@ const searchFields = ref([
   'created_at',
   'updated_at',
 ]);
-const searchFilter = ref("");
+const props = defineProps<{
+  searchFilter: string;
+  viewMode?: "table" | "cards" | "full";
+}>();
+
+const viewMode = computed(() => props.viewMode ?? "table");
 
 const verificationRequests = reactive([]);
 
 const loadData = async () => {
+  isLoading.value = true;
+  emit("loading", true);
   const params = {
     page: page.value,
     perPage: perPage.value,
-    searchFilter: searchFilter.value,
+    searchFilter: props.searchFilter,
     searchFields: searchFields.value,
   };
 
@@ -103,6 +144,7 @@ const loadData = async () => {
   let responseVerificationRequestsData = response.data.data.data;
 
   isLoading.value = false;
+  emit("loading", false);
   verificationRequests.splice(0, verificationRequests.length, ...responseVerificationRequestsData);
 };
 
@@ -121,15 +163,13 @@ const handleChangePage = async (value: number) => {
   await loadData();
 };
 
-const handleInputSearch = debounce(async (value: any) => {
-  try {
-    isLoadingSearch.value = true;
-    searchFilter.value = value;
+watch(
+  () => props.searchFilter,
+  async () => {
+    page.value = 1;
     await loadData();
-  } finally {
-    isLoadingSearch.value = false;
-  }
-}, 300);
+  },
+);
 
 const handleClickVerificationRequest = (id:string) => {
   navigateTo(`/admin/clients/${id}?tab=1`)
@@ -137,88 +177,39 @@ const handleClickVerificationRequest = (id:string) => {
 
 onMounted(async () => {
   isLoading.value = true;
+  emit("loading", true);
   await loadData();
   // useEventBus.on("loadDataForAdmins", loadData);
+});
+
+defineExpose({
+  reload: async () => {
+    isLoading.value = true;
+    emit("loading", true);
+    await loadData();
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 
 .verifications-panel {
-  padding: 20px;
-
-  &__search-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &__options {
-      height: 46px;
-      min-width: 46px;
-      margin-bottom: 20px;
-      gap: 10px;
-
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-
-      color: var(--ui-text-main)
-    }
-  }
-
   &--items {
-
-  }
-
-  &--row {
-    background-color: var(--color-stroke-ui-dark);
-    border: 1px solid transparent;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    height: 80px;
-
     display: grid;
-    align-items: center;
-    grid-template-columns: 100px 1fr 150px 150px;
-    padding: 0 20px;
-
-    &:hover {
-      background: none;
-      border: 1px solid var(--color-stroke-ui-dark);
-    }
-
-    &__user-info {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      height: 50px;
-    }
-
-    &__name {
-      font-size: 16px;
-    }
-
-    &__email {
-      font-size: 13px;
-      font-weight: bold;
-    }
+    gap: 12px;
   }
+}
 
-  // --- --- ---
+.verification-card {
+  background: var(--ui-background-panel);
+  border: 1px solid var(--color-stroke-ui-light);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: background-color 0.2s ease;
+}
 
-  .panel-search {
-    margin-bottom: 20px;
-    width: 400px;
-
-    &__input {
-      border: none;
-
-      &.input {
-        padding: 0 !important;
-      }
-    }
-  }
+.verification-card:hover {
+  background: var(--color-stroke-ui-dark);
 }
 
 .add-btn {

@@ -20,7 +20,7 @@
             />
           </div>
 
-          <div class="flex-1">
+          <div class="flex-1 min-w-0">
             <Transition
               enter-active-class="transition ease-linear duration-100"
               enter-from-class="opacity-0 translate-x-4"
@@ -36,7 +36,7 @@
                 >
                   {{ tabsList[activeTabIndex].label }}
                 </div>
-                <div class="p-5 overflow-y-auto">
+                <div class="p-5 overflow-y-auto overflow-x-hidden">
                   <component
                     :is="tabsList[activeTabIndex].component"
                     :key="activeTabIndex"

@@ -54,7 +54,7 @@
 
           <div v-else class="relative">
             <div
-              class="backdrop-blur-[2px] w-full absolute inset-0 flex items-center justify-center z-10"
+              class="backdrop-blur-sm bg-[var(--ui-background)]/40 w-full absolute inset-0 flex items-center justify-center z-10 rounded-xl"
               v-if="isLoading && !isInitialLoading"
             >
               <UiIconSpinnerDefault />

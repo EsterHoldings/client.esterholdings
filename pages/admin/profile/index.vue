@@ -1,21 +1,48 @@
 <template>
   <UiContainer>
-    <div class="profile">
-      <div class="profile__title">
-        <UiTextH4>{{ t("cabinet.profile.index.title") }}</UiTextH4>
-
-        <TabsDefault
-            :tabsList="tabsList"
-            @selectTab="handleActiveTab"
-            :activeTabIndex="activeTabIndex"
-        />
+    <div>
+      <div class="mb-5 flex items-center justify-between">
+        <UiTextH4 class="text-[var(--ui-text-main)]">
+          {{ t("cabinet.profile.index.title") }}
+        </UiTextH4>
       </div>
-      <transition name="slide-short" mode="out-in">
-        <component
-            :is="tabsList[activeTabIndex].component"
-            :key="activeTabIndex"
-        />
-      </transition>
+
+      <PanelDefault>
+        <div class="flex flex-row max-lg:flex-col">
+          <div
+            class="w-[240px] max-lg:w-full border-r max-lg:border-r-0 max-lg:border-b border-[var(--ui-primary-main)] p-2 max-lg:p-2"
+          >
+            <TabsAsList
+              :tabsList="tabsList"
+              @selectTab="handleActiveTab"
+              :activeTabIndex="activeTabIndex"
+            />
+          </div>
+
+          <div class="flex-1">
+            <Transition
+              enter-active-class="transition ease-linear duration-100"
+              enter-from-class="opacity-0 translate-x-4"
+              enter-to-class="opacity-100 translate-x-0"
+              leave-active-class="transition ease-linear duration-100"
+              leave-from-class="opacity-100 translate-x-0"
+              leave-to-class="opacity-0 -translate-x-4"
+              mode="out-in"
+            >
+              <div>
+                <div
+                  class="text-[--ui-text-main] h-[66px] w-full pl-5 pr-5 border-b border-solid border-[var(--ui-primary-main)] flex items-center justify-start"
+                >
+                  {{ tabsList[activeTabIndex].label }}
+                </div>
+                <div class="p-5 overflow-y-auto">
+                  <component :is="tabsList[activeTabIndex].component" :key="activeTabIndex" />
+                </div>
+              </div>
+            </Transition>
+          </div>
+        </div>
+      </PanelDefault>
     </div>
   </UiContainer>
 </template>
@@ -28,7 +55,8 @@ import UiContainer from "~/components/ui/UiContainer.vue";
 import UiTextH4 from "~/components/ui/UiTextH4.vue";
 import TabGeneral from "~/pages/admin/profile/components/TabGeneral.vue";
 import TabUserPhoto from "~/pages/admin/profile/components/TabUserPhoto.vue";
-import TabsDefault from "~/components/block/tabs/TabsDefault.vue";
+import PanelDefault from "~/components/block/panels/PanelDefault.vue";
+import TabsAsList from "~/components/block/tabs/TabsAsList.vue";
 import TabChangePassword from "~/pages/admin/profile/components/TabChangePassword.vue";
 
 definePageMeta({
@@ -40,13 +68,11 @@ const {t} = useI18n();
 const STORAGE_KEY = "adminProfileActiveTab";
 const activeTabIndex = ref(0);
 
-const tabsList = computed(() => {
-  return [
-    {label: t("cabinet.profile.index.tabs.general"), component: TabGeneral},
-    {label: t("cabinet.profile.index.tabs.photo"), component: TabUserPhoto},
-    {label: t("cabinet.profile.index.tabs.change_password"), component: TabChangePassword,},
-  ];
-});
+const tabsList = computed(() => [
+  { label: t("cabinet.profile.index.tabs.general"), component: TabGeneral },
+  { label: t("cabinet.profile.index.tabs.photo"), component: TabUserPhoto },
+  { label: t("cabinet.profile.index.tabs.change_password"), component: TabChangePassword },
+]);
 
 onMounted(() => {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -64,45 +90,4 @@ const handleActiveTab = (tabIndex: number) => {
 };
 </script>
 
-<style lang="scss" scoped>
-.profile {
-  padding-bottom: 40px;
-
-  &__title {
-    margin-bottom: 20px;
-
-    h4 {
-      color: var(--ui-text-main);
-    }
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.slide-short-enter-active,
-.slide-short-leave-active {
-  transition: opacity 0.1s ease, transform 0.1s ease;
-}
-
-.slide-short-enter-from {
-  opacity: 0;
-  transform: translateX(30px);
-}
-
-.slide-short-enter-to {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.slide-short-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.slide-short-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
-}
-</style>
+<style lang="scss" scoped></style>

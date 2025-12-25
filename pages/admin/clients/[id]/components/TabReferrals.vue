@@ -12,8 +12,8 @@
           <UiIconUpdate />
         </UiButtonDefault>
       </div>
-      <div class="flex flex-wrap items-center gap-2 text-sm text-[var(--ui-text-secondary)] w-full lg:flex-nowrap">
-        <div class="flex flex-wrap items-center gap-2 lg:flex-nowrap">
+      <div class="flex flex-col gap-2 text-sm text-[var(--ui-text-secondary)] w-full">
+        <div class="flex flex-wrap items-center gap-2">
           <button
             v-for="opt in sortOptions"
             :key="opt.value"
@@ -25,7 +25,7 @@
             {{ opt.text }}
           </button>
         </div>
-        <div class="flex flex-wrap items-center gap-2 lg:flex-nowrap">
+        <div class="flex flex-wrap items-center gap-2">
           <button
             v-for="lvl in levelFilters"
             :key="lvl.value"
@@ -43,7 +43,7 @@
     <div class="relative flex flex-col gap-2">
       <div
         v-if="isLoadingList"
-        class="absolute inset-0 z-10 flex items-center justify-center backdrop-blur-[2px] bg-black/20 rounded-2xl"
+        class="absolute inset-0 z-10 flex items-center justify-center backdrop-blur-sm bg-[var(--ui-background)]/40 rounded-2xl"
       >
         <UiIconSpinnerDefault />
       </div>
@@ -229,9 +229,14 @@ const handlePerPageChange = (next: number) => {
   border: 1px solid var(--color-stroke-ui-light);
   padding: 12px 14px;
   transition: background-color 0.2s ease, transform 0.1s ease;
+  overflow: hidden;
 }
 
 .referral-card-full:hover {
   background: var(--color-stroke-ui-dark);
+}
+
+.admin-referrals-tab {
+  min-width: 0;
 }
 </style>

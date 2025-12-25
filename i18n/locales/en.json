@@ -1364,6 +1364,13 @@
         "subtitle": "List of clients"
       }
     },
+    "verifications": {
+      "index": {
+        "title": "Verification requests",
+        "subtitle": "List of verification requests"
+      },
+      "searchPlaceholder": "Search verification requests..."
+    },
     "dashboard": {
       "title": "Admin dashboard",
       "subtitle": "Overview with demo data",

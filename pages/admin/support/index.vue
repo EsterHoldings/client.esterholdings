@@ -68,7 +68,7 @@
           class="relative rounded-2xl border border-[var(--color-stroke-ui-dark)] bg-[var(--ui-background)]"
       >
         <div
-            class="absolute top-0 left-0 right-0 bottom-0 backdrop-blur-sm rounded-lg flex items-center justify-center"
+            class="absolute top-0 left-0 right-0 bottom-0 rounded-lg flex items-center justify-center bg-[var(--ui-background)]/40 backdrop-blur-sm"
             v-if="isLoading">
           <UiIconSpinnerDefault/>
         </div>

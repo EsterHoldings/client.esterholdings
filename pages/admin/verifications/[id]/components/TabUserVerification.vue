@@ -144,6 +144,9 @@ onMounted(async () => {
 
       &__verification-list {
         list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
 
         &_wrapper {
           position: relative;
@@ -155,9 +158,11 @@ onMounted(async () => {
           justify-content: center;
 
           background-color: var(--ui-background);
-          opacity: .3;
+          opacity: .6;
 
-          border-radius: 10px;
+          border-radius: 12px;
+          backdrop-filter: blur(6px);
+          z-index: 10;
 
           position: absolute;
 
@@ -168,18 +173,20 @@ onMounted(async () => {
         }
 
         li {
-          height: 50px;
+          min-height: 36px;
           display: flex;
           align-items: center;
-          border-bottom: 1px solid var(--color-stroke-ui-dark);
+          padding: 8px 12px;
+          border-radius: 10px;
+          background: var(--ui-background-panel);
+          border: 1px solid var(--color-stroke-ui-light);
 
           svg {
-            margin-left: 10px;
+            margin-left: 0;
           }
 
           span {
-            margin-left: 40px;
-            margin-right: 10px;
+            margin-left: 10px;
           }
         }
       }

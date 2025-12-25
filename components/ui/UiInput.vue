@@ -192,7 +192,11 @@ input {
 }
 
 .input .disabled {
-  background-color: var(--color-text-muted);
+  background-color: var(--ui-background-panel);
+  border-color: var(--color-stroke-ui-light);
+  border-style: dashed;
+  color: var(--ui-text-secondary);
+  cursor: not-allowed;
 }
 
 .password-eye {
