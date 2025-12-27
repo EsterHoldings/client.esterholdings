@@ -1,5 +1,51 @@
 <template>
   <div class="user-verification__wrapper">
+    <div class="user-verification__right">
+      <PanelDefault class="user-verification__right__panel">
+        <div class="user-profile-card">
+          <div class="user-profile-card__header">
+            <div>
+              <UiTextH5 class="user-profile-card__name">
+                {{ props.userData.first_name }}
+                {{ props.userData.last_name }}
+                {{ props.userData.mid_name }}
+              </UiTextH5>
+              <div class="user-profile-card__subtitle">
+                {{ props.userData.email || "-" }}
+              </div>
+            </div>
+            <div class="user-profile-card__meta">
+              <span>Дата рождения: {{ props.userData.birthdate || "-" }}</span>
+              <span>Телефон: {{ props.userData.phone || "-" }}</span>
+            </div>
+          </div>
+
+          <div class="user-profile-card__grid">
+            <div class="user-profile-card__item">
+              <span class="label">Страна</span>
+              <span class="value">{{ props.userData.country || "-" }}</span>
+            </div>
+            <div class="user-profile-card__item">
+              <span class="label">Город</span>
+              <span class="value">{{ props.userData.city || "-" }}</span>
+            </div>
+            <div class="user-profile-card__item">
+              <span class="label">Штат</span>
+              <span class="value">{{ props.userData.state || "-" }}</span>
+            </div>
+            <div class="user-profile-card__item">
+              <span class="label">Индекс</span>
+              <span class="value">{{ props.userData.postal_code || "-" }}</span>
+            </div>
+            <div class="user-profile-card__item wide">
+              <span class="label">Адрес</span>
+              <span class="value">{{ props.userData.address || "-" }}</span>
+            </div>
+          </div>
+        </div>
+      </PanelDefault>
+    </div>
+
     <div class="user-verification__left">
       <PanelDefault>
 
@@ -18,67 +64,56 @@
           <ul class="user-verification__left__verification-list">
 
             <li>
-              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--main">
-                <span>Email</span>
+              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
+                <UiIconSuccess v-if="infoStatus === 'approved'"/>
+                <UiIconWarning v-if="infoStatus === 'pending'"/>
+                <UiIconFailed v-if="infoStatus === 'rejected'"/>
+                <span v-if="infoStatus === 'approved'">{{ 'Профиль — Успешно верифицирован!' }}</span>
+                <span v-if="infoStatus === 'pending'">{{ 'Профиль — Ожидает верификации!' }}</span>
+                <span v-if="infoStatus === 'rejected'">{{ 'Профиль — Отклонено!' }}</span>
               </div>
+              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
+                <VerificationActions
+                  :enable-comment="true"
+                  :comment="infoComment"
+                  :status="infoStatus"
+                  @update-status="handleVerificationProfile"
+                />
+              </div>
+            </li>
+
+            <li>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
                 <UiIconSuccess v-if="emailStatus === 'approved'"/>
                 <UiIconWarning v-if="emailStatus === 'pending'"/>
                 <UiIconFailed v-if="emailStatus === 'rejected'"/>
-                <span v-if="emailStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-                <span v-if="emailStatus === 'pending'">{{ 'Ожидает подтверждения!' }}</span>
-                <span v-if="emailStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span v-if="emailStatus === 'approved'">{{ 'Email — Успешно верифицирован!' }}</span>
+                <span v-if="emailStatus === 'pending'">{{ 'Email — Ожидает подтверждения!' }}</span>
+                <span v-if="emailStatus === 'rejected'">{{ 'Email — Отклонено!' }}</span>
               </div>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
             </li>
 
             <li>
-              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--main">
-                <span>Фото профиля</span>
-              </div>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
                 <UiIconSuccess v-if="photoStatus === 'approved'"/>
                 <UiIconWarning v-if="photoStatus === 'pending'"/>
                 <UiIconFailed v-if="photoStatus === 'rejected'"/>
-                <span v-if="photoStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-                <span v-if="photoStatus === 'pending'">{{ 'Не загружено!' }}</span>
-                <span v-if="photoStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span v-if="photoStatus === 'approved'">{{ 'Фото профиля — Успешно верифицирован!' }}</span>
+                <span v-if="photoStatus === 'pending'">{{ 'Фото профиля — Не загружено!' }}</span>
+                <span v-if="photoStatus === 'rejected'">{{ 'Фото профиля — Отклонено!' }}</span>
               </div>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
             </li>
 
             <li>
-              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--main">
-                <span>Адрес</span>
-              </div>
-              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
-                <UiIconSuccess v-if="addressStatus === 'approved'"/>
-                <UiIconWarning v-if="addressStatus === 'pending'"/>
-                <UiIconFailed v-if="addressStatus === 'rejected'"/>
-                <span v-if="addressStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-                <span v-if="addressStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
-                <span v-if="addressStatus === 'rejected'">{{ 'Отклонено!' }}</span>
-              </div>
-              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
-                <VerificationActions
-                    :enable-comment="true"
-                    :comment="addressComment"
-                    :status="addressStatus"
-                    @update-status="handleVerificationAddress"
-                />
-              </div>
-            </li>
-            <li>
-              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--main">
-                <span>Документы</span>
-              </div>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
                 <UiIconSuccess v-if="documentsStatus === 'approved'"/>
                 <UiIconWarning v-if="documentsStatus === 'pending'"/>
                 <UiIconFailed v-if="documentsStatus === 'rejected'"/>
-                <span v-if="documentsStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-                <span v-if="documentsStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
-                <span v-if="documentsStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span v-if="documentsStatus === 'approved'">{{ 'Документы — Успешно верифицирован!' }}</span>
+                <span v-if="documentsStatus === 'pending'">{{ 'Документы — Ожидает верификации!' }}</span>
+                <span v-if="documentsStatus === 'rejected'">{{ 'Документы — Отклонено!' }}</span>
               </div>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
                 <VerificationActions
@@ -90,16 +125,13 @@
               </div>
             </li>
             <li>
-              <div class="user-verification__left__verification-cell user-verification__left__verification-cell--main">
-                <span>1-й Депозит</span>
-              </div>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
                 <UiIconSuccess v-if="depositStatus === 'approved'"/>
                 <UiIconWarning v-if="depositStatus === 'pending'"/>
                 <UiIconFailed v-if="depositStatus === 'rejected'"/>
-                <span v-if="depositStatus === 'approved'">{{ 'Успешно верифицирован!' }}</span>
-                <span v-if="depositStatus === 'pending'">{{ 'Ожидает верификации!' }}</span>
-                <span v-if="depositStatus === 'rejected'">{{ 'Отклонено!' }}</span>
+                <span v-if="depositStatus === 'approved'">{{ '1-й Депозит — Успешно верифицирован!' }}</span>
+                <span v-if="depositStatus === 'pending'">{{ '1-й Депозит — Ожидает верификации!' }}</span>
+                <span v-if="depositStatus === 'rejected'">{{ '1-й Депозит — Отклонено!' }}</span>
               </div>
               <div class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
             </li>
@@ -111,130 +143,6 @@
       </PanelDefault>
     </div>
 
-    <div class="user-verification__right">
-      <PanelDefault class="user-verification__right__panel">
-
-        <div class="user-verification__right__info-group">
-          <div class="user-verification__right__status-row">
-            <div class="user-verification__right__status-row-text">
-              <UiIconSuccess v-if="infoStatus === 'approved'"/>
-              <UiIconWarning v-if="infoStatus === 'pending'"/>
-              <UiIconFailed v-if="infoStatus === 'rejected'"/>
-              <UiTextH5 v-if="infoStatus === 'approved'">Профиль — Успешно верифицирован!</UiTextH5>
-              <UiTextH5 v-if="infoStatus === 'pending'">Профиль — Ожидает верификации!</UiTextH5>
-              <UiTextH5 v-if="infoStatus === 'rejected'">Профиль — Отклонено!</UiTextH5>
-            </div>
-            <VerificationActions
-                :enable-comment="true"
-                :comment="infoComment"
-                :status="infoStatus"
-                @update-status="handleVerificationProfile"
-            />
-          </div>
-          <ul class="user-verification__right__info-list">
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Имя:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.first_name }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Фамилия:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.last_name }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Отчество:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.mid_name }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Дата рождения:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.birthdate }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Телефон:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.phone }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Страна:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.country }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Город:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.city }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Штат:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.state }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Адрес:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.address }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-
-            <li>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--label">
-                <span>Индекс:</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--value">
-                <span>{{ props.userData.postal_code }}</span>
-              </div>
-              <div class="user-verification__right__info-cell user-verification__right__info-cell--actions"></div>
-            </li>
-          </ul>
-        </div>
-      </PanelDefault>
-    </div>
   </div>
 
   <div class="user-verification__documents_wrapper">
@@ -247,20 +155,22 @@
 
         <div v-if="documentsListRequestData.length === 0">No documents...</div>
 
-        <div class="document" v-for="documentRequestData in documentsListRequestData" :key="documentRequestData.id">
-          <div class="document__options">
-            <VerificationActions
-                :status="documentRequestData.state"
-                @update-status="handleVerificationDocument($event, documentRequestData.id)"
-            />
-          </div>
-          <UiImage
-              class="document__options__doc-image"
-              :src="documentRequestData.document_data.full_url"
-              @click="handleClientDocumentImage(documentRequestData.document_data.full_url)"
-          />
-          <span class="document__options__doc-title"># {{ documentRequestData.document_data.number }}</span>
+      <div class="document" v-for="documentRequestData in documentsListRequestData" :key="documentRequestData.id">
+        <UiImage
+          class="document__image"
+          :src="documentRequestData.document_data.full_url"
+          @click="handleClientDocumentImage(documentRequestData.document_data.full_url)"
+        />
+        <div class="document__meta">
+          <span class="document__title"># {{ documentRequestData.document_data.number }}</span>
         </div>
+        <div class="document__options">
+          <VerificationActions
+            :status="documentRequestData.state"
+            @update-status="handleVerificationDocument($event, documentRequestData.id)"
+          />
+        </div>
+      </div>
 
       </div>
     </PanelDefault>
@@ -483,6 +393,19 @@ onMounted(async () => {
   .user-verification__right {
     width: 100% !important;
   }
+
+  .user-profile-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .user-profile-card__meta {
+    text-align: left;
+  }
+
+  .user-profile-card__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .user {
@@ -493,6 +416,69 @@ onMounted(async () => {
       gap: 20px;
 
       color: var(--ui-text-main);
+    }
+
+    .user-profile-card {
+      background: var(--ui-background-panel);
+      border: 1px solid var(--color-stroke-ui-light);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .user-profile-card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .user-profile-card__name {
+      color: var(--ui-text-main);
+    }
+
+    .user-profile-card__subtitle {
+      color: var(--ui-text-secondary);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .user-profile-card__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: right;
+      color: var(--ui-text-secondary);
+      font-size: 12px;
+    }
+
+    .user-profile-card__grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 16px;
+    }
+
+    .user-profile-card__item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .user-profile-card__item .label {
+      color: var(--ui-text-secondary);
+      font-size: 12px;
+    }
+
+    .user-profile-card__item .value {
+      color: var(--ui-text-main);
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .user-profile-card__item.wide {
+      grid-column: 1 / -1;
     }
 
     &__left {
@@ -516,7 +502,7 @@ onMounted(async () => {
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 10px;
 
         &_wrapper {
           position: relative;
@@ -545,13 +531,10 @@ onMounted(async () => {
         li {
           min-height: 36px;
           display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-columns: 1fr auto;
           align-items: center;
           gap: 12px;
-          padding: 8px 12px;
-          border-radius: 10px;
-          background: var(--ui-background-panel);
-          border: 1px solid var(--color-stroke-ui-light);
+          padding: 0;
         }
       }
 
@@ -561,10 +544,6 @@ onMounted(async () => {
         gap: 6px;
         min-width: 0;
         width: 100%;
-
-        &--main {
-          justify-content: flex-start;
-        }
 
         &--status {
           justify-content: flex-start;
@@ -630,75 +609,85 @@ onMounted(async () => {
   }
 
   &__content {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 20px;
-
-    @media (max-width: 1073px) {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    @media (max-width: 794px) {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    @media (max-width: 601px) {
-      grid-template-columns: 1fr;
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     .document {
-      min-height: 200px;
+      min-height: 120px;
       height: auto;
-      min-width: 180px;
-
+      width: 100%;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      justify-content: center;
-      gap: 20px;
-
-      border: 1px solid var(--color-stroke-ui-dark);
-      border-radius: 8px;
+      justify-content: flex-start;
+      gap: 16px;
+      background: var(--ui-background-panel);
+      border: 1px solid var(--color-stroke-ui-light);
+      border-radius: 12px;
+      padding: 12px 14px;
       user-select: none;
-
       position: relative;
 
       &__options {
-        z-index: 99;
-        background-color: var(--ui-background);
-        position: absolute;
-        bottom: 0;
-        right: 10px;
-        text-align: center;
+        z-index: 1;
+        background-color: transparent;
+        position: static;
+        border-radius: 0;
+        height: auto;
+        width: auto;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+        margin-left: auto;
+      }
+
+      &__image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
         border-radius: 10px;
-        height: 38px;
-        width: min-content;
-        margin: 0 auto 10px auto;
+        flex-shrink: 0;
+      }
 
-        &__doc-title {
-          color: var(--ui-text-main);
-          font-weight: bold;
-          position: absolute;
-          left: 10px;
-          top: 10px;
-          background-color: var(--ui-background);
-          border: 1px solid var(--color-primary);
-          padding: 5px;
-          border-radius: 4px;
-        }
+      &__meta {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        min-width: 0;
+      }
 
-        &__doc-image {
-          border-radius: 7px;
-        }
+      &__title {
+        color: var(--ui-text-main);
+        font-weight: 600;
       }
 
       &:hover {
         background-color: var(--color-stroke-ui-dark);
-        border: 1px solid var(--ui-primary-main);
       }
 
       &:active {
         opacity: .5;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .document {
+        flex-direction: column;
+      }
+
+      .document__options {
+        width: 100%;
+        align-items: flex-start;
+        margin-left: 0;
+      }
+
+      .document__image {
+        width: 100%;
+        height: auto;
       }
     }
   }

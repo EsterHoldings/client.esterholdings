@@ -1,38 +1,48 @@
 <template>
   <div class="doc-actions">
-    <UiButtonDefault state="info--outline--small"
-        v-if="props.enableComment"
-        class="doc-actions__btn doc-actions__btn--comment"
-        :class="{ active: commentText.length > 0 || props.comment?.length > 0 || ''}"
-        @click="toggleComment"
-        title="Коментар"
+    <button
+      v-if="props.enableComment"
+      type="button"
+      class="action-toggle action-toggle--comment"
+      :class="{ active: commentText.length > 0 || props.comment?.length > 0 || '' }"
+      @click="toggleComment"
+      title="Коментар"
+      aria-label="Коментар"
     >
       <UiIconComment />
-    </UiButtonDefault>
-    <UiButtonDefault state="info--outline--small"
-        class="doc-actions__btn doc-actions__btn--rejected"
+    </button>
+    <div class="action-group">
+      <button
+        type="button"
+        class="action-toggle"
         :class="{ active: props.status === 'rejected' }"
         @click="onReject"
         title="Відхилено"
-    >
-      <UiIconDelete />
-    </UiButtonDefault>
-    <UiButtonDefault state="info--outline--small"
-        class="doc-actions__btn doc-actions__btn--pending"
+        aria-label="Відхилено"
+      >
+        <UiIconDelete />
+      </button>
+      <button
+        type="button"
+        class="action-toggle"
         :class="{ active: props.status === 'pending' }"
         @click="onPending"
         title="В очікуванні"
-    >
-      <UiIconAlert />
-    </UiButtonDefault>
-    <UiButtonDefault state="info--outline--small"
-        class="doc-actions__btn doc-actions__btn--approved"
+        aria-label="В очікуванні"
+      >
+        <UiIconAlert />
+      </button>
+      <button
+        type="button"
+        class="action-toggle"
         :class="{ active: props.status === 'approved' }"
         @click="onApprove"
         title="Підтверджено"
-    >
-      <UiIconCheck />
-    </UiButtonDefault>
+        aria-label="Підтверджено"
+      >
+        <UiIconCheck />
+      </button>
+    </div>
 
     <transition name="fade">
       <div v-if="isCommentOpen" class="comment-popup">
@@ -68,14 +78,14 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import UiIconDelete from '~/components/ui/UiIconDelete.vue';
 import UiIconComment from '~/components/ui/UiIconComment.vue';
 import UiTextarea from "~/components/ui/UiTextarea.vue";
-import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiIconCheck from "~/components/ui/UiIconCheck.vue";
 import UiIconAlert from "~/components/ui/UiIconAlert.vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
+import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 
 const props = defineProps({
   status: {
@@ -131,47 +141,65 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.active {
-  background-color: var(--ui-text-secondary);
-  border: 1px solid var(--ui-primary-accent);
-
-  svg {
-    stroke: var(--ui-primary-accent);
-  }
-}
-
 .doc-actions {
   position: relative;
   display: flex;
-  gap: 5px;
-  padding: 3px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
   border-radius: 10px;
   width: min-content;
-
-  &:hover {
-    &>svg {
-      stroke: white;
-    }
-  }
+  background: var(--color-stroke-ui-dark);
+  border: 1px solid var(--color-stroke-ui-light);
 }
 
-.doc-actions__btn--comment  {
-  border: 1px solid var(--color-stroke-ui-dark);
-  color: var(--color-success);
-
-  &:hover {
-    background-color: var(--ui-primary-accent);
-  }
-
-  &.active {
-    border: 1px solid var(--color-primary);
-    color: var(--color-success);
-  }
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.doc-actions__btn--rejected  { color: var(--color-danger) }
-.doc-actions__btn--pending   { color: var(--color-warning) }
-.doc-actions__btn--approved  { color: var(--color-success) }
+.action-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  border-radius: 8px;
+  color: var(--ui-text-main);
+  background: transparent;
+  border: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.action-toggle svg {
+  height: 18px;
+  width: 18px;
+}
+
+.action-toggle--comment {
+  background: var(--ui-background-panel);
+  border: 1px solid var(--color-stroke-ui-light);
+  margin-right: 10px;
+}
+
+.action-toggle--comment.active {
+  background: var(--color-stroke-ui-light);
+  color: var(--ui-text-main);
+}
+
+.action-toggle--comment:hover {
+  background: var(--color-stroke-ui-dark);
+}
+
+.action-toggle.active {
+  background: var(--color-stroke-ui-light);
+  color: #fff;
+}
+
+.action-toggle:not(.active):hover {
+  background: var(--color-stroke-ui-light);
+}
 
 
 .comment-popup {

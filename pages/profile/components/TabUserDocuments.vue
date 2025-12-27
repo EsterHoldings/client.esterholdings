@@ -42,6 +42,14 @@
     </div>
 
     <div class="space-y-3">
+      <UiButtonDefault
+          state="info"
+          :disabled="isUploading || selectedFiles.length === 0"
+          class="!mt-5"
+          @click="uploadFiles"
+      >
+        {{ isUploading ? "Uploading..." : "Upload and Send to Verification" }}
+      </UiButtonDefault>
       <div class="flex items-center justify-between rounded-xl border border-[var(--color-stroke-ui-dark)] h-[40px] px-4">
         <UiTextH6>Confirm your full name</UiTextH6>
         <div class="flex items-center justify-between gap-1.5">
@@ -53,26 +61,6 @@
           <span class="text-[var(--color-danger)]" v-if="verificationDocumentsStatus === 'rejected'">Rejected</span>
         </div>
       </div>
-      <div class="flex items-center justify-between rounded-xl border border-[var(--color-stroke-ui-dark)] h-[40px] px-4 mb-5">
-        <UiTextH6>Confirm your address (passport or receipt)</UiTextH6>
-        <div class="flex items-center justify-between gap-1.5">
-          <UiIconWarningFull class="text-[var(--color-warning)]" v-if="verificationAddressStatus === 'pending'"/>
-          <UiIconSuccessFull class="text-[var(--color-success)]" v-if="verificationAddressStatus === 'approved'"/>
-          <UiIconDangerFull class="text-[var(--color-danger)]" v-if="verificationAddressStatus === 'rejected'"/>
-          <span class="text-[var(--color-warning)]" v-if="verificationAddressStatus === 'pending'">In progress</span>
-          <span class="text-[var(--color-success)]" v-if="verificationAddressStatus === 'approved'">Approved</span>
-          <span class="text-[var(--color-danger)]" v-if="verificationAddressStatus === 'rejected'">Rejected</span>
-        </div>
-      </div>
-
-      <UiButtonDefault
-          state="info"
-          :disabled="isUploading || selectedFiles.length === 0"
-          class="!mt-5"
-          @click="uploadFiles"
-      >
-        {{ isUploading ? "Uploading..." : "Upload and Send to Verification" }}
-      </UiButtonDefault>
     </div>
 
     <div class="space-y-4">
@@ -91,12 +79,12 @@
       <div class="relative rounded-[22px] border border-[var(--ui-primary-main)] overflow-hidden shadow-[inset_0_1px_0_rgba(77,131,255,.45)]">
         <!-- Header -->
         <div
-            class="grid items-center px-6 py-3 bg-[var(--ui-primary-main)] text-sm text-[var(--ui-text-main)]/90 [grid-template-columns:47px_1fr_1fr_1fr_30px]"
+            class="grid items-center px-6 py-3 bg-[var(--ui-primary-main)] text-sm text-[var(--ui-text-main)]/90 gap-x-3 [grid-template-columns:47px_1fr_1fr_1fr_30px]"
         >
           <div></div>
           <div>Name</div>
-          <div class="text-right">Date</div>
-          <div class="text-right">Status</div>
+          <div class="text-left">Status</div>
+          <div class="text-left">Date</div>
           <div></div>
         </div>
 

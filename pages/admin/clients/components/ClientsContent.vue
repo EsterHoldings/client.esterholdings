@@ -5,21 +5,19 @@
       :key="item.id"
       class="client-card card-with-action"
       :class="viewMode === 'full' ? 'client-card--full' : ''"
+      @click="handleOpenClientPage(item.id)"
     >
-      <button
-        class="action-btn"
-        aria-label="Open client"
-        @click="handleOpenClientPage(item.id)"
-      >
-        <UiIconUser />
-      </button>
-
       <div class="client-card__body" :class="viewMode === 'full' ? 'client-card__body--row' : ''">
         <div class="client-card__user">
-          <UiTextSmall class="text-[var(--ui-text-secondary)]">
-            {{ t("admin.accounts.components.accounts-panel.columns.name") }}
-          </UiTextSmall>
           <div class="client-card__user-row">
+            <button
+              v-if="item.id"
+              class="client-card__copy client-card__copy--leading"
+              aria-label="Copy id"
+              @click.stop
+            >
+              <UiIconCopy :text="item.id" />
+            </button>
             <div class="user-photo" @click="handleOpenClientPage(item.id)">
               <UiImageCircle
                 :twoChars="getTwoCharsByFullName(item.first_name, item.last_name)"
@@ -27,10 +25,11 @@
               />
             </div>
             <div class="client-card__user-text">
-              <div class="truncate font-semibold">
-                {{ item.first_name }} {{ item.last_name }}
+              <div class="client-card__name-row">
+                <div class="truncate font-semibold">
+                  {{ item.first_name }} {{ item.last_name }}
+                </div>
               </div>
-              <div class="client-card__user-id">{{ item.id }}</div>
             </div>
           </div>
         </div>
@@ -70,7 +69,7 @@
 <script lang="ts" setup>
 import {useI18n} from "vue-i18n";
 import UiImageCircle from "~/components/ui/UiImageCircle.vue";
-import UiIconUser from "~/components/ui/UiIconUser.vue";
+import UiIconCopy from "~/components/ui/UiIconCopy.vue";
 import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 
 const emit = defineEmits(['click'])
@@ -183,9 +182,26 @@ const formatDate = (date: string) => {
   min-width: 0;
 }
 
-.client-card__user-id {
-  font-size: 12px;
-  color: var(--ui-primary-main);
+.client-card__name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.client-card__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-text-secondary);
+}
+
+.client-card__copy:hover {
+  color: var(--ui-text-main);
+}
+
+.client-card__copy--leading {
+  flex-shrink: 0;
 }
 
 .client-card__meta {
@@ -202,27 +218,6 @@ const formatDate = (date: string) => {
 }
 
 .card-with-action {
-  padding-right: 36px;
-}
-
-.card-with-action .action-btn {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 28px;
-  width: 28px;
-  border-radius: 8px;
-  color: var(--ui-text-secondary);
-  background: transparent;
-  border: none;
-  transition: color 0.2s ease, transform 0.15s ease;
-}
-
-.card-with-action .action-btn:hover {
-  color: var(--ui-text-main);
-  transform: translateY(-1px);
+  padding-right: 14px;
 }
 </style>

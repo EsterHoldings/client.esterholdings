@@ -20,7 +20,14 @@
           <div class="profile-data__info">
 
             <div class="profile-data__info_photo__wrapper">
-              <UiImage class="profile-data__info_photo" :src="props.userData.photo_url"/>
+              <UiImage
+                v-if="props.userData.photo_url"
+                class="profile-data__info_photo"
+                :src="props.userData.photo_url"
+              />
+              <div v-else class="profile-data__info_photo profile-data__info_photo--placeholder">
+                <span>Фото не загружено</span>
+              </div>
             </div>
 
             <div class="profile-data__info_personal-info">
@@ -166,7 +173,8 @@ onMounted(async () => {
     }
 
     .profile-data__info_photo {
-      height: 500px;
+      max-height: 350px;
+      height: auto;
     }
   }
 
@@ -209,13 +217,25 @@ onMounted(async () => {
 
         &_photo {
           margin-top: 20px;
-          height: 200px;
           width: 200px;
+          height: auto;
+          max-height: 350px;
           border-radius: 10px;
 
           &__wrapper {
             width: 50%;
-            height: 200px;
+            height: auto;
+          }
+
+          &--placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 12px;
+            background: var(--color-stroke-ui-light);
+            color: var(--ui-text-secondary);
+            font-size: 13px;
           }
         }
 

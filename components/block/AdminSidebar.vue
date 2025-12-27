@@ -85,7 +85,7 @@
     justify-content: center;
     flex-direction: column;
     gap: 30px;
-    border-right: 1px solid var(--color-stroke-ui);
+    border-right: 1px solid var(--color-stroke-ui-light);
     background-color: var(--ui-background-sidebar);
     z-index: 1;
 

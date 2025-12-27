@@ -45,12 +45,19 @@
 
       <template #content>
         <div>
-          <ClientsContent
-            v-if="viewMode !== 'table'"
-            :data="clientsData"
-            :viewMode="viewMode"
-            @click="handleOpenClientPage"
-          />
+          <div v-if="viewMode !== 'table'" class="relative">
+            <div
+              class="backdrop-blur-[2px] w-full absolute inset-0 flex items-center justify-center z-10 rounded-xl"
+              v-if="isLoading && !isInitialLoading"
+            >
+              <UiIconSpinnerDefault />
+            </div>
+            <ClientsContent
+              :data="clientsData"
+              :viewMode="viewMode"
+              @click="handleOpenClientPage"
+            />
+          </div>
 
           <div v-else class="relative">
             <div
