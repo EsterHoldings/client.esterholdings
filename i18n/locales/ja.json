@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "新しいパスワードを保存",
-          "success": "パスワードが正常に更新されました！"
+          "success": "パスワードが正常に更新されました！",
+          "forgot": {
+            "title": "パスワードをお忘れですか？",
+            "description": "ボタンをクリックしてパスワード再設定メールを受け取ってください。",
+            "button": "メールでリンクを送信"
+          },
+          "two_fa": {
+            "title": "二段階認証",
+            "subtitle": "QRコードをスキャンするか、秘密鍵を手動で入力してください",
+            "enabled": "2FA有効",
+            "disable": "2FAを無効にする",
+            "code_label": "2FAコード",
+            "code_placeholder": "ここにコードを入力",
+            "confirm": "確認",
+            "enable_success": "2FAが有効になりました！",
+            "enable_error": "無効なコードまたは接続エラー",
+            "disable_success": "2FAが無効になりました",
+            "disable_error": "2FAを無効にできませんでした"
+          },
+          "reset": {
+            "pending": "再送信する前にしばらくお待ちください。",
+            "success": "パスワード再設定メールを送信しました。",
+            "error": "再設定メールを送信できませんでした。後でもう一度お試しください。"
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "クライアント",
         "subtitle": "クライアントリスト"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "認証リクエスト",
+        "subtitle": "認証リクエスト一覧"
+      },
+      "searchPlaceholder": "認証リクエストを検索...",
+      "comment": {
+        "label": "コメント",
+        "placeholder": "コメントを入力...",
+        "save": "保存",
+        "close": "閉じる"
       }
     },
     "dashboard": {

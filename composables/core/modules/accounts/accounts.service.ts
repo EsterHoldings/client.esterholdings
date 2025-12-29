@@ -30,6 +30,10 @@ export class AccountsService {
   async delete(id:any):Promise<any> {
     return await this.useApi.delete(`/client/accounts/${id}`);
   }
+
+  async toggleFavorite(id: any): Promise<any> {
+    return await this.useApi.post(`/client/accounts/${id}/favorite`, {});
+  }
 }
 
 export default AccountsService;

@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "Neues Passwort speichern",
-          "success": "Passwort wurde erfolgreich aktualisiert!"
+          "success": "Passwort wurde erfolgreich aktualisiert!",
+          "forgot": {
+            "title": "Passwort vergessen?",
+            "description": "Klicken Sie auf die Schaltfläche, um eine E-Mail zum Zurücksetzen des Passworts zu erhalten.",
+            "button": "Link per E-Mail senden"
+          },
+          "two_fa": {
+            "title": "Zwei-Faktor-Authentifizierung",
+            "subtitle": "Scannen Sie den QR-Code oder geben Sie den geheimen Schlüssel manuell ein",
+            "enabled": "2FA aktiviert",
+            "disable": "2FA deaktivieren",
+            "code_label": "2FA-Code",
+            "code_placeholder": "Code hier eingeben",
+            "confirm": "Bestätigen",
+            "enable_success": "2FA wurde aktiviert!",
+            "enable_error": "Ungültiger Code oder Verbindungsfehler",
+            "disable_success": "2FA wurde deaktiviert",
+            "disable_error": "2FA konnte nicht deaktiviert werden"
+          },
+          "reset": {
+            "pending": "Bitte warten Sie, bevor Sie eine weitere Reset-E-Mail senden.",
+            "success": "Die E-Mail zum Zurücksetzen des Passworts wurde gesendet.",
+            "error": "Die Reset-E-Mail konnte nicht gesendet werden. Bitte später versuchen."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "Kunden",
         "subtitle": "Liste der Kunden"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "Verifizierungsanfragen",
+        "subtitle": "Liste der Verifizierungsanfragen"
+      },
+      "searchPlaceholder": "Verifizierungsanfragen suchen...",
+      "comment": {
+        "label": "Kommentar",
+        "placeholder": "Kommentar eingeben...",
+        "save": "Speichern",
+        "close": "Schließen"
       }
     },
     "dashboard": {

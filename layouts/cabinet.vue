@@ -19,7 +19,7 @@
           class="cabinet-main flex-1 min-h-0 overflow-y-auto no-scrollbar box-border w-full p-1 lg:pl-[250px] text-white pb-safe-area mb-[90px] lg:mb-0"
         >
           <UiContainer>
-            <div v-if="breadcrumbs.length" class="cabinet-breadcrumbs text-sm text-[var(--ui-text-secondary)]">
+            <div v-if="showBreadcrumbs && breadcrumbs.length" class="cabinet-breadcrumbs text-sm text-[var(--ui-text-secondary)]">
               <UiBreadcrumb :list="breadcrumbs" />
             </div>
           </UiContainer>
@@ -40,6 +40,7 @@ import CabinetSidebar from "~/components/block/CabinetSidebar.vue";
 import TheFooter from "~/components/block/TheFooter.vue";
 import CabinetHeader from "~/components/block/CabinetHeader.vue";
 import UiBreadcrumb from "~/components/ui/UiBreadcrumb.vue";
+import UiIconHome from "~/components/ui/UiIconHome.vue";
 import UiContainer from "~/components/ui/UiContainer.vue";
 
 const route = useRoute();
@@ -66,16 +67,32 @@ const breadcrumbs = computed(() => {
   const basePrefix = startIdx ? "/" + segments.slice(0, startIdx).join("/") : "";
   const visibleSegments = segments.slice(startIdx);
 
-  const list = visibleSegments.map((seg, idx) => {
+  const filteredSegments = visibleSegments.filter(
+    (seg) => seg.toLowerCase() !== "dashboard",
+  );
+
+  const list = filteredSegments.map((seg, idx) => {
     const key = seg.toLowerCase();
     const name = labels[key] ?? decodeURIComponent(seg);
-    const to = basePrefix + "/" + visibleSegments.slice(0, idx + 1).join("/");
+    const to = basePrefix + "/" + filteredSegments.slice(0, idx + 1).join("/");
     return { name, to };
   });
-  const dashCrumb = { name: labels.dashboard ?? "Dashboard", to: basePrefix + "/dashboard" };
+  const dashCrumb = {
+    name: labels.dashboard ?? "Dashboard",
+    to: basePrefix + "/dashboard",
+    icon: UiIconHome,
+  };
   if (!list.length) return [dashCrumb];
   if (list[0].name.toLowerCase() !== "dashboard") return [dashCrumb, ...list];
   return [dashCrumb, ...list.slice(1)];
+});
+
+const showBreadcrumbs = computed(() => {
+  const segments = route.path.split("/").filter(Boolean);
+  const currentLocale = locale.value?.toLowerCase?.();
+  const startIdx = currentLocale && segments[0]?.toLowerCase() === currentLocale ? 1 : 0;
+  const visibleSegments = segments.slice(startIdx);
+  return visibleSegments.join("/") !== "dashboard";
 });
 </script>
 

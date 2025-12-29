@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "새 비밀번호 저장",
-          "success": "비밀번호가 성공적으로 업데이트되었습니다!"
+          "success": "비밀번호가 성공적으로 업데이트되었습니다!",
+          "forgot": {
+            "title": "비밀번호를 잊으셨나요?",
+            "description": "비밀번호 재설정 이메일을 받으려면 버튼을 클릭하세요.",
+            "button": "이메일로 링크 보내기"
+          },
+          "two_fa": {
+            "title": "2단계 인증",
+            "subtitle": "QR 코드를 스캔하거나 비밀 키를 수동으로 입력하세요",
+            "enabled": "2FA 활성화됨",
+            "disable": "2FA 비활성화",
+            "code_label": "2FA 코드",
+            "code_placeholder": "여기에 코드를 입력",
+            "confirm": "확인",
+            "enable_success": "2FA가 활성화되었습니다!",
+            "enable_error": "잘못된 코드 또는 연결 오류",
+            "disable_success": "2FA가 비활성화되었습니다",
+            "disable_error": "2FA를 비활성화할 수 없습니다"
+          },
+          "reset": {
+            "pending": "다시 보내기 전에 잠시 기다려주세요.",
+            "success": "비밀번호 재설정 이메일이 전송되었습니다.",
+            "error": "재설정 이메일을 보낼 수 없습니다. 나중에 다시 시도하세요."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "고객",
         "subtitle": "고객 목록"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "인증 요청",
+        "subtitle": "인증 요청 목록"
+      },
+      "searchPlaceholder": "인증 요청 검색...",
+      "comment": {
+        "label": "댓글",
+        "placeholder": "댓글을 입력하세요...",
+        "save": "저장",
+        "close": "닫기"
       }
     },
     "dashboard": {

@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "Salvar nova senha",
-          "success": "A senha foi atualizada com sucesso!"
+          "success": "A senha foi atualizada com sucesso!",
+          "forgot": {
+            "title": "Esqueceu a senha?",
+            "description": "Clique no botão para receber um e-mail para redefinir a senha.",
+            "button": "Enviar link por e-mail"
+          },
+          "two_fa": {
+            "title": "Verificação em duas etapas",
+            "subtitle": "Digitalize o QR code ou insira a chave secreta manualmente",
+            "enabled": "2FA ativada",
+            "disable": "Desativar 2FA",
+            "code_label": "Código 2FA",
+            "code_placeholder": "Digite o código aqui",
+            "confirm": "Confirmar",
+            "enable_success": "2FA foi ativada!",
+            "enable_error": "Código inválido ou erro de conexão",
+            "disable_success": "2FA foi desativada",
+            "disable_error": "Não foi possível desativar a 2FA"
+          },
+          "reset": {
+            "pending": "Aguarde antes de enviar outro e-mail de redefinição.",
+            "success": "O e-mail de redefinição de senha foi enviado.",
+            "error": "Não foi possível enviar o e-mail de redefinição. Tente mais tarde."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "Clientes",
         "subtitle": "Lista de clientes"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "Solicitações de verificação",
+        "subtitle": "Lista de solicitações de verificação"
+      },
+      "searchPlaceholder": "Pesquisar solicitações de verificação...",
+      "comment": {
+        "label": "Comentário",
+        "placeholder": "Digite um comentário...",
+        "save": "Salvar",
+        "close": "Fechar"
       }
     },
     "dashboard": {

@@ -7,6 +7,8 @@
 - API helpers and domain logic sit in `services/` and `utils/`; shared values in `constants/`; types in `types/`.
 - Styling and media live in `assets/`; static files in `public/`; Tailwind config in `tailwind.config.ts`.
 - Nuxt setup is in `nuxt.config.ts`; router overrides in `router.options.ts`; server routes/handlers under `server/`.
+- This repo is the frontend; backend lives in the sibling `server/` folder next to this `client/` folder.
+- All client API calls go through `useAppCore` (see `composables/useAppCore`); follow its patterns when adding or updating requests.
 
 ## Build, Test, and Development Commands
 ```bash

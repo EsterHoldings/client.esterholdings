@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "Salva nuova password",
-          "success": "Password aggiornata con successo!"
+          "success": "Password aggiornata con successo!",
+          "forgot": {
+            "title": "Password dimenticata?",
+            "description": "Fai clic sul pulsante per ricevere un'email per reimpostare la password.",
+            "button": "Invia link via email"
+          },
+          "two_fa": {
+            "title": "Verifica in due passaggi",
+            "subtitle": "Scansiona il QR code o inserisci la chiave segreta manualmente",
+            "enabled": "2FA abilitata",
+            "disable": "Disattiva 2FA",
+            "code_label": "Codice 2FA",
+            "code_placeholder": "Inserisci il codice qui",
+            "confirm": "Conferma",
+            "enable_success": "2FA è stata abilitata!",
+            "enable_error": "Codice non valido o errore di connessione",
+            "disable_success": "2FA è stata disattivata",
+            "disable_error": "Impossibile disattivare 2FA"
+          },
+          "reset": {
+            "pending": "Attendi prima di inviare un'altra email di reset.",
+            "success": "L'email di reset password è stata inviata.",
+            "error": "Impossibile inviare l'email di reset. Riprova più tardi."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "Clienti",
         "subtitle": "Elenco clienti"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "Richieste di verifica",
+        "subtitle": "Elenco delle richieste di verifica"
+      },
+      "searchPlaceholder": "Cerca richieste di verifica...",
+      "comment": {
+        "label": "Commento",
+        "placeholder": "Inserisci un commento...",
+        "save": "Salva",
+        "close": "Chiudi"
       }
     },
     "dashboard": {

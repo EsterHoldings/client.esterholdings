@@ -1,5 +1,12 @@
 <template>
-  <div class="verifications-panel">
+  <div
+    class="verifications-panel"
+    :class="viewMode !== 'table'
+      ? viewMode === 'full'
+        ? 'verifications-panel--items grid-cols-1'
+        : 'verifications-panel--items grid-cols-1 md:grid-cols-2 xl:grid-cols-3'
+      : ''"
+  >
     <TableMain v-if="viewMode === 'table'">
       <template #thead>
         <tr>
@@ -40,11 +47,7 @@
       </template>
     </TableMain>
 
-    <div
-      v-else
-      class="verifications-panel--items"
-      :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'"
-    >
+    <template v-else>
       <div
         class="verification-card"
         v-for="verificationRequest in verificationRequests"
@@ -70,7 +73,7 @@
           <VerificationActions :status="verificationRequest['state']" />
         </div>
       </div>
-    </div>
+    </template>
 
     <PaginationDefault
       :isLoading="isLoading"

@@ -37,6 +37,10 @@ export class AccountsModule implements BasicModuleInterface {
     return await this.accountsService.delete(id);
   }
 
+  async toggleFavorite(id: any): Promise<any> {
+    return await this.accountsService.toggleFavorite(id);
+  }
+
 
 }
 

@@ -1,11 +1,20 @@
 <template>
   <ul class="breadcrumb">
     <li v-for="(item, index) in list" :key="item.name + index" class="breadcrumb__item">
-      <NuxtLink v-if="item.to" :to="item.to" class="breadcrumb__link">
-        {{ item.name }}
+      <NuxtLink
+        v-if="item.to"
+        :to="item.to"
+        class="breadcrumb__link"
+        :aria-label="item.name">
+        <component v-if="item.icon" :is="item.icon" class="breadcrumb__icon" />
+        <span v-else>{{ item.name }}</span>
       </NuxtLink>
-      <span v-else class="breadcrumb__link">
-        {{ item.name }}
+      <span
+        v-else
+        class="breadcrumb__link"
+        :aria-label="item.name">
+        <component v-if="item.icon" :is="item.icon" class="breadcrumb__icon" />
+        <span v-else>{{ item.name }}</span>
       </span>
       <UiIconArrowRightShort v-if="index + 1 !== list.length" class="breadcrumb__sep" />
     </li>
@@ -18,6 +27,7 @@ import UiIconArrowRightShort from "~/components/ui/UiIconArrowRightShort.vue";
 type BreadcrumbItem = {
   name: string;
   to?: string;
+  icon?: any;
 };
 
 defineProps<{
@@ -54,6 +64,12 @@ defineProps<{
 
   &__sep {
     color: var(--ui-text-secondary);
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
   }
 }
 </style>

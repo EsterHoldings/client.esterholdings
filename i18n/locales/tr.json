@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "Yeni şifreyi kaydet",
-          "success": "Şifre başarıyla güncellendi!"
+          "success": "Şifre başarıyla güncellendi!",
+          "forgot": {
+            "title": "Parolanızı mı unuttunuz?",
+            "description": "Parolayı sıfırlamak için e-posta almak üzere butona tıklayın.",
+            "button": "E-posta ile bağlantı gönder"
+          },
+          "two_fa": {
+            "title": "İki adımlı doğrulama",
+            "subtitle": "QR kodu tarayın veya gizli anahtarı manuel olarak girin",
+            "enabled": "2FA etkin",
+            "disable": "2FA'yı devre dışı bırak",
+            "code_label": "2FA kodu",
+            "code_placeholder": "Kodu buraya girin",
+            "confirm": "Onayla",
+            "enable_success": "2FA etkinleştirildi!",
+            "enable_error": "Geçersiz kod veya bağlantı hatası",
+            "disable_success": "2FA devre dışı bırakıldı",
+            "disable_error": "2FA devre dışı bırakılamadı"
+          },
+          "reset": {
+            "pending": "Başka bir sıfırlama e-postası göndermeden önce lütfen bekleyin.",
+            "success": "Parola sıfırlama e-postası gönderildi.",
+            "error": "Parola sıfırlama e-postası gönderilemedi. Daha sonra tekrar deneyin."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "Müşteriler",
         "subtitle": "Müşteriler listesi"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "Doğrulama istekleri",
+        "subtitle": "Doğrulama istekleri listesi"
+      },
+      "searchPlaceholder": "Doğrulama isteklerini ara...",
+      "comment": {
+        "label": "Yorum",
+        "placeholder": "Yorum girin...",
+        "save": "Kaydet",
+        "close": "Kapat"
       }
     },
     "dashboard": {

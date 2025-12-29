@@ -49,6 +49,7 @@
         <TableMain ref="tableRef" v-if="viewMode === 'table'">
           <template #thead>
             <tr>
+              <th class="px-4 py-2 text-left font-normal w-[56px]"></th>
               <th class="px-5 py-2 text-left font-normal">
                 <div class="flex items-center justify-start">
                   <UiTextSmall class="cursor-default mr-[10px]" @click="handleOrderByAndDirection('type')">
@@ -101,6 +102,28 @@
                   :key="account.id"
                   class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
               >
+                <td class="px-4 py-3 align-middle">
+                  <button
+                    class="flex h-8 w-8 items-center justify-center rounded-md transition text-[var(--ui-text-secondary)]"
+                    type="button"
+                    :aria-pressed="account.is_favorite"
+                    :title="account.is_favorite ? 'Remove from favorites' : 'Add to favorites'"
+                    @click.stop="handleToggleFavorite(account)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      class="h-4 w-4"
+                      :fill="account.is_favorite ? 'var(--ui-primary-accent)' : 'none'"
+                      :stroke="account.is_favorite ? 'var(--ui-primary-accent)' : 'var(--ui-text-secondary)'"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                  </button>
+                </td>
                 <td class="px-5 py-3 align-middle">
                   <div class="font-bold">
                     {{ account.account_type.name }}
@@ -221,6 +244,26 @@
                 :class="['account-card card-with-menu', cardMenuOpenId === account.id ? 'card-open' : '']"
             >
               <div class="card-menu-actions">
+                <button
+                  type="button"
+                  class="menu-btn"
+                  :aria-pressed="account.is_favorite"
+                  :title="account.is_favorite ? 'Remove from favorites' : 'Add to favorites'"
+                  @click.stop="handleToggleFavorite(account)"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    class="h-4 w-4"
+                    :fill="account.is_favorite ? 'var(--ui-primary-accent)' : 'none'"
+                    :stroke="account.is_favorite ? 'var(--ui-primary-accent)' : 'var(--ui-text-secondary)'"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                  </svg>
+                </button>
                 <button class="menu-btn" aria-label="Copy number">
                   <UiIconCopy :text="account.number" />
                 </button>
@@ -399,6 +442,28 @@ const spinIcon = ref(false);
 const cardMenuOpenId = ref<string | number | null>(null);
 const cardMenuStyle = ref<Record<string, string>>({});
 const cardMenuTriggerRefs = reactive<Record<string | number, HTMLElement | null>>({});
+const MAX_FAVORITES = 3;
+
+const sortAccounts = (items: any[]) =>
+  [...items].sort((a, b) => {
+    if (!!a.is_favorite !== !!b.is_favorite) return a.is_favorite ? -1 : 1;
+    return Number(b.balance ?? 0) - Number(a.balance ?? 0);
+  });
+
+const applyFavoriteLimit = (items: any[], selectedId: string) => {
+  const favorites = items
+    .filter((account) => account.is_favorite)
+    .sort((a, b) => {
+      const aTime = a.favorite_at ? new Date(a.favorite_at).getTime() : 0;
+      const bTime = b.favorite_at ? new Date(b.favorite_at).getTime() : 0;
+      return aTime - bTime;
+    });
+  if (favorites.length <= MAX_FAVORITES) return items;
+  const toRemove = favorites.find((fav) => fav.id !== selectedId) ?? favorites[0];
+  return items.map((account) =>
+    account.id === toRemove.id ? { ...account, is_favorite: false, favorite_at: null } : account,
+  );
+};
 const viewMode = ref<"table" | "cards" | "full">("table");
 const viewOptions = [
   {
@@ -571,10 +636,12 @@ const loadData = async () => {
 
   const accountsData = response.data.data.data.map((x: any) => {
     x.isSpinning = false;
+    x.is_favorite = !!x.is_favorite;
     return x;
   });
 
-  accounts.splice(0, accounts.length, ...accountsData);
+  const ordered = sortAccounts(accountsData);
+  accounts.splice(0, accounts.length, ...ordered);
 
   isLoading.value = false;
   isInitialLoading.value = false;
@@ -707,6 +774,44 @@ const handleClickUpdate = async () => {
   await loadData();
 };
 
+const handleToggleFavorite = async (account: any) => {
+  const isAdding = !account.is_favorite;
+  const now = new Date().toISOString();
+  let optimistic = accounts.map((item) =>
+    item.id === account.id
+      ? { ...item, is_favorite: isAdding, favorite_at: isAdding ? now : null }
+      : item,
+  );
+  if (isAdding) {
+    optimistic = applyFavoriteLimit(optimistic, account.id);
+  }
+  const ordered = sortAccounts(optimistic);
+  accounts.splice(0, accounts.length, ...ordered);
+
+  try {
+    const response = await appCore.accounts.toggleFavorite(account.id);
+    const payload = response?.data?.data ?? {};
+    const updated = payload.account;
+    const removedId = payload.removed_favorite_id;
+    const synced = accounts.map((item) => {
+      if (updated?.id && item.id === updated.id) {
+        return {
+          ...item,
+          is_favorite: !!updated.is_favorite,
+          favorite_at: updated.favorite_at ?? null,
+        };
+      }
+      if (removedId && item.id === removedId) {
+        return { ...item, is_favorite: false, favorite_at: null };
+      }
+      return item;
+    });
+    accounts.splice(0, accounts.length, ...sortAccounts(synced));
+  } catch {
+    await loadData();
+  }
+};
+
 const handleClickTransfer = async (accountId: string, tab: number | string = 0) => {
   closeOptions();
 
@@ -785,13 +890,13 @@ const handleClickCreateNewAccount = () =>
 }
 
 .card-with-menu {
-  padding-right: 58px;
+  padding-left: 58px;
 }
 
 .card-menu-actions {
   position: absolute;
   top: 6px;
-  right: 6px;
+  left: 6px;
   display: inline-flex;
   align-items: center;
   gap: 6px;

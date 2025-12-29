@@ -68,12 +68,22 @@
       <div>
         <PanelDefault class="p-5 rounded-2xl border border-[var(--color-stroke-ui-dark)] bg-[var(--ui-background)]">
           <div class="space-y-3">
-            <div class="text-sm font-semibold underline">Forgot Password?</div>
-            <div class="text-xs opacity-80">
-              Натисніть кнопку, щоб отримати лист і скинути пароль.
+            <div class="text-sm font-semibold underline">
+              {{ t("cabinet.profile.components.tab-change-password.forgot.title") }}
             </div>
-            <UiButtonDefault state="primary" class="mt-1" @click="handleClickSendResetPasswordEmail">
-              Send Link by Email
+            <div class="text-xs opacity-80">
+              {{ t("cabinet.profile.components.tab-change-password.forgot.description") }}
+            </div>
+            <UiButtonDefault
+              state="primary"
+              class="mt-1"
+              :disabled="isResetLoading"
+              @click="handleClickSendResetPasswordEmail"
+            >
+              <span class="flex items-center gap-2">
+                <span>{{ t("cabinet.profile.components.tab-change-password.forgot.button") }}</span>
+                <UiIconSpinnerDefault v-if="isResetLoading" class="h-4 w-4" />
+              </span>
             </UiButtonDefault>
           </div>
         </PanelDefault>
@@ -83,9 +93,11 @@
     <div>
       <div class="mb-4 flex items-center justify-between">
         <div>
-          <div class="text-base font-semibold">Two-Step Verification</div>
+          <div class="text-base font-semibold">
+            {{ t("cabinet.profile.components.tab-change-password.two_fa.title") }}
+          </div>
           <div class="text-xs opacity-70">
-            Відскануйте QR-код або введіть секретний ключ вручну
+            {{ t("cabinet.profile.components.tab-change-password.two_fa.subtitle") }}
           </div>
         </div>
         <UiSwitchToggle :model-value="twoFaSwitchOn" @update:modelValue="handleToggleTwoFa" />
@@ -103,7 +115,9 @@
           </div>
           <div class="flex items-center justify-center">
             <UiButtonDefault state="danger--outline" @click="handleClickTwoFaDisable">
-              <span v-if="!loadingDisable">Disable 2Fa</span>
+              <span v-if="!loadingDisable">
+                {{ t("cabinet.profile.components.tab-change-password.two_fa.disable") }}
+              </span>
               <UiIconSpinnerDefault v-else />
             </UiButtonDefault>
           </div>
@@ -116,12 +130,18 @@
           </div>
 
           <div class="flex flex-col justify-center">
-            <UiFormControl label="2Fa code">
-              <UiInput placeholder="Enter code here" :value="otp" @input="handleInputOtp" />
+            <UiFormControl :label="t('cabinet.profile.components.tab-change-password.two_fa.code_label')">
+              <UiInput
+                :placeholder="t('cabinet.profile.components.tab-change-password.two_fa.code_placeholder')"
+                :value="otp"
+                @input="handleInputOtp"
+              />
             </UiFormControl>
 
             <UiButtonDefault class="mt-4 w-[140px]" state="info--outline" @click="onEnable">
-              <span v-if="!loading">Confirm</span>
+              <span v-if="!loading">
+                {{ t("cabinet.profile.components.tab-change-password.two_fa.confirm") }}
+              </span>
               <UiIconSpinnerDefault v-else />
             </UiButtonDefault>
           </div>
@@ -161,6 +181,7 @@ const toast = useToast()
 const appCore = useAppCore()
 
 const isLoading = ref(false)
+const isResetLoading = ref(false)
 
 const otp = ref('')
 const error = ref('')
@@ -176,7 +197,7 @@ const qrSvg = ref('')
 const twoFaEnabledLabel = computed(() => {
   const raw = String(qrSvg.value ?? '')
   const plain = raw.replace(/<[^>]*>/g, '').trim()
-  return plain.length > 0 ? plain : '2FA enabled'
+  return plain.length > 0 ? plain : t("cabinet.profile.components.tab-change-password.two_fa.enabled")
 })
 
 const handleInputOtp = (value: string) => { otp.value = value }
@@ -186,7 +207,7 @@ const handleSubmit = async () => {
     isLoading.value = true
     await appCore.password.updatePassword(formData)
     resetValidationUserDataForm()
-    toast.success('Password was successfully updated!')
+    toast.success(t("cabinet.profile.components.tab-change-password.success"))
   } catch (e: any) {
     console.error(e)
     if (e.status === 422) {
@@ -214,9 +235,9 @@ const onEnable = async () => {
   try {
     await appCore.auth2fa.doEnable2fa({ otp: otp.value })
     success.value = true
-    toast.success('2Fa was enabled!')
+    toast.success(t("cabinet.profile.components.tab-change-password.two_fa.enable_success"))
   } catch (e: any) {
-    error.value = e.message || 'Невірний код або помилка зв’язку'
+    error.value = e.message || t("cabinet.profile.components.tab-change-password.two_fa.enable_error")
     toast.error(error.value)
   } finally {
     loading.value = false
@@ -232,12 +253,12 @@ const handleClickTwoFaDisable = async () => {
   loading.value = true
   try {
     await appCore.auth2fa.doDisable2fa({})
-    toast.success('2FA вимкнено')
+    toast.success(t("cabinet.profile.components.tab-change-password.two_fa.disable_success"))
     qrSvg.value = ''
     otp.value = ''
     success.value = false
   } catch (e: any) {
-    errorDisable.value = e.message || 'Помилка при вимкненні 2FA'
+    errorDisable.value = e.message || t("cabinet.profile.components.tab-change-password.two_fa.disable_error")
     toast.error(errorDisable.value)
   } finally {
     await loadTwoFaQr()
@@ -249,8 +270,24 @@ const handleClickTwoFaDisable = async () => {
 }
 
 const handleClickSendResetPasswordEmail = async () => {
-  await appCore.password.resetPassword()
-  toast.success('Reset password email was sent to your email.')
+  if (isResetLoading.value) {
+    toast.error(t("cabinet.profile.components.tab-change-password.reset.pending"))
+    return
+  }
+  isResetLoading.value = true
+  try {
+    await appCore.password.resetPassword()
+    toast.success(t("cabinet.profile.components.tab-change-password.reset.success"))
+  } catch (e: any) {
+    const apiMessage = e?.response?.data?.errors?.email
+    if (e?.status === 422 && apiMessage) {
+      toast.error(apiMessage)
+    } else {
+      toast.error(e?.message || t("cabinet.profile.components.tab-change-password.reset.error"))
+    }
+  } finally {
+    isResetLoading.value = false
+  }
 }
 
 const loadTwoFaQr = async () => {

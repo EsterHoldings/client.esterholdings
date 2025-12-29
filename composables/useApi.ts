@@ -7,7 +7,7 @@ import {
     ROUTE_AUTH_LOGIN,
     ROUTE_AUTH_REFRESH
 } from "~/constants/routes";
-import { useRuntimeConfig } from "nuxt/app";
+import { useCookie, useNuxtApp, useRuntimeConfig } from "nuxt/app";
 import { ADMIN_REFRESH_TOKEN } from "~/constants/auth";
 import useAppCore from "~/composables/useAppCore";
 import { useErrorStack } from "~/stores/errors";
@@ -34,10 +34,32 @@ export class useApi {
         const errorsStack = useErrorStack();
         errorsStack.flush();
 
+        const resolveLocale = () => {
+            const localeCookie = useCookie<string>("locale");
+            const i18nRedirected = useCookie<string>("i18n_redirected");
+            const nuxtApp = useNuxtApp();
+            const i18n = (nuxtApp?.$i18n ?? null) as { locale?: string | { value: string } } | null;
+            const i18nLocale =
+                typeof i18n?.locale === "string" ? i18n.locale : i18n?.locale?.value;
+            const resolved = i18nLocale || localeCookie.value || i18nRedirected.value;
+
+            if (resolved && localeCookie.value !== resolved) {
+                localeCookie.value = resolved;
+            }
+
+            return resolved;
+        };
+
         this.api.interceptors.request.use((config) => {
             const authStore = forClient ? useAuthStore() : useAdminAuthStore();
             if (authStore.accessToken)
                 config.headers.Authorization = `Bearer ${authStore.accessToken}`;
+
+            const locale = resolveLocale();
+            if (locale) {
+                config.headers["X-Locale"] = locale;
+                config.headers["Accept-Language"] = locale;
+            }
 
             return config;
         });

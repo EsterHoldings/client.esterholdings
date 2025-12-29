@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "Enregistrer le nouveau mot de passe",
-          "success": "Le mot de passe a été mis à jour avec succès!"
+          "success": "Le mot de passe a été mis à jour avec succès!",
+          "forgot": {
+            "title": "Mot de passe oublié ?",
+            "description": "Cliquez sur le bouton pour recevoir un e-mail de réinitialisation du mot de passe.",
+            "button": "Envoyer le lien par e-mail"
+          },
+          "two_fa": {
+            "title": "Vérification en deux étapes",
+            "subtitle": "Scannez le QR code ou saisissez la clé secrète manuellement",
+            "enabled": "2FA activée",
+            "disable": "Désactiver 2FA",
+            "code_label": "Code 2FA",
+            "code_placeholder": "Saisissez le code ici",
+            "confirm": "Confirmer",
+            "enable_success": "2FA a été activée !",
+            "enable_error": "Code invalide ou erreur de connexion",
+            "disable_success": "2FA a été désactivée",
+            "disable_error": "Impossible de désactiver 2FA"
+          },
+          "reset": {
+            "pending": "Veuillez patienter avant d'envoyer un autre e-mail de réinitialisation.",
+            "success": "L'e-mail de réinitialisation a été envoyé.",
+            "error": "Impossible d'envoyer l'e-mail de réinitialisation. Réessayez plus tard."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "Clients",
         "subtitle": "Liste des clients"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "Demandes de vérification",
+        "subtitle": "Liste des demandes de vérification"
+      },
+      "searchPlaceholder": "Rechercher des demandes de vérification...",
+      "comment": {
+        "label": "Commentaire",
+        "placeholder": "Saisir un commentaire...",
+        "save": "Enregistrer",
+        "close": "Fermer"
       }
     },
     "dashboard": {

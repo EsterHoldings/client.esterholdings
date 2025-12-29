@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "Guardar nueva contraseña",
-          "success": "¡La contraseña se actualizó exitosamente!"
+          "success": "¡La contraseña se actualizó exitosamente!",
+          "forgot": {
+            "title": "¿Olvidaste tu contraseña?",
+            "description": "Haz clic en el botón para recibir un correo para restablecer la contraseña.",
+            "button": "Enviar enlace por correo"
+          },
+          "two_fa": {
+            "title": "Verificación en dos pasos",
+            "subtitle": "Escanea el código QR o introduce la clave secreta manualmente",
+            "enabled": "2FA habilitada",
+            "disable": "Desactivar 2FA",
+            "code_label": "Código 2FA",
+            "code_placeholder": "Introduce el código aquí",
+            "confirm": "Confirmar",
+            "enable_success": "¡Se habilitó 2FA!",
+            "enable_error": "Código inválido o error de conexión",
+            "disable_success": "2FA desactivada",
+            "disable_error": "No se pudo desactivar 2FA"
+          },
+          "reset": {
+            "pending": "Espera antes de enviar otro correo de restablecimiento.",
+            "success": "Se envió el correo de restablecimiento a tu email.",
+            "error": "No se pudo enviar el correo de restablecimiento. Inténtalo más tarde."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "Clientes",
         "subtitle": "Lista de clientes"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "Solicitudes de verificación",
+        "subtitle": "Lista de solicitudes de verificación"
+      },
+      "searchPlaceholder": "Buscar solicitudes de verificación...",
+      "comment": {
+        "label": "Comentario",
+        "placeholder": "Escribe un comentario...",
+        "save": "Guardar",
+        "close": "Cerrar"
       }
     },
     "dashboard": {

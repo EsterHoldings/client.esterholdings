@@ -8,32 +8,48 @@
     </div>
 
     <div class="admin-dashboard__grid admin-dashboard__grid--priority">
-      <PanelDefault v-for="card in priorityCards" :key="card.id" class="stat-card stat-card--priority">
-        <div class="flex items-center justify-between">
-          <div>
-            <UiTextSmall class="text-[var(--ui-text-secondary)]">{{ card.label }}</UiTextSmall>
-            <UiTextH5 class="text-[var(--ui-text-main)]">{{ card.value }}</UiTextH5>
+      <button
+        v-for="card in priorityCards"
+        :key="card.id"
+        type="button"
+        class="stat-card-link"
+        @click="handleNavigate(card.to)"
+      >
+        <PanelDefault class="stat-card stat-card--priority">
+          <div class="flex items-center justify-between">
+            <div>
+              <UiTextSmall class="text-[var(--ui-text-secondary)]">{{ card.label }}</UiTextSmall>
+              <UiTextH5 class="text-[var(--ui-text-main)]">{{ card.value }}</UiTextH5>
+            </div>
+            <div class="rounded-full bg-[var(--ui-primary-main)]/20 p-2 text-[var(--ui-primary-accent)]">
+              <component :is="card.icon" class="!h-5 !w-5" />
+            </div>
           </div>
-          <div class="rounded-full bg-[var(--ui-primary-main)]/20 p-2 text-[var(--ui-primary-accent)]">
-            <component :is="card.icon" class="!h-5 !w-5" />
-          </div>
-        </div>
-      </PanelDefault>
+        </PanelDefault>
+      </button>
     </div>
 
     <div class="admin-dashboard__grid">
-      <PanelDefault v-for="card in statCards" :key="card.id" class="stat-card">
-        <div class="flex items-center justify-between">
-          <div>
-            <UiTextSmall class="text-[var(--ui-text-secondary)]">{{ card.label }}</UiTextSmall>
-            <UiTextH5 class="text-[var(--ui-text-main)]">{{ card.value }}</UiTextH5>
+      <button
+        v-for="card in statCards"
+        :key="card.id"
+        type="button"
+        class="stat-card-link"
+        @click="handleNavigate(card.to)"
+      >
+        <PanelDefault class="stat-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <UiTextSmall class="text-[var(--ui-text-secondary)]">{{ card.label }}</UiTextSmall>
+              <UiTextH5 class="text-[var(--ui-text-main)]">{{ card.value }}</UiTextH5>
+            </div>
+            <div class="rounded-full bg-[var(--color-stroke-ui-dark)] p-2 text-[var(--ui-text-main)]">
+              <component :is="card.icon" class="!h-5 !w-5" />
+            </div>
           </div>
-          <div class="rounded-full bg-[var(--color-stroke-ui-dark)] p-2 text-[var(--ui-text-main)]">
-            <component :is="card.icon" class="!h-5 !w-5" />
-          </div>
-        </div>
-        <UiTextSmall class="mt-2 text-[var(--ui-text-secondary)]">{{ card.delta }}</UiTextSmall>
-      </PanelDefault>
+          <UiTextSmall class="mt-2 text-[var(--ui-text-secondary)]">{{ card.delta }}</UiTextSmall>
+        </PanelDefault>
+      </button>
     </div>
 
     <div class="admin-dashboard__panels">
@@ -44,7 +60,8 @@
             <div
               v-for="user in recentUsers"
               :key="user.id"
-              class="flex items-center justify-between rounded-xl bg-[var(--color-stroke-ui-dark)] px-3 py-2"
+              class="dashboard-row-link flex items-center justify-between rounded-xl bg-[var(--color-stroke-ui-dark)] px-3 py-2"
+              @click="handleNavigate(user.to)"
             >
               <div>
                 <UiTextSmall class="text-[var(--ui-text-main)]">{{ user.name }}</UiTextSmall>
@@ -65,7 +82,8 @@
             <div
               v-for="payment in recentPayments"
               :key="payment.id"
-              class="flex items-center justify-between rounded-xl bg-[var(--color-stroke-ui-dark)] px-3 py-2"
+              class="dashboard-row-link flex items-center justify-between rounded-xl bg-[var(--color-stroke-ui-dark)] px-3 py-2"
+              @click="handleNavigate(payment.to)"
             >
               <div>
                 <UiTextSmall class="text-[var(--ui-text-main)]">
@@ -87,6 +105,7 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { navigateTo } from "nuxt/app";
 
 import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 import UiBadge from "~/components/ui/UiBadge.vue";
@@ -108,18 +127,21 @@ const priorityCards = computed(() => [
     label: t("admin.dashboard.processingTransactions", "Transactions in processing"),
     value: 14,
     icon: UiIconPayment,
+    to: "/admin/payments",
   },
   {
     id: "processing_requisites",
     label: t("admin.dashboard.processingRequisites", "Requisites in processing"),
     value: 6,
     icon: UiIconSetting,
+    to: "/admin/payments",
   },
   {
     id: "processing_verifications",
     label: t("admin.dashboard.processingVerifications", "Verifications in processing"),
     value: 9,
     icon: UiIconWarningFull,
+    to: "/admin/verifications",
   },
 ]);
 
@@ -130,6 +152,7 @@ const statCards = computed(() => [
     value: "12,340",
     delta: "+3.2% vs prev week",
     icon: UiIconUsers,
+    to: "/admin/clients",
   },
   {
     id: "deposits",
@@ -137,6 +160,7 @@ const statCards = computed(() => [
     value: "$182,500",
     delta: "+1.8% vs prev week",
     icon: UiIconPayment,
+    to: "/admin/payments",
   },
   {
     id: "withdrawals",
@@ -144,20 +168,26 @@ const statCards = computed(() => [
     value: "$96,200",
     delta: "-0.7% vs prev week",
     icon: UiIconWithdraw,
+    to: "/admin/payments",
   },
 ]);
 
 const recentUsers = [
-  { id: 1, name: "Alice Johnson", email: "alice@example.com", status: "active" },
-  { id: 2, name: "Mark Lee", email: "mark@example.com", status: "pending" },
-  { id: 3, name: "Sara Kim", email: "sara@example.com", status: "active" },
+  { id: 1, name: "Alice Johnson", email: "alice@example.com", status: "active", to: "/admin/clients/1" },
+  { id: 2, name: "Mark Lee", email: "mark@example.com", status: "pending", to: "/admin/clients/2" },
+  { id: 3, name: "Sara Kim", email: "sara@example.com", status: "active", to: "/admin/clients/3" },
 ];
 
 const recentPayments = [
-  { id: 1, amount: "$1,250", currency: "USD", status: "success", account: "MT4-123456" },
-  { id: 2, amount: "$980", currency: "USD", status: "pending", account: "MT4-234567" },
-  { id: 3, amount: "$2,400", currency: "USD", status: "success", account: "MT4-345678" },
+  { id: 1, amount: "$1,250", currency: "USD", status: "success", account: "MT4-123456", to: "/admin/payments" },
+  { id: 2, amount: "$980", currency: "USD", status: "pending", account: "MT4-234567", to: "/admin/payments" },
+  { id: 3, amount: "$2,400", currency: "USD", status: "success", account: "MT4-345678", to: "/admin/payments" },
 ];
+
+const handleNavigate = (to?: string) => {
+  if (!to) return;
+  navigateTo(to);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -192,5 +222,35 @@ const recentPayments = [
 .stat-card--priority {
   border: 1px solid var(--ui-primary-accent);
   background: color-mix(in srgb, var(--ui-primary-main) 12%, var(--ui-background-panel));
+}
+
+.stat-card-link {
+  border: none;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.stat-card-link :deep(.stat-card) {
+  transition: background-color 0.2s ease, transform 0.1s ease, border-color 0.2s ease;
+}
+
+.stat-card-link:hover :deep(.stat-card) {
+  background: var(--color-stroke-ui-dark);
+}
+
+.stat-card-link:focus-visible {
+  outline: 2px solid var(--ui-primary-accent);
+  border-radius: 12px;
+}
+
+.dashboard-row-link {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dashboard-row-link:hover {
+  background: var(--color-stroke-ui-light);
 }
 </style>

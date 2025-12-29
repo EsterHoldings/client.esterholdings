@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "שמור סיסמה חדשה",
-          "success": "הסיסמה עודכנה בהצלחה!"
+          "success": "הסיסמה עודכנה בהצלחה!",
+          "forgot": {
+            "title": "שכחת סיסמה?",
+            "description": "לחץ על הכפתור כדי לקבל אימייל לאיפוס הסיסמה.",
+            "button": "שלח קישור במייל"
+          },
+          "two_fa": {
+            "title": "אימות דו-שלבי",
+            "subtitle": "סרוק את קוד ה-QR או הזן את המפתח הסודי ידנית",
+            "enabled": "2FA מופעל",
+            "disable": "בטל 2FA",
+            "code_label": "קוד 2FA",
+            "code_placeholder": "הזן קוד כאן",
+            "confirm": "אשר",
+            "enable_success": "2FA הופעל!",
+            "enable_error": "קוד שגוי או שגיאת חיבור",
+            "disable_success": "2FA בוטל",
+            "disable_error": "לא ניתן לבטל 2FA"
+          },
+          "reset": {
+            "pending": "נא להמתין לפני שליחת אימייל איפוס נוסף.",
+            "success": "אימייל איפוס סיסמה נשלח.",
+            "error": "לא ניתן לשלוח אימייל איפוס. נסה שוב מאוחר יותר."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "לקוחות",
         "subtitle": "רשימת לקוחות"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "בקשות אימות",
+        "subtitle": "רשימת בקשות אימות"
+      },
+      "searchPlaceholder": "חיפוש בקשות אימות...",
+      "comment": {
+        "label": "הערה",
+        "placeholder": "הזן הערה...",
+        "save": "שמור",
+        "close": "סגור"
       }
     },
     "dashboard": {

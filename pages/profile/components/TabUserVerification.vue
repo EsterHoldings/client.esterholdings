@@ -146,7 +146,6 @@ const photoComment = ref<string>('')
 const items = computed(() => ([
   {key: 'email', title: 'Email', subtitle: 'Confirm your email', status: emailStatus, comment: emailComment},
   {key: 'photo', title: 'Photo', subtitle: 'Upload photo', status: photoStatus, comment: photoComment},
-  {key: 'address', title: 'Adress', subtitle: '', status: addressStatus, comment: addressComment},
   {key: 'documents', title: 'Document', subtitle: '', status: documentsStatus, comment: documentsComment},
   {
     key: 'deposit',

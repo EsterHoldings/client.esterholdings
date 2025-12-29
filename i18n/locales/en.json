@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "Save new password",
-          "success": "Password was successfully updated!"
+          "success": "Password was successfully updated!",
+          "forgot": {
+            "title": "Forgot Password?",
+            "description": "Click the button to receive an email to reset your password.",
+            "button": "Send Link by Email"
+          },
+          "two_fa": {
+            "title": "Two-Step Verification",
+            "subtitle": "Scan the QR code or enter the secret key manually",
+            "enabled": "2FA enabled",
+            "disable": "Disable 2FA",
+            "code_label": "2FA code",
+            "code_placeholder": "Enter code here",
+            "confirm": "Confirm",
+            "enable_success": "2FA was enabled!",
+            "enable_error": "Invalid code or connection error",
+            "disable_success": "2FA disabled",
+            "disable_error": "Failed to disable 2FA"
+          },
+          "reset": {
+            "pending": "Please wait before sending another reset email.",
+            "success": "Reset password email was sent to your email.",
+            "error": "Failed to send reset email. Try again later."
+          }
         },
         "tab-general": {
           "labels": {
@@ -1369,7 +1392,13 @@
         "title": "Verification requests",
         "subtitle": "List of verification requests"
       },
-      "searchPlaceholder": "Search verification requests..."
+      "searchPlaceholder": "Search verification requests...",
+      "comment": {
+        "label": "Comment",
+        "placeholder": "Enter comment...",
+        "save": "Save",
+        "close": "Close"
+      }
     },
     "dashboard": {
       "title": "Admin dashboard",

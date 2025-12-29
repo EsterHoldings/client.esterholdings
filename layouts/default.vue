@@ -10,6 +10,9 @@
           <div class="page-content">
             <div class="page" :key="route.fullPath">
               <UiContainer>
+                <div v-if="showBreadcrumbs && breadcrumbs.length" class="admin-breadcrumbs text-sm text-[var(--ui-text-secondary)]">
+                  <UiBreadcrumb :list="breadcrumbs" />
+                </div>
                 <slot/>
               </UiContainer>
             </div>
@@ -27,13 +30,73 @@ import AdminSidebar from "~/components/block/AdminSidebar.vue";
 import UiImage from "~/components/ui/UiImage.vue";
 import TheFooter from "@/components/block/TheFooter.vue";
 import HeaderMenu from "~/components/block/LandingHeader/components/HeaderMenu.vue";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import {useRoute} from "vue-router";
+import { useI18n } from "vue-i18n";
 import UiContainer from "~/components/ui/UiContainer.vue";
 import AdminHeader from "~/components/block/AdminHeader.vue";
+import UiBreadcrumb from "~/components/ui/UiBreadcrumb.vue";
+import UiIconHome from "~/components/ui/UiIconHome.vue";
 
 const route = useRoute();
 const isSidebarOpen = ref(false);
+const { t, locale } = useI18n({ useScope: "global" });
+
+const resolveLabel = (key: string, fallback: string) => {
+  const val = t(key);
+  return val === key ? fallback : val;
+};
+
+const labels: Record<string, string> = {
+  admin: resolveLabel("admin.breadcrumbs.home", "Главная"),
+  dashboard: resolveLabel("admin.breadcrumbs.home", "Главная"),
+  clients: resolveLabel("admin.menu.clients", "Clients"),
+  accounts: resolveLabel("admin.menu.accounts", "Accounts"),
+  payments: resolveLabel("admin.menu.payments", "Payments"),
+  referral: resolveLabel("admin.menu.referral", "Referral"),
+  settings: resolveLabel("admin.menu.settings", "Settings"),
+  support: resolveLabel("admin.menu.support", "Support"),
+  access: resolveLabel("admin.menu.access", "Access"),
+  verifications: resolveLabel("admin.menu.verificationRequests", "Verifications"),
+  profile: resolveLabel("admin.menu.profile", "Profile"),
+  news: resolveLabel("admin.menu.news", "News"),
+};
+
+const breadcrumbs = computed(() => {
+  const segments = route.path.split("/").filter(Boolean);
+  const currentLocale = locale.value?.toLowerCase?.();
+  const startIdx = currentLocale && segments[0]?.toLowerCase() === currentLocale ? 1 : 0;
+  const basePrefix = startIdx ? "/" + segments.slice(0, startIdx).join("/") : "";
+  const visibleSegments = segments.slice(startIdx);
+
+  const filteredSegments = visibleSegments.filter(
+    (seg) => !["admin", "dashboard"].includes(seg.toLowerCase()),
+  );
+
+  const list = filteredSegments.map((seg, idx) => {
+    const key = seg.toLowerCase();
+    const name = labels[key] ?? decodeURIComponent(seg);
+    const to = basePrefix + "/" + filteredSegments.slice(0, idx + 1).join("/");
+    return { name, to };
+  });
+
+  const dashCrumb = {
+    name: labels.dashboard ?? "Главная",
+    to: basePrefix + "/admin/dashboard",
+    icon: UiIconHome,
+  };
+  if (!list.length) return [dashCrumb];
+  if (list[0].name.toLowerCase() !== "главная") return [dashCrumb, ...list];
+  return [dashCrumb, ...list.slice(1)];
+});
+
+const showBreadcrumbs = computed(() => {
+  const segments = route.path.split("/").filter(Boolean);
+  const currentLocale = locale.value?.toLowerCase?.();
+  const startIdx = currentLocale && segments[0]?.toLowerCase() === currentLocale ? 1 : 0;
+  const visibleSegments = segments.slice(startIdx);
+  return visibleSegments.join("/") !== "admin/dashboard";
+});
 
 watch(
   () => route.fullPath,
@@ -86,6 +149,13 @@ watch(
   z-index: 40;
   background: var(--ui-background-admin);
   width: calc(100% - 264px);
+}
+
+.admin-breadcrumbs {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 10px 0;
 }
 
 .sidebar-overlay {

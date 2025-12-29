@@ -888,7 +888,30 @@
             "new_password_confirmation": "*********"
           },
           "button": "保存新密码",
-          "success": "密码已成功更新！"
+          "success": "密码已成功更新！",
+          "forgot": {
+            "title": "忘记密码？",
+            "description": "点击按钮以接收重置密码的邮件。",
+            "button": "通过邮件发送链接"
+          },
+          "two_fa": {
+            "title": "两步验证",
+            "subtitle": "扫描二维码或手动输入密钥",
+            "enabled": "2FA 已启用",
+            "disable": "禁用 2FA",
+            "code_label": "2FA 代码",
+            "code_placeholder": "在此输入代码",
+            "confirm": "确认",
+            "enable_success": "2FA 已启用！",
+            "enable_error": "验证码无效或连接错误",
+            "disable_success": "2FA 已禁用",
+            "disable_error": "无法禁用 2FA"
+          },
+          "reset": {
+            "pending": "请稍候再发送重置邮件。",
+            "success": "重置密码邮件已发送。",
+            "error": "无法发送重置邮件。请稍后再试。"
+          }
         },
         "tab-general": {
           "labels": {
@@ -1359,6 +1382,19 @@
       "index": {
         "title": "客户",
         "subtitle": "客户列表"
+      }
+    },
+    "verifications": {
+      "index": {
+        "title": "验证请求",
+        "subtitle": "验证请求列表"
+      },
+      "searchPlaceholder": "搜索验证请求...",
+      "comment": {
+        "label": "备注",
+        "placeholder": "输入备注...",
+        "save": "保存",
+        "close": "关闭"
       }
     },
     "dashboard": {

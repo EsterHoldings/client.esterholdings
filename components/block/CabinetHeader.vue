@@ -6,6 +6,7 @@
 
   import { useThemeStore } from "~/stores/themeStore.js";
   import { useAuthStore } from "~/stores/authStore";
+  import { useUiStore } from "~/stores/uiStore";
 
   import LanguageSwitcher from "~/components/block/LandingHeader/components/LanguageSwitcher.vue";
   import UiIconArrowDown from "~/components/ui/UiIconArrowDown.vue";
@@ -29,11 +30,17 @@
   import UiSwitchToggle from "~/components/ui/UiSwitchToggle.vue";
 
   const authStore = useAuthStore();
+  const uiStore = useUiStore();
   const themeStore = useThemeStore();
   const { t, locale } = useI18n({ useScope: "global" });
   const addCurrentLocaleToPath = (path = "") => `/${locale.value}/${path}`;
 
-  const isOpen = ref(false);
+  const isOpen = computed({
+    get: () => uiStore.notificationsOpen,
+    set: (value) => {
+      uiStore.notificationsOpen = value;
+    },
+  });
   const isLoading = ref(false);
   const notificationsRef = ref(null);
   const notifications = reactive([
@@ -73,7 +80,7 @@
   const profileMenuRef = ref(null);
   const profileContainerRef = ref(null);
 
-  const handleClickNotifications = () => (isOpen.value = !isOpen.value);
+  const handleClickNotifications = () => uiStore.toggleNotifications();
 
   const handleClickProfileMenu = () => {
     profileMenuIsOpen.value = !profileMenuIsOpen.value;
@@ -84,7 +91,7 @@
       profileMenuIsOpen.value = false;
     }
     if (notificationsRef.value && !notificationsRef.value.contains(event.target as Node)) {
-      isOpen.value = false;
+      uiStore.closeNotifications();
     }
   };
 
