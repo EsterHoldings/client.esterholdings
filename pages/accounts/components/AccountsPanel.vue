@@ -67,7 +67,7 @@
               <th class="px-5 py-2 text-left font-normal">
                 <div class="flex items-center justify-start">
                   <UiTextSmall
-                    class="cursor-default mr-[10px]"
+                    class="cursor-pointer mr-[10px]"
                     @click="handleOrderByAndDirection('type')">
                     {{ t("cabinet.accounts.columns.type") }}
                   </UiTextSmall>
@@ -77,7 +77,7 @@
               <th class="px-5 py-2 text-left font-normal">
                 <div class="flex items-center justify-start">
                   <UiTextSmall
-                    class="cursor-default mr-[10px]"
+                    class="cursor-pointer mr-[10px]"
                     @click="handleOrderByAndDirection('number')">
                     {{ t("cabinet.accounts.columns.number") }}
                   </UiTextSmall>
@@ -91,7 +91,7 @@
               <th class="px-5 py-2 text-left font-normal">
                 <div class="flex items-center justify-start">
                   <UiTextSmall
-                    class="cursor-default mr-[10px]"
+                    class="cursor-pointer mr-[10px]"
                     @click="handleOrderByAndDirection('leverage')">
                     {{ t("cabinet.accounts.columns.leverage") }}
                   </UiTextSmall>
@@ -101,7 +101,7 @@
               <th class="px-5 py-2 text-right font-normal">
                 <div class="flex items-center justify-end">
                   <UiTextSmall
-                    class="cursor-default mr-[10px]"
+                    class="cursor-pointer mr-[10px]"
                     @click="handleOrderByAndDirection('balance')">
                     {{ t("cabinet.accounts.columns.balance") }}
                   </UiTextSmall>
@@ -165,7 +165,7 @@
                   </div>
                 </td>
 
-                <td class="px-5 py-3 align-middle">1:50</td>
+                <td class="px-5 py-3 align-middle">{{ getLeverageDisplay(account) }}</td>
 
                 <td class="px-5 py-3 align-middle">
                   <div class="flex items-center justify-end gap-[10px] text-right text-[20px] font-bold">
@@ -388,7 +388,7 @@
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
                       {{ t("cabinet.accounts.columns.leverage") }}
                     </UiTextSmall>
-                    <div class="font-semibold">1:50</div>
+                    <div class="font-semibold">{{ getLeverageDisplay(account) }}</div>
                   </div>
                   <div class="min-w-[140px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
@@ -420,7 +420,7 @@
                   <div class="account-card__compact-side">
                     <div class="account-card__compact-meta">
                       <span>{{ t("cabinet.accounts.columns.leverage") }}</span>
-                      <strong>1:50</strong>
+                      <strong>{{ getLeverageDisplay(account) }}</strong>
                     </div>
                     <div class="account-card__compact-balance">
                       <span :class="getBalanceHighlightClass(account.id)">${{ account.balance }}</span>
@@ -714,6 +714,11 @@
     if (state === "same") return "balance-highlight-same";
     return "";
   };
+  const getLeverageDisplay = (account: any): string => {
+    const value = String(account?.leverage_display ?? "").trim();
+
+    return value !== "" ? value : "1:100";
+  };
 
   const refreshAccountBalance = async (account: any) => {
     const key = refreshKey(account.id);
@@ -760,26 +765,46 @@
     await loadData();
   };
 
-  const handleOrderByAndDirection = async (value: string) => {
-    if (orderBy.value === value) {
+  const resolveSortValue = (value: unknown): string | null => {
+    if (typeof value === "string") {
+      const normalized = value.trim();
+      return normalized !== "" ? normalized : null;
+    }
+
+    if (value && typeof value === "object" && "value" in value) {
+      const optionValue = (value as { value?: unknown }).value;
+      if (typeof optionValue === "string") {
+        const normalized = optionValue.trim();
+        return normalized !== "" ? normalized : null;
+      }
+    }
+
+    return null;
+  };
+
+  const applySorting = async (value: unknown) => {
+    const nextOrderBy = resolveSortValue(value);
+    if (!nextOrderBy) {
+      return;
+    }
+
+    if (orderBy.value === nextOrderBy) {
       orderDirection.value = orderDirection.value === ORDER_DIRECTION_ASC ? ORDER_DIRECTION_DESC : ORDER_DIRECTION_ASC;
     } else {
-      orderBy.value = value;
+      orderBy.value = nextOrderBy;
       orderDirection.value = ORDER_DIRECTION_DESC;
     }
 
+    currentPage.value = 1;
     await loadData();
   };
 
-  const handleChangeFilterSortBy = async (value: string) => {
-    if (orderBy.value === value) {
-      orderDirection.value = orderDirection.value === ORDER_DIRECTION_DESC ? ORDER_DIRECTION_ASC : ORDER_DIRECTION_DESC;
-    } else {
-      orderBy.value = value;
-      orderDirection.value = ORDER_DIRECTION_DESC;
-    }
+  const handleOrderByAndDirection = async (value: string) => {
+    await applySorting(value);
+  };
 
-    await loadData();
+  const handleChangeFilterSortBy = async (value: string | null) => {
+    await applySorting(value);
   };
 
   const handleSetPerPage = async (value: number) => {
@@ -797,6 +822,8 @@
       page: currentPage.value,
       orderBy: orderBy.value,
       orderDirection: orderDirection.value,
+      order_by: orderBy.value,
+      order_direction: orderDirection.value,
     });
 
     perPage.value = response.data.data.per_page;
