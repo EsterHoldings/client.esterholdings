@@ -509,7 +509,7 @@
   const accounts = reactive<any[]>([]);
   const refreshingBalanceIds = reactive<Record<string, boolean>>({});
   type BalanceRefreshFeedback = "success" | "error";
-  type BalanceChangeDirection = "up" | "down";
+  type BalanceChangeDirection = "up" | "down" | "same";
   const refreshFeedbackById = reactive<Record<string, BalanceRefreshFeedback | undefined>>({});
   const balanceHighlightById = reactive<Record<string, BalanceChangeDirection | undefined>>({});
   const refreshFeedbackTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -699,6 +699,7 @@
     const state = balanceHighlightById[refreshKey(id)];
     if (state === "up") return "balance-highlight-up";
     if (state === "down") return "balance-highlight-down";
+    if (state === "same") return "balance-highlight-same";
     return "";
   };
 
@@ -718,8 +719,14 @@
         account.balance = String(updatedBalance);
         accounts.splice(0, accounts.length, ...sortAccounts(accounts));
 
-        if (previousBalance !== null && nextBalance !== null && nextBalance !== previousBalance) {
-          setBalanceHighlight(account.id, nextBalance > previousBalance ? "up" : "down");
+        if (previousBalance !== null && nextBalance !== null) {
+          if (nextBalance > previousBalance) {
+            setBalanceHighlight(account.id, "up");
+          } else if (nextBalance < previousBalance) {
+            setBalanceHighlight(account.id, "down");
+          } else {
+            setBalanceHighlight(account.id, "same");
+          }
         }
 
         setRefreshFeedback(account.id, "success");
@@ -1108,6 +1115,10 @@
     animation: balance-highlight-down 1s ease;
   }
 
+  .balance-highlight-same {
+    animation: balance-highlight-same 1s ease;
+  }
+
   .card-menu {
     position: fixed;
     z-index: 9999;
@@ -1198,6 +1209,25 @@
     }
     100% {
       color: inherit;
+    }
+  }
+
+  @keyframes balance-highlight-same {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    20% {
+      opacity: 0.35;
+    }
+    40% {
+      opacity: 1;
+    }
+    60% {
+      opacity: 0.35;
+    }
+    80% {
+      opacity: 1;
     }
   }
 
