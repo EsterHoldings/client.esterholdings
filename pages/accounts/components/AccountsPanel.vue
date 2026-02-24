@@ -551,28 +551,6 @@
   const cardMenuOpenId = ref<string | number | null>(null);
   const cardMenuStyle = ref<Record<string, string>>({});
   const cardMenuTriggerRefs = reactive<Record<string | number, HTMLElement | null>>({});
-  const MAX_FAVORITES = 3;
-
-  const sortAccounts = (items: any[]) =>
-    [...items].sort((a, b) => {
-      if (!!a.is_favorite !== !!b.is_favorite) return a.is_favorite ? -1 : 1;
-      return Number(b.balance ?? 0) - Number(a.balance ?? 0);
-    });
-
-  const applyFavoriteLimit = (items: any[], selectedId: string) => {
-    const favorites = items
-      .filter(account => account.is_favorite)
-      .sort((a, b) => {
-        const aTime = a.favorite_at ? new Date(a.favorite_at).getTime() : 0;
-        const bTime = b.favorite_at ? new Date(b.favorite_at).getTime() : 0;
-        return aTime - bTime;
-      });
-    if (favorites.length <= MAX_FAVORITES) return items;
-    const toRemove = favorites.find(fav => fav.id !== selectedId) ?? favorites[0];
-    return items.map(account =>
-      account.id === toRemove.id ? { ...account, is_favorite: false, favorite_at: null } : account
-    );
-  };
   const viewMode = ref<"table" | "cards" | "full">("table");
   const viewOptions = [
     {
@@ -751,7 +729,6 @@
       if (updatedBalance !== undefined && updatedBalance !== null) {
         const nextBalance = normalizeBalanceValue(updatedBalance);
         account.balance = String(updatedBalance);
-        accounts.splice(0, accounts.length, ...sortAccounts(accounts));
 
         if (previousBalance !== null && nextBalance !== null) {
           if (nextBalance > previousBalance) {
@@ -784,8 +761,13 @@
   };
 
   const handleOrderByAndDirection = async (value: string) => {
-    orderDirection.value = orderDirection.value === ORDER_DIRECTION_ASC ? ORDER_DIRECTION_DESC : ORDER_DIRECTION_ASC;
-    orderBy.value = value;
+    if (orderBy.value === value) {
+      orderDirection.value = orderDirection.value === ORDER_DIRECTION_ASC ? ORDER_DIRECTION_DESC : ORDER_DIRECTION_ASC;
+    } else {
+      orderBy.value = value;
+      orderDirection.value = ORDER_DIRECTION_DESC;
+    }
+
     await loadData();
   };
 
@@ -794,6 +776,7 @@
       orderDirection.value = orderDirection.value === ORDER_DIRECTION_DESC ? ORDER_DIRECTION_ASC : ORDER_DIRECTION_DESC;
     } else {
       orderBy.value = value;
+      orderDirection.value = ORDER_DIRECTION_DESC;
     }
 
     await loadData();
@@ -825,8 +808,7 @@
       return x;
     });
 
-    const ordered = sortAccounts(accountsData);
-    accounts.splice(0, accounts.length, ...ordered);
+    accounts.splice(0, accounts.length, ...accountsData);
 
     isLoading.value = false;
     isInitialLoading.value = false;
@@ -970,36 +952,9 @@
   };
 
   const handleToggleFavorite = async (account: any) => {
-    const isAdding = !account.is_favorite;
-    const now = new Date().toISOString();
-    let optimistic = accounts.map(item =>
-      item.id === account.id ? { ...item, is_favorite: isAdding, favorite_at: isAdding ? now : null } : item
-    );
-    if (isAdding) {
-      optimistic = applyFavoriteLimit(optimistic, account.id);
-    }
-    const ordered = sortAccounts(optimistic);
-    accounts.splice(0, accounts.length, ...ordered);
-
     try {
-      const response = await appCore.accounts.toggleFavorite(account.id);
-      const payload = response?.data?.data ?? {};
-      const updated = payload.account;
-      const removedId = payload.removed_favorite_id;
-      const synced = accounts.map(item => {
-        if (updated?.id && item.id === updated.id) {
-          return {
-            ...item,
-            is_favorite: !!updated.is_favorite,
-            favorite_at: updated.favorite_at ?? null,
-          };
-        }
-        if (removedId && item.id === removedId) {
-          return { ...item, is_favorite: false, favorite_at: null };
-        }
-        return item;
-      });
-      accounts.splice(0, accounts.length, ...sortAccounts(synced));
+      await appCore.accounts.toggleFavorite(account.id);
+      await loadData();
     } catch {
       await loadData();
     }
