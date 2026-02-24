@@ -990,10 +990,10 @@
   };
 
   const handleClickDelete = async (accountId: string) => {
-    if (confirm("Are you sure?")) {
+    if (confirm("Archive this account?")) {
       await appCore.accounts.delete(accountId);
       await loadData();
-      toast.success("Account deleted!");
+      toast.success("Account archived!");
     }
     closeOptions();
   };
