@@ -149,10 +149,8 @@
                     <span class="cursor-pointer">$ {{ account.balance }}</span>
                     <UiIconUpdate
                         class="h-[14px] w-[14px] mr-[10px] cursor-pointer transition-transform duration-200 hover:animate-[wiggle_0.2s_ease]"
-                        ref="iconUpdate"
-                        :class="{ spinning: spinIcon }"
-                        @click="handleIconClick(account.id)"
-                        @animationend="onIconAnimationEnd"
+                        :spinning="isBalanceRefreshing(account.id)"
+                        @click="refreshAccountBalance(account)"
                     />
                   </div>
                 </td>
@@ -339,7 +337,21 @@
                   <UiTextSmall class="text-[var(--ui-text-secondary)]">
                     {{ t('cabinet.accounts.columns.balance') }}
                   </UiTextSmall>
-                  <div class="font-semibold text-[var(--color-success)]">${{ account.balance }}</div>
+                  <div class="flex items-center gap-2 font-semibold text-[var(--color-success)]">
+                    <span>${{ account.balance }}</span>
+                    <button
+                      type="button"
+                      class="refresh-balance-btn"
+                      @click.stop="refreshAccountBalance(account)"
+                      :disabled="isBalanceRefreshing(account.id)"
+                      title="Refresh balance"
+                    >
+                      <UiIconUpdate
+                        class="h-[14px] w-[14px]"
+                        :spinning="isBalanceRefreshing(account.id)"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -444,7 +456,7 @@ const sortByFilterData = reactive([
 ]);
 
 const accounts = reactive<any[]>([]);
-const spinIcon = ref(false);
+const refreshingBalanceIds = reactive<Record<string, boolean>>({});
 const cardMenuOpenId = ref<string | number | null>(null);
 const cardMenuStyle = ref<Record<string, string>>({});
 const cardMenuTriggerRefs = reactive<Record<string | number, HTMLElement | null>>({});
@@ -588,13 +600,28 @@ async function goNext() {
   }
 }
 
-const handleIconClick = (id: string) => {
-  const account: any = accounts.find((x: any) => x.id === id);
-  if (account) account.isSpinning = true;
-};
+const refreshKey = (id: string | number) => String(id);
+const isBalanceRefreshing = (id: string | number) => !!refreshingBalanceIds[refreshKey(id)];
 
-const onIconAnimationEnd = () => {
-  spinIcon.value = false;
+const refreshAccountBalance = async (account: any) => {
+  const key = refreshKey(account.id);
+  if (refreshingBalanceIds[key]) return;
+
+  refreshingBalanceIds[key] = true;
+  try {
+    const response = await appCore.accounts.refreshBalance(account.id);
+    const data = response?.data?.data ?? {};
+    const updatedBalance = data.balance;
+
+    if (updatedBalance !== undefined && updatedBalance !== null) {
+      account.balance = String(updatedBalance);
+      accounts.splice(0, accounts.length, ...sortAccounts(accounts));
+    }
+  } catch {
+    toast.error("Failed to refresh account balance.");
+  } finally {
+    refreshingBalanceIds[key] = false;
+  }
 };
 
 const handleInputSearch = async (value: any) => {
@@ -641,7 +668,6 @@ const loadData = async () => {
   total.value = response.data.data.total;
 
   const accountsData = response.data.data.data.map((x: any) => {
-    x.isSpinning = false;
     x.is_favorite = !!x.is_favorite;
     return x;
   });
@@ -925,6 +951,21 @@ const handleClickCreateNewAccount = () =>
 .menu-btn:hover {
   color: var(--ui-text-main);
   transform: translateY(-1px);
+}
+
+.refresh-balance-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.refresh-balance-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .card-menu {

@@ -41,6 +41,10 @@ export class AccountsModule implements BasicModuleInterface {
     return await this.accountsService.toggleFavorite(id);
   }
 
+  async refreshBalance(id: any): Promise<any> {
+    return await this.accountsService.refreshBalance(id);
+  }
+
 
 }
 

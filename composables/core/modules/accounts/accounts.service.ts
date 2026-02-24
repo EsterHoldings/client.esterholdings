@@ -34,6 +34,10 @@ export class AccountsService {
   async toggleFavorite(id: any): Promise<any> {
     return await this.useApi.post(`/client/accounts/${id}/favorite`, {});
   }
+
+  async refreshBalance(id: any): Promise<any> {
+    return await this.useApi.post(`/client/mt4/accounts/${id}/balance/refresh`, {});
+  }
 }
 
 export default AccountsService;
