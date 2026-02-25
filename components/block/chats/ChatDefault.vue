@@ -134,7 +134,12 @@
         </div>
       </div>
 
-      <div class="chat-input-wrap border-t border-[var(--color-stroke-ui-light)] p-3">
+      <div
+        class="chat-input-wrap border-t border-[var(--color-stroke-ui-light)] p-3"
+        @touchstart="handleInputAreaTouchStart"
+        @touchmove="handleInputAreaTouchMove"
+        @touchend="handleInputAreaTouchEnd"
+        @touchcancel="handleInputAreaTouchEnd">
         <div
           class="flex items-center gap-2 rounded-2xl bg-[var(--ui-background-panel)] p-2 ring-1 ring-[var(--color-stroke-ui-light)]">
           <component
@@ -293,7 +298,12 @@
               </div>
             </div>
 
-            <div class="chat-input-wrap border-t border-[var(--color-stroke-ui-light)] p-3">
+            <div
+              class="chat-input-wrap border-t border-[var(--color-stroke-ui-light)] p-3"
+              @touchstart="handleInputAreaTouchStart"
+              @touchmove="handleInputAreaTouchMove"
+              @touchend="handleInputAreaTouchEnd"
+              @touchcancel="handleInputAreaTouchEnd">
               <div
                 class="flex items-center gap-2 rounded-2xl bg-[var(--ui-background-panel)] p-2 ring-1 ring-[var(--color-stroke-ui-light)]">
                 <component
@@ -381,6 +391,7 @@
     (e: "mobile-toggle-panel"): void;
     (e: "mobile-close-chat"): void;
     (e: "mobile-header-swipe", direction: "up" | "down"): void;
+    (e: "mobile-input-swipe-up"): void;
   }>();
 
   const mounted = ref(false);
@@ -398,6 +409,7 @@
   const HEADER_SWIPE_THRESHOLD = 42;
   const MESSAGES_SWIPE_DOWN_THRESHOLD = 56;
   const MESSAGES_HORIZONTAL_DRIFT_LIMIT = 48;
+  const INPUT_SWIPE_UP_THRESHOLD = 42;
   const headerTouchStartY = ref<number | null>(null);
   const headerTouchDeltaY = ref(0);
   const messagesTouchStartY = ref<number | null>(null);
@@ -405,6 +417,10 @@
   const messagesTouchDeltaY = ref(0);
   const messagesTouchDeltaX = ref(0);
   const messagesSwipeDismissInProgress = ref(false);
+  const inputTouchStartY = ref<number | null>(null);
+  const inputTouchStartX = ref<number | null>(null);
+  const inputTouchDeltaY = ref(0);
+  const inputTouchDeltaX = ref(0);
 
   const handleHeaderTouchStart = (event: TouchEvent) => {
     if (!showMobileControls.value) return;
@@ -479,6 +495,13 @@
     messagesSwipeDismissInProgress.value = false;
   };
 
+  const resetInputTouch = () => {
+    inputTouchStartY.value = null;
+    inputTouchStartX.value = null;
+    inputTouchDeltaY.value = 0;
+    inputTouchDeltaX.value = 0;
+  };
+
   const handleMessagesTouchStart = (event: TouchEvent) => {
     if (!isMobileChatInteraction()) return;
     const touch = event.touches?.[0];
@@ -538,6 +561,54 @@
     }
 
     resetMessagesTouch();
+  };
+
+  const handleInputAreaTouchStart = (event: TouchEvent) => {
+    if (!isMobileChatInteraction()) return;
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    inputTouchStartY.value = touch.clientY;
+    inputTouchStartX.value = touch.clientX;
+    inputTouchDeltaY.value = 0;
+    inputTouchDeltaX.value = 0;
+  };
+
+  const handleInputAreaTouchMove = (event: TouchEvent) => {
+    if (!isMobileChatInteraction()) return;
+    if (inputTouchStartY.value === null || inputTouchStartX.value === null) return;
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    inputTouchDeltaY.value = touch.clientY - inputTouchStartY.value;
+    inputTouchDeltaX.value = touch.clientX - inputTouchStartX.value;
+
+    const verticalSwipe = Math.abs(inputTouchDeltaY.value) > Math.abs(inputTouchDeltaX.value);
+    const swipeUp = inputTouchDeltaY.value < 0;
+    if (verticalSwipe && swipeUp) {
+      event.preventDefault();
+    }
+  };
+
+  const handleInputAreaTouchEnd = () => {
+    if (!isMobileChatInteraction()) {
+      resetInputTouch();
+      return;
+    }
+    if (inputTouchStartY.value === null || inputTouchStartX.value === null) {
+      resetInputTouch();
+      return;
+    }
+
+    const verticalSwipe = Math.abs(inputTouchDeltaY.value) > Math.abs(inputTouchDeltaX.value);
+    const smallHorizontalDrift = Math.abs(inputTouchDeltaX.value) <= MESSAGES_HORIZONTAL_DRIFT_LIMIT;
+    const swipeUp = inputTouchDeltaY.value <= -INPUT_SWIPE_UP_THRESHOLD;
+
+    if (verticalSwipe && smallHorizontalDrift && swipeUp) {
+      emit("mobile-input-swipe-up");
+    }
+
+    resetInputTouch();
   };
 
   function clampToViewport() {

@@ -24,11 +24,13 @@
         }"
         :style="supportGridStyle">
         <PanelDefault
+          ref="supportSidePanelRef"
           class="support-side p-2"
           :class="{
             'is-collapsed': !isSideExpanded,
             'is-mobile': isMobileViewport,
           }"
+          :style="supportSideStyle"
           @touchstart="handleSidePanelTouchStart"
           @touchmove="handleSidePanelTouchMove"
           @touchend="handleSidePanelTouchEnd"
@@ -40,7 +42,7 @@
               type="button"
               class="support-side__mobile-arrow"
               aria-label="Close details"
-              @click="isSideExpanded = false">
+              @click="collapseSidePanel()">
               <UiIconChevronUp />
             </button>
           </div>
@@ -189,6 +191,7 @@
             :mobile-panel-expanded="isSideExpanded"
             @mobile-toggle-panel="toggleSideExpanded"
             @mobile-header-swipe="handleMobileHeaderSwipe"
+            @mobile-input-swipe-up="handleMobileInputSwipeUp"
             @mobile-close-chat="handleMobileChatClose" />
         </div>
       </div>
@@ -222,6 +225,7 @@
   const activeTabIndex = ref(0);
   const isLoading = ref(false);
   const supportGridRef = ref<HTMLElement | null>(null);
+  const supportSidePanelRef = ref<HTMLElement | { $el?: HTMLElement } | null>(null);
   const desktopGridHeight = ref<number | null>(null);
 
   const id = computed(() => String(route.params.id));
@@ -277,9 +281,16 @@
   const DESKTOP_GRID_BOTTOM_GAP = 16;
   const MIN_DESKTOP_GRID_HEIGHT = 320;
   const MOBILE_CHAT_BOTTOM_GAP = 20;
-  const MOBILE_PANEL_CLOSE_SWIPE_THRESHOLD = 42;
+  const MOBILE_PANEL_CLOSE_MIN_SWIPE = 42;
+  const MOBILE_PANEL_CLOSE_PROGRESS_THRESHOLD = 0.5;
+  const MOBILE_PANEL_HORIZONTAL_DRIFT_LIMIT = 52;
   const panelTouchStartY = ref<number | null>(null);
+  const panelTouchStartX = ref<number | null>(null);
   const panelTouchDeltaY = ref(0);
+  const panelTouchDeltaX = ref(0);
+  const panelDragOffset = ref(0);
+  const panelDragMaxOffset = ref(0);
+  const isPanelDragging = ref(false);
   let desktopGridRafId: number | null = null;
 
   const supportGridStyle = computed(() => {
@@ -298,6 +309,21 @@
 
     const bottom = `calc(${MOBILE_CHAT_BOTTOM_GAP}px + env(safe-area-inset-bottom, 0px))`;
     return { bottom };
+  });
+
+  const panelDragProgress = computed(() => {
+    if (panelDragMaxOffset.value <= 0) return 0;
+    return Math.min(1, panelDragOffset.value / panelDragMaxOffset.value);
+  });
+
+  const supportSideStyle = computed(() => {
+    if (!isMobileViewport.value || !isMobileFullscreenChat.value || !isSideExpanded.value) return undefined;
+
+    return {
+      transform: `translateY(${-panelDragOffset.value}px)`,
+      opacity: `${Math.max(0.35, 1 - panelDragProgress.value * 0.65)}`,
+      transition: isPanelDragging.value ? "none" : "opacity 0.24s ease, transform 0.24s ease, border-color 0.2s ease",
+    } as const;
   });
 
   const measureDesktopGridHeight = () => {
@@ -354,23 +380,50 @@
 
   const toggleSideExpanded = () => {
     if (!isMobileViewport.value || !isMobileFullscreenChat.value) return;
-    isSideExpanded.value = !isSideExpanded.value;
+    if (isSideExpanded.value) {
+      collapseSidePanel();
+      return;
+    }
+    panelDragOffset.value = 0;
+    isPanelDragging.value = false;
+    isSideExpanded.value = true;
   };
 
   const handleMobileHeaderSwipe = (direction: "up" | "down") => {
     if (!isMobileViewport.value || !isMobileFullscreenChat.value) return;
 
     if (direction === "down") {
+      panelDragOffset.value = 0;
+      isPanelDragging.value = false;
       isSideExpanded.value = true;
       return;
     }
 
-    isSideExpanded.value = false;
+    collapseSidePanel();
+  };
+
+  const resolveSidePanelElement = () => {
+    const value = supportSidePanelRef.value;
+    if (!value) return null;
+    if (value instanceof HTMLElement) return value;
+    if ("$el" in value && value.$el instanceof HTMLElement) return value.$el;
+    return null;
   };
 
   const resetSidePanelTouch = () => {
     panelTouchStartY.value = null;
+    panelTouchStartX.value = null;
     panelTouchDeltaY.value = 0;
+    panelTouchDeltaX.value = 0;
+    panelDragMaxOffset.value = 0;
+    isPanelDragging.value = false;
+  };
+
+  const collapseSidePanel = () => {
+    isPanelDragging.value = false;
+    isSideExpanded.value = false;
+    panelDragOffset.value = 0;
+    resetSidePanelTouch();
   };
 
   const handleSidePanelTouchStart = (event: TouchEvent) => {
@@ -379,19 +432,40 @@
     if (!touch) return;
 
     panelTouchStartY.value = touch.clientY;
+    panelTouchStartX.value = touch.clientX;
     panelTouchDeltaY.value = 0;
+    panelTouchDeltaX.value = 0;
+    panelDragOffset.value = 0;
+    isPanelDragging.value = false;
+
+    const panelElement = resolveSidePanelElement();
+    panelDragMaxOffset.value = Math.max(1, Math.round(panelElement?.getBoundingClientRect().height ?? 0));
   };
 
   const handleSidePanelTouchMove = (event: TouchEvent) => {
     if (!isMobileViewport.value || !isMobileFullscreenChat.value || !isSideExpanded.value) return;
-    if (panelTouchStartY.value === null) return;
+    if (panelTouchStartY.value === null || panelTouchStartX.value === null) return;
 
     const touch = event.touches?.[0];
     if (!touch) return;
 
     panelTouchDeltaY.value = touch.clientY - panelTouchStartY.value;
-    if (Math.abs(panelTouchDeltaY.value) > 8) {
+    panelTouchDeltaX.value = touch.clientX - panelTouchStartX.value;
+
+    const verticalSwipe = Math.abs(panelTouchDeltaY.value) > Math.abs(panelTouchDeltaX.value);
+    const smallHorizontalDrift = Math.abs(panelTouchDeltaX.value) <= MOBILE_PANEL_HORIZONTAL_DRIFT_LIMIT;
+    const swipeUp = panelTouchDeltaY.value < 0;
+
+    if (verticalSwipe && smallHorizontalDrift && swipeUp) {
+      isPanelDragging.value = true;
+      panelDragOffset.value = Math.min(panelDragMaxOffset.value || 1, Math.abs(panelTouchDeltaY.value));
       event.preventDefault();
+      return;
+    }
+
+    if (isPanelDragging.value) {
+      event.preventDefault();
+      panelDragOffset.value = 0;
     }
   };
 
@@ -400,22 +474,47 @@
       resetSidePanelTouch();
       return;
     }
-    if (panelTouchStartY.value === null) {
+    if (panelTouchStartY.value === null || panelTouchStartX.value === null) {
       resetSidePanelTouch();
       return;
     }
 
-    if (panelTouchDeltaY.value <= -MOBILE_PANEL_CLOSE_SWIPE_THRESHOLD) {
-      isSideExpanded.value = false;
+    const closeThresholdByProgress = (panelDragMaxOffset.value || 1) * MOBILE_PANEL_CLOSE_PROGRESS_THRESHOLD;
+    const verticalSwipe = Math.abs(panelTouchDeltaY.value) > Math.abs(panelTouchDeltaX.value);
+    const smallHorizontalDrift = Math.abs(panelTouchDeltaX.value) <= MOBILE_PANEL_HORIZONTAL_DRIFT_LIMIT;
+    const closeThreshold = Math.max(MOBILE_PANEL_CLOSE_MIN_SWIPE, closeThresholdByProgress);
+    const shouldCloseByProgress = panelDragOffset.value >= closeThreshold;
+    const shouldCloseByDistance =
+      verticalSwipe && smallHorizontalDrift && panelTouchDeltaY.value <= -MOBILE_PANEL_CLOSE_MIN_SWIPE;
+    const shouldClose = shouldCloseByProgress || shouldCloseByDistance;
+
+    if (shouldClose) {
+      isPanelDragging.value = false;
+      panelDragOffset.value = Math.min(panelDragMaxOffset.value || 1, Math.max(panelDragOffset.value, closeThreshold));
+
+      requestAnimationFrame(() => {
+        collapseSidePanel();
+      });
+      return;
     }
 
+    isPanelDragging.value = false;
+    panelDragOffset.value = 0;
     resetSidePanelTouch();
   };
 
   const handleMobileChatClose = () => {
     if (!isMobileViewport.value) return;
-    isSideExpanded.value = false;
+    collapseSidePanel();
     isMobileFullscreenChat.value = false;
+  };
+
+  const handleMobileInputSwipeUp = () => {
+    if (!isMobileViewport.value) return;
+    if (isMobileFullscreenChat.value) return;
+
+    isMobileFullscreenChat.value = true;
+    collapseSidePanel();
   };
 
   useHead(() => ({
@@ -726,29 +825,29 @@
       border-right: 0;
       border: 1px solid var(--color-stroke-ui-light);
       background: color-mix(in oklab, var(--ui-background-panel) 96%, transparent);
-      -webkit-backdrop-filter: blur(2px);
-      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
-      max-height: none;
+      opacity: 1;
+      transform: translateY(0);
       overflow: hidden;
       transition:
-        max-height 0.25s ease,
-        opacity 0.2s ease,
-        transform 0.2s ease;
+        opacity 0.24s ease,
+        transform 0.24s ease,
+        border-color 0.2s ease;
     }
 
     .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile.is-collapsed {
-      max-height: 0;
       opacity: 0;
       pointer-events: none;
-      transform: translateY(-6px);
+      transform: translateY(calc(-100% - 24px));
       border-color: transparent;
     }
 
     .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile .support-side__scroll {
-      max-height: none;
       height: 100%;
       padding: 8px;
+      transition: opacity 0.2s ease;
     }
 
     .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side__mobile-header {
@@ -759,8 +858,8 @@
       padding-bottom: 8px;
       border-bottom: 1px solid var(--color-stroke-ui-light);
       background: color-mix(in oklab, var(--ui-background-card) 96%, transparent);
-      -webkit-backdrop-filter: blur(2px);
-      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
     }
 
     .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side__mobile-arrow {
@@ -777,7 +876,6 @@
 
     .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile.is-collapsed .support-side__scroll {
       overflow: hidden;
-      max-height: 0;
       opacity: 0;
       pointer-events: none;
       gap: 0;
