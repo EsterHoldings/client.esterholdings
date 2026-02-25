@@ -1,5 +1,5 @@
 <template>
-  <UiContainer class="payments-create-modal">
+  <div class="payments-create-modal">
     <div
       v-if="props.title"
       class="payments-create-modal__top">
@@ -72,7 +72,7 @@
         </div>
       </div>
     </div>
-  </UiContainer>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -86,7 +86,6 @@
   import TabDepositFormUsdtErc20 from "~/pages/payments/create/components/TabDepositFormUsdtErc20.vue";
   import TabDepositFormUsdtTrc20 from "~/pages/payments/create/components/TabDepositFormUsdtTrc20.vue";
   import TabWithdrawal from "~/pages/payments/create/components/TabWithdrawal.vue";
-  import UiContainer from "~/components/ui/UiContainer.vue";
   import UiIconBTC from "~/components/ui/UiIconBTC.vue";
   import UiIconPayment from "~/components/ui/UiIconPayment.vue";
   import UiIconUsdtErc20 from "~/components/ui/UiIconUsdtErc20.vue";
@@ -116,7 +115,7 @@
     {
       title: "",
       initialTab: "deposit",
-    },
+    }
   );
 
   const appCore = useAppCore();
