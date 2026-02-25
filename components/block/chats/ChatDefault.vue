@@ -2,10 +2,10 @@
   <!-- РЕЖИМ БЛОЧНОГО КОМПОНЕНТА (asBlock === true) -->
   <div
     v-if="asBlockMode"
-    class="h-full min-h-0 w-full max-w-full">
+    class="support-chat-block flex min-h-0 w-full max-w-full flex-1">
     <!-- нет Teleport, нет fixed, нет draggable, и ВАЖНО: мы НЕ навешиваем attrs сюда -->
     <div
-      class="support-chat flex h-full min-h-0 w-full max-w-full flex-col overflow-hidden rounded-[10px] border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] shadow-none">
+      class="support-chat flex min-h-0 w-full max-w-full flex-1 flex-col overflow-hidden rounded-[10px] border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] shadow-none">
       <div
         class="drag-handle relative flex select-none items-center justify-between border-b border-[var(--color-stroke-ui-light)] px-4 py-3"
         @touchstart="handleHeaderTouchStart"
@@ -860,6 +860,28 @@
   }
 
   const appCore = useAppCore();
+  const waitForNextPaint = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+  const hasMessagesOverflow = () => {
+    const el = listRef.value;
+    if (!el) return true;
+    return el.scrollHeight > el.clientHeight + 1;
+  };
+
+  async function ensureScrollableHistoryForBlock() {
+    if (!asBlockMode.value) return;
+
+    const MAX_PREFILL_PAGES = 8;
+    let attempts = 0;
+
+    while (hasMore.value && !hasMessagesOverflow() && attempts < MAX_PREFILL_PAGES) {
+      await loadMoreAbove();
+      await nextTick();
+      await waitForNextPaint();
+      attempts += 1;
+    }
+  }
+
   function mapApi(m: ApiMsg): ChatMessage {
     return {
       id: m.id,
@@ -890,11 +912,12 @@
     ensureAscOrder();
     await nextTick();
     await new Promise(requestAnimationFrame);
+    hasMore.value = asc.length === PAGE_SIZE;
+    nextPage = 2;
+    await ensureScrollableHistoryForBlock();
     scrollToBottom();
     userIsNearBottom.value = true;
     booting.value = false;
-    hasMore.value = asc.length === PAGE_SIZE;
-    nextPage = 2;
   }
   let loadingMore = false;
   async function loadMoreAbove() {
