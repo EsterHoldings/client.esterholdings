@@ -197,10 +197,11 @@
                 <tr
                     v-for="payment in payments"
                     :key="payment.id"
-                    class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
+                    class="cursor-pointer border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
+                    @click="handlePaymentItemClick($event, payment.id)"
                 >
                   <td class="px-2 py-3 font-bold flex justify-center items-center">
-                    <button class="cursor-pointer" aria-label="Copy id">
+                    <button class="cursor-pointer" aria-label="Copy id" @click.stop>
                       <UiIconCopy :text="payment.id"/>
                     </button>
                   </td>
@@ -269,11 +270,12 @@
               <div
                   v-for="payment in payments"
                   :key="payment.id"
-                  class="payment-card card-with-actions"
+                  class="payment-card card-with-actions cursor-pointer"
                   :class="viewMode === 'full' ? 'payment-card--full' : ''"
+                  @click="handlePaymentItemClick($event, payment.id)"
               >
                 <div class="card-actions" aria-hidden="true">
-                  <button class="copy-btn" aria-label="Copy id">
+                  <button class="copy-btn" aria-label="Copy id" @click.stop>
                     <UiIconCopy :text="payment.id" />
                   </button>
 
@@ -695,6 +697,29 @@ const handleOpenPayment = (paymentId: string | number | null) => {
   const id = String(paymentId)
   closePaymentMenu()
   router.push(localePath(`/payments/${id}`))
+}
+
+const shouldSkipPaymentNavigation = (event: MouseEvent): boolean => {
+  const target = event.target as HTMLElement | null
+
+  if (target?.closest('button, a, input, select, textarea, [role="button"]')) {
+    return true
+  }
+
+  const selection = window.getSelection?.()
+  if (!selection) {
+    return false
+  }
+
+  return selection.type === 'Range' && selection.toString().trim().length > 0
+}
+
+const handlePaymentItemClick = (event: MouseEvent, paymentId: string | number): void => {
+  if (shouldSkipPaymentNavigation(event)) {
+    return
+  }
+
+  handleOpenPayment(paymentId)
 }
 
 const handleDeletePayment = async (paymentId: string | number | null) => {
