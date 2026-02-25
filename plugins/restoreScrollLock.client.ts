@@ -1,11 +1,33 @@
 import { defineNuxtPlugin } from "#app";
 
 export default defineNuxtPlugin(nuxtApp => {
-  nuxtApp.$router.afterEach(() => {
+  nuxtApp.$router.afterEach(to => {
     // Сбрасываем любые блокировки скролла, которые могли остаться от предыдущих экранов/меню
     if (process.client) {
       const body = document.body;
       const html = document.documentElement;
+      const isCabinetRoute = String(to.meta?.layout ?? "") === "cabinet";
+
+      if (isCabinetRoute) {
+        body.classList.remove("scroll-unlocked", "overflow-hidden", "fixed");
+        body.classList.add("cabinet-scroll-lock");
+        body.style.setProperty("overflow", "hidden", "important");
+        body.style.setProperty("overflow-y", "hidden", "important");
+        body.style.position = "";
+        body.style.width = "";
+        body.style.height = "100dvh";
+
+        html.classList.remove("scroll-unlocked", "overflow-hidden", "fixed");
+        html.classList.add("cabinet-scroll-lock");
+        html.style.setProperty("overflow", "hidden", "important");
+        html.style.setProperty("overflow-y", "hidden", "important");
+        html.style.height = "100dvh";
+
+        return;
+      }
+
+      body.classList.remove("cabinet-scroll-lock");
+      html.classList.remove("cabinet-scroll-lock");
 
       body.style.overflow = "auto";
       body.style.setProperty("overflow", "auto", "important");

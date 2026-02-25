@@ -35,6 +35,7 @@
   import { computed } from "vue";
   import { useRoute } from "vue-router";
   import { useI18n } from "vue-i18n";
+  import { useHead } from "#imports";
 
   import CabinetSidebar from "~/components/block/CabinetSidebar.vue";
   import TheFooter from "~/components/block/TheFooter.vue";
@@ -45,6 +46,15 @@
 
   const route = useRoute();
   const { t, locale } = useI18n({ useScope: "global" });
+
+  useHead({
+    htmlAttrs: {
+      class: "cabinet-scroll-lock",
+    },
+    bodyAttrs: {
+      class: "cabinet-scroll-lock",
+    },
+  });
 
   const resolveLabel = (key: string, fallback: string) => {
     const val = t(key);
@@ -101,6 +111,21 @@
     height: 100%;
   }
 
+  html.cabinet-scroll-lock,
+  body.cabinet-scroll-lock {
+    height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+  }
+
+  body.cabinet-scroll-lock {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
   .cabinet-layout {
     position: relative;
     isolation: isolate;
@@ -124,11 +149,12 @@
     left: 0;
     right: 0;
     z-index: 10;
+    padding-top: env(safe-area-inset-top, 0px);
     background: var(--ui-background);
   }
 
   .cabinet-main {
-    padding-top: 60px;
+    padding-top: calc(60px + env(safe-area-inset-top, 0px));
     overscroll-behavior-y: none;
     overflow-anchor: none;
   }
