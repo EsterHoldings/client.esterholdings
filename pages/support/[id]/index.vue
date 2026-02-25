@@ -17,43 +17,18 @@
       <div
         ref="supportGridRef"
         class="support-ticket-grid grid gap-[20px] grid-cols-1 md:grid-cols-[1fr_2fr] items-stretch"
-        :class="{ 'is-collapsed': !isSideExpanded, 'is-mobile': isMobileViewport }"
+        :class="{
+          'is-collapsed': !isSideExpanded,
+          'is-mobile': isMobileViewport,
+          'is-mobile-fullscreen': isMobileFullscreenChat,
+        }"
         :style="supportGridStyle">
         <PanelDefault
           class="support-side p-2"
           :class="{
             'is-collapsed': !isSideExpanded,
             'is-mobile': isMobileViewport,
-            'is-swiping': isSideSwipeDragging,
-          }"
-          @touchstart="handleSideTouchStart"
-          @touchmove="handleSideTouchMove"
-          @touchend="handleSideTouchEnd"
-          @touchcancel="handleSideTouchEnd">
-          <div
-            v-if="isMobileViewport"
-            class="support-side__mobile-bar">
-            <button
-              type="button"
-              class="support-side__mobile-toggle"
-              @click="toggleSideExpanded"
-              aria-label="Toggle details">
-              <UiIconChevronUp v-if="isSideExpanded" />
-              <UiIconChevronDown v-else />
-            </button>
-
-            <div class="support-side__mobile-ticket min-w-0">
-              <div class="support-side__mobile-ticket-id truncate">#{{ id }}</div>
-              <div class="support-side__mobile-ticket-status truncate">{{ status || "in progress" }}</div>
-            </div>
-
-            <span
-              class="support-side__mobile-copy"
-              aria-label="Copy ticket id">
-              <UiIconCopy :text="id" />
-            </span>
-          </div>
-
+          }">
           <div class="support-side__scroll flex flex-col gap-4">
             <div class="support-side__card support-side__profile">
               <div class="flex items-center gap-3">
@@ -193,7 +168,12 @@
           <ChatDefault
             :as-block="true"
             :ticket-id="id"
-            :currentUser="currentUser" />
+            :currentUser="currentUser"
+            :mobile-controls="isMobileViewport && isMobileFullscreenChat"
+            :mobile-panel-expanded="isSideExpanded"
+            @mobile-toggle-panel="toggleSideExpanded"
+            @mobile-header-swipe="handleMobileHeaderSwipe"
+            @mobile-close-chat="handleMobileChatClose" />
         </div>
       </div>
     </div>
@@ -228,7 +208,7 @@
   const supportGridRef = ref<HTMLElement | null>(null);
   const desktopGridHeight = ref<number | null>(null);
 
-  const id: string = computed(() => String(route.params.id));
+  const id = computed(() => String(route.params.id));
 
   const currentUser = reactive({
     id: null,
@@ -239,10 +219,11 @@
   const lastMessageAt = ref("");
   const status = ref("");
   const subject = ref("");
-  const activeTab = ref<"media" | "videos" | "links">("media");
+  type SupportTab = "media" | "videos" | "links";
+  const activeTab = ref<SupportTab>("media");
   const isSideExpanded = ref(false);
   const isMobileViewport = ref(false);
-  const isSideSwipeDragging = ref(false);
+  const isMobileFullscreenChat = ref(true);
   const userCard = reactive({
     name: "Ester Holdings Client",
     email: "client@esterholdings.com",
@@ -253,7 +234,7 @@
     { id: 1, name: "You", role: "Client", initials: "YC", online: true },
     { id: 2, name: "Support Agent", role: "Support", initials: "SA", online: true },
   ]);
-  const tabs = [
+  const tabs: Array<{ id: SupportTab; label: string }> = [
     { id: "media", label: "Media" },
     { id: "videos", label: "Video" },
     { id: "links", label: "Links" },
@@ -277,14 +258,9 @@
   ];
 
   const MOBILE_BREAKPOINT = 768;
-  const SWIPE_THRESHOLD = 42;
   const DESKTOP_GRID_BOTTOM_GAP = 16;
   const MIN_DESKTOP_GRID_HEIGHT = 320;
   const MOBILE_CHAT_BOTTOM_GAP = 20;
-  const MOBILE_SIDE_COLLAPSED_HEIGHT = 72;
-  const sideTouchStartY = ref(0);
-  const sideTouchDeltaY = ref(0);
-  const sideTouchTracking = ref(false);
   let desktopGridRafId: number | null = null;
 
   const supportGridStyle = computed(() => {
@@ -299,16 +275,10 @@
   });
 
   const supportChatWrapperStyle = computed(() => {
-    if (!isMobileViewport.value) return undefined;
+    if (!isMobileViewport.value || !isMobileFullscreenChat.value) return undefined;
 
     const bottom = `calc(${MOBILE_CHAT_BOTTOM_GAP}px + env(safe-area-inset-bottom, 0px))`;
-
-    if (isSideExpanded.value) {
-      return { bottom };
-    }
-
-    const top = `calc(max(8px, env(safe-area-inset-top, 0px)) + ${MOBILE_SIDE_COLLAPSED_HEIGHT}px + 8px)`;
-    return { top, bottom };
+    return { bottom };
   });
 
   const measureDesktopGridHeight = () => {
@@ -349,72 +319,54 @@
 
     if (nextMobile && !wasMobile) {
       isSideExpanded.value = false;
+      isMobileFullscreenChat.value = true;
+    }
+
+    if (nextMobile) {
+      desktopGridHeight.value = null;
     }
 
     if (!nextMobile) {
-      isSideSwipeDragging.value = false;
-      sideTouchTracking.value = false;
-      sideTouchDeltaY.value = 0;
-    } else {
-      desktopGridHeight.value = null;
+      isMobileFullscreenChat.value = true;
     }
 
     scheduleDesktopGridMeasure();
   };
 
   const toggleSideExpanded = () => {
+    if (!isMobileViewport.value || !isMobileFullscreenChat.value) return;
     isSideExpanded.value = !isSideExpanded.value;
+  };
+
+  const handleMobileHeaderSwipe = (direction: "up" | "down") => {
+    if (!isMobileViewport.value || !isMobileFullscreenChat.value) return;
+
+    if (direction === "down") {
+      isSideExpanded.value = true;
+      return;
+    }
+
+    isSideExpanded.value = false;
+  };
+
+  const handleMobileChatClose = () => {
+    if (!isMobileViewport.value) return;
+    isSideExpanded.value = false;
+    isMobileFullscreenChat.value = false;
   };
 
   useHead(() => ({
     htmlAttrs: {
       class: {
-        "support-chat-fullscreen": isMobileViewport.value,
+        "support-chat-fullscreen": isMobileViewport.value && isMobileFullscreenChat.value,
       },
     },
     bodyAttrs: {
       class: {
-        "support-chat-fullscreen": isMobileViewport.value,
+        "support-chat-fullscreen": isMobileViewport.value && isMobileFullscreenChat.value,
       },
     },
   }));
-
-  const handleSideTouchStart = (event: TouchEvent) => {
-    if (!isMobileViewport.value) return;
-    const touch = event.touches?.[0];
-    if (!touch) return;
-
-    sideTouchTracking.value = true;
-    sideTouchStartY.value = touch.clientY;
-    sideTouchDeltaY.value = 0;
-    isSideSwipeDragging.value = false;
-  };
-
-  const handleSideTouchMove = (event: TouchEvent) => {
-    if (!isMobileViewport.value || !sideTouchTracking.value) return;
-    const touch = event.touches?.[0];
-    if (!touch) return;
-
-    sideTouchDeltaY.value = touch.clientY - sideTouchStartY.value;
-    if (Math.abs(sideTouchDeltaY.value) > 8) {
-      isSideSwipeDragging.value = true;
-      event.preventDefault();
-    }
-  };
-
-  const handleSideTouchEnd = () => {
-    if (!isMobileViewport.value || !sideTouchTracking.value) return;
-
-    if (sideTouchDeltaY.value <= -SWIPE_THRESHOLD) {
-      isSideExpanded.value = true;
-    } else if (sideTouchDeltaY.value >= SWIPE_THRESHOLD) {
-      isSideExpanded.value = false;
-    }
-
-    sideTouchTracking.value = false;
-    sideTouchDeltaY.value = 0;
-    isSideSwipeDragging.value = false;
-  };
 
   const loadData = async () => {
     isLoading.value = true;
@@ -593,7 +545,7 @@
   }
 
   @media (max-width: 767px) {
-    .support-ticket-grid.is-mobile {
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen {
       position: fixed;
       inset: 0;
       z-index: 120;
@@ -606,7 +558,7 @@
       background: var(--ui-background);
     }
 
-    .support-chat-wrapper {
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-chat-wrapper {
       position: absolute;
       inset: 0;
       height: 100dvh;
@@ -615,7 +567,7 @@
       z-index: 1;
     }
 
-    .support-chat-wrapper :deep(.support-chat) {
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-chat-wrapper :deep(.support-chat) {
       border-radius: 0;
       border-left: 0;
       border-right: 0;
@@ -623,7 +575,7 @@
       max-height: 100dvh;
     }
 
-    .support-chat-wrapper :deep(.drag-handle) {
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-chat-wrapper :deep(.drag-handle) {
       padding-top: calc(10px + env(safe-area-inset-top, 0px));
     }
   }
@@ -660,26 +612,6 @@
     display: flex;
   }
 
-  .support-side__mobile-bar,
-  .support-side__mobile-toggle,
-  .support-side__mobile-copy {
-    display: none;
-  }
-
-  .support-side__mobile-ticket-id {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ui-text-main);
-    line-height: 1.15;
-  }
-
-  .support-side__mobile-ticket-status {
-    margin-top: 2px;
-    font-size: 11px;
-    color: var(--ui-text-secondary);
-    line-height: 1;
-  }
-
   .support-side__expand {
     display: flex;
     flex-direction: column;
@@ -711,7 +643,7 @@
   }
 
   @media (max-width: 767px) {
-    .support-side.is-mobile {
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile {
       position: absolute;
       top: max(8px, env(safe-area-inset-top, 0px));
       left: 8px;
@@ -722,48 +654,28 @@
       border: 1px solid var(--color-stroke-ui-light);
       background: color-mix(in oklab, var(--ui-background-panel) 90%, transparent);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
-      max-height: calc(100dvh - max(8px, env(safe-area-inset-top, 0px)) - 8px);
+      max-height: calc(100dvh - max(8px, env(safe-area-inset-top, 0px)) - env(safe-area-inset-bottom, 0px) - 28px);
       overflow: hidden;
+      transition:
+        max-height 0.25s ease,
+        opacity 0.2s ease,
+        transform 0.2s ease;
     }
 
-    .support-side.is-mobile.is-collapsed {
-      max-height: 72px;
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile.is-collapsed {
+      max-height: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+      border-color: transparent;
     }
 
-    .support-side.is-mobile .support-side__mobile-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 56px;
-      width: 100%;
-      padding: 8px 10px 6px;
-      border-bottom: 1px solid transparent;
-    }
-
-    .support-side.is-mobile:not(.is-collapsed) .support-side__mobile-bar {
-      border-bottom-color: var(--color-stroke-ui-dark);
-    }
-
-    .support-side__mobile-toggle,
-    .support-side__mobile-copy {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1px solid var(--color-stroke-ui-light);
-      background: var(--ui-background-card);
-      color: var(--ui-text-main);
-      flex: 0 0 34px;
-    }
-
-    .support-side.is-mobile .support-side__scroll {
-      max-height: calc(100dvh - 140px);
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile .support-side__scroll {
+      max-height: 100%;
       padding-top: 8px;
     }
 
-    .support-side.is-mobile.is-collapsed .support-side__scroll {
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile.is-collapsed .support-side__scroll {
       overflow: hidden;
       max-height: 0;
       opacity: 0;
@@ -771,13 +683,17 @@
       gap: 0;
     }
 
-    .support-side.is-mobile:not(.is-collapsed) .support-side__scroll {
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen
+      .support-side.is-mobile:not(.is-collapsed)
+      .support-side__scroll {
       opacity: 1;
       pointer-events: auto;
     }
 
-    .support-side.is-mobile.is-swiping {
-      transition: none;
+    .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side.is-mobile:not(.is-collapsed) {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
     }
 
     .support-side__toggle {
@@ -796,12 +712,6 @@
   }
 
   @media (min-width: 768px) {
-    .support-side__mobile-bar,
-    .support-side__mobile-toggle,
-    .support-side__mobile-copy {
-      display: none !important;
-    }
-
     .support-side__expand {
       gap: 12px;
       max-height: none;
