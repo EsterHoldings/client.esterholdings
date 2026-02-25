@@ -109,7 +109,7 @@
     class="h-[60px] flex items-center justify-between lg:justify-end border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
 
     <div class="lg:absolute lg:top-[-100px]">
-      <NuxtLink to="/">
+      <NuxtLink :to="addCurrentLocaleToPath('dashboard')">
         <UiIconLogo v-if="!isThemeLight" />
         <UiIconLogoLight v-else />
       </NuxtLink>

@@ -65,48 +65,63 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <!-- LEFT COLUMN: widgets + MT4 -->
-        <div class="col-span-1 flex flex-col gap-5 text-[var(--ui-text-main)]">
-          <!-- 4 widgets -->
-          <div class="grid grid-cols-2 items-stretch gap-2">
+        <div class="grid grid-cols-1 gap-5">
+          <div class="dashboard-summary-grid items-stretch">
             <NuxtLink :to="localePath('/accounts')" class="dashboard-widget-link">
-              <TotalAmountWidget class="dashboard-widget-card" />
+              <TotalAmountWidget
+                class="dashboard-widget-card"
+                :amount="dashboardSummary.totalAmount"
+                :currency="dashboardSummary.currency"
+                :is-loading="isSummaryLoading"
+              />
+            </NuxtLink>
+            <NuxtLink :to="localePath('/referrals')" class="dashboard-widget-link">
+              <ReferralTotalAmount
+                class="dashboard-widget-card"
+                :amount="dashboardSummary.referralTotal"
+                :currency="dashboardSummary.currency"
+                :is-loading="isSummaryLoading"
+              />
             </NuxtLink>
             <NuxtLink :to="localePath('/payments')" class="dashboard-widget-link">
-              <PendingTransactionsWidget class="dashboard-widget-card" />
+              <PendingTransactionsWidget
+                class="dashboard-widget-card"
+                :total="dashboardSummary.pendingTransactions"
+                :is-loading="isSummaryLoading"
+              />
             </NuxtLink>
             <button
               type="button"
               class="dashboard-widget-link"
               @click="handleOpenNotifications"
             >
-              <MissedNotificationsWidget class="dashboard-widget-card" />
+              <MissedNotificationsWidget
+                class="dashboard-widget-card"
+                :total="dashboardSummary.missedNotifications"
+                :is-loading="isSummaryLoading"
+              />
             </button>
-            <NuxtLink :to="localePath('/referrals')" class="dashboard-widget-link">
-              <ReferralTotalAmount class="dashboard-widget-card" />
-            </NuxtLink>
           </div>
 
-          <Mt4AccountsWidget
-            v-if="mt4Accounts.length"
-            :accounts="mt4Accounts"
-            :is-loading="isMt4Refreshing"
-            @toggle-favorite="toggleFavorite"
-            class="mt-4"
-          />
-          <div v-else class="mt-4 rounded-xl border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] p-4 text-sm text-[var(--ui-text-secondary)]">
-            {{ t("cabinet.dashboard.mt4.empty") }}
+          <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <div class="col-span-1 flex flex-col gap-5 text-[var(--ui-text-main)]">
+              <Mt4AccountsWidget
+                v-if="mt4Accounts.length"
+                :accounts="mt4Accounts"
+                :is-loading="isMt4Refreshing"
+                @toggle-favorite="toggleFavorite"
+              />
+              <div v-else class="rounded-xl border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] p-4 text-sm text-[var(--ui-text-secondary)]">
+                {{ t("cabinet.dashboard.mt4.empty") }}
+              </div>
+            </div>
+
+            <div class="col-span-1 flex flex-col gap-3 text-[var(--ui-text-main)]">
+              <AccountVerificationWidget />
+            </div>
           </div>
-        </div>
 
-        <!-- RIGHT COLUMN: verification -->
-        <div class="col-span-1 flex flex-col gap-3 text-[var(--ui-text-main)] mt-5 lg:mt-0">
-          <AccountVerificationWidget />
-        </div>
-
-          <!-- FULL WIDTH: transactions -->
-          <div class="col-span-1 lg:col-span-2">
+          <div class="col-span-1">
             <TransactionsWidget />
           </div>
         </div>
@@ -118,7 +133,7 @@
 <script lang="ts" setup>
 import { definePageMeta, useLocalePath } from "~/.nuxt/imports";
 import { useI18n } from "vue-i18n";
-import { computed, onBeforeUnmount, onMounted, ref, nextTick } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useNuxtApp } from "nuxt/app";
 
 import UiContainer from "~/components/ui/UiContainer.vue";
@@ -149,6 +164,23 @@ const localePath = useLocalePath();
 const uiStore = useUiStore();
 const appCore = useAppCore();
 let mt4RefreshTimer: ReturnType<typeof setInterval> | null = null;
+
+type DashboardSummary = {
+  totalAmount: number;
+  pendingTransactions: number;
+  missedNotifications: number;
+  referralTotal: number;
+  currency: string;
+};
+
+const dashboardSummary = ref<DashboardSummary>({
+  totalAmount: 0,
+  pendingTransactions: 0,
+  missedNotifications: 0,
+  referralTotal: 0,
+  currency: "USD",
+});
+const isSummaryLoading = ref(false);
 
 const AUTO_REFRESH_STORAGE_KEY = "dashboardAutoRefreshInterval";
 const DEFAULT_REFRESH_SECONDS = "20";
@@ -212,8 +244,7 @@ const setupAutoRefresh = () => {
     autoRefreshProgressValue.value = ((totalMs - clampedRemainingMs) / totalMs) * 100;
 
     if (remainingMs <= 0) {
-      handleRefreshMt4();
-      useEventBus.emit("dashboardRefresh");
+      handleRefreshDashboard();
       nextRefreshAt = Date.now() + totalMs;
       autoRefreshRemaining.value = seconds;
       autoRefreshProgressValue.value = 0;
@@ -238,19 +269,19 @@ const initAutoRefresh = () => {
   setupAutoRefresh();
 };
 
-onMounted(() => {
+onMounted(async () => {
   // @ts-ignore
   const sub = (window as any).Echo?.channel("test") ?? $echo.channel("test");
   sub.listen(".Ping", (e: any) => {
     console.log("[TEST] Ping received:", e);
   });
 
-  handleRefreshMt4();
-  initAutoRefresh();
-
-  nextTick(() => {
+  try {
+    await handleRefreshDashboard();
+  } finally {
+    initAutoRefresh();
     isInitialLoading.value = false;
-  });
+  }
 });
 
 onBeforeUnmount(() => {
@@ -337,6 +368,25 @@ const toggleFavorite = async (id: string) => {
   }
 };
 const isMt4Refreshing = ref(false);
+const handleRefreshSummary = async () => {
+  if (isSummaryLoading.value) return;
+
+  isSummaryLoading.value = true;
+  try {
+    const response = await appCore.dashboard.getSummary();
+    const payload = response?.data?.data ?? {};
+    dashboardSummary.value = {
+      totalAmount: Number(payload.total_amount ?? 0),
+      pendingTransactions: Number(payload.pending_transactions ?? 0),
+      missedNotifications: Number(payload.missed_notifications ?? 0),
+      referralTotal: Number(payload.referral_total ?? 0),
+      currency: String(payload.currency ?? "USD"),
+    };
+  } catch {}
+  finally {
+    isSummaryLoading.value = false;
+  }
+};
 
 const handleRefreshMt4 = async () => {
   if (isMt4Refreshing.value) return;
@@ -367,13 +417,20 @@ const handleRefreshMt4 = async () => {
   }
 };
 
+const handleRefreshDashboard = async () => {
+  try {
+    await Promise.all([handleRefreshMt4(), handleRefreshSummary()]);
+  } finally {
+    useEventBus.emit("dashboardRefresh");
+  }
+};
+
 const handleOpenNotifications = () => {
   uiStore.openNotifications();
 };
 
 const handleManualRefresh = () => {
-  handleRefreshMt4();
-  useEventBus.emit("dashboardRefresh");
+  handleRefreshDashboard();
 };
 
 </script>
@@ -400,7 +457,26 @@ const handleManualRefresh = () => {
   width: 100%;
 }
 
+.dashboard-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .dashboard-summary-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .dashboard-widget-link :deep(.dashboard-widget-card) {
+  height: 100%;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
 }

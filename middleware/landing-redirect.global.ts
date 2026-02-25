@@ -1,7 +1,9 @@
 import { defineNuxtRouteMiddleware, navigateTo } from "nuxt/app";
+import { isPwaContext } from "~/utils/isPwaContext";
 
 export default defineNuxtRouteMiddleware((to) => {
   if (!process.client) return;
+  if (!isPwaContext()) return;
 
   const token = localStorage.getItem("user_access_token");
   if (!token) return;

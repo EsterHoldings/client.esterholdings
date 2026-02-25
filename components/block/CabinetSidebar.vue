@@ -3,7 +3,7 @@
     class="hidden lg:flex fixed inset-y-0 left-0 w-[240px] flex-col items-center justify-between bg-[var(--ui-background-sidebar)]/82 backdrop-blur-md text-[var(--ui-text-main)] z-40 shadow-[0_0_5px_-1px_rgba(255,249,249,.1)] border-r border-r-[var(--color-stroke-ui-light)]">
     <div class="w-full flex flex-col items-start">
       <div class="h-[60px] flex items-center justify-center pl-5 mb-8">
-        <NuxtLink to="/">
+        <NuxtLink :to="addCurrentLocaleToPath('dashboard')">
           <UiIconLogoLight v-if="isThemeLight" />
           <UiIconLogo v-else />
         </NuxtLink>
@@ -27,6 +27,7 @@
   import { useRoute } from "vue-router";
   import { navigateTo } from "nuxt/app";
   import { computed, reactive, ref } from "vue";
+  import { useI18n } from "vue-i18n";
 
   import { useThemeStore } from "~/stores/themeStore.js";
   import { useAuthStore } from "~/stores/authStore";
@@ -46,6 +47,8 @@
 
   const authStore = useAuthStore();
   const themeStore = useThemeStore();
+  const { locale } = useI18n({ useScope: "global" });
+  const addCurrentLocaleToPath = (path = "") => `/${locale.value}/${path}`;
 
   const isOpen = ref(false);
   const isLoading = ref(false);

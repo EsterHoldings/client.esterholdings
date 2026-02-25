@@ -57,17 +57,42 @@
                 <span class="text-sm font-semibold text-[var(--ui-text-main)] truncate" :title="item.title">
                   {{ item.title }}
                 </span>
-                <UiBadge :state="badgeState(item.state)" outline class="!py-0.5 !px-2 text-xs">
-                  {{ item.statusLabel }}
-                </UiBadge>
+                <div class="flex items-center gap-2 sm:ml-auto">
+                  <UiBadge :state="badgeState(item.state)" outline class="!py-0.5 !px-2 text-xs">
+                    {{ item.statusLabel }}
+                  </UiBadge>
+                  <button
+                    v-if="isExpandable(item)"
+                    type="button"
+                    class="expand-button"
+                    :aria-label="isExpanded(item.key) ? 'Hide details' : 'Show details'"
+                    @click="toggleExpanded(item.key)"
+                  >
+                    <UiIconArrowDown class="h-3.5 w-3.5 transition-transform" :class="{ 'rotate-180': isExpanded(item.key) }" />
+                  </button>
+                </div>
               </div>
-              <UiTextSmall class="text-[var(--ui-text-secondary)] leading-snug">
+              <UiTextSmall
+                class="verification-text-line text-[var(--ui-text-secondary)] leading-snug"
+                :class="{ 'is-expanded': isExpanded(item.key) }"
+                :title="!isExpanded(item.key) ? item.statusText : undefined"
+              >
                 {{ item.statusText }}
               </UiTextSmall>
-              <UiTextSmall v-if="item.comment" class="text-[var(--ui-primary-accent)] mt-1 leading-snug">
+              <UiTextSmall
+                v-if="item.comment"
+                class="verification-text-line is-accent mt-1 leading-snug"
+                :class="{ 'is-expanded': isExpanded(item.key) }"
+                :title="!isExpanded(item.key) ? item.comment : undefined"
+              >
                 {{ item.comment }}
               </UiTextSmall>
-              <UiTextSmall v-if="item.hint" class="text-[var(--ui-text-secondary)] mt-1 leading-snug">
+              <UiTextSmall
+                v-if="item.hint"
+                class="verification-text-line text-[var(--ui-text-secondary)] mt-1 leading-snug"
+                :class="{ 'is-expanded': isExpanded(item.key) }"
+                :title="!isExpanded(item.key) ? item.hint : undefined"
+              >
                 {{ item.hint }}
               </UiTextSmall>
             </div>
@@ -91,7 +116,7 @@ import UiBadge from "~/components/ui/UiBadge.vue";
 import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
 import UiIconFailed from "~/components/ui/UiIconFailed.vue";
 import UiIconWarning from "~/components/ui/UiIconWarning.vue";
-import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+import UiIconArrowDown from "~/components/ui/UiIconArrowDown.vue";
 
 import useAppCore from "~/composables/useAppCore";
 import useEventBus from "~/composables/useEventBus";
@@ -128,6 +153,7 @@ const initials = computed(() => {
 const isLoading = ref(false);
 const verificationRequestData = reactive<Record<string, any>>({});
 const handleDashboardRefresh = () => loadVerificationData();
+const expandedMap = reactive<Record<string, boolean>>({});
 
 const emailStatus = ref<VerificationStatus>("pending");
 const infoStatus = ref<VerificationStatus>("pending");
@@ -247,6 +273,17 @@ const badgeState = (state: "warn" | "error" | "success") => {
   return "warning";
 };
 
+const isExpandable = (item: { statusText: string; comment: string; hint: string }) => {
+  if (item.comment || item.hint) return true;
+  return item.statusText.length > 72;
+};
+
+const toggleExpanded = (key: string) => {
+  expandedMap[key] = !expandedMap[key];
+};
+
+const isExpanded = (key: string) => Boolean(expandedMap[key]);
+
 const loadVerificationData = async () => {
   if (isLoading.value) return;
   isLoading.value = true;
@@ -286,6 +323,7 @@ onBeforeUnmount(() => {
   background: var(--ui-background-panel);
   border: 1px solid var(--color-stroke-ui-light);
   padding: 14px 16px;
+  min-height: 116px;
   transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
 }
 
@@ -313,5 +351,39 @@ onBeforeUnmount(() => {
 
 .step-icon.success {
   color: var(--color-success);
+}
+
+.verification-text-line {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.verification-text-line.is-expanded {
+  white-space: normal;
+  overflow: visible;
+}
+
+.verification-text-line.is-accent {
+  color: var(--ui-primary-accent);
+}
+
+.expand-button {
+  height: 22px;
+  width: 22px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-stroke-ui-dark);
+  border: 1px solid var(--color-stroke-ui-light);
+  color: var(--ui-text-secondary);
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.expand-button:hover {
+  color: var(--ui-text-main);
+  border-color: var(--ui-text-secondary);
 }
 </style>
