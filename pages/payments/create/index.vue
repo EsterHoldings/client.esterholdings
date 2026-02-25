@@ -1,9 +1,16 @@
 <template>
-  <div class="payments-create-modal">
+  <div :class="['payments-create-modal', { 'payments-create-modal--inline-close': !!props.title }]">
     <div
       v-if="props.title"
       class="payments-create-modal__top">
       <UiTextH4>{{ props.title }}</UiTextH4>
+      <button
+        type="button"
+        class="payments-create-modal__close-btn"
+        aria-label="Закрити"
+        @click="closeModal">
+        ×
+      </button>
     </div>
 
     <div
@@ -78,7 +85,7 @@
 <script lang="ts" setup>
   import useAppCore from "~/composables/useAppCore";
   import { definePageMeta } from "~/.nuxt/imports";
-  import { reactive, ref, computed, onMounted } from "vue";
+  import { reactive, ref, computed, onMounted, inject } from "vue";
   import { useI18n } from "vue-i18n";
 
   import TabDeposit from "~/pages/payments/create/components/TabDeposit.vue";
@@ -119,6 +126,7 @@
   );
 
   const appCore = useAppCore();
+  const { closeModal } = inject("modalControl") as { closeModal: () => void };
   const { t } = useI18n({ useScope: "global" });
   const backToMethodLabel = computed(() => {
     const key = "cabinet.billing.backToMethodSelection";
@@ -288,8 +296,25 @@
     padding-right: 20px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     border-bottom: 1px solid var(--color-stroke-ui-dark);
+    gap: 12px;
+  }
+
+  .payments-create-modal__close-btn {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--ui-text-main);
+    padding: 0;
+    min-width: 28px;
+    min-height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   .payments-create-modal__content {
@@ -358,5 +383,9 @@
     .payments-create-modal__center {
       padding: 20px;
     }
+  }
+
+  :global(.modal-right-side:has(.payments-create-modal--inline-close) .modal-close-btn) {
+    display: none;
   }
 </style>
