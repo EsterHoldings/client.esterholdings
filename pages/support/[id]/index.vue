@@ -28,7 +28,11 @@
           :class="{
             'is-collapsed': !isSideExpanded,
             'is-mobile': isMobileViewport,
-          }">
+          }"
+          @touchstart="handleSidePanelTouchStart"
+          @touchmove="handleSidePanelTouchMove"
+          @touchend="handleSidePanelTouchEnd"
+          @touchcancel="handleSidePanelTouchEnd">
           <div class="support-side__scroll flex flex-col gap-4">
             <div class="support-side__card support-side__profile">
               <div class="flex items-center gap-3">
@@ -261,6 +265,9 @@
   const DESKTOP_GRID_BOTTOM_GAP = 16;
   const MIN_DESKTOP_GRID_HEIGHT = 320;
   const MOBILE_CHAT_BOTTOM_GAP = 20;
+  const MOBILE_PANEL_CLOSE_SWIPE_THRESHOLD = 42;
+  const panelTouchStartY = ref<number | null>(null);
+  const panelTouchDeltaY = ref(0);
   let desktopGridRafId: number | null = null;
 
   const supportGridStyle = computed(() => {
@@ -347,6 +354,50 @@
     }
 
     isSideExpanded.value = false;
+  };
+
+  const resetSidePanelTouch = () => {
+    panelTouchStartY.value = null;
+    panelTouchDeltaY.value = 0;
+  };
+
+  const handleSidePanelTouchStart = (event: TouchEvent) => {
+    if (!isMobileViewport.value || !isMobileFullscreenChat.value || !isSideExpanded.value) return;
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    panelTouchStartY.value = touch.clientY;
+    panelTouchDeltaY.value = 0;
+  };
+
+  const handleSidePanelTouchMove = (event: TouchEvent) => {
+    if (!isMobileViewport.value || !isMobileFullscreenChat.value || !isSideExpanded.value) return;
+    if (panelTouchStartY.value === null) return;
+
+    const touch = event.touches?.[0];
+    if (!touch) return;
+
+    panelTouchDeltaY.value = touch.clientY - panelTouchStartY.value;
+    if (Math.abs(panelTouchDeltaY.value) > 8) {
+      event.preventDefault();
+    }
+  };
+
+  const handleSidePanelTouchEnd = () => {
+    if (!isMobileViewport.value || !isMobileFullscreenChat.value) {
+      resetSidePanelTouch();
+      return;
+    }
+    if (panelTouchStartY.value === null) {
+      resetSidePanelTouch();
+      return;
+    }
+
+    if (panelTouchDeltaY.value <= -MOBILE_PANEL_CLOSE_SWIPE_THRESHOLD) {
+      isSideExpanded.value = false;
+    }
+
+    resetSidePanelTouch();
   };
 
   const handleMobileChatClose = () => {
@@ -652,7 +703,7 @@
       margin: 0;
       border-radius: 16px;
       border: 1px solid var(--color-stroke-ui-light);
-      background: color-mix(in oklab, var(--ui-background-panel) 90%, transparent);
+      background: color-mix(in oklab, var(--ui-background-panel) 96%, transparent);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
       max-height: calc(100dvh - max(8px, env(safe-area-inset-top, 0px)) - env(safe-area-inset-bottom, 0px) - 28px);
       overflow: hidden;
