@@ -725,7 +725,7 @@
       border-left: 0;
       border-right: 0;
       border: 1px solid var(--color-stroke-ui-light);
-      background: color-mix(in oklab, var(--ui-background-panel) 99%, transparent);
+      background: var(--ui-background-panel);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
       max-height: none;
       overflow: hidden;
@@ -756,7 +756,7 @@
       padding-top: calc(8px + env(safe-area-inset-top, 0px));
       padding-bottom: 8px;
       border-bottom: 1px solid var(--color-stroke-ui-light);
-      background: color-mix(in oklab, var(--ui-background-card) 96%, transparent);
+      background: var(--ui-background-card);
     }
 
     .support-ticket-grid.is-mobile.is-mobile-fullscreen .support-side__mobile-arrow {
