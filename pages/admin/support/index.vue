@@ -426,7 +426,7 @@
   const orderDirection = ref(ORDER_DIRECTION_DESC);
   const currentRowActiveOptions = ref<number | null>(null);
   const VIEW_MODE_STORAGE_KEY = "admin_support_view_mode";
-  const ADMIN_SUPPORT_LIST_REFRESH_MS = 10000;
+  const ADMIN_SUPPORT_LIST_REFRESH_MS = 20000;
   const viewMode = ref<"table" | "cards" | "full">("table");
   const viewOptions = [
     {
@@ -733,13 +733,17 @@
   const connectSupportRealtime = () => {
     if (!$echo || supportGlobalChannel) return;
 
-    supportGlobalChannel = $echo.private("support.global").listen(".MessageSent", handleSupportListReload);
+    supportGlobalChannel = $echo
+      .private("support.global")
+      .listen(".MessageSent", handleSupportListReload)
+      .listen(".ticket.presence.updated", handleSupportPresenceRealtime);
   };
 
   const disconnectSupportRealtime = () => {
     if (!$echo || !supportGlobalChannel) return;
 
     supportGlobalChannel.stopListening(".MessageSent");
+    supportGlobalChannel.stopListening(".ticket.presence.updated");
     $echo.leave("support.global");
     supportGlobalChannel = null;
   };
@@ -783,8 +787,9 @@
   const normalizeSupportPresencePayload = (payload?: any): { ticketId: string; counterpartyOnline: boolean } | null => {
     if (!payload || typeof payload !== "object") return null;
 
-    const rawTicketId = payload.ticketId ?? payload.ticket_id;
-    const rawCounterpartyOnline = payload.counterparty_online ?? payload.counterpartyOnline;
+    const data = payload?.data ?? payload;
+    const rawTicketId = data.ticketId ?? data.ticket_id;
+    const rawCounterpartyOnline = data.counterparty_online ?? data.counterpartyOnline ?? Boolean(data.online_client);
     if (rawTicketId === undefined || rawTicketId === null || rawCounterpartyOnline === undefined) return null;
 
     return {
@@ -887,6 +892,10 @@
   };
 
   const handleSupportPresenceUpdated = (payload?: any) => {
+    applySupportPresencePayload(payload);
+  };
+
+  const handleSupportPresenceRealtime = (payload?: any) => {
     applySupportPresencePayload(payload);
   };
 

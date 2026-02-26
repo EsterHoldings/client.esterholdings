@@ -3,6 +3,7 @@ import type EchoType from "laravel-echo";
 import Pusher from "pusher-js";
 import { defineNuxtPlugin, useRuntimeConfig } from "nuxt/app";
 import { ADMIN_ACCESS_TOKEN, USER_ACCESS_TOKEN } from "~/constants/auth";
+import { ROUTE_ADMIN_AUTH_REFRESH, ROUTE_AUTH_REFRESH } from "~/constants/routes";
 
 declare global {
   interface Window {
@@ -29,17 +30,55 @@ const resolveOrigin = (candidate: string | undefined): string => {
   }
 };
 
-const resolveAuthToken = (): string => {
-  return (
-    localStorage.getItem(ADMIN_ACCESS_TOKEN) ||
-    localStorage.getItem("access_token") ||
-    localStorage.getItem(USER_ACCESS_TOKEN) ||
-    ""
-  );
+const isAdminRoute = (): boolean => /\/admin(\/|$)/.test(window.location.pathname);
+
+const resolveAuthToken = (preferAdminAuth: boolean): string => {
+  if (preferAdminAuth) {
+    return localStorage.getItem(ADMIN_ACCESS_TOKEN) || localStorage.getItem("access_token") || "";
+  }
+
+  return localStorage.getItem(USER_ACCESS_TOKEN) || "";
 };
 
 const resolveXsrfToken = (): string => {
   return document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/)?.[1] ?? "";
+};
+
+const withTrailingSlash = (value: string): string => (value.endsWith("/") ? value : `${value}/`);
+
+const resolveApiBase = (candidate: string | undefined): string => {
+  if (!candidate || candidate.trim() === "") {
+    return `${window.location.origin}/api`;
+  }
+
+  try {
+    const resolved = new URL(candidate, window.location.origin);
+    return resolved.toString().replace(/\/+$/, "");
+  } catch {
+    return `${window.location.origin}/api`;
+  }
+};
+
+const resolveRefreshEndpoint = (apiBase: string, preferAdminAuth: boolean): string => {
+  const relativePath = preferAdminAuth ? ROUTE_ADMIN_AUTH_REFRESH : ROUTE_AUTH_REFRESH;
+  return new URL(relativePath.replace(/^\/+/, ""), withTrailingSlash(apiBase)).toString();
+};
+
+const extractAccessToken = (payload: any): string => {
+  return String(payload?.access_token ?? payload?.data?.access_token ?? "");
+};
+
+const persistAccessToken = (preferAdminAuth: boolean, token: string) => {
+  if (!token) return;
+
+  if (preferAdminAuth) {
+    localStorage.setItem(ADMIN_ACCESS_TOKEN, token);
+    // keep backward compatibility with legacy admin token key
+    localStorage.removeItem("access_token");
+    return;
+  }
+
+  localStorage.setItem(USER_ACCESS_TOKEN, token);
 };
 
 export default defineNuxtPlugin(() => {
@@ -53,11 +92,87 @@ export default defineNuxtPlugin(() => {
   };
 
   const authOrigin = resolveOrigin(cfg.hostBase || cfg.baseApi);
+  const apiBase = resolveApiBase(cfg.baseApi);
   const authEndpoint = `${authOrigin}/broadcasting/auth`;
 
   const scheme = (cfg.reverbScheme || window.location.protocol.replace(":", "") || "http").toLowerCase();
   const forceTLS = scheme === "https";
   const port = sanitizePort(cfg.reverbPort, forceTLS ? 443 : 80);
+  let refreshInFlight: Promise<string | null> | null = null;
+
+  const refreshAccessToken = async (preferAdminAuth: boolean): Promise<string | null> => {
+    if (refreshInFlight) {
+      return refreshInFlight;
+    }
+
+    refreshInFlight = (async () => {
+      try {
+        const xsrf = resolveXsrfToken();
+        const refreshEndpoint = resolveRefreshEndpoint(apiBase, preferAdminAuth);
+        const response = await fetch(refreshEndpoint, {
+          method: "PUT",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest",
+            ...(xsrf ? { "X-XSRF-TOKEN": decodeURIComponent(xsrf) } : {}),
+          },
+        });
+
+        if (!response.ok) {
+          return null;
+        }
+
+        const payload = await response.json().catch(() => null);
+        const refreshedToken = extractAccessToken(payload);
+        if (!refreshedToken) {
+          return null;
+        }
+
+        persistAccessToken(preferAdminAuth, refreshedToken);
+        return refreshedToken;
+      } catch {
+        return null;
+      }
+    })();
+
+    try {
+      return await refreshInFlight;
+    } finally {
+      refreshInFlight = null;
+    }
+  };
+
+  const authorizeChannel = async (socketId: string, channelName: string, preferAdminAuth: boolean) => {
+    const xsrf = resolveXsrfToken();
+    let token = resolveAuthToken(preferAdminAuth);
+
+    const requestAuth = async (currentToken: string) =>
+      fetch(authEndpoint, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+          ...(currentToken ? { Authorization: `Bearer ${currentToken}` } : {}),
+          ...(xsrf ? { "X-XSRF-TOKEN": decodeURIComponent(xsrf) } : {}),
+        },
+        body: JSON.stringify({
+          socket_id: socketId,
+          channel_name: channelName,
+        }),
+      });
+
+    let response = await requestAuth(token);
+
+    if (response.status === 401) {
+      const refreshedToken = await refreshAccessToken(preferAdminAuth);
+      token = refreshedToken ?? resolveAuthToken(preferAdminAuth);
+      response = await requestAuth(token);
+    }
+
+    return response;
+  };
 
   window.Pusher = Pusher;
 
@@ -74,22 +189,7 @@ export default defineNuxtPlugin(() => {
     authorizer: (channel: any) => ({
       authorize: async (socketId: string, callback: (error: boolean, data: any) => void) => {
         try {
-          const token = resolveAuthToken();
-          const xsrf = resolveXsrfToken();
-          const response = await fetch(authEndpoint, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Requested-With": "XMLHttpRequest",
-              ...(token ? { Authorization: `Bearer ${token}` } : {}),
-              ...(xsrf ? { "X-XSRF-TOKEN": decodeURIComponent(xsrf) } : {}),
-            },
-            body: JSON.stringify({
-              socket_id: socketId,
-              channel_name: channel.name,
-            }),
-          });
+          const response = await authorizeChannel(socketId, channel.name, isAdminRoute());
 
           if (!response.ok) {
             const errorBody = await response.text();
