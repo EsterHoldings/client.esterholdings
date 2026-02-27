@@ -888,11 +888,12 @@
           "title": "Создать новый платёжный реквизит",
           "name": "Название платёжного реквизита",
           "namePlaceholder": "Название платёжного реквизита",
+          "paymentMethod": "Платежный метод",
           "recipientAddress": "Пожалуйста, выберите платёжную систему."
         },
-        "view": "View",
-        "confirm": "Confirm",
-        "delete": "Delete"
+        "view": "Просмотр",
+        "confirm": "Подтвердить",
+        "delete": "Удалить"
       },
       "nothingToShow": "Нет данных =(",
       "pagination": {

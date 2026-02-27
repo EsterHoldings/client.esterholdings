@@ -18,7 +18,7 @@ export class PaymentDetailsModule implements BasicModuleInterface {
     return await this.paymentDetailsService.get(params);
   }
   async getById(id:any) {
-    return await this.paymentDetailsService.get(id);
+    return await this.paymentDetailsService.getById(id);
   }
 
   async post(data:object = {}):Promise<any> {

@@ -888,6 +888,7 @@
           "title": "Create new payment detail",
           "name": "Payment detail name",
           "namePlaceholder": "Payment detail name",
+          "paymentMethod": "Payment method",
           "recipientAddress": "Please select a payment system."
         },
         "view": "View",

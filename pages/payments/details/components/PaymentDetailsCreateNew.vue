@@ -23,7 +23,7 @@
         </UiFormControl>
 
         <UiFormControl
-          :label="t('cabinet.accounts.accounts-form.fields.accountType')"
+          :label="paymentMethodLabel"
           :errors="validatorPaymentDetailForm?.errorsFormData?.paymentSystemId?.errors">
           <UiSelect
             :without-no-select="true"
@@ -209,6 +209,12 @@
     }
 
     return current.fields.length > 0 ? current.fields : [fallbackPaymentField];
+  });
+
+  const paymentMethodLabel = computed(() => {
+    const key = "cabinet.payments.details.createNew.paymentMethod";
+    const translated = t(key);
+    return translated === key ? "Платежный метод" : translated;
   });
 
   const humanizeFieldKey = (key: string): string => {

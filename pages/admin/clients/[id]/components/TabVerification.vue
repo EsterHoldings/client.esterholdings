@@ -11,465 +11,527 @@
     </button>
   </div>
 
-  <template v-if="activeVerificationTab === 'client'">
-    <div class="user-verification__right">
-      <div class="user-verification__right__panel user-verification__section">
-        <div class="user-profile-card">
-          <div class="user-profile-card__header">
-            <div>
-              <UiTextH5 class="user-profile-card__name">
-                {{ props.userData.first_name }}
-                {{ props.userData.last_name }}
-                {{ props.userData.mid_name }}
-              </UiTextH5>
-              <div class="user-profile-card__subtitle">
-                {{ props.userData.email || "-" }}
-              </div>
-            </div>
-            <div class="user-profile-card__meta">
-              <span>Дата рождения: {{ props.userData.birthdate || "-" }}</span>
-              <span>Телефон: {{ props.userData.phone || "-" }}</span>
-            </div>
-          </div>
-
-          <div class="user-profile-card__grid">
-            <div class="user-profile-card__item">
-              <span class="label">Страна</span>
-              <span class="value">{{ props.userData.country || "-" }}</span>
-            </div>
-            <div class="user-profile-card__item">
-              <span class="label">Город</span>
-              <span class="value">{{ props.userData.city || "-" }}</span>
-            </div>
-            <div class="user-profile-card__item">
-              <span class="label">Штат</span>
-              <span class="value">{{ props.userData.state || "-" }}</span>
-            </div>
-            <div class="user-profile-card__item">
-              <span class="label">Индекс</span>
-              <span class="value">{{ props.userData.postal_code || "-" }}</span>
-            </div>
-            <div class="user-profile-card__item wide">
-              <span class="label">Адрес</span>
-              <span class="value">{{ props.userData.address || "-" }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="user-verification__left">
-      <div class="user-verification__section">
-        <div class="user-verification__left__title__wrapper">
-          <UiTextH5 class="user-verification__left__title"># {{ t("support.page.status") }}</UiTextH5>
-          <div>
-            <span
-              class="user-documents-uploader__title__options_reload"
-              @click="handleRefreshActiveTab">
-              <UiIconUpdate :class="{ spin: isLoading }" />
-            </span>
-          </div>
-        </div>
-
-        <div class="user-verification__left__verification-list_wrapper">
-          <ul class="user-verification__left__verification-list">
-            <li>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
-                <UiIconSuccess
-                  v-if="infoStatus === 'approved'"
-                  class="user-verification__left__status-icon" />
-                <UiIconWarning
-                  v-if="infoStatus === 'pending'"
-                  class="user-verification__left__status-icon" />
-                <UiIconFailed
-                  v-if="infoStatus === 'rejected'"
-                  class="user-verification__left__status-icon" />
-                <div class="user-verification__left__verification-text">
-                  <span
-                    v-if="infoStatus === 'approved'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Профиль — Успешно верифицирован!" }}</span
-                  >
-                  <span
-                    v-if="infoStatus === 'pending'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Профиль — Ожидает верификации!" }}</span
-                  >
-                  <span
-                    v-if="infoStatus === 'rejected'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Профиль — Отклонено!" }}</span
-                  >
-                  <span
-                    v-if="infoComment"
-                    class="user-verification__left__verification-comment"
-                    >{{ infoComment }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
-                <VerificationActions
-                  :enable-comment="true"
-                  :comment="infoComment"
-                  :status="infoStatus"
-                  :comment-open="isInfoCommentOpen"
-                  @update-status="handleVerificationProfile"
-                  @toggle-comment="toggleInfoComment" />
-              </div>
-              <transition name="comment-expand">
-                <div
-                  v-if="isInfoCommentOpen"
-                  class="user-verification__left__comment-row">
-                  <div class="user-verification__left__comment-editor p-2">
-                    <UiFormControl :label="t('admin.verifications.comment.label')">
-                      <UiTextarea
-                        :value="infoCommentDraft"
-                        @input="handleInfoCommentInput"
-                        class="user-verification__left__comment-textarea"
-                        :placeholder="t('admin.verifications.comment.placeholder')"></UiTextarea>
-                    </UiFormControl>
-                    <div class="user-verification__left__comment-actions">
-                      <UiButtonDefault
-                        state="info--outline--small"
-                        class="user-verification__left__comment-btn"
-                        @click="submitInfoComment">
-                        {{ t("admin.verifications.comment.save") }}
-                      </UiButtonDefault>
-                      <UiButtonDefault
-                        state="info--outline--small"
-                        class="user-verification__left__comment-btn"
-                        @click="cancelInfoComment">
-                        {{ t("admin.verifications.comment.close") }}
-                      </UiButtonDefault>
-                    </div>
-                  </div>
-                </div>
-              </transition>
-            </li>
-
-            <li>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
-                <UiIconSuccess
-                  v-if="emailStatus === 'approved'"
-                  class="user-verification__left__status-icon" />
-                <UiIconWarning
-                  v-if="emailStatus === 'pending'"
-                  class="user-verification__left__status-icon" />
-                <UiIconFailed
-                  v-if="emailStatus === 'rejected'"
-                  class="user-verification__left__status-icon" />
-                <div class="user-verification__left__verification-text">
-                  <span
-                    v-if="emailStatus === 'approved'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Email — Успешно верифицирован!" }}</span
-                  >
-                  <span
-                    v-if="emailStatus === 'pending'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Email — Ожидает подтверждения!" }}</span
-                  >
-                  <span
-                    v-if="emailStatus === 'rejected'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Email — Отклонено!" }}</span
-                  >
-                  <span
-                    v-if="emailComment"
-                    class="user-verification__left__verification-comment"
-                    >{{ emailComment }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
-            </li>
-
-            <li>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
-                <UiIconSuccess
-                  v-if="photoStatus === 'approved'"
-                  class="user-verification__left__status-icon" />
-                <UiIconWarning
-                  v-if="photoStatus === 'pending'"
-                  class="user-verification__left__status-icon" />
-                <UiIconFailed
-                  v-if="photoStatus === 'rejected'"
-                  class="user-verification__left__status-icon" />
-                <div class="user-verification__left__verification-text">
-                  <span
-                    v-if="photoStatus === 'approved'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Фото профиля — Успешно верифицирован!" }}</span
-                  >
-                  <span
-                    v-if="photoStatus === 'pending'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Фото профиля — Не загружено!" }}</span
-                  >
-                  <span
-                    v-if="photoStatus === 'rejected'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Фото профиля — Отклонено!" }}</span
-                  >
-                  <span
-                    v-if="photoComment"
-                    class="user-verification__left__verification-comment"
-                    >{{ photoComment }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
-            </li>
-
-            <li>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
-                <UiIconSuccess
-                  v-if="documentsStatus === 'approved'"
-                  class="user-verification__left__status-icon" />
-                <UiIconWarning
-                  v-if="documentsStatus === 'pending'"
-                  class="user-verification__left__status-icon" />
-                <UiIconFailed
-                  v-if="documentsStatus === 'rejected'"
-                  class="user-verification__left__status-icon" />
-                <div class="user-verification__left__verification-text">
-                  <span
-                    v-if="documentsStatus === 'approved'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Документы — Успешно верифицирован!" }}</span
-                  >
-                  <span
-                    v-if="documentsStatus === 'pending'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Документы — Ожидает верификации!" }}</span
-                  >
-                  <span
-                    v-if="documentsStatus === 'rejected'"
-                    class="user-verification__left__verification-title"
-                    >{{ "Документы — Отклонено!" }}</span
-                  >
-                  <span
-                    v-if="documentsComment"
-                    class="user-verification__left__verification-comment"
-                    >{{ documentsComment }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
-                <VerificationActions
-                  :enable-comment="true"
-                  :comment="documentsComment"
-                  :status="documentsStatus"
-                  :comment-open="isDocumentsCommentOpen"
-                  @update-status="handleVerificationDocuments"
-                  @toggle-comment="toggleDocumentsComment" />
-              </div>
-              <transition name="comment-expand">
-                <div
-                  v-if="isDocumentsCommentOpen"
-                  class="user-verification__left__comment-row">
-                  <div class="user-verification__left__comment-editor p-2">
-                    <UiFormControl :label="t('admin.verifications.comment.label')">
-                      <UiTextarea
-                        :value="documentsCommentDraft"
-                        @input="handleDocumentsCommentInput"
-                        class="user-verification__left__comment-textarea"
-                        :placeholder="t('admin.verifications.comment.placeholder')"></UiTextarea>
-                    </UiFormControl>
-                    <div class="user-verification__left__comment-actions">
-                      <UiButtonDefault
-                        state="info--outline--small"
-                        class="user-verification__left__comment-btn"
-                        @click="submitDocumentsComment">
-                        {{ t("admin.verifications.comment.save") }}
-                      </UiButtonDefault>
-                      <UiButtonDefault
-                        state="info--outline--small"
-                        class="user-verification__left__comment-btn"
-                        @click="cancelDocumentsComment">
-                        {{ t("admin.verifications.comment.close") }}
-                      </UiButtonDefault>
-                    </div>
-                  </div>
-                </div>
-              </transition>
-            </li>
-            <li>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
-                <UiIconSuccess
-                  v-if="depositStatus === 'approved'"
-                  class="user-verification__left__status-icon" />
-                <UiIconWarning
-                  v-if="depositStatus === 'pending'"
-                  class="user-verification__left__status-icon" />
-                <UiIconFailed
-                  v-if="depositStatus === 'rejected'"
-                  class="user-verification__left__status-icon" />
-                <div class="user-verification__left__verification-text">
-                  <span
-                    v-if="depositStatus === 'approved'"
-                    class="user-verification__left__verification-title"
-                    >{{ "1-й Депозит — Успешно верифицирован!" }}</span
-                  >
-                  <span
-                    v-if="depositStatus === 'pending'"
-                    class="user-verification__left__verification-title"
-                    >{{ "1-й Депозит — Ожидает верификации!" }}</span
-                  >
-                  <span
-                    v-if="depositStatus === 'rejected'"
-                    class="user-verification__left__verification-title"
-                    >{{ "1-й Депозит — Отклонено!" }}</span
-                  >
-                  <span
-                    v-if="depositComment"
-                    class="user-verification__left__verification-comment"
-                    >{{ depositComment }}</span
-                  >
-                </div>
-              </div>
-              <div
-                class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
-            </li>
-          </ul>
-          <div
-            class="user-verification__left__verification-list--is-loading"
-            v-if="isLoading">
-            <UiIconSpinnerDefault />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="user-verification__documents user-verification__section">
-      <UiTextH5 class="user-verification__documents__title"># Documents verification</UiTextH5>
-      <div class="user-verification__documents__content">
-        <div v-if="documentsListRequestData.length === 0">No documents...</div>
-        <div
-          class="document"
-          v-for="documentRequestData in documentsListRequestData"
-          :key="documentRequestData.id">
-          <UiImage
-            class="document__image"
-            :src="documentRequestData.document_data.full_url"
-            @click="handleClientDocumentImage(documentRequestData.document_data.full_url)" />
-          <div class="document__meta">
-            <span class="document__title"># {{ documentRequestData.document_data.number }}</span>
-          </div>
-          <div class="document__options">
-            <VerificationActions
-              :status="documentRequestData.state"
-              @update-status="handleVerificationDocument($event, documentRequestData.id)" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </template>
-
   <div
-    v-else
-    class="user-verification__payout user-verification__section">
-    <div class="user-verification__left__title__wrapper">
-      <UiTextH5 class="user-verification__left__title"># Верификация реквизитов выплат</UiTextH5>
-      <div>
-        <span
-          class="user-documents-uploader__title__options_reload"
-          @click="handleRefreshActiveTab">
-          <UiIconUpdate :class="{ spin: isPayoutLoading }" />
-        </span>
-      </div>
-    </div>
+    ref="verificationTabSwitchRef"
+    class="verification-tab-switch-anchor">
+    <transition
+      name="verification-tab-switch"
+      mode="out-in"
+      @before-leave="handleVerificationTabBeforeLeave"
+      @enter="handleVerificationTabEnter"
+      @after-enter="handleVerificationTabAfterEnter"
+      @enter-cancelled="handleVerificationTabTransitionCancelled"
+      @leave-cancelled="handleVerificationTabTransitionCancelled">
+      <div
+        :key="activeVerificationTab"
+        class="verification-tab-switch-panel">
+        <template v-if="activeVerificationTab === 'client'">
+          <div class="user-verification__right">
+            <div class="user-verification__right__panel user-verification__section">
+              <div class="user-profile-card">
+                <div class="user-profile-card__header">
+                  <div>
+                    <UiTextH5 class="user-profile-card__name">
+                      {{ props.userData.first_name }}
+                      {{ props.userData.last_name }}
+                      {{ props.userData.mid_name }}
+                    </UiTextH5>
+                    <div class="user-profile-card__subtitle">
+                      {{ props.userData.email || "-" }}
+                    </div>
+                  </div>
+                  <div class="user-profile-card__meta">
+                    <span>Дата рождения: {{ props.userData.birthdate || "-" }}</span>
+                    <span>Телефон: {{ props.userData.phone || "-" }}</span>
+                  </div>
+                </div>
 
-    <div class="user-verification__left__verification-list_wrapper">
-      <ul class="user-verification__left__verification-list">
-        <li
-          v-for="paymentDetail in payoutDetails"
-          :key="paymentDetail.id">
-          <div class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
-            <UiIconSuccess
-              v-if="paymentDetail.status === 'approved'"
-              class="user-verification__left__status-icon" />
-            <UiIconWarning
-              v-if="paymentDetail.status === 'pending'"
-              class="user-verification__left__status-icon" />
-            <UiIconFailed
-              v-if="paymentDetail.status === 'rejected'"
-              class="user-verification__left__status-icon" />
-            <div class="user-verification__left__verification-text">
-              <span class="user-verification__left__verification-title">
-                {{ paymentDetail.name || "Реквизит без названия" }}
-              </span>
-              <span class="user-verification__left__verification-comment">
-                {{ paymentDetail.paymentSystemName || "Payment system" }} · {{ paymentDetail.updatedAt || "-" }}
-              </span>
-              <div
-                v-if="paymentDetail.documents.length > 0"
-                class="user-verification__left__verification-documents">
-                <div class="user-verification__left__verification-documents-meta">
-                  <span class="user-verification__left__verification-documents-count">
-                    Скриншотов: {{ paymentDetail.documents.length }}
+                <div class="user-profile-card__grid">
+                  <div class="user-profile-card__item">
+                    <span class="label">Страна</span>
+                    <span class="value">{{ props.userData.country || "-" }}</span>
+                  </div>
+                  <div class="user-profile-card__item">
+                    <span class="label">Город</span>
+                    <span class="value">{{ props.userData.city || "-" }}</span>
+                  </div>
+                  <div class="user-profile-card__item">
+                    <span class="label">Штат</span>
+                    <span class="value">{{ props.userData.state || "-" }}</span>
+                  </div>
+                  <div class="user-profile-card__item">
+                    <span class="label">Индекс</span>
+                    <span class="value">{{ props.userData.postal_code || "-" }}</span>
+                  </div>
+                  <div class="user-profile-card__item wide">
+                    <span class="label">Адрес</span>
+                    <span class="value">{{ props.userData.address || "-" }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="user-verification__left">
+            <div class="user-verification__section">
+              <div class="user-verification__left__title__wrapper">
+                <UiTextH5 class="user-verification__left__title"># {{ t("support.page.status") }}</UiTextH5>
+                <div>
+                  <span
+                    class="user-documents-uploader__title__options_reload"
+                    @click="handleRefreshActiveTab">
+                    <UiIconUpdate :class="{ spin: isLoading }" />
                   </span>
                 </div>
-                <div class="user-verification__left__verification-documents-grid">
-                  <button
-                    v-for="(paymentDetailDocument, documentIndex) in paymentDetail.documents"
-                    :key="paymentDetail.id + ':' + paymentDetailDocument.path + ':' + documentIndex"
-                    type="button"
-                    class="user-verification__left__verification-documents-thumb"
-                    :class="{ 'user-verification__left__verification-documents-thumb--loading': isPayoutDocumentLoading(paymentDetail.id, documentIndex) }"
-                    :disabled="isPayoutDocumentLoading(paymentDetail.id, documentIndex)"
-                    @click.stop="handleOpenPayoutDocument(paymentDetail.id, documentIndex)">
-                    <img
-                      v-if="resolvePayoutDocumentPreviewSrc(paymentDetailDocument)"
-                      class="user-verification__left__verification-documents-thumb-img"
-                      :src="resolvePayoutDocumentPreviewSrc(paymentDetailDocument)"
-                      :alt="`Скриншот #${documentIndex + 1}`" />
-                    <span
-                      v-else
-                      class="user-verification__left__verification-documents-thumb-fallback">
-                      Скрин
-                    </span>
-                    <span class="user-verification__left__verification-documents-thumb-index">
-                      #{{ documentIndex + 1 }}
-                    </span>
-                  </button>
+              </div>
+
+              <div class="user-verification__left__verification-list_wrapper">
+                <ul class="user-verification__left__verification-list">
+                  <li>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
+                      <UiIconSuccess
+                        v-if="infoStatus === 'approved'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconWarning
+                        v-if="infoStatus === 'pending'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconFailed
+                        v-if="infoStatus === 'rejected'"
+                        class="user-verification__left__status-icon" />
+                      <div class="user-verification__left__verification-text">
+                        <span
+                          v-if="infoStatus === 'approved'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Профиль — Успешно верифицирован!" }}</span
+                        >
+                        <span
+                          v-if="infoStatus === 'pending'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Профиль — Ожидает верификации!" }}</span
+                        >
+                        <span
+                          v-if="infoStatus === 'rejected'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Профиль — Отклонено!" }}</span
+                        >
+                        <span
+                          v-if="infoComment"
+                          class="user-verification__left__verification-comment"
+                          >{{ infoComment }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
+                      <VerificationActions
+                        :enable-comment="true"
+                        :comment="infoComment"
+                        :status="infoStatus"
+                        :comment-open="isInfoCommentOpen"
+                        @update-status="handleVerificationProfile"
+                        @toggle-comment="toggleInfoComment" />
+                    </div>
+                    <transition name="comment-expand">
+                      <div
+                        v-if="isInfoCommentOpen"
+                        class="user-verification__left__comment-row">
+                        <div class="user-verification__left__comment-editor p-2">
+                          <UiFormControl :label="t('admin.verifications.comment.label')">
+                            <UiTextarea
+                              :value="infoCommentDraft"
+                              @input="handleInfoCommentInput"
+                              class="user-verification__left__comment-textarea"
+                              :placeholder="t('admin.verifications.comment.placeholder')"></UiTextarea>
+                          </UiFormControl>
+                          <div class="user-verification__left__comment-actions">
+                            <UiButtonDefault
+                              state="info--outline--small"
+                              class="user-verification__left__comment-btn"
+                              @click="submitInfoComment">
+                              {{ t("admin.verifications.comment.save") }}
+                            </UiButtonDefault>
+                            <UiButtonDefault
+                              state="info--outline--small"
+                              class="user-verification__left__comment-btn"
+                              @click="cancelInfoComment">
+                              {{ t("admin.verifications.comment.close") }}
+                            </UiButtonDefault>
+                          </div>
+                        </div>
+                      </div>
+                    </transition>
+                  </li>
+
+                  <li>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
+                      <UiIconSuccess
+                        v-if="emailStatus === 'approved'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconWarning
+                        v-if="emailStatus === 'pending'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconFailed
+                        v-if="emailStatus === 'rejected'"
+                        class="user-verification__left__status-icon" />
+                      <div class="user-verification__left__verification-text">
+                        <span
+                          v-if="emailStatus === 'approved'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Email — Успешно верифицирован!" }}</span
+                        >
+                        <span
+                          v-if="emailStatus === 'pending'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Email — Ожидает подтверждения!" }}</span
+                        >
+                        <span
+                          v-if="emailStatus === 'rejected'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Email — Отклонено!" }}</span
+                        >
+                        <span
+                          v-if="emailComment"
+                          class="user-verification__left__verification-comment"
+                          >{{ emailComment }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
+                  </li>
+
+                  <li>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
+                      <UiIconSuccess
+                        v-if="photoStatus === 'approved'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconWarning
+                        v-if="photoStatus === 'pending'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconFailed
+                        v-if="photoStatus === 'rejected'"
+                        class="user-verification__left__status-icon" />
+                      <div class="user-verification__left__verification-text">
+                        <span
+                          v-if="photoStatus === 'approved'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Фото профиля — Успешно верифицирован!" }}</span
+                        >
+                        <span
+                          v-if="photoStatus === 'pending'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Фото профиля — Не загружено!" }}</span
+                        >
+                        <span
+                          v-if="photoStatus === 'rejected'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Фото профиля — Отклонено!" }}</span
+                        >
+                        <span
+                          v-if="photoComment"
+                          class="user-verification__left__verification-comment"
+                          >{{ photoComment }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
+                  </li>
+
+                  <li>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
+                      <UiIconSuccess
+                        v-if="documentsStatus === 'approved'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconWarning
+                        v-if="documentsStatus === 'pending'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconFailed
+                        v-if="documentsStatus === 'rejected'"
+                        class="user-verification__left__status-icon" />
+                      <div class="user-verification__left__verification-text">
+                        <span
+                          v-if="documentsStatus === 'approved'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Документы — Успешно верифицирован!" }}</span
+                        >
+                        <span
+                          v-if="documentsStatus === 'pending'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Документы — Ожидает верификации!" }}</span
+                        >
+                        <span
+                          v-if="documentsStatus === 'rejected'"
+                          class="user-verification__left__verification-title"
+                          >{{ "Документы — Отклонено!" }}</span
+                        >
+                        <span
+                          v-if="documentsComment"
+                          class="user-verification__left__verification-comment"
+                          >{{ documentsComment }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
+                      <VerificationActions
+                        :enable-comment="true"
+                        :comment="documentsComment"
+                        :status="documentsStatus"
+                        :comment-open="isDocumentsCommentOpen"
+                        @update-status="handleVerificationDocuments"
+                        @toggle-comment="toggleDocumentsComment" />
+                    </div>
+                    <transition name="comment-expand">
+                      <div
+                        v-if="isDocumentsCommentOpen"
+                        class="user-verification__left__comment-row">
+                        <div class="user-verification__left__comment-editor p-2">
+                          <UiFormControl :label="t('admin.verifications.comment.label')">
+                            <UiTextarea
+                              :value="documentsCommentDraft"
+                              @input="handleDocumentsCommentInput"
+                              class="user-verification__left__comment-textarea"
+                              :placeholder="t('admin.verifications.comment.placeholder')"></UiTextarea>
+                          </UiFormControl>
+                          <div class="user-verification__left__comment-actions">
+                            <UiButtonDefault
+                              state="info--outline--small"
+                              class="user-verification__left__comment-btn"
+                              @click="submitDocumentsComment">
+                              {{ t("admin.verifications.comment.save") }}
+                            </UiButtonDefault>
+                            <UiButtonDefault
+                              state="info--outline--small"
+                              class="user-verification__left__comment-btn"
+                              @click="cancelDocumentsComment">
+                              {{ t("admin.verifications.comment.close") }}
+                            </UiButtonDefault>
+                          </div>
+                        </div>
+                      </div>
+                    </transition>
+                  </li>
+                  <li>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
+                      <UiIconSuccess
+                        v-if="depositStatus === 'approved'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconWarning
+                        v-if="depositStatus === 'pending'"
+                        class="user-verification__left__status-icon" />
+                      <UiIconFailed
+                        v-if="depositStatus === 'rejected'"
+                        class="user-verification__left__status-icon" />
+                      <div class="user-verification__left__verification-text">
+                        <span
+                          v-if="depositStatus === 'approved'"
+                          class="user-verification__left__verification-title"
+                          >{{ "1-й Депозит — Успешно верифицирован!" }}</span
+                        >
+                        <span
+                          v-if="depositStatus === 'pending'"
+                          class="user-verification__left__verification-title"
+                          >{{ "1-й Депозит — Ожидает верификации!" }}</span
+                        >
+                        <span
+                          v-if="depositStatus === 'rejected'"
+                          class="user-verification__left__verification-title"
+                          >{{ "1-й Депозит — Отклонено!" }}</span
+                        >
+                        <span
+                          v-if="depositComment"
+                          class="user-verification__left__verification-comment"
+                          >{{ depositComment }}</span
+                        >
+                      </div>
+                    </div>
+                    <div
+                      class="user-verification__left__verification-cell user-verification__left__verification-cell--actions"></div>
+                  </li>
+                </ul>
+                <div
+                  class="user-verification__left__verification-list--is-loading"
+                  v-if="isLoading">
+                  <UiIconSpinnerDefault />
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="user-verification__documents user-verification__section">
+            <UiTextH5 class="user-verification__documents__title"># Documents verification</UiTextH5>
+            <div class="user-verification__documents__content">
+              <div v-if="documentsListRequestData.length === 0">No documents...</div>
+              <div
+                class="document"
+                v-for="documentRequestData in documentsListRequestData"
+                :key="documentRequestData.id">
+                <UiImage
+                  class="document__image"
+                  :src="documentRequestData.document_data.full_url"
+                  @click="handleClientDocumentImage(documentRequestData.document_data.full_url)" />
+                <div class="document__meta">
+                  <span class="document__title"># {{ documentRequestData.document_data.number }}</span>
+                </div>
+                <div class="document__options">
+                  <VerificationActions
+                    :status="documentRequestData.state"
+                    @update-status="handleVerificationDocument($event, documentRequestData.id)" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <div
+          v-else
+          class="user-verification__payout user-verification__section">
+          <div class="user-verification__left__title__wrapper">
+            <UiTextH5 class="user-verification__left__title"># Верификация реквизитов выплат</UiTextH5>
+            <div>
               <span
-                v-else
-                class="user-verification__left__verification-comment">
-                Скриншот реквизитов не загружен.
+                class="user-documents-uploader__title__options_reload"
+                @click="handleRefreshActiveTab">
+                <UiIconUpdate :class="{ spin: isPayoutLoading }" />
               </span>
             </div>
           </div>
-          <div class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
-            <VerificationActions
-              :status="paymentDetail.status"
-              @update-status="handleVerificationPayoutDetail($event, paymentDetail.id)" />
+
+          <div class="user-verification__left__verification-list_wrapper">
+            <ul class="user-verification__left__verification-list">
+              <li
+                v-for="paymentDetail in payoutDetails"
+                :key="paymentDetail.id">
+                <div
+                  class="user-verification__left__verification-cell user-verification__left__verification-cell--status">
+                  <UiIconSuccess
+                    v-if="paymentDetail.status === 'approved'"
+                    class="user-verification__left__status-icon" />
+                  <UiIconWarning
+                    v-if="paymentDetail.status === 'pending'"
+                    class="user-verification__left__status-icon" />
+                  <UiIconFailed
+                    v-if="paymentDetail.status === 'rejected'"
+                    class="user-verification__left__status-icon" />
+                  <div class="user-verification__left__verification-text">
+                    <span class="user-verification__left__verification-title">
+                      {{ paymentDetail.name || "Реквизит без названия" }}
+                    </span>
+                    <span class="user-verification__left__verification-comment">
+                      {{ paymentDetail.paymentSystemName || "Payment system" }} · {{ paymentDetail.updatedAt || "-" }}
+                    </span>
+                    <span
+                      v-if="paymentDetail.adminComment"
+                      class="user-verification__left__verification-admin-comment">
+                      {{ paymentDetail.adminComment }}
+                    </span>
+                    <div
+                      v-if="paymentDetail.documents.length > 0"
+                      class="user-verification__left__verification-documents">
+                      <div class="user-verification__left__verification-documents-meta">
+                        <span class="user-verification__left__verification-documents-count">
+                          Скриншотов: {{ paymentDetail.documents.length }}
+                        </span>
+                      </div>
+                      <div class="user-verification__left__verification-documents-grid">
+                        <button
+                          v-for="(paymentDetailDocument, documentIndex) in paymentDetail.documents"
+                          :key="paymentDetail.id + ':' + paymentDetailDocument.path + ':' + documentIndex"
+                          type="button"
+                          class="user-verification__left__verification-documents-thumb"
+                          :class="{
+                            'user-verification__left__verification-documents-thumb--loading': isPayoutDocumentLoading(
+                              paymentDetail.id,
+                              documentIndex
+                            ),
+                          }"
+                          :disabled="isPayoutDocumentLoading(paymentDetail.id, documentIndex)"
+                          @click.stop="handleOpenPayoutDocument(paymentDetail.id, documentIndex)">
+                          <img
+                            v-if="resolvePayoutDocumentPreviewSrc(paymentDetailDocument)"
+                            class="user-verification__left__verification-documents-thumb-img"
+                            :src="resolvePayoutDocumentPreviewSrc(paymentDetailDocument)"
+                            :alt="`Скриншот #${documentIndex + 1}`" />
+                          <span
+                            v-else
+                            class="user-verification__left__verification-documents-thumb-fallback">
+                            Скрин
+                          </span>
+                          <span class="user-verification__left__verification-documents-thumb-index">
+                            #{{ documentIndex + 1 }}
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <span
+                      v-else
+                      class="user-verification__left__verification-comment">
+                      Скриншот реквизитов не загружен.
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="user-verification__left__verification-cell user-verification__left__verification-cell--actions">
+                  <VerificationActions
+                    :status="paymentDetail.status"
+                    :enable-comment="true"
+                    :comment="resolvePayoutCommentValue(paymentDetail)"
+                    :comment-open="isPayoutCommentOpen(paymentDetail.id)"
+                    @toggle-comment="togglePayoutComment(paymentDetail)"
+                    @update-status="handleVerificationPayoutDetail($event, paymentDetail.id)" />
+                </div>
+                <transition name="comment-expand">
+                  <div
+                    v-if="isPayoutCommentOpen(paymentDetail.id)"
+                    class="user-verification__left__comment-row">
+                    <div class="user-verification__left__comment-editor p-2">
+                      <UiFormControl :label="t('admin.verifications.comment.label')">
+                        <UiTextarea
+                          :value="payoutCommentDraftMap[paymentDetail.id] || ''"
+                          @input="handlePayoutCommentInput(paymentDetail.id, $event)"
+                          class="user-verification__left__comment-textarea"
+                          :placeholder="t('admin.verifications.comment.placeholder')"></UiTextarea>
+                      </UiFormControl>
+                      <div class="user-verification__left__comment-actions">
+                        <UiButtonDefault
+                          state="info--outline--small"
+                          class="user-verification__left__comment-btn"
+                          @click="submitPayoutComment(paymentDetail.id)">
+                          {{ t("admin.verifications.comment.save") }}
+                        </UiButtonDefault>
+                        <UiButtonDefault
+                          state="info--outline--small"
+                          class="user-verification__left__comment-btn"
+                          @click="cancelPayoutComment(paymentDetail.id)">
+                          {{ t("admin.verifications.comment.close") }}
+                        </UiButtonDefault>
+                      </div>
+                    </div>
+                  </div>
+                </transition>
+              </li>
+            </ul>
+
+            <div
+              v-if="payoutDetails.length === 0 && !isPayoutLoading"
+              class="user-verification__payout-empty">
+              Реквизитов для выплат пока нет.
+            </div>
+
+            <div
+              v-if="isPayoutLoading"
+              class="user-verification__left__verification-list--is-loading">
+              <UiIconSpinnerDefault />
+            </div>
           </div>
-        </li>
-      </ul>
-
-      <div
-        v-if="payoutDetails.length === 0 && !isPayoutLoading"
-        class="user-verification__payout-empty">
-        Реквизитов для выплат пока нет.
+        </div>
       </div>
-
-      <div
-        v-if="isPayoutLoading"
-        class="user-verification__left__verification-list--is-loading">
-        <UiIconSpinnerDefault />
-      </div>
-    </div>
+    </transition>
   </div>
 
   <div class="user-verification__panel user-verification__section">
@@ -493,7 +555,7 @@
 
 <script lang="ts" setup>
   import useAppCore from "~/composables/useAppCore";
-  import { onMounted, reactive, ref, watch } from "vue";
+  import { onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import { useRoute, useRouter } from "vue-router";
@@ -548,6 +610,7 @@
     status: AdminPaymentDetailStatus;
     paymentSystemName: string;
     updatedAt: string;
+    adminComment: string;
     documents: AdminPaymentDetailDocument[];
   }
 
@@ -587,6 +650,9 @@
     { id: "client" as const, label: "Верификация клиента" },
     { id: "payout" as const, label: "Реквизиты для выплат" },
   ];
+  const VERIFICATION_TAB_SWITCH_DURATION_MS = 260;
+  const verificationTabSwitchRef = ref<HTMLElement | null>(null);
+  let verificationTabSwitchResetTimer: ReturnType<typeof setTimeout> | null = null;
 
   const infoStatus = ref("pending");
   const infoComment = ref("");
@@ -606,6 +672,68 @@
   const documentsCommentDraft = ref("");
   const historyRows = ref<VerificationHistoryItem[]>([]);
   const payoutDocumentLoadingMap = reactive<Record<string, boolean>>({});
+  const payoutCommentOpenMap = reactive<Record<string, boolean>>({});
+  const payoutCommentDraftMap = reactive<Record<string, string>>({});
+
+  const clearVerificationTabSwitchResetTimer = (): void => {
+    if (verificationTabSwitchResetTimer === null) {
+      return;
+    }
+
+    clearTimeout(verificationTabSwitchResetTimer);
+    verificationTabSwitchResetTimer = null;
+  };
+
+  const unlockVerificationTabSwitchHeight = (): void => {
+    clearVerificationTabSwitchResetTimer();
+
+    const anchor = verificationTabSwitchRef.value;
+    if (!anchor) {
+      return;
+    }
+
+    anchor.style.height = "";
+    anchor.style.overflow = "";
+  };
+
+  const lockVerificationTabSwitchHeight = (height: number): void => {
+    const anchor = verificationTabSwitchRef.value;
+    if (!anchor) {
+      return;
+    }
+
+    anchor.style.overflow = "hidden";
+    anchor.style.height = `${Math.max(height, 0)}px`;
+  };
+
+  const scheduleVerificationTabSwitchUnlock = (): void => {
+    clearVerificationTabSwitchResetTimer();
+    verificationTabSwitchResetTimer = setTimeout(() => {
+      unlockVerificationTabSwitchHeight();
+    }, VERIFICATION_TAB_SWITCH_DURATION_MS + 60);
+  };
+
+  const handleVerificationTabBeforeLeave = (el: Element): void => {
+    const panelHeight = (el as HTMLElement).offsetHeight;
+    const anchorHeight = verificationTabSwitchRef.value?.offsetHeight ?? 0;
+    lockVerificationTabSwitchHeight(panelHeight || anchorHeight);
+  };
+
+  const handleVerificationTabEnter = (el: Element): void => {
+    requestAnimationFrame(() => {
+      const nextHeight = (el as HTMLElement).offsetHeight;
+      lockVerificationTabSwitchHeight(nextHeight);
+      scheduleVerificationTabSwitchUnlock();
+    });
+  };
+
+  const handleVerificationTabAfterEnter = (): void => {
+    unlockVerificationTabSwitchHeight();
+  };
+
+  const handleVerificationTabTransitionCancelled = (): void => {
+    unlockVerificationTabSwitchHeight();
+  };
 
   const normalizePaymentStatus = (value: unknown): AdminPaymentDetailStatus => {
     if (typeof value !== "string") {
@@ -683,6 +811,63 @@
     return String(value || "").toLowerCase() === "payout" ? "payout" : "client";
   };
 
+  const ensurePayoutCommentState = (rows: AdminPaymentDetailItem[]): void => {
+    const activeIds = new Set(rows.map(row => row.id));
+
+    Object.keys(payoutCommentOpenMap).forEach(id => {
+      if (!activeIds.has(id)) {
+        delete payoutCommentOpenMap[id];
+      }
+    });
+
+    Object.keys(payoutCommentDraftMap).forEach(id => {
+      if (!activeIds.has(id)) {
+        delete payoutCommentDraftMap[id];
+      }
+    });
+
+    rows.forEach(row => {
+      if (!(row.id in payoutCommentOpenMap)) {
+        payoutCommentOpenMap[row.id] = false;
+      }
+
+      if (!payoutCommentOpenMap[row.id]) {
+        payoutCommentDraftMap[row.id] = row.adminComment || "";
+      }
+    });
+  };
+
+  const isPayoutCommentOpen = (paymentDetailId: string): boolean => Boolean(payoutCommentOpenMap[paymentDetailId]);
+
+  const resolvePayoutCommentValue = (paymentDetail: AdminPaymentDetailItem): string => {
+    if (isPayoutCommentOpen(paymentDetail.id)) {
+      return String(payoutCommentDraftMap[paymentDetail.id] || "");
+    }
+
+    return String(paymentDetail.adminComment || "");
+  };
+
+  const togglePayoutComment = (paymentDetail: AdminPaymentDetailItem): void => {
+    const paymentDetailId = paymentDetail.id;
+    const nextState = !isPayoutCommentOpen(paymentDetailId);
+
+    payoutCommentOpenMap[paymentDetailId] = nextState;
+    payoutCommentDraftMap[paymentDetailId] = nextState
+      ? String(payoutCommentDraftMap[paymentDetailId] ?? paymentDetail.adminComment ?? "")
+      : String(paymentDetail.adminComment || "");
+  };
+
+  const handlePayoutCommentInput = (paymentDetailId: string, event: any): void => {
+    payoutCommentDraftMap[paymentDetailId] = String(event?.target?.value ?? "");
+  };
+
+  const cancelPayoutComment = (paymentDetailId: string): void => {
+    const paymentDetail = payoutDetails.value.find(item => item.id === paymentDetailId);
+
+    payoutCommentOpenMap[paymentDetailId] = false;
+    payoutCommentDraftMap[paymentDetailId] = String(paymentDetail?.adminComment || "");
+  };
+
   const loadVerificationData = async () => {
     isLoading.value = true;
 
@@ -733,8 +918,10 @@
         status: normalizePaymentStatus(row.status),
         paymentSystemName: String(row?.payment_system?.name ?? row?.paymentSystem?.name ?? ""),
         updatedAt: String(row.updated_at ?? ""),
+        adminComment: String(row.admin_comment ?? ""),
         documents: normalizePayoutDocuments(row.documents),
       }));
+      ensurePayoutCommentState(payoutDetails.value);
     } finally {
       isPayoutLoading.value = false;
     }
@@ -767,14 +954,37 @@
     isPayoutLoading.value = true;
 
     try {
+      const paymentDetail = payoutDetails.value.find(item => item.id === paymentDetailId);
+      const nextStatus = normalizePaymentStatus(value?.status ?? paymentDetail?.status);
+      const nextComment = String(
+        value?.comment ?? payoutCommentDraftMap[paymentDetailId] ?? paymentDetail?.adminComment ?? ""
+      );
+
       await appCore.adminModules.clients.patchPaymentDetailStatus(props.clientId, paymentDetailId, {
-        status: value.status,
+        status: nextStatus,
+        comment: nextComment,
       });
       toast.success("Payment details status updated!");
+      payoutCommentOpenMap[paymentDetailId] = false;
       await Promise.all([loadPayoutVerificationData(), loadVerificationData()]);
     } finally {
       isPayoutLoading.value = false;
     }
+  };
+
+  const submitPayoutComment = async (paymentDetailId: string): Promise<void> => {
+    const paymentDetail = payoutDetails.value.find(item => item.id === paymentDetailId);
+    if (!paymentDetail) {
+      return;
+    }
+
+    await handleVerificationPayoutDetail(
+      {
+        status: paymentDetail.status,
+        comment: String(payoutCommentDraftMap[paymentDetailId] ?? ""),
+      },
+      paymentDetailId
+    );
   };
 
   const handleOpenPayoutDocument = async (paymentDetailId: string, documentIndex: number) => {
@@ -912,6 +1122,10 @@
 
     await Promise.all([loadVerificationData(), loadPayoutVerificationData()]);
   });
+
+  onBeforeUnmount(() => {
+    clearVerificationTabSwitchResetTimer();
+  });
 </script>
 
 <style lang="scss" scoped>
@@ -966,6 +1180,35 @@
     background: color-mix(in srgb, var(--ui-primary-main) 22%, transparent);
     border-color: var(--ui-primary-main);
     color: var(--ui-text-main);
+  }
+
+  .verification-tab-switch-anchor {
+    position: relative;
+    transition: height 0.26s ease;
+    will-change: height;
+  }
+
+  .verification-tab-switch-panel {
+    width: 100%;
+  }
+
+  .verification-tab-switch-enter-active,
+  .verification-tab-switch-leave-active {
+    transition:
+      opacity 0.26s ease,
+      transform 0.26s ease;
+  }
+
+  .verification-tab-switch-enter-from,
+  .verification-tab-switch-leave-to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .verification-tab-switch-enter-to,
+  .verification-tab-switch-leave-from {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .user-verification__payout-empty {
@@ -1074,6 +1317,17 @@
           font-size: 12px;
           line-height: 1.4;
           white-space: normal;
+        }
+
+        &__verification-admin-comment {
+          margin-top: 2px;
+          color: var(--ui-text-main);
+          font-size: 12px;
+          line-height: 1.45;
+          white-space: normal;
+          padding: 6px 8px;
+          border-radius: 8px;
+          background: color-mix(in srgb, var(--ui-background) 78%, transparent);
         }
 
         &__verification-documents {

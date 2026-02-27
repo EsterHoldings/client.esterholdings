@@ -5,14 +5,19 @@
         {{ t("cabinet.payments.title") }}
       </UiTextH4>
 
-      <UiButtonDefault state="info" class="w-full md:w-auto" @click="handleClickCreateNewPaymentDetail">
+      <UiButtonDefault
+        state="info"
+        class="w-full md:w-auto"
+        @click="handleClickCreateNewPaymentDetail">
         <UiIconPlus class="mr-2" />
         <span>{{ t("cabinet.payments.details.createNew.title") }}</span>
       </UiButtonDefault>
     </template>
 
     <template #content>
-      <PageStructureContent :plain="viewMode !== 'table'" v-if="!isInitialLoading">
+      <PageStructureContent
+        :plain="viewMode !== 'table'"
+        v-if="!isInitialLoading">
         <template #top>
           <div class="flex w-full flex-col gap-2 md:flex-row md:items-center">
             <div class="flex w-full flex-1 min-w-[260px] items-center gap-2">
@@ -20,14 +25,16 @@
                 class="w-full"
                 @input="handleInputSearch"
                 :value="search"
-                :placeholder="t('cabinet.accounts.search')"
-              >
+                :placeholder="t('cabinet.accounts.search')">
                 <template #icon-left>
                   <UiIconSearch />
                 </template>
               </UiInput>
 
-              <UiButtonDefault state="info--small" class="!w-[44px]" @click="handleClickUpdate">
+              <UiButtonDefault
+                state="info--small"
+                class="!w-[44px]"
+                @click="handleClickUpdate">
                 <UiIconUpdate :spinning="isLoading" />
               </UiButtonDefault>
             </div>
@@ -38,10 +45,12 @@
                 :value="orderBy"
                 :data="sortByFilterData"
                 :withoutNoSelect="true"
-                @change="handleChangeFilterSortBy"
-              >
+                @change="handleChangeFilterSortBy">
                 <template #icon-left>
-                  <UiIconSortBy class="!h-4 !w-4" :orderDirectionEnabled="true" :orderDirection="orderDirection" />
+                  <UiIconSortBy
+                    class="!h-4 !w-4"
+                    :orderDirectionEnabled="true"
+                    :orderDirection="orderDirection" />
                 </template>
               </UiSelect>
 
@@ -50,46 +59,59 @@
                 bordered
                 :modelValue="viewMode"
                 :options="viewOptions"
-                @update:modelValue="viewMode = $event"
-              />
+                @update:modelValue="viewMode = $event" />
             </div>
           </div>
         </template>
 
         <template #content>
-          <TableMain v-if="viewMode === 'table'" ref="tableRef">
+          <TableMain
+            v-if="viewMode === 'table'"
+            ref="tableRef">
             <template #thead>
               <tr>
                 <th class="px-5 py-2 text-left font-normal w-[16rem]">
-                  <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('name')">
+                  <button
+                    type="button"
+                    class="flex items-center gap-2"
+                    @click="handleOrderByAndDirection('name')">
                     <UiTextSmall>Name</UiTextSmall>
-                    <UiIconSort :active="orderBy === 'name'" :direction="orderDirection" />
+                    <UiIconSort
+                      :active="orderBy === 'name'"
+                      :direction="orderDirection" />
                   </button>
                 </th>
 
                 <th class="px-5 py-2 text-left font-normal w-[12rem]">
-                  <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('payment_system')">
+                  <button
+                    type="button"
+                    class="flex items-center gap-2"
+                    @click="handleOrderByAndDirection('payment_system')">
                     <UiTextSmall>Payment system</UiTextSmall>
                   </button>
                 </th>
 
-                <th class="px-5 py-2 text-left font-normal w-[6rem]">
-                  <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('currency')">
-                    <UiTextSmall>Currency</UiTextSmall>
-                  </button>
-                </th>
-
                 <th class="px-5 py-2 text-left font-normal w-[8rem]">
-                  <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('status')">
+                  <button
+                    type="button"
+                    class="flex items-center gap-2"
+                    @click="handleOrderByAndDirection('status')">
                     <UiTextSmall>Status</UiTextSmall>
-                    <UiIconSort :active="orderBy === 'status'" :direction="orderDirection" />
+                    <UiIconSort
+                      :active="orderBy === 'status'"
+                      :direction="orderDirection" />
                   </button>
                 </th>
 
                 <th class="px-5 py-2 text-left font-normal w-[14rem]">
-                  <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('updated_at')">
+                  <button
+                    type="button"
+                    class="flex items-center gap-2"
+                    @click="handleOrderByAndDirection('updated_at')">
                     <UiTextSmall>UpdatedAt</UiTextSmall>
-                    <UiIconSort :active="orderBy === 'updated_at'" :direction="orderDirection" />
+                    <UiIconSort
+                      :active="orderBy === 'updated_at'"
+                      :direction="orderDirection" />
                   </button>
                 </th>
 
@@ -99,80 +121,76 @@
 
             <template #tbody>
               <div
-                  v-if="isLoading"
-                  class="backdrop-blur-[2px] w-full absolute bottom-0 top-[45px] flex items-center justify-center z-10"
-              >
+                v-if="isLoading"
+                class="backdrop-blur-[2px] w-full absolute bottom-0 top-[45px] flex items-center justify-center z-10">
                 <UiIconSpinnerDefault />
               </div>
 
               <template v-if="paymentDetails.length">
                 <tr
-                    v-for="(paymentDetail, index) in paymentDetails"
-                    :key="paymentDetail.id"
-                    class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
-                >
+                  v-for="(paymentDetail, index) in paymentDetails"
+                  :key="paymentDetail.id"
+                  class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]">
                   <td
-                      class="px-5 py-3 align-middle font-bold truncate"
-                      :title="paymentDetail?.name"
-                  >
+                    class="px-5 py-3 align-middle font-bold truncate"
+                    :title="paymentDetail?.name">
                     {{ paymentDetail?.name }}
                   </td>
 
-                  <td class="px-5 py-3 align-middle truncate" :title="paymentDetail.payment_system_name">
+                  <td
+                    class="px-5 py-3 align-middle truncate"
+                    :title="paymentDetail.payment_system_name">
                     {{ paymentDetail.payment_system_name }}
                   </td>
 
                   <td class="px-5 py-3 align-middle">
-                    {{ paymentDetail.currency ?? "USD" }}
-                  </td>
-
-                  <td class="px-5 py-3 align-middle capitalize">
-                    {{ paymentDetail.status }}
+                    <div class="status-inline">
+                      <span
+                        class="status-inline__dot"
+                        :class="statusDotClass(paymentDetail.status)"></span>
+                      <span class="status-inline__text">{{ statusText(paymentDetail.status) }}</span>
+                    </div>
                   </td>
 
                   <td class="px-5 py-3 align-middle whitespace-nowrap">
-                    {{ new Date(paymentDetail.updated_at).toLocaleString() }}
+                    <div class="updated-at-cell">
+                      <span class="updated-at-cell__relative">{{ formatRelativeDate(paymentDetail.updated_at) }}</span>
+                      <span class="updated-at-cell__absolute">{{ formatDateTime(paymentDetail.updated_at) }}</span>
+                    </div>
                   </td>
 
                   <td class="px-5 py-3 align-middle">
                     <span
-                        @click="toggleRowOptions(index)"
-                        class="relative flex h-[32px] w-[32px] items-center justify-center rounded-md border border-transparent transition-colors cursor-pointer"
-                        :ref="(el) => (triggerRefs[index] = el as HTMLElement | null)"
-                    >
+                      @click="toggleRowOptions(index)"
+                      class="relative flex h-[32px] w-[32px] items-center justify-center rounded-md border border-transparent transition-colors cursor-pointer"
+                      :ref="el => (triggerRefs[index] = el as HTMLElement | null)">
                       <UiIconDotsVertical />
                     </span>
 
                     <Teleport to="body">
                       <div
-                          v-if="currentRowActiveOptions === index"
-                          :ref="(el) => (menuRefs[index] = el as HTMLElement | null)"
-                          class="fixed z-[9999] max-h-[70vh] overflow-auto text-[var(--ui-text-main)]"
-                          :class="[
+                        v-if="currentRowActiveOptions === index"
+                        :ref="el => (menuRefs[index] = el as HTMLElement | null)"
+                        class="fixed z-[9999] max-h-[70vh] overflow-auto text-[var(--ui-text-main)]"
+                        :class="[
                           'flex min-w-[140px] max-w-[60vw] flex-col gap-1 rounded-md border border-[var(--color-stroke-ui-light)] bg-[var(--color-stroke-ui-dark)] p-3 shadow-lg transition-opacity duration-100',
                           menuReady[index] ? 'opacity-100' : 'opacity-0 pointer-events-none',
                         ]"
-                          :style="getMenuStyle(index)"
-                      >
+                        :style="getMenuStyle(index)">
                         <div
-                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
-                        >
+                          class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
+                          @click="handleClickViewPaymentDetail(paymentDetail.id)">
                           <UiIconEye class="!h-[14px] !w-[14px]" />
-                          <UiTextSmall class="whitespace-nowrap">View</UiTextSmall>
+                          <UiTextSmall class="whitespace-nowrap">{{ t("cabinet.payments.details.view") }}</UiTextSmall>
                         </div>
 
                         <div
-                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
-                        >
-                          <UiIconConfirm class="!h-[14px] !w-[14px]" />
-                          <UiTextSmall class="whitespace-nowrap">Confirm</UiTextSmall>
-                        </div>
-
-                        <div
-                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
-                        >
+                          class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
+                          @click="handleDeletePaymentDetail(paymentDetail.id)">
                           <UiIconTrash class="!h-[14px] !w-[14px] stroke-[var(--ui-sticker-danger)]" />
-                          <UiTextSmall class="whitespace-nowrap">Delete</UiTextSmall>
+                          <UiTextSmall class="whitespace-nowrap">{{
+                            t("cabinet.payments.details.delete")
+                          }}</UiTextSmall>
                         </div>
                       </div>
                     </Teleport>
@@ -182,49 +200,58 @@
             </template>
           </TableMain>
 
-          <div v-else class="relative">
+          <div
+            v-else
+            class="relative">
             <div
-                class="backdrop-blur-[2px] w-full absolute inset-0 flex items-center justify-center z-10"
-                v-if="isLoading && !isInitialLoading"
-            >
-              <UiIconSpinnerDefault/>
+              class="backdrop-blur-[2px] w-full absolute inset-0 flex items-center justify-center z-10"
+              v-if="isLoading && !isInitialLoading">
+              <UiIconSpinnerDefault />
             </div>
 
             <div
-                class="grid gap-3"
-                :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'"
-            >
+              class="grid gap-3"
+              :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'">
               <div
-                  v-for="paymentDetail in paymentDetails"
-                  :key="paymentDetail.id"
-                  class="payment-card card-with-actions"
-              >
-                <div class="card-actions" aria-hidden="true">
-                  <button class="copy-btn" aria-label="Copy id">
+                v-for="paymentDetail in paymentDetails"
+                :key="paymentDetail.id"
+                class="payment-card card-with-actions">
+                <div
+                  class="card-actions"
+                  aria-hidden="true">
+                  <button
+                    class="copy-btn"
+                    aria-label="Copy id">
                     <UiIconCopy :text="paymentDetail.id" />
                   </button>
                   <button
-                      type="button"
-                      class="action-btn"
-                      @click.stop="toggleCardMenu(paymentDetail.id)"
-                      aria-label="Open menu"
-                  >
+                    type="button"
+                    class="action-btn"
+                    @click.stop="toggleCardMenu(paymentDetail.id)"
+                    aria-label="Open menu">
                     <UiIconDotsVertical class="h-4 w-4" />
                     <div
-                        v-if="cardMenuOpenId === paymentDetail.id"
-                        class="card-menu"
-                    >
-                      <button class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.view', 'View')">
+                      v-if="cardMenuOpenId === paymentDetail.id"
+                      class="card-menu">
+                      <button
+                        class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]"
+                        type="button"
+                        :title="t('cabinet.payments.details.view', 'View')"
+                        @click="handleClickViewPaymentDetail(paymentDetail.id)">
                         <UiIconEye class="!h-4 !w-4 shrink-0" />
-                        <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.payments.details.view') || 'View' }}</UiTextSmall>
+                        <UiTextSmall class="whitespace-nowrap">{{
+                          t("cabinet.payments.details.view") || "View"
+                        }}</UiTextSmall>
                       </button>
-                      <button class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.confirm', 'Confirm')">
-                        <UiIconConfirm class="!h-4 !w-4 shrink-0" />
-                        <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.payments.details.confirm') || 'Confirm' }}</UiTextSmall>
-                      </button>
-                      <button class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]" type="button" :title="t('cabinet.payments.details.delete', 'Delete')">
+                      <button
+                        class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]"
+                        type="button"
+                        :title="t('cabinet.payments.details.delete', 'Delete')"
+                        @click="handleDeletePaymentDetail(paymentDetail.id)">
                         <UiIconTrash class="!h-4 !w-4 shrink-0 stroke-[var(--ui-sticker-danger)]" />
-                        <UiTextSmall class="whitespace-nowrap">{{ t('cabinet.payments.details.delete') || 'Delete' }}</UiTextSmall>
+                        <UiTextSmall class="whitespace-nowrap">{{
+                          t("cabinet.payments.details.delete") || "Delete"
+                        }}</UiTextSmall>
                       </button>
                     </div>
                   </button>
@@ -233,34 +260,34 @@
                 <div class="payment-card__body">
                   <div class="min-w-[140px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t('cabinet.billing.columns.paymentSystem') }}
+                      {{ t("cabinet.billing.columns.paymentSystem") }}
                     </UiTextSmall>
                     <div class="truncate font-semibold">{{ paymentDetail.payment_system_name }}</div>
                   </div>
                   <div class="min-w-[120px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t('cabinet.billing.columns.account') }}
+                      {{ t("cabinet.billing.columns.account") }}
                     </UiTextSmall>
                     <div class="truncate">{{ paymentDetail.name }}</div>
                   </div>
-                  <div class="min-w-[100px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t('cabinet.billing.columns.currency') }}
-                    </UiTextSmall>
-                    <div class="font-semibold">{{ paymentDetail.currency ?? "USD" }}</div>
-                  </div>
                   <div class="min-w-[120px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t('cabinet.billing.columns.status') }}
+                      {{ t("cabinet.billing.columns.status") }}
                     </UiTextSmall>
-                    <div class="font-semibold capitalize">{{ paymentDetail.status }}</div>
+                    <div class="status-inline">
+                      <span
+                        class="status-inline__dot"
+                        :class="statusDotClass(paymentDetail.status)"></span>
+                      <span class="status-inline__text">{{ statusText(paymentDetail.status) }}</span>
+                    </div>
                   </div>
                   <div class="min-w-[160px]">
                     <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t('cabinet.billing.columns.createdAt') }}
+                      {{ t("cabinet.billing.updatedAt") || "Updated at" }}
                     </UiTextSmall>
-                    <div class="text-xs text-[var(--ui-text-main)] whitespace-nowrap">
-                      {{ new Date(paymentDetail.updated_at).toLocaleString() }}
+                    <div class="updated-at-cell">
+                      <span class="updated-at-cell__relative">{{ formatRelativeDate(paymentDetail.updated_at) }}</span>
+                      <span class="updated-at-cell__absolute">{{ formatDateTime(paymentDetail.updated_at) }}</span>
                     </div>
                   </div>
                 </div>
@@ -277,10 +304,11 @@
         </div>
       </template>
 
-
       <template v-if="!isInitialLoading && paymentDetails.length === 0">
         <div class="h-[40vh] flex items-center justify-center">
-          <span v-if="!isLoading" class="text-[var(--ui-text-main)]">
+          <span
+            v-if="!isLoading"
+            class="text-[var(--ui-text-main)]">
             {{ t("cabinet.payments.nothingToShow") }}
           </span>
           <UiIconSpinnerDefault v-else />
@@ -288,1076 +316,632 @@
       </template>
 
       <PaginationMain
-          class="px-5 py-2"
-          :current-page="currentPage"
-          :total-pages="totalPages"
-          :total="total"
-          :per-page="perPage"
-          :visible-pages="visiblePages"
-          :per-page-options="[1,2,3,4,5,6,7,8,9,10,12,15,20,25,50,100]"
-          @go-prev="goPrev"
-          @go-next="goNext"
-          @set-page="setPage"
-          @set-per-page="handleSetPerPage"
-      />
-
+        class="px-5 py-2"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        :total="total"
+        :per-page="perPage"
+        :visible-pages="visiblePages"
+        :per-page-options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 50, 100]"
+        @go-prev="goPrev"
+        @go-next="goNext"
+        @set-page="setPage"
+        @set-per-page="handleSetPerPage" />
     </template>
   </PageStructureDefault>
 </template>
 
 <script lang="ts" setup>
-import PaymentDetailsCreateNew from "~/pages/payments/details/components/PaymentDetailsCreateNew.vue";
+  import PaymentDetailsCreateNew from "~/pages/payments/details/components/PaymentDetailsCreateNew.vue";
 
-import PageStructureContent from "~/components/block/pages/PageStructureContent.vue";
-import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
-import PaginationMain from "~/components/block/paginations/PaginationMain.vue";
-import TableMain from "~/components/block/tables/TableMain.vue";
+  import PageStructureContent from "~/components/block/pages/PageStructureContent.vue";
+  import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
+  import PaginationMain from "~/components/block/paginations/PaginationMain.vue";
+  import TableMain from "~/components/block/tables/TableMain.vue";
 
-import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
-import UiIconConfirm from "~/components/ui/UiIconConfirm.vue";
-import UiIconDotsVertical from "~/components/ui/UiIconDotsVertical.vue";
-import UiIconEye from "~/components/ui/UiIconEye.vue";
-import UiIconLogo from "~/components/ui/UiIconLogo.vue";
-import UiIconPlus from "~/components/ui/UiIconPlus.vue";
-import UiIconSearch from "~/components/ui/UiIconSearch.vue";
-import UiIconSort from "~/components/ui/UiIconSort.vue";
-import UiIconSortBy from "~/components/ui/UiIconSortBy.vue";
-import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
-import UiIconTrash from "~/components/ui/UiIconTrash.vue";
-import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
-import UiInput from "~/components/ui/UiInput.vue";
-import UiSelect from "~/components/ui/UiSelect.vue";
-import UiTextH4 from "~/components/ui/UiTextH4.vue";
-import UiTextSmall from "~/components/ui/UiTextSmall.vue";
-import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
+  import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+  import UiIconDotsVertical from "~/components/ui/UiIconDotsVertical.vue";
+  import UiIconEye from "~/components/ui/UiIconEye.vue";
+  import UiIconLogo from "~/components/ui/UiIconLogo.vue";
+  import UiIconPlus from "~/components/ui/UiIconPlus.vue";
+  import UiIconSearch from "~/components/ui/UiIconSearch.vue";
+  import UiIconSort from "~/components/ui/UiIconSort.vue";
+  import UiIconSortBy from "~/components/ui/UiIconSortBy.vue";
+  import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+  import UiIconTrash from "~/components/ui/UiIconTrash.vue";
+  import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
+  import UiInput from "~/components/ui/UiInput.vue";
+  import UiSelect from "~/components/ui/UiSelect.vue";
+  import UiTextH4 from "~/components/ui/UiTextH4.vue";
+  import UiTextSmall from "~/components/ui/UiTextSmall.vue";
+  import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
 
-import useAppCore from "~/composables/useAppCore";
+  import useAppCore from "~/composables/useAppCore";
+  import useEventBus from "~/composables/useEventBus";
 
-import { definePageMeta } from "~/.nuxt/imports";
-import { useI18n } from "vue-i18n";
-import { computed, h, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+  import { definePageMeta, navigateTo, useLocalePath } from "~/.nuxt/imports";
+  import { useI18n } from "vue-i18n";
+  import { useToast } from "vue-toastification";
+  import { computed, h, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
 
-definePageMeta({
-  layout: "cabinet",
-  middleware: ["auth-client", "client-check-auth"],
-});
-
-const { t } = useI18n({ useScope: "global" });
-const { openModal } = inject("modalControl") as { openModal: Function };
-
-const appCore = useAppCore();
-
-const ORDER_DIRECTION_ASC = "asc";
-const ORDER_DIRECTION_DESC = "desc";
-const VIEW_MODE_STORAGE_KEY = "paymentDetailsViewMode";
-
-const isLoading = ref(false);
-const isInitialLoading = ref(true);
-const viewMode = ref<"table" | "cards" | "full">("table");
-const cardMenuOpenId = ref<string | number | null>(null);
-
-const search = ref("");
-const total = ref(0);
-const perPage = ref(7);
-const currentPage = ref(1);
-const orderBy = ref("created_at");
-const orderDirection = ref<typeof ORDER_DIRECTION_ASC | typeof ORDER_DIRECTION_DESC>(ORDER_DIRECTION_DESC);
-
-const paymentDetails = reactive<any[]>([]);
-
-const tableRef = ref<any>(null);
-
-const currentRowActiveOptions = ref<number | null>(null);
-const triggerRefs = ref<(HTMLElement | null)[]>([]);
-const menuRefs = ref<(HTMLElement | null)[]>([]);
-const menuReady = reactive<Record<number, boolean>>({});
-const dropUp = reactive<Record<number, boolean>>({});
-const menuPosition = reactive<Record<number, { top: number; left: number }>>({});
-
-const getMenuStyle = (index: number) => {
-  const pos = menuPosition[index];
-  if (!pos) return { top: "0px", left: "0px" };
-  return { top: `${pos.top}px`, left: `${pos.left}px` };
-};
-
-const updateMenuPosition = (index: number) => {
-  const trigger = triggerRefs.value[index];
-  const menu = menuRefs.value[index];
-  if (!trigger || !menu) return;
-
-  const offset = 8;
-  const triggerRect = trigger.getBoundingClientRect();
-
-  const menuHeight = menu.offsetHeight;
-  const menuWidth = menu.offsetWidth;
-
-  const availableDown = window.innerHeight - triggerRect.bottom;
-  const availableUp = triggerRect.top;
-
-  let openUp = false;
-  if (availableDown >= menuHeight + offset) openUp = false;
-  else if (availableUp >= menuHeight + offset) openUp = true;
-  else openUp = availableUp > availableDown;
-
-  dropUp[index] = openUp;
-
-  let top = openUp ? triggerRect.top - offset - menuHeight : triggerRect.bottom + offset;
-  let left = triggerRect.right - menuWidth - 12;
-
-  const minX = 8;
-  const maxX = Math.max(8, window.innerWidth - menuWidth - 8);
-  left = Math.min(Math.max(left, minX), maxX);
-
-  const minY = 8;
-  const maxY = Math.max(8, window.innerHeight - menuHeight - 8);
-  top = Math.min(Math.max(top, minY), maxY);
-
-  menuPosition[index] = { top, left };
-};
-
-const toggleRowOptions = async (index: number) => {
-  const next = currentRowActiveOptions.value === index ? null : index;
-  currentRowActiveOptions.value = next;
-
-  if (next === null) return;
-
-  menuReady[index] = false;
-
-  await nextTick();
-  updateMenuPosition(index);
-
-  requestAnimationFrame(() => {
-    menuReady[index] = true;
+  definePageMeta({
+    layout: "cabinet",
+    middleware: ["auth-client", "client-check-auth"],
   });
-};
 
-const recalcActiveMenu = () => {
-  if (currentRowActiveOptions.value !== null) {
-    updateMenuPosition(currentRowActiveOptions.value);
-  }
-};
+  const { t } = useI18n({ useScope: "global" });
+  const { openModal } = inject("modalControl") as { openModal: Function };
 
-const onClickOutside = (e: MouseEvent) => {
-  const i = currentRowActiveOptions.value;
-  if (i === null) return;
+  const appCore = useAppCore();
+  const localePath = useLocalePath();
+  const toast = useToast();
 
-  const tEl = triggerRefs.value[i];
-  const mEl = menuRefs.value[i];
-  const target = e.target as Node | null;
-  if (!target) return;
+  const ORDER_DIRECTION_ASC = "asc";
+  const ORDER_DIRECTION_DESC = "desc";
+  const VIEW_MODE_STORAGE_KEY = "paymentDetailsViewMode";
 
-  const inside = (!!tEl && tEl.contains(target)) || (!!mEl && mEl.contains(target));
-  if (!inside) currentRowActiveOptions.value = null;
-};
+  const isLoading = ref(false);
+  const isInitialLoading = ref(true);
+  const viewMode = ref<"table" | "cards" | "full">("table");
+  const cardMenuOpenId = ref<string | number | null>(null);
 
-const onKeydown = (e: KeyboardEvent) => {
-  if (e.key === "Escape") currentRowActiveOptions.value = null;
-};
+  const search = ref("");
+  const total = ref(0);
+  const perPage = ref(7);
+  const currentPage = ref(1);
+  const orderBy = ref("created_at");
+  const orderDirection = ref<typeof ORDER_DIRECTION_ASC | typeof ORDER_DIRECTION_DESC>(ORDER_DIRECTION_DESC);
 
-const sortByFilterData = reactive([
-  { id: "name", value: "name", text: "Name" },
-  { id: "status", value: "status", text: "Status" },
-  { id: "created_at", value: "created_at", text: "Created at" },
-  { id: "updated_at", value: "updated_at", text: "Updated at" },
-]);
+  const paymentDetails = reactive<any[]>([]);
 
-const viewOptions = [
-  {
-    value: "table" as const,
-    label: "Список",
-    icon: {
-      render() {
-        return h(
-          "svg",
-          {
-            viewBox: "0 0 24 24",
-            fill: "none",
-            stroke: "currentColor",
-            "stroke-width": "2",
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-          },
-          [
-            h("line", { x1: "8", y1: "6", x2: "21", y2: "6" }),
-            h("line", { x1: "3", y1: "6", x2: "4", y2: "6" }),
-            h("line", { x1: "8", y1: "12", x2: "21", y2: "12" }),
-            h("line", { x1: "3", y1: "12", x2: "4", y2: "12" }),
-            h("line", { x1: "8", y1: "18", x2: "21", y2: "18" }),
-            h("line", { x1: "3", y1: "18", x2: "4", y2: "18" }),
-          ],
-        );
+  const statusTextMap: Record<string, string> = {
+    approved: "Approved",
+    pending: "Pending",
+    rejected: "Rejected",
+  };
+
+  const tableRef = ref<any>(null);
+
+  const currentRowActiveOptions = ref<number | null>(null);
+  const triggerRefs = ref<(HTMLElement | null)[]>([]);
+  const menuRefs = ref<(HTMLElement | null)[]>([]);
+  const menuReady = reactive<Record<number, boolean>>({});
+  const dropUp = reactive<Record<number, boolean>>({});
+  const menuPosition = reactive<Record<number, { top: number; left: number }>>({});
+
+  const getMenuStyle = (index: number) => {
+    const pos = menuPosition[index];
+    if (!pos) return { top: "0px", left: "0px" };
+    return { top: `${pos.top}px`, left: `${pos.left}px` };
+  };
+
+  const updateMenuPosition = (index: number) => {
+    const trigger = triggerRefs.value[index];
+    const menu = menuRefs.value[index];
+    if (!trigger || !menu) return;
+
+    const offset = 8;
+    const triggerRect = trigger.getBoundingClientRect();
+
+    const menuHeight = menu.offsetHeight;
+    const menuWidth = menu.offsetWidth;
+
+    const availableDown = window.innerHeight - triggerRect.bottom;
+    const availableUp = triggerRect.top;
+
+    let openUp = false;
+    if (availableDown >= menuHeight + offset) openUp = false;
+    else if (availableUp >= menuHeight + offset) openUp = true;
+    else openUp = availableUp > availableDown;
+
+    dropUp[index] = openUp;
+
+    let top = openUp ? triggerRect.top - offset - menuHeight : triggerRect.bottom + offset;
+    let left = triggerRect.right - menuWidth - 12;
+
+    const minX = 8;
+    const maxX = Math.max(8, window.innerWidth - menuWidth - 8);
+    left = Math.min(Math.max(left, minX), maxX);
+
+    const minY = 8;
+    const maxY = Math.max(8, window.innerHeight - menuHeight - 8);
+    top = Math.min(Math.max(top, minY), maxY);
+
+    menuPosition[index] = { top, left };
+  };
+
+  const toggleRowOptions = async (index: number) => {
+    const next = currentRowActiveOptions.value === index ? null : index;
+    currentRowActiveOptions.value = next;
+
+    if (next === null) return;
+
+    menuReady[index] = false;
+
+    await nextTick();
+    updateMenuPosition(index);
+
+    requestAnimationFrame(() => {
+      menuReady[index] = true;
+    });
+  };
+
+  const recalcActiveMenu = () => {
+    if (currentRowActiveOptions.value !== null) {
+      updateMenuPosition(currentRowActiveOptions.value);
+    }
+  };
+
+  const onClickOutside = (e: MouseEvent) => {
+    const i = currentRowActiveOptions.value;
+    if (i === null) return;
+
+    const tEl = triggerRefs.value[i];
+    const mEl = menuRefs.value[i];
+    const target = e.target as Node | null;
+    if (!target) return;
+
+    const inside = (!!tEl && tEl.contains(target)) || (!!mEl && mEl.contains(target));
+    if (!inside) currentRowActiveOptions.value = null;
+  };
+
+  const onKeydown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") currentRowActiveOptions.value = null;
+  };
+
+  const sortByFilterData = reactive([
+    { id: "name", value: "name", text: "Name" },
+    { id: "status", value: "status", text: "Status" },
+    { id: "created_at", value: "created_at", text: "Created at" },
+    { id: "updated_at", value: "updated_at", text: "Updated at" },
+  ]);
+
+  const viewOptions = [
+    {
+      value: "table" as const,
+      label: "Список",
+      icon: {
+        render() {
+          return h(
+            "svg",
+            {
+              viewBox: "0 0 24 24",
+              fill: "none",
+              stroke: "currentColor",
+              "stroke-width": "2",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+            },
+            [
+              h("line", { x1: "8", y1: "6", x2: "21", y2: "6" }),
+              h("line", { x1: "3", y1: "6", x2: "4", y2: "6" }),
+              h("line", { x1: "8", y1: "12", x2: "21", y2: "12" }),
+              h("line", { x1: "3", y1: "12", x2: "4", y2: "12" }),
+              h("line", { x1: "8", y1: "18", x2: "21", y2: "18" }),
+              h("line", { x1: "3", y1: "18", x2: "4", y2: "18" }),
+            ]
+          );
+        },
       },
     },
-  },
-  {
-    value: "cards" as const,
-    label: "Картки",
-    icon: {
-      render() {
-        return h(
-          "svg",
-          {
-            viewBox: "0 0 24 24",
-            fill: "none",
-            stroke: "currentColor",
-            "stroke-width": "2",
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-          },
-          [
-            h("rect", { x: "3", y: "3", width: "7", height: "7", rx: "1" }),
-            h("rect", { x: "14", y: "3", width: "7", height: "7", rx: "1" }),
-            h("rect", { x: "3", y: "14", width: "7", height: "7", rx: "1" }),
-            h("rect", { x: "14", y: "14", width: "7", height: "7", rx: "1" }),
-          ],
-        );
+    {
+      value: "cards" as const,
+      label: "Картки",
+      icon: {
+        render() {
+          return h(
+            "svg",
+            {
+              viewBox: "0 0 24 24",
+              fill: "none",
+              stroke: "currentColor",
+              "stroke-width": "2",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+            },
+            [
+              h("rect", { x: "3", y: "3", width: "7", height: "7", rx: "1" }),
+              h("rect", { x: "14", y: "3", width: "7", height: "7", rx: "1" }),
+              h("rect", { x: "3", y: "14", width: "7", height: "7", rx: "1" }),
+              h("rect", { x: "14", y: "14", width: "7", height: "7", rx: "1" }),
+            ]
+          );
+        },
       },
     },
-  },
-  {
-    value: "full" as const,
-    label: "На всю ширину",
-    icon: {
-      render() {
-        return h(
-          "svg",
-          {
-            viewBox: "0 0 24 24",
-            fill: "none",
-            stroke: "currentColor",
-            "stroke-width": "2",
-            "stroke-linecap": "round",
-            "stroke-linejoin": "round",
-          },
-          [
-            h("rect", { x: "3", y: "6", width: "18", height: "4", rx: "1" }),
-            h("rect", { x: "3", y: "14", width: "18", height: "4", rx: "1" }),
-          ],
-        );
+    {
+      value: "full" as const,
+      label: "На всю ширину",
+      icon: {
+        render() {
+          return h(
+            "svg",
+            {
+              viewBox: "0 0 24 24",
+              fill: "none",
+              stroke: "currentColor",
+              "stroke-width": "2",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+            },
+            [
+              h("rect", { x: "3", y: "6", width: "18", height: "4", rx: "1" }),
+              h("rect", { x: "3", y: "14", width: "18", height: "4", rx: "1" }),
+            ]
+          );
+        },
       },
     },
-  },
-];
+  ];
 
-const totalPages = computed(() => Math.ceil(total.value / perPage.value));
+  const totalPages = computed(() => Math.ceil(total.value / perPage.value));
 
-const visiblePages = computed(() => {
-  const pages: number[] = [];
-  const maxPagesToShow = 5;
-  const half = Math.floor(maxPagesToShow / 2);
+  const visiblePages = computed(() => {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+    const half = Math.floor(maxPagesToShow / 2);
 
-  let start = Math.max(1, currentPage.value - half);
-  let end = Math.min(totalPages.value, start + maxPagesToShow - 1);
+    let start = Math.max(1, currentPage.value - half);
+    let end = Math.min(totalPages.value, start + maxPagesToShow - 1);
 
-  if (end - start < maxPagesToShow - 1) start = Math.max(1, end - maxPagesToShow + 1);
-  for (let i = start; i <= end; i++) pages.push(i);
+    if (end - start < maxPagesToShow - 1) start = Math.max(1, end - maxPagesToShow + 1);
+    for (let i = start; i <= end; i++) pages.push(i);
 
-  return pages;
-});
+    return pages;
+  });
 
-async function setPage(page: number) {
-  if (page >= 1 && page <= totalPages.value) {
-    currentPage.value = page;
+  async function setPage(page: number) {
+    if (page >= 1 && page <= totalPages.value) {
+      currentPage.value = page;
+      await loadData();
+    }
+  }
+
+  async function goPrev() {
+    if (currentPage.value > 1) {
+      currentPage.value--;
+      await loadData();
+    }
+  }
+
+  async function goNext() {
+    if (currentPage.value < totalPages.value) {
+      currentPage.value++;
+      await loadData();
+    }
+  }
+
+  const handleInputSearch = async (value: string) => {
+    search.value = value;
+    currentPage.value = 1;
     await loadData();
-  }
-}
+  };
 
-async function goPrev() {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-    await loadData();
-  }
-}
-
-async function goNext() {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-    await loadData();
-  }
-}
-
-const handleInputSearch = async (value: string) => {
-  search.value = value;
-  currentPage.value = 1;
-  await loadData();
-};
-
-const handleOrderByAndDirection = async (value: string) => {
-  orderDirection.value = orderDirection.value === ORDER_DIRECTION_ASC ? ORDER_DIRECTION_DESC : ORDER_DIRECTION_ASC;
-  orderBy.value = value;
-  await loadData();
-};
-
-const toggleCardMenu = (id: string | number) => {
-  cardMenuOpenId.value = cardMenuOpenId.value === id ? null : id;
-};
-
-const handleOutsideCardMenu = (event: MouseEvent) => {
-  if (!cardMenuOpenId.value) return;
-  const target = event.target as HTMLElement | null;
-  if (!target) return;
-  if (!target.closest(".card-actions")) {
-    cardMenuOpenId.value = null;
-  }
-};
-
-const handleChangeFilterSortBy = async (value: string) => {
-  if (orderBy.value === value) {
-    orderDirection.value = orderDirection.value === ORDER_DIRECTION_DESC ? ORDER_DIRECTION_ASC : ORDER_DIRECTION_DESC;
-  } else {
+  const handleOrderByAndDirection = async (value: string) => {
+    orderDirection.value = orderDirection.value === ORDER_DIRECTION_ASC ? ORDER_DIRECTION_DESC : ORDER_DIRECTION_ASC;
     orderBy.value = value;
-  }
-  await loadData();
-};
+    await loadData();
+  };
 
-const handleSetPerPage = async (value: number) => {
-  perPage.value = value;
-  currentPage.value = 1;
-  await loadData();
-};
+  const normalizeStatus = (value: unknown): "approved" | "pending" | "rejected" => {
+    const normalized = String(value ?? "")
+      .trim()
+      .toLowerCase();
+    if (normalized === "approved" || normalized === "rejected") {
+      return normalized;
+    }
 
-const loadData = async () => {
-  isLoading.value = true;
+    return "pending";
+  };
 
-  try {
-    const response = await appCore.paymentDetails.get({
-      search: search.value,
-      perPage: perPage.value,
-      page: currentPage.value,
-      orderBy: orderBy.value,
-      orderDirection: orderDirection.value,
-    });
+  const statusDotClass = (value: unknown): string => {
+    const normalized = normalizeStatus(value);
+    if (normalized === "approved") return "status-inline__dot--approved";
+    if (normalized === "rejected") return "status-inline__dot--rejected";
+    return "status-inline__dot--pending";
+  };
 
-    perPage.value = response.data.data.per_page;
-    currentPage.value = response.data.data.current_page;
-    total.value = response.data.data.total;
+  const statusText = (value: unknown): string => {
+    const normalized = normalizeStatus(value);
+    return statusTextMap[normalized] ?? normalized;
+  };
 
-    const paymentDetailsData = response.data.data.data.map((x: any) => {
-      x.isSpinning = false;
-      return x;
-    });
+  const formatDateTime = (value: unknown): string => {
+    const date = new Date(String(value ?? ""));
+    if (Number.isNaN(date.getTime())) {
+      return "-";
+    }
 
-    paymentDetails.splice(0, paymentDetails.length, ...paymentDetailsData);
-  } finally {
-    isLoading.value = false;
-    isInitialLoading.value = false;
-  }
-};
+    return date.toLocaleString();
+  };
 
-const handleClickUpdate = async () => {
-  await loadData();
-};
+  const formatRelativeDate = (value: unknown): string => {
+    const date = new Date(String(value ?? ""));
+    if (Number.isNaN(date.getTime())) {
+      return "-";
+    }
 
-const initViewMode = () => {
-  if (typeof window === "undefined") return;
-  const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
-  if (saved && ["table", "cards", "full"].includes(saved)) {
-    viewMode.value = saved as typeof viewMode.value;
-  }
-};
+    const now = Date.now();
+    const diffMs = now - date.getTime();
+    const diffMinutes = Math.round(diffMs / (1000 * 60));
 
-watch(viewMode, mode => {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
-});
+    if (diffMinutes < 1) return "just now";
+    if (diffMinutes < 60) return `${diffMinutes} min ago`;
 
-const handleClickCreateNewPaymentDetail = async () => {
-  openModal(PaymentDetailsCreateNew, {
-    title: t("cabinet.payments.details.createNew.title"),
+    const diffHours = Math.round(diffMinutes / 60);
+    if (diffHours < 24) return `${diffHours} h ago`;
+
+    const diffDays = Math.round(diffHours / 24);
+    return `${diffDays} d ago`;
+  };
+
+  const closeAllMenus = () => {
+    cardMenuOpenId.value = null;
+    currentRowActiveOptions.value = null;
+  };
+
+  const handleClickViewPaymentDetail = async (id: string | number) => {
+    closeAllMenus();
+    await navigateTo(localePath(`/payments/details/${String(id)}`));
+  };
+
+  const handleDeletePaymentDetail = async (id: string | number) => {
+    closeAllMenus();
+
+    const confirmed = window.confirm("Удалить платёжный реквизит?");
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await appCore.paymentDetails.delete(id);
+      toast.success("Платёжный реквизит удалён.");
+      await loadData();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Не удалось удалить платёжный реквизит.");
+    }
+  };
+
+  const toggleCardMenu = (id: string | number) => {
+    cardMenuOpenId.value = cardMenuOpenId.value === id ? null : id;
+  };
+
+  const handleOutsideCardMenu = (event: MouseEvent) => {
+    if (!cardMenuOpenId.value) return;
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+    if (!target.closest(".card-actions")) {
+      cardMenuOpenId.value = null;
+    }
+  };
+
+  const handleChangeFilterSortBy = async (value: string) => {
+    if (orderBy.value === value) {
+      orderDirection.value = orderDirection.value === ORDER_DIRECTION_DESC ? ORDER_DIRECTION_ASC : ORDER_DIRECTION_DESC;
+    } else {
+      orderBy.value = value;
+    }
+    await loadData();
+  };
+
+  const handleSetPerPage = async (value: number) => {
+    perPage.value = value;
+    currentPage.value = 1;
+    await loadData();
+  };
+
+  const loadData = async () => {
+    isLoading.value = true;
+
+    try {
+      const response = await appCore.paymentDetails.get({
+        search: search.value,
+        perPage: perPage.value,
+        page: currentPage.value,
+        orderBy: orderBy.value,
+        orderDirection: orderDirection.value,
+      });
+
+      perPage.value = response.data.data.per_page;
+      currentPage.value = response.data.data.current_page;
+      total.value = response.data.data.total;
+
+      const paymentDetailsData = response.data.data.data.map((x: any) => {
+        x.isSpinning = false;
+        return x;
+      });
+
+      paymentDetails.splice(0, paymentDetails.length, ...paymentDetailsData);
+    } finally {
+      isLoading.value = false;
+      isInitialLoading.value = false;
+    }
+  };
+
+  const handleClickUpdate = async () => {
+    await loadData();
+  };
+
+  const handleReloadDataByEvent = async () => {
+    await loadData();
+  };
+
+  const initViewMode = () => {
+    if (typeof window === "undefined") return;
+    const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    if (saved && ["table", "cards", "full"].includes(saved)) {
+      viewMode.value = saved as typeof viewMode.value;
+    }
+  };
+
+  watch(viewMode, mode => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
   });
-};
 
-onMounted(async () => {
-  initViewMode();
-  await loadData();
+  const handleClickCreateNewPaymentDetail = async () => {
+    openModal(PaymentDetailsCreateNew, {
+      title: t("cabinet.payments.details.createNew.title"),
+    });
+  };
 
-  window.addEventListener("resize", recalcActiveMenu, { passive: true });
-  window.addEventListener("scroll", recalcActiveMenu, { passive: true, capture: true });
+  onMounted(async () => {
+    initViewMode();
+    await loadData();
+    useEventBus.on("loadDataForPaymentDetails", handleReloadDataByEvent);
 
-  const el = (tableRef.value?.$el ?? null) as HTMLElement | null;
-  el?.addEventListener("scroll", recalcActiveMenu, { passive: true });
+    window.addEventListener("resize", recalcActiveMenu, { passive: true });
+    window.addEventListener("scroll", recalcActiveMenu, { passive: true, capture: true });
 
-  window.addEventListener("mousedown", onClickOutside, true);
-  window.addEventListener("keydown", onKeydown, true);
-  window.addEventListener("click", handleOutsideCardMenu, true);
-});
+    const el = (tableRef.value?.$el ?? null) as HTMLElement | null;
+    el?.addEventListener("scroll", recalcActiveMenu, { passive: true });
 
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", recalcActiveMenu);
-  window.removeEventListener("scroll", recalcActiveMenu, true);
+    window.addEventListener("mousedown", onClickOutside, true);
+    window.addEventListener("keydown", onKeydown, true);
+    window.addEventListener("click", handleOutsideCardMenu, true);
+  });
 
-  const el = (tableRef.value?.$el ?? null) as HTMLElement | null;
-  el?.removeEventListener("scroll", recalcActiveMenu);
+  onBeforeUnmount(() => {
+    useEventBus.off("loadDataForPaymentDetails", handleReloadDataByEvent);
 
-  window.removeEventListener("mousedown", onClickOutside, true);
-  window.removeEventListener("keydown", onKeydown, true);
-  window.removeEventListener("click", handleOutsideCardMenu, true);
-});
+    window.removeEventListener("resize", recalcActiveMenu);
+    window.removeEventListener("scroll", recalcActiveMenu, true);
+
+    const el = (tableRef.value?.$el ?? null) as HTMLElement | null;
+    el?.removeEventListener("scroll", recalcActiveMenu);
+
+    window.removeEventListener("mousedown", onClickOutside, true);
+    window.removeEventListener("keydown", onKeydown, true);
+    window.removeEventListener("click", handleOutsideCardMenu, true);
+  });
 </script>
 
 <style scoped>
-.payment-card {
-  background: var(--ui-background-panel);
-  border-bottom: 1px solid var(--color-stroke-ui-light);
-  border-radius: 10px;
-  padding: 8px 10px;
-  position: relative;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
-}
+  .payment-card {
+    background: var(--ui-background-panel);
+    border-bottom: 1px solid var(--color-stroke-ui-light);
+    border-radius: 10px;
+    padding: 8px 10px;
+    position: relative;
+    transition:
+      background-color 0.2s ease,
+      opacity 0.2s ease;
+  }
 
-.payment-card:hover {
-  opacity: 0.6;
-}
+  .payment-card:hover {
+    opacity: 0.6;
+  }
 
-.payment-card__body {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px 12px;
-  margin-top: 4px;
-  color: var(--ui-text-main);
-}
+  .payment-card__body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    margin-top: 4px;
+    color: var(--ui-text-main);
+  }
 
-.payment-card__body > div {
-  flex: 1 1 140px;
-}
+  .payment-card__body > div {
+    flex: 1 1 140px;
+  }
 
-.card-with-actions {
-  padding-right: 58px;
-}
+  .card-with-actions {
+    padding-right: 58px;
+  }
 
-.card-actions {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
+  .card-actions {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
 
-.copy-btn,
-.action-btn {
-  height: 28px;
-  width: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: transparent;
-  border: none;
-  color: var(--ui-text-secondary);
-  transition: color 0.2s ease, transform 0.15s ease;
-  position: relative;
-}
+  .copy-btn,
+  .action-btn {
+    height: 28px;
+    width: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: transparent;
+    border: none;
+    color: var(--ui-text-secondary);
+    transition:
+      color 0.2s ease,
+      transform 0.15s ease;
+    position: relative;
+  }
 
-.copy-btn:hover,
-.action-btn:hover {
-  color: var(--ui-text-main);
-  transform: translateY(-1px);
-}
+  .copy-btn:hover,
+  .action-btn:hover {
+    color: var(--ui-text-main);
+    transform: translateY(-1px);
+  }
 
-.card-menu {
-  position: absolute;
-  right: 0;
-  top: 32px;
-  z-index: 20;
-  min-width: 160px;
-  border-radius: 10px;
-  border: 1px solid var(--color-stroke-ui-light);
-  background: var(--color-stroke-ui-dark);
-  padding: 8px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-}
+  .card-menu {
+    position: absolute;
+    right: 0;
+    top: 32px;
+    z-index: 20;
+    min-width: 160px;
+    border-radius: 10px;
+    border: 1px solid var(--color-stroke-ui-light);
+    background: var(--color-stroke-ui-dark);
+    padding: 8px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  }
 
-.card-menu button {
-  height: 34px;
-}
+  .card-menu button {
+    height: 34px;
+  }
+
+  .status-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-inline__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .status-inline__dot--approved {
+    background: #22c55e;
+  }
+
+  .status-inline__dot--pending {
+    background: #f59e0b;
+  }
+
+  .status-inline__dot--rejected {
+    background: #ef4444;
+  }
+
+  .status-inline__text {
+    color: var(--ui-text-main);
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .updated-at-cell {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1.2;
+    gap: 2px;
+  }
+
+  .updated-at-cell__relative {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+  }
+
+  .updated-at-cell__absolute {
+    color: var(--ui-text-main);
+    font-size: 12px;
+  }
 </style>
-
-
-
-<!--<template>-->
-<!--  <UiContainer>-->
-<!--    <div class="payments-details pb-10">-->
-<!--      <div class="mt-5 mb-5 flex items-center justify-between">-->
-<!--        <UiTextH4 class="text-[var(&#45;&#45;ui-text-main)]">-->
-<!--          {{ t("cabinet.payments.title") }}-->
-<!--        </UiTextH4>-->
-
-<!--        <UiButtonDefault state="info" @click="handleClickCreateNewPaymentDetail">-->
-<!--          <UiIconPlus class="mr-2" />-->
-<!--          <span>{{ t("cabinet.payments.details.createNew.title") }}</span>-->
-<!--        </UiButtonDefault>-->
-<!--      </div>-->
-
-<!--      <div>-->
-<!--        <div class="mb-5 flex items-center justify-between">-->
-<!--          <div class="lex items-center justify-center gap-1 w-full max-w-60">-->
-<!--            <UiInput-->
-<!--                class="w-full"-->
-<!--                @input="handleInputSearch"-->
-<!--                :value="search"-->
-<!--                :placeholder="t('cabinet.accounts.search')"-->
-<!--            >-->
-<!--              <template #icon-left>-->
-<!--                <UiIconSearch />-->
-<!--              </template>-->
-<!--            </UiInput>-->
-<!--          </div>-->
-
-<!--          <div class="flex items-center gap-2">-->
-<!--            <UiButtonDefault state="info&#45;&#45;small" class="mr-2" @click="handleClickUpdate">-->
-<!--              <UiIconUpdate v-if="!isLoading" />-->
-<!--              <UiIconSpinnerDefault v-else />-->
-<!--            </UiButtonDefault>-->
-
-<!--            <UiSelect-->
-<!--                class="mr-2"-->
-<!--                :value="orderBy"-->
-<!--                :data="sortByFilterData"-->
-<!--                :withoutNoSelect="true"-->
-<!--                @change="handleChangeFilterSortBy"-->
-<!--            >-->
-<!--              <template #icon-left>-->
-<!--                <UiIconSortBy-->
-<!--                    class="!h-4 !w-4"-->
-<!--                    :orderDirectionEnabled="true"-->
-<!--                    :orderDirection="orderDirection"-->
-<!--                />-->
-<!--              </template>-->
-<!--            </UiSelect>-->
-
-<!--            <UiButtonDefault state="info&#45;&#45;small">-->
-<!--              <UiIconFilters class="mr-2" />-->
-<!--              <UiTextSmall>Filters</UiTextSmall>-->
-<!--              <UiIconArrowDown :rotate180="false" class="ml-2" />-->
-<!--            </UiButtonDefault>-->
-<!--          </div>-->
-<!--        </div>-->
-
-<!--        <PanelDefault>-->
-<!--          <div v-if="isInitialLoading" class="flex min-h-[55vh] w-full flex-col items-center justify-center">-->
-<!--            <UiIconLogo class="mb-4 h-[44px] w-[44px]" />-->
-<!--            <UiIconSpinnerDefault class="h-[44px] w-[44px]" />-->
-<!--          </div>-->
-
-<!--          <div v-else class="relative rounded-[9px]">-->
-<!--            <div-->
-<!--                class="pointer-events-none absolute inset-0 z-[1] rounded-[9px] ring-1 ring-[var(&#45;&#45;color-stroke-ui-dark)]"-->
-<!--            ></div>-->
-
-<!--            <div class="relative z-[0] overflow-x-auto overscroll-x-contain" ref="scrollArea">-->
-<!--              <table class="w-full min-w-[1000px] table-auto whitespace-nowrap text-[var(&#45;&#45;ui-text-main)]">-->
-<!--                <colgroup>-->
-<!--                  <col class="w-[16rem]" />-->
-<!--                  <col class="w-[12rem]" />-->
-<!--                  <col class="w-[6rem]" />-->
-<!--                  <col class="w-[8rem]" />-->
-<!--                  <col class="w-[14rem]" />-->
-<!--                  <col class="w-[3rem]" />-->
-<!--                </colgroup>-->
-
-<!--                <thead>-->
-<!--                <tr class="h-[46px] !border-none">-->
-<!--                  <th class="px-5 text-left !border-none bg-[var(&#45;&#45;color-stroke-ui-light)] rounded-tl-[10px]">-->
-<!--                    <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('name')">-->
-<!--                      <UiTextSmall>Name</UiTextSmall>-->
-<!--                      <UiIconSort :active="orderBy === 'name'" :direction="orderDirection" />-->
-<!--                    </button>-->
-<!--                  </th>-->
-
-<!--                  <th class="px-5 text-left bg-[var(&#45;&#45;color-stroke-ui-light)]">-->
-<!--                    <button-->
-<!--                        type="button"-->
-<!--                        class="flex items-center gap-2"-->
-<!--                        @click="handleOrderByAndDirection('payment_system')"-->
-<!--                    >-->
-<!--                      <UiTextSmall>Payment system</UiTextSmall>-->
-<!--                    </button>-->
-<!--                  </th>-->
-
-<!--                  <th class="px-5 text-left bg-[var(&#45;&#45;color-stroke-ui-light)]">-->
-<!--                    <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('currency')">-->
-<!--                      <UiTextSmall>Currency</UiTextSmall>-->
-<!--                    </button>-->
-<!--                  </th>-->
-
-<!--                  <th class="px-5 text-left bg-[var(&#45;&#45;color-stroke-ui-light)]">-->
-<!--                    <button type="button" class="flex items-center gap-2" @click="handleOrderByAndDirection('status')">-->
-<!--                      <UiTextSmall>Status</UiTextSmall>-->
-<!--                      <UiIconSort :active="orderBy === 'status'" :direction="orderDirection" />-->
-<!--                    </button>-->
-<!--                  </th>-->
-
-<!--                  <th class="px-5 text-left bg-[var(&#45;&#45;color-stroke-ui-light)]">-->
-<!--                    <button-->
-<!--                        type="button"-->
-<!--                        class="flex items-center gap-2"-->
-<!--                        @click="handleOrderByAndDirection('updated_at')"-->
-<!--                    >-->
-<!--                      <UiTextSmall>UpdatedAt</UiTextSmall>-->
-<!--                      <UiIconSort :active="orderBy === 'updated_at'" :direction="orderDirection" />-->
-<!--                    </button>-->
-<!--                  </th>-->
-
-<!--                  <th class="px-5 text-right bg-[var(&#45;&#45;color-stroke-ui-light)] rounded-tr-[10px]"></th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-
-<!--                <tbody>-->
-<!--                <tr v-if="paymentDetails.length === 0" class="h-[40vh]">-->
-<!--                  <td colspan="7" class="px-5 text-center align-middle bg-[var(&#45;&#45;ui-background-panel)] rounded-b-[10px]">-->
-<!--                    {{ t("cabinet.payments.nothingToShow") }}-->
-<!--                  </td>-->
-<!--                </tr>-->
-
-<!--                <tr-->
-<!--                    v-else-->
-<!--                    v-for="(paymentDetail, index) in paymentDetails"-->
-<!--                    :key="paymentDetail.id"-->
-<!--                    class="h-[60px] border border-[var(&#45;&#45;color-stroke-ui-dark)] bg-[var(&#45;&#45;ui-background-panel)] hover:bg-[var(&#45;&#45;color-stroke-ui-dark)]"-->
-<!--                >-->
-<!--                  <td-->
-<!--                      class="px-5 align-middle font-bold text-[var(&#45;&#45;color-ui-accent)] truncate bg-inherit"-->
-<!--                      :class="index === paymentDetails.length - 1 ? 'rounded-bl-[10px]' : ''"-->
-<!--                      :title="paymentDetail?.name"-->
-<!--                  >-->
-<!--                    {{ paymentDetail?.name }}-->
-<!--                  </td>-->
-
-<!--                  <td class="px-5 align-middle truncate bg-inherit" :title="paymentDetail.payment_system_name">-->
-<!--                    {{ paymentDetail.payment_system_name }}-->
-<!--                  </td>-->
-
-<!--                  <td class="px-5 align-middle bg-inherit">-->
-<!--                    {{ paymentDetail.currency ?? "USD" }}-->
-<!--                  </td>-->
-
-<!--                  <td class="px-5 align-middle capitalize bg-inherit">-->
-<!--                    {{ paymentDetail.status }}-->
-<!--                  </td>-->
-
-<!--                  <td class="px-5 align-middle bg-inherit">-->
-<!--                    {{ new Date(paymentDetail.updated_at).toLocaleString() }}-->
-<!--                  </td>-->
-
-<!--                  <td-->
-<!--                      class="px-5 align-middle bg-inherit"-->
-<!--                      :class="index === paymentDetails.length - 1 ? 'rounded-br-[10px]' : ''"-->
-<!--                  >-->
-<!--                      <span-->
-<!--                          @click="toggleRowOptions(index)"-->
-<!--                          class="relative flex h-[32px] w-[32px] items-center justify-center rounded-md border border-transparent transition-colors"-->
-<!--                          :ref="(el) => (triggerRefs[index] = el as HTMLElement | null)"-->
-<!--                      >-->
-<!--                        <UiIconDotsVertical />-->
-<!--                      </span>-->
-
-<!--                    <Teleport to="body">-->
-<!--                      <div-->
-<!--                          v-if="currentRowActiveOptions === index"-->
-<!--                          :ref="(el) => (menuRefs[index] = el as HTMLElement | null)"-->
-<!--                          class="fixed z-[9999] max-h-[70vh] overflow-auto text-[var(&#45;&#45;ui-text-main)]"-->
-<!--                          :class="[-->
-<!--                            'flex min-w-[140px] max-w-[60vw] flex-col gap-1 rounded-md border border-[var(&#45;&#45;color-stroke-ui-light)] bg-[var(&#45;&#45;color-stroke-ui-dark)] p-3 shadow-lg transition-opacity duration-100',-->
-<!--                            menuReady[index] ? 'opacity-100' : 'opacity-0 pointer-events-none'-->
-<!--                          ]"-->
-<!--                          :style="getMenuStyle(index)"-->
-<!--                      >-->
-<!--                        <div-->
-<!--                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(&#45;&#45;color-stroke-ui-light)] hover:opacity-70"-->
-<!--                        >-->
-<!--                          <UiIconEye class="!h-[14px] !w-[14px]" />-->
-<!--                          <UiTextSmall class="whitespace-nowrap">View</UiTextSmall>-->
-<!--                        </div>-->
-
-<!--                        <div-->
-<!--                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(&#45;&#45;color-stroke-ui-light)] hover:opacity-70"-->
-<!--                        >-->
-<!--                          <UiIconConfirm class="!h-[14px] !w-[14px]" />-->
-<!--                          <UiTextSmall class="whitespace-nowrap">Confirm</UiTextSmall>-->
-<!--                        </div>-->
-
-<!--                        <div-->
-<!--                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(&#45;&#45;color-stroke-ui-light)] hover:opacity-70"-->
-<!--                        >-->
-<!--                          <UiIconTrash class="!h-[14px] !w-[14px] stroke-[var(&#45;&#45;ui-sticker-danger)]" />-->
-<!--                          <UiTextSmall class="whitespace-nowrap">Delete</UiTextSmall>-->
-<!--                        </div>-->
-<!--                      </div>-->
-<!--                    </Teleport>-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--              </table>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </PanelDefault>-->
-
-<!--        <PanelDefault v-if="!isInitialLoading" class="px-5 h-[50px] mt-2 flex items-center justify-between">-->
-<!--          <div class="p-0 flex items-center justify-center [&>div]:h-[33px] [&>div]:w-[33px]">-->
-<!--            <UiTextSmall class="mr-2">Per page:</UiTextSmall>-->
-<!--            <UiSelect-->
-<!--                class="!w-min flex items-center justify-center !h-[32px]"-->
-<!--                :data="perPageList"-->
-<!--                :value="perPage"-->
-<!--                @change="handleChangePerPage"-->
-<!--                :withoutNoSelect="true"-->
-<!--            />-->
-<!--          </div>-->
-
-<!--          <UiTextSmall>{{ (currentPage * perPage) - perPage }}-{{ currentPage * perPage }} / {{ total }}</UiTextSmall>-->
-
-<!--          <div class="flex items-center justify-center gap-2">-->
-<!--            <UiTextSmall-->
-<!--                class="px-3 py-1.5 h-[32px] border border-[&#45;&#45;color-stroke-ui-dark] cursor-pointer text-[14px] rounded text-[var(&#45;&#45;ui-text-main)]"-->
-<!--                v-if="currentPage !== 1 && total > perPage"-->
-<!--                @click="goPrev"-->
-<!--            >-->
-<!--              {{ t("cabinet.accounts.pagination.prev") }}-->
-<!--            </UiTextSmall>-->
-
-<!--            <UiTextSmall-->
-<!--                v-if="visiblePages[0] > 1"-->
-<!--                class="px-3 py-1.5 h-[32px] border border-[var(&#45;&#45;color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(&#45;&#45;ui-text-main)]"-->
-<!--                @click="setPage(1)"-->
-<!--            >-->
-<!--              1-->
-<!--            </UiTextSmall>-->
-
-<!--            <UiTextSmall v-if="visiblePages[0] > 2">...</UiTextSmall>-->
-
-<!--            <UiTextSmall-->
-<!--                v-for="page in visiblePages"-->
-<!--                :key="page"-->
-<!--                class="px-3 py-1.5 h-[32px] border border-[var(&#45;&#45;color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(&#45;&#45;ui-text-main)]"-->
-<!--                :class="{ 'bg-[var(&#45;&#45;ui-primary-main)] text-white': currentPage === page }"-->
-<!--                @click="setPage(page)"-->
-<!--            >-->
-<!--              {{ page }}-->
-<!--            </UiTextSmall>-->
-
-<!--            <UiTextSmall v-if="visiblePages[visiblePages.length - 1] < totalPages">...</UiTextSmall>-->
-
-<!--            <UiTextSmall-->
-<!--                v-if="visiblePages[visiblePages.length - 1] < totalPages"-->
-<!--                class="px-3 py-1.5 h-[32px] border border-[var(&#45;&#45;color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(&#45;&#45;ui-text-main)]"-->
-<!--                @click="setPage(totalPages)"-->
-<!--            >-->
-<!--              {{ totalPages }}-->
-<!--            </UiTextSmall>-->
-
-<!--            <UiTextSmall-->
-<!--                class="px-3 py-1.5 border border-[var(&#45;&#45;color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(&#45;&#45;ui-text-main)]"-->
-<!--                v-if="currentPage !== totalPages && total > perPage"-->
-<!--                @click="goNext"-->
-<!--            >-->
-<!--              {{ t("cabinet.accounts.pagination.next") }}-->
-<!--            </UiTextSmall>-->
-<!--          </div>-->
-<!--        </PanelDefault>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </UiContainer>-->
-<!--</template>-->
-
-<!--<script lang="ts" setup>-->
-<!--import AdminsPanelAddNew from "~/pages/admin/access/components/AdminsPanelAddNew.vue";-->
-<!--import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";-->
-<!--import UiContainer from "~/components/ui/UiContainer.vue";-->
-<!--import UiIconArrowDown from "~/components/ui/UiIconArrowDown.vue";-->
-<!--import UiIconFilters from "~/components/ui/UiIconFilters.vue";-->
-<!--import UiIconPlus from "~/components/ui/UiIconPlus.vue";-->
-<!--import UiIconSort from "~/components/ui/UiIconSort.vue";-->
-<!--import UiIconSortBy from "~/components/ui/UiIconSortBy.vue";-->
-<!--import UiInput from "~/components/ui/UiInput.vue";-->
-<!--import UiSelect from "~/components/ui/UiSelect.vue";-->
-<!--import UiTextH4 from "~/components/ui/UiTextH4.vue";-->
-<!--import UiTextSmall from "~/components/ui/UiTextSmall.vue";-->
-<!--import useAppCore from "~/composables/useAppCore";-->
-<!--import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";-->
-<!--import { definePageMeta } from "~/.nuxt/imports";-->
-<!--import { useI18n } from "vue-i18n";-->
-<!--import PanelDefault from "~/components/block/panels/PanelDefault.vue";-->
-<!--import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";-->
-<!--import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";-->
-<!--import UiIconDotsVertical from "~/components/ui/UiIconDotsVertical.vue";-->
-<!--import UiIconTrash from "~/components/ui/UiIconTrash.vue";-->
-<!--import UiIconEye from "~/components/ui/UiIconEye.vue";-->
-<!--import UiIconConfirm from "~/components/ui/UiIconConfirm.vue";-->
-<!--import UiIconSearch from "~/components/ui/UiIconSearch.vue";-->
-<!--import UiIconLogo from "~/components/ui/UiIconLogo.vue";-->
-<!--import CreateNewDeposit from "~/pages/payments/create/index.vue";-->
-<!--import CreateNewPaymentDetail from "~/pages/payments/details/components/CreateNewPaymentDetail.vue";-->
-<!--import PaymentDetailsCreateNew from "~/pages/payments/details/components/PaymentDetailsCreateNew.vue";-->
-
-<!--const { t } = useI18n({ useScope: "global" });-->
-<!--const { openModal } = inject("modalControl") as { openModal: Function };-->
-
-<!--definePageMeta({-->
-<!--  layout: "cabinet",-->
-<!--  middleware: ["auth-client", "client-check-auth"],-->
-<!--});-->
-
-<!--const appCore = useAppCore();-->
-
-<!--const ORDER_DIRECTION_ASC = "asc";-->
-<!--const ORDER_DIRECTION_DESC = "desc";-->
-
-<!--const isLoading = ref(false);-->
-<!--const isInitialLoading = ref(true);-->
-
-<!--const search = ref("");-->
-<!--const total = ref(0);-->
-<!--const perPage = ref(7);-->
-<!--const currentPage = ref(1);-->
-<!--const orderBy = ref("created_at");-->
-<!--const orderDirection = ref<typeof ORDER_DIRECTION_ASC | typeof ORDER_DIRECTION_DESC>(ORDER_DIRECTION_DESC);-->
-
-<!--const paymentDetails = reactive<any[]>([]);-->
-
-<!--const currentRowActiveOptions = ref<number | null>(null);-->
-<!--const scrollArea = ref<HTMLElement | null>(null);-->
-<!--const triggerRefs = ref<(HTMLElement | null)[]>([]);-->
-<!--const menuRefs = ref<(HTMLElement | null)[]>([]);-->
-<!--const menuReady = reactive<Record<number, boolean>>({});-->
-<!--const dropUp = reactive<Record<number, boolean>>({});-->
-<!--const menuPosition = reactive<Record<number, { top: number; left: number }>>({});-->
-
-<!--const perPageList = reactive([-->
-<!--  { id: 1, value: 1, text: "1" },-->
-<!--  { id: 2, value: 2, text: "2" },-->
-<!--  { id: 3, value: 3, text: "3" },-->
-<!--  { id: 4, value: 4, text: "4" },-->
-<!--  { id: 5, value: 5, text: "5" },-->
-<!--  { id: 6, value: 6, text: "6" },-->
-<!--  { id: 7, value: 7, text: "7" },-->
-<!--  { id: 8, value: 8, text: "8" },-->
-<!--  { id: 9, value: 9, text: "9" },-->
-<!--  { id: 10, value: 10, text: "10" },-->
-<!--  { id: 12, value: 12, text: "12" },-->
-<!--  { id: 15, value: 15, text: "15" },-->
-<!--  { id: 20, value: 20, text: "20" },-->
-<!--  { id: 25, value: 25, text: "25" },-->
-<!--  { id: 50, value: 50, text: "50" },-->
-<!--  { id: 100, value: 100, text: "100" },-->
-<!--]);-->
-
-<!--const getMenuStyle = (index: number) => {-->
-<!--  const pos = menuPosition[index];-->
-<!--  if (!pos) return { top: "0px", left: "0px" };-->
-<!--  return { top: `${pos.top}px`, left: `${pos.left}px` };-->
-<!--};-->
-
-<!--const toggleRowOptions = async (index: number) => {-->
-<!--  const next = currentRowActiveOptions.value === index ? null : index;-->
-<!--  currentRowActiveOptions.value = next;-->
-
-<!--  if (next === null) return;-->
-
-<!--  menuReady[index] = false;-->
-
-<!--  await nextTick();-->
-<!--  updateMenuPosition(index);-->
-
-<!--  requestAnimationFrame(() => {-->
-<!--    menuReady[index] = true;-->
-<!--  });-->
-<!--};-->
-
-<!--const updateMenuPosition = (index: number) => {-->
-<!--  const trigger = triggerRefs.value[index];-->
-<!--  const menu = menuRefs.value[index];-->
-<!--  if (!trigger || !menu) return;-->
-
-<!--  const offset = 8;-->
-<!--  const triggerRect = trigger.getBoundingClientRect();-->
-
-<!--  const menuHeight = menu.offsetHeight;-->
-<!--  const menuWidth = menu.offsetWidth;-->
-
-<!--  const availableDown = window.innerHeight - triggerRect.bottom;-->
-<!--  const availableUp = triggerRect.top;-->
-
-<!--  let openUp = false;-->
-<!--  if (availableDown >= menuHeight + offset) {-->
-<!--    openUp = false;-->
-<!--  } else if (availableUp >= menuHeight + offset) {-->
-<!--    openUp = true;-->
-<!--  } else {-->
-<!--    openUp = availableUp > availableDown;-->
-<!--  }-->
-
-<!--  dropUp[index] = openUp;-->
-
-<!--  let top = openUp ? triggerRect.top - offset - menuHeight : triggerRect.bottom + offset;-->
-<!--  let left = triggerRect.right - menuWidth - 12;-->
-
-<!--  const minX = 8;-->
-<!--  const maxX = Math.max(8, window.innerWidth - menuWidth - 8);-->
-<!--  left = Math.min(Math.max(left, minX), maxX);-->
-
-<!--  const minY = 8;-->
-<!--  const maxY = Math.max(8, window.innerHeight - menuHeight - 8);-->
-<!--  top = Math.min(Math.max(top, minY), maxY);-->
-
-<!--  menuPosition[index] = { top, left };-->
-<!--};-->
-
-<!--const recalcActiveMenu = () => {-->
-<!--  if (currentRowActiveOptions.value !== null) {-->
-<!--    updateMenuPosition(currentRowActiveOptions.value);-->
-<!--  }-->
-<!--};-->
-
-<!--const onClickOutside = (e: MouseEvent) => {-->
-<!--  const i = currentRowActiveOptions.value;-->
-<!--  if (i === null) return;-->
-
-<!--  const tEl = triggerRefs.value[i];-->
-<!--  const mEl = menuRefs.value[i];-->
-<!--  const target = e.target as Node | null;-->
-<!--  if (!target) return;-->
-
-<!--  const inside = (!!tEl && tEl.contains(target)) || (!!mEl && mEl.contains(target));-->
-<!--  if (!inside) currentRowActiveOptions.value = null;-->
-<!--};-->
-
-<!--const onKeydown = (e: KeyboardEvent) => {-->
-<!--  if (e.key === "Escape") currentRowActiveOptions.value = null;-->
-<!--};-->
-
-<!--const sortByFilterData = reactive([-->
-<!--  { id: "name", value: "name", text: "Name" },-->
-<!--  { id: "status", value: "status", text: "Status" },-->
-<!--  { id: "created_at", value: "created_at", text: "Created at" },-->
-<!--  { id: "updated_at", value: "updated_at", text: "Updated at" },-->
-<!--]);-->
-
-<!--const totalPages = computed(() => Math.ceil(total.value / perPage.value));-->
-
-<!--const visiblePages = computed(() => {-->
-<!--  const pages: number[] = [];-->
-<!--  const maxPagesToShow = 5;-->
-<!--  const half = Math.floor(maxPagesToShow / 2);-->
-
-<!--  let start = Math.max(1, currentPage.value - half);-->
-<!--  let end = Math.min(totalPages.value, start + maxPagesToShow - 1);-->
-
-<!--  if (end - start < maxPagesToShow - 1) start = Math.max(1, end - maxPagesToShow + 1);-->
-<!--  for (let i = start; i <= end; i++) pages.push(i);-->
-<!--  return pages;-->
-<!--});-->
-
-<!--async function setPage(page: number) {-->
-<!--  if (page >= 1 && page <= totalPages.value) {-->
-<!--    currentPage.value = page;-->
-<!--    await loadData();-->
-<!--  }-->
-<!--}-->
-
-<!--async function goPrev() {-->
-<!--  if (currentPage.value > 1) {-->
-<!--    currentPage.value&#45;&#45;;-->
-<!--    await loadData();-->
-<!--  }-->
-<!--}-->
-
-<!--async function goNext() {-->
-<!--  if (currentPage.value < totalPages.value) {-->
-<!--    currentPage.value++;-->
-<!--    await loadData();-->
-<!--  }-->
-<!--}-->
-
-<!--const handleInputSearch = async (value: string) => {-->
-<!--  search.value = value;-->
-<!--  currentPage.value = 1;-->
-<!--  await loadData();-->
-<!--};-->
-
-<!--const handleOrderByAndDirection = async (value: string) => {-->
-<!--  orderDirection.value = orderDirection.value === ORDER_DIRECTION_ASC ? ORDER_DIRECTION_DESC : ORDER_DIRECTION_ASC;-->
-<!--  orderBy.value = value;-->
-<!--  await loadData();-->
-<!--};-->
-
-<!--const loadData = async () => {-->
-<!--  isLoading.value = true;-->
-
-<!--  try {-->
-<!--    const response = await appCore.paymentDetails.get({-->
-<!--      search: search.value,-->
-<!--      perPage: perPage.value,-->
-<!--      page: currentPage.value,-->
-<!--      orderBy: orderBy.value,-->
-<!--      orderDirection: orderDirection.value,-->
-<!--    });-->
-
-<!--    perPage.value = response.data.data.per_page;-->
-<!--    currentPage.value = response.data.data.current_page;-->
-<!--    total.value = response.data.data.total;-->
-
-<!--    const paymentDetailsData = response.data.data.data.map((x: any) => {-->
-<!--      x.isSpinning = false;-->
-<!--      return x;-->
-<!--    });-->
-
-<!--    paymentDetails.splice(0, paymentDetails.length, ...paymentDetailsData);-->
-<!--  } finally {-->
-<!--    isLoading.value = false;-->
-<!--    isInitialLoading.value = false;-->
-<!--  }-->
-<!--};-->
-
-<!--const shortId = (uuid: string) => uuid.split("-").pop();-->
-<!--const copyToClipboard = (paymentId: string) => {-->
-<!--  const id = shortId(paymentId);-->
-<!--  if (id) navigator.clipboard.writeText(id);-->
-<!--};-->
-
-<!--const handleChangePerPage = async (newPerPage: number) => {-->
-<!--  perPage.value = newPerPage;-->
-<!--  await loadData();-->
-<!--};-->
-
-<!--const handleChangeFilterSortBy = async (value: string) => {-->
-<!--  if (orderBy.value === value) {-->
-<!--    orderDirection.value = orderDirection.value === ORDER_DIRECTION_DESC ? ORDER_DIRECTION_ASC : ORDER_DIRECTION_DESC;-->
-<!--  } else {-->
-<!--    orderBy.value = value;-->
-<!--  }-->
-<!--  await loadData();-->
-<!--};-->
-
-<!--const handleClickUpdate = async () => {-->
-<!--  await loadData();-->
-<!--};-->
-
-<!--const handleClickCreateNewPaymentDetail = async () => {-->
-<!--  openModal(PaymentDetailsCreateNew, {-->
-<!--    title: t("cabinet.payments.details.createNew.title"),-->
-<!--  });-->
-<!--};-->
-
-<!--onMounted(async () => {-->
-<!--  await loadData();-->
-
-<!--  window.addEventListener("resize", recalcActiveMenu, { passive: true });-->
-<!--  window.addEventListener("scroll", recalcActiveMenu, { passive: true, capture: true });-->
-
-<!--  scrollArea.value?.addEventListener("scroll", recalcActiveMenu, { passive: true });-->
-
-<!--  window.addEventListener("mousedown", onClickOutside, true);-->
-<!--  window.addEventListener("keydown", onKeydown, true);-->
-<!--});-->
-
-<!--onBeforeUnmount(() => {-->
-<!--  window.removeEventListener("resize", recalcActiveMenu);-->
-<!--  window.removeEventListener("scroll", recalcActiveMenu, true);-->
-<!--  scrollArea.value?.removeEventListener("scroll", recalcActiveMenu);-->
-
-<!--  window.removeEventListener("mousedown", onClickOutside, true);-->
-<!--  window.removeEventListener("keydown", onKeydown, true);-->
-<!--});-->
-<!--</script>-->
