@@ -531,12 +531,25 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 8px;
+    height: 6px;
+    --comment-zigzag-color: color-mix(in srgb, var(--ui-primary-main) 48%, var(--color-stroke-ui-light));
     background:
-      linear-gradient(-45deg, transparent 6px, color-mix(in srgb, var(--ui-primary-main) 22%, transparent) 0) 0 0/12px
-        8px repeat-x,
-      linear-gradient(45deg, transparent 6px, color-mix(in srgb, var(--ui-primary-main) 22%, transparent) 0) 6px 0/12px
-        8px repeat-x;
+      linear-gradient(
+          -45deg,
+          transparent calc(50% - 0.8px),
+          var(--comment-zigzag-color) calc(50% - 0.8px),
+          var(--comment-zigzag-color) calc(50% + 0.8px),
+          transparent calc(50% + 0.8px)
+        )
+        0 0 / 12px 6px repeat-x,
+      linear-gradient(
+          45deg,
+          transparent calc(50% - 0.8px),
+          var(--comment-zigzag-color) calc(50% - 0.8px),
+          var(--comment-zigzag-color) calc(50% + 0.8px),
+          transparent calc(50% + 0.8px)
+        )
+        6px 0 / 12px 6px repeat-x;
   }
 
   .payment-detail-card__comment-section--has-value {
