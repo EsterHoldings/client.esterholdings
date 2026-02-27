@@ -25,7 +25,7 @@
 
       <div
         v-else-if="errorMessage"
-        class="rounded-xl border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] p-4 text-[var(--ui-sticker-danger)]">
+        class="rounded-xl bg-[var(--ui-background-panel)] p-4 text-[var(--ui-sticker-danger)]">
         {{ errorMessage }}
       </div>
 
@@ -87,8 +87,15 @@
                 v-for="row in dataRows"
                 :key="row.key"
                 class="details-field">
-                <div class="details-field__key">{{ row.key }}</div>
-                <div class="details-field__value">{{ row.value }}</div>
+                <div class="details-field__meta">
+                  <div class="details-field__key">{{ row.key }}</div>
+                  <div class="details-field__value">{{ row.value }}</div>
+                </div>
+                <div
+                  class="details-field__copy"
+                  :title="'Скопировать значение'">
+                  <UiIconCopy :text="row.value" />
+                </div>
               </div>
             </div>
           </section>
@@ -229,6 +236,7 @@
 
   import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+  import UiIconCopy from "~/components/ui/UiIconCopy.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
@@ -458,7 +466,7 @@
 
   .payment-detail-card {
     grid-column: span 12;
-    border: 1px solid var(--color-stroke-ui-light);
+    border: 0;
     border-radius: 14px;
     background: var(--ui-background-panel);
     padding: 14px;
@@ -473,9 +481,8 @@
   }
 
   .payment-detail-card--comment-has-value {
-    border-color: color-mix(in srgb, var(--ui-primary-main) 50%, var(--color-stroke-ui-light));
     background: color-mix(in srgb, var(--ui-primary-main) 7%, var(--ui-background-panel));
-    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 18%, transparent);
+    box-shadow: none;
   }
 
   .payment-detail-card__header {
@@ -545,15 +552,25 @@
   .details-fields-grid {
     margin-top: 8px;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 8px;
   }
 
   .details-field {
-    border: 1px solid var(--color-stroke-ui-light);
+    border: 0;
     border-radius: 10px;
     padding: 8px 10px;
     background: var(--ui-background);
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .details-field__meta {
+    min-width: 0;
+    flex: 1 1 auto;
   }
 
   .details-field__key {
@@ -568,6 +585,23 @@
     word-break: break-word;
   }
 
+  .details-field__copy {
+    flex: 0 0 auto;
+    margin-top: 2px;
+    color: var(--ui-text-secondary);
+  }
+
+  .details-field__copy :deep(.copy-btn) {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--ui-background-panel) 82%, transparent);
+  }
+
+  .details-field__copy :deep(.copy-btn:hover) {
+    color: var(--ui-text-main);
+  }
+
   .documents-grid {
     margin-top: 8px;
     display: grid;
@@ -576,7 +610,7 @@
   }
 
   .document-card {
-    border: 1px solid var(--color-stroke-ui-light);
+    border: 0;
     border-radius: 10px;
     overflow: hidden;
     background: var(--ui-background);
@@ -630,7 +664,7 @@
   }
 
   .history-item {
-    border: 1px solid var(--color-stroke-ui-light);
+    border: 0;
     border-radius: 10px;
     background: var(--ui-background);
     padding: 10px;
@@ -677,7 +711,7 @@
   .history-item__doc {
     width: 44px;
     height: 44px;
-    border: 1px solid var(--color-stroke-ui-light);
+    border: 0;
     border-radius: 8px;
     overflow: hidden;
     background: var(--ui-background-panel);
