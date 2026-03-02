@@ -134,6 +134,7 @@
             <UiSelect
               :data="stateOptions"
               :value="selectedStateId"
+              :disabled="!selectedCountryId"
               :isDirty="validatorUserDataForm.errorsFormData.state.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.state.errors.length > 0"
               searchable
@@ -152,6 +153,7 @@
             <UiSelect
               :data="cityOptions"
               :value="selectedCityId"
+              :disabled="!selectedStateId"
               :isDirty="validatorUserDataForm.errorsFormData.city.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.city.errors.length > 0"
               searchable
@@ -239,6 +241,11 @@
     query?: string;
     page?: number;
     append?: boolean;
+  }
+
+  interface FetchCitiesOptions extends FetchOptions {
+    countryId?: string | null;
+    stateId?: string | null;
   }
 
   const { t } = useI18n();
@@ -366,17 +373,21 @@
     }
   };
 
-  const fetchCities = async (
-    stateId: string,
-    { query = citySearch.value, page = 1, append = false }: FetchOptions = {}
-  ) => {
-    if (!stateId || citiesMeta.loading) {
+  const fetchCities = async ({
+    countryId = selectedCountryId.value,
+    stateId = selectedStateId.value,
+    query = citySearch.value,
+    page = 1,
+    append = false,
+  }: FetchCitiesOptions = {}) => {
+    if (!countryId || !stateId || citiesMeta.loading) {
       return;
     }
 
     citiesMeta.loading = true;
     try {
       const { data } = await appCore.locations.cities({
+        country_id: countryId,
         state_id: stateId,
         q: query || undefined,
         per_page: 25,
@@ -426,7 +437,13 @@
     citiesMeta.lastPage = 1;
 
     if (nextValue) {
-      await fetchCities(nextValue, { query: "", page: 1, append: false });
+      await fetchCities({
+        countryId: selectedCountryId.value,
+        stateId: nextValue,
+        query: "",
+        page: 1,
+        append: false,
+      });
     }
   };
 
@@ -511,10 +528,16 @@
       clearTimeout(citySearchTimer);
     }
     citySearchTimer = setTimeout(() => {
-      if (!selectedStateId.value) {
+      if (!selectedCountryId.value || !selectedStateId.value) {
         return;
       }
-      void fetchCities(selectedStateId.value, { query: citySearch.value, page: 1, append: false });
+      void fetchCities({
+        countryId: selectedCountryId.value,
+        stateId: selectedStateId.value,
+        query: citySearch.value,
+        page: 1,
+        append: false,
+      });
     }, 250);
   };
 
@@ -533,10 +556,21 @@
   };
 
   const loadMoreCities = () => {
-    if (!selectedStateId.value || citiesMeta.loading || citiesMeta.page >= citiesMeta.lastPage) {
+    if (
+      !selectedCountryId.value ||
+      !selectedStateId.value ||
+      citiesMeta.loading ||
+      citiesMeta.page >= citiesMeta.lastPage
+    ) {
       return;
     }
-    void fetchCities(selectedStateId.value, { query: citySearch.value, page: citiesMeta.page + 1, append: true });
+    void fetchCities({
+      countryId: selectedCountryId.value,
+      stateId: selectedStateId.value,
+      query: citySearch.value,
+      page: citiesMeta.page + 1,
+      append: true,
+    });
   };
 
   const initializeLocationSelections = async (
@@ -586,9 +620,15 @@
       return;
     }
 
-    await fetchCities(resolvedStateId, { query: cityName || "", page: 1, append: false });
+    await fetchCities({
+      countryId: resolvedCountryId,
+      stateId: resolvedStateId,
+      query: cityName || "",
+      page: 1,
+      append: false,
+    });
     if (cityOptions.value.length === 0) {
-      await fetchCities(resolvedStateId, { query: "", page: 1, append: false });
+      await fetchCities({ countryId: resolvedCountryId, stateId: resolvedStateId, query: "", page: 1, append: false });
     }
 
     const matchedCity = findOptionByLabel(cityOptions.value, cityName || "");

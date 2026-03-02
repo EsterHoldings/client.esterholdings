@@ -6,13 +6,17 @@
       ref="body"
       type="button"
       class="select outline-none inline-flex h-10 w-full items-center justify-start gap-2 rounded-[8px] border bg-[var(--color-stroke-ui-dark)] px-5 text-[var(--color-ui-text)] transition border-[var(--color-stroke-ui-light)]"
-      :class="{ '!border-none !bg-[transparent]': withoutOverlay }"
+      :class="{
+        '!border-none !bg-[transparent]': withoutOverlay,
+        'cursor-not-allowed opacity-60 pointer-events-none': props.disabled,
+      }"
       :data-open="isOpen || null"
       :data-open-up="dropup || null"
       :data-invalid="(props.isDirty && props.isInvalid) || null"
       :data-valid="(props.isDirty && !props.isInvalid) || null"
       :aria-expanded="isOpen ? 'true' : 'false'"
       aria-haspopup="listbox"
+      :disabled="props.disabled"
       @click.stop="toggle">
       <div
         v-if="slots['icon-left']"
@@ -111,6 +115,7 @@
     searchable?: boolean;
     searchValue?: string;
     searchPlaceholder?: string;
+    disabled?: boolean;
   }
 
   const props = withDefaults(defineProps<Props>(), {
@@ -121,6 +126,7 @@
     searchable: false,
     searchValue: "",
     searchPlaceholder: "",
+    disabled: false,
   });
 
   const emit = defineEmits<{
@@ -153,6 +159,21 @@
     v => (internalValue.value = v ?? null)
   );
 
+  watch(
+    () => props.disabled,
+    disabled => {
+      if (!disabled) {
+        return;
+      }
+
+      if (isOpen.value) {
+        isOpen.value = false;
+        emit("blur", internalValue.value ?? "");
+        removeGlobalListeners();
+      }
+    }
+  );
+
   const displayText = computed(
     () => data.value.find(i => i.value === internalValue.value)?.text || t("ui-components.ui-select")
   );
@@ -170,6 +191,10 @@
   );
 
   function toggle() {
+    if (props.disabled) {
+      return;
+    }
+
     isOpen.value = !isOpen.value;
     if (isOpen.value) {
       nextTick(() => {
