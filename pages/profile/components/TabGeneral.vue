@@ -230,11 +230,13 @@
     id: string;
     value: string;
     text: string;
+    originalText: string;
   }
 
   interface LocationApiItem {
     id: number | string;
     name: string;
+    name_original?: string;
   }
 
   interface FetchOptions {
@@ -248,7 +250,7 @@
     stateId?: string | null;
   }
 
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const toast = useToast();
   const appCore = useAppCore();
 
@@ -296,13 +298,26 @@
   });
 
   const normalizeText = (value: string): string => value.trim().toLowerCase();
+  const activeLocale = computed(() => String(locale.value || "").trim() || undefined);
 
   const toSelectOptions = (items: LocationApiItem[]): SelectOption[] =>
     items.map(item => ({
       id: String(item.id),
       value: String(item.id),
       text: item.name,
+      originalText: item.name_original || item.name,
     }));
+
+  const mergeUniqueOptions = (base: SelectOption[], incoming: SelectOption[]): SelectOption[] => {
+    if (incoming.length === 0) {
+      return base;
+    }
+
+    const existingValues = new Set(base.map(option => option.value));
+    const additions = incoming.filter(option => !existingValues.has(option.value));
+
+    return additions.length > 0 ? [...base, ...additions] : base;
+  };
 
   const findOptionByValue = (options: SelectOption[], value: string | null): SelectOption | null => {
     if (!value) {
@@ -318,7 +333,13 @@
       return null;
     }
 
-    return options.find(option => normalizeText(option.text) === normalizedLabel) || null;
+    return (
+      options.find(
+        option =>
+          normalizeText(option.text) === normalizedLabel ||
+          normalizeText(option.originalText) === normalizedLabel
+      ) || null
+    );
   };
 
   const fetchCountries = async ({ query = countrySearch.value, page = 1, append = false }: FetchOptions = {}) => {
@@ -330,6 +351,7 @@
     try {
       const { data } = await appCore.locations.countries({
         q: query || undefined,
+        lang: activeLocale.value,
         per_page: 25,
         page,
       });
@@ -358,6 +380,7 @@
       const { data } = await appCore.locations.states({
         country_id: countryId,
         q: query || undefined,
+        lang: activeLocale.value,
         per_page: 25,
         page,
       });
@@ -390,6 +413,7 @@
         country_id: countryId,
         state_id: stateId,
         q: query || undefined,
+        lang: activeLocale.value,
         per_page: 25,
         page,
       });
@@ -578,12 +602,23 @@
     stateName: string,
     cityName: string
   ): Promise<void> => {
-    await fetchCountries({ query: countryName || "", page: 1, append: false });
-    if (countryOptions.value.length === 0) {
-      await fetchCountries({ query: "", page: 1, append: false });
+    await fetchCountries({ query: "", page: 1, append: false });
+
+    let matchedCountry = findOptionByLabel(countryOptions.value, countryName || "");
+    if (!matchedCountry && countryName.trim() !== "") {
+      const { data } = await appCore.locations.countries({
+        q: countryName,
+        lang: activeLocale.value,
+        per_page: 25,
+        page: 1,
+      });
+
+      const extraItems = Array.isArray(data?.data) ? data.data : [];
+      const extraOptions = toSelectOptions(extraItems);
+      countryOptions.value = mergeUniqueOptions(countryOptions.value, extraOptions);
+      matchedCountry = findOptionByLabel(countryOptions.value, countryName || "");
     }
 
-    const matchedCountry = findOptionByLabel(countryOptions.value, countryName || "");
     if (!matchedCountry) {
       formData.country = countryName || "";
       formData.state = stateName || "";
@@ -600,12 +635,21 @@
       return;
     }
 
-    await fetchStates(resolvedCountryId, { query: stateName || "", page: 1, append: false });
-    if (stateOptions.value.length === 0) {
-      await fetchStates(resolvedCountryId, { query: "", page: 1, append: false });
-    }
+    let matchedState = findOptionByLabel(stateOptions.value, stateName || "");
+    if (!matchedState && stateName.trim() !== "") {
+      const { data } = await appCore.locations.states({
+        country_id: resolvedCountryId,
+        q: stateName,
+        lang: activeLocale.value,
+        per_page: 25,
+        page: 1,
+      });
 
-    const matchedState = findOptionByLabel(stateOptions.value, stateName || "");
+      const extraItems = Array.isArray(data?.data) ? data.data : [];
+      const extraOptions = toSelectOptions(extraItems);
+      stateOptions.value = mergeUniqueOptions(stateOptions.value, extraOptions);
+      matchedState = findOptionByLabel(stateOptions.value, stateName || "");
+    }
     if (!matchedState) {
       formData.state = stateName || "";
       formData.city = cityName || "";
@@ -620,18 +664,22 @@
       return;
     }
 
-    await fetchCities({
-      countryId: resolvedCountryId,
-      stateId: resolvedStateId,
-      query: cityName || "",
-      page: 1,
-      append: false,
-    });
-    if (cityOptions.value.length === 0) {
-      await fetchCities({ countryId: resolvedCountryId, stateId: resolvedStateId, query: "", page: 1, append: false });
-    }
+    let matchedCity = findOptionByLabel(cityOptions.value, cityName || "");
+    if (!matchedCity && cityName.trim() !== "") {
+      const { data } = await appCore.locations.cities({
+        country_id: resolvedCountryId,
+        state_id: resolvedStateId,
+        q: cityName,
+        lang: activeLocale.value,
+        per_page: 25,
+        page: 1,
+      });
 
-    const matchedCity = findOptionByLabel(cityOptions.value, cityName || "");
+      const extraItems = Array.isArray(data?.data) ? data.data : [];
+      const extraOptions = toSelectOptions(extraItems);
+      cityOptions.value = mergeUniqueOptions(cityOptions.value, extraOptions);
+      matchedCity = findOptionByLabel(cityOptions.value, cityName || "");
+    }
     if (!matchedCity) {
       formData.city = cityName || "";
       return;

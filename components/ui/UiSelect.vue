@@ -59,7 +59,7 @@
 
       <UiTextSmall
         v-if="!withoutNoSelect"
-        class="select__option block h-10 cursor-pointer rounded px-5 text-[var(--color-ui-text)] font-semibold text-[0.8125rem] hover:bg-[var(--color-stroke-ui-light)]"
+        class="select__option flex items-center justify-start mb-1 h-10 cursor-pointer rounded px-5 text-[var(--color-ui-text)] font-semibold text-[0.8125rem] hover:bg-[var(--color-stroke-ui-light)]"
         :class="{ 'opacity-80': internalValue === null }"
         role="option"
         :aria-selected="internalValue === null ? 'true' : 'false'"
