@@ -1081,18 +1081,24 @@
     }
   };
 
-  const handleClickTransfer = async (accountId: string | number, tab: number | string = 0) => {
+  const handleClickTransfer = async (accountId: string | number, tab: number | string = "general") => {
     closeOptions();
     closeCardMenu();
 
     return navigateTo(resolveAccountRoute(accountId, tab));
   };
 
-  const handleClickHistory = (accountId: string | number, tab: number | string = 1) => {
+  const handleClickHistory = (accountId: string | number, tab: number | string = "history") => {
     closeOptions();
     closeCardMenu();
 
     return navigateTo(resolveAccountRoute(accountId, tab));
+  };
+
+  const tabSlugByIndex: Record<number, string> = {
+    0: "general",
+    1: "history",
+    2: "trade-history",
   };
 
   const resolveAccountRoute = (accountId: string | number, tab?: number | string) => {
@@ -1101,9 +1107,11 @@
       return { path };
     }
 
+    const tabQuery = typeof tab === "number" ? (tabSlugByIndex[tab] ?? "general") : String(tab);
+
     return {
       path,
-      query: { tab: String(tab) },
+      query: { tab: tabQuery },
     };
   };
 

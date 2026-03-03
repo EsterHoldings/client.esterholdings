@@ -108,23 +108,27 @@
   .account-overview__list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-  }
-
-  .account-overview__row {
     border-radius: 12px;
     border: 1px solid var(--color-stroke-ui-light);
     background: color-mix(in srgb, var(--ui-background-card) 65%, transparent);
+    overflow: hidden;
+  }
+
+  .account-overview__row {
     padding: 12px;
     min-height: 56px;
     display: grid;
     grid-template-columns: minmax(80px, 140px) minmax(0, 1fr);
     align-items: center;
     gap: 8px 12px;
+    border-bottom: 1px solid var(--color-stroke-ui-light);
+  }
+
+  .account-overview__row:last-child {
+    border-bottom: none;
   }
 
   .account-overview__row.is-highlighted {
-    border-color: color-mix(in srgb, var(--ui-primary-main) 55%, var(--color-stroke-ui-light));
     background: color-mix(in srgb, var(--ui-primary-main) 12%, var(--ui-background-card));
   }
 
@@ -184,7 +188,7 @@
     }
 
     .account-overview__value-wrap {
-      justify-content: space-between;
+      justify-content: flex-start;
     }
 
     .account-overview__value {

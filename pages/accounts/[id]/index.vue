@@ -12,7 +12,10 @@
         </div>
       </div>
 
-      <PanelDefault class="account-page__panel">
+      <PanelDefault
+        ref="panelRef"
+        class="account-page__panel"
+        :style="{ minHeight: panelMinHeight }">
         <div class="account-layout">
           <aside class="account-layout__tabs">
             <TabsAsList
@@ -55,8 +58,8 @@
 
   import { definePageMeta } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
-  import { computed, onMounted, reactive, ref, watch } from "vue";
-  import { useRoute, useRouter } from "vue-router";
+  import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+  import { useRoute } from "vue-router";
   import TabGeneral from "~/pages/accounts/[id]/components/TabGeneral.vue";
 
   import useAppCore from "~/composables/useAppCore";
@@ -73,13 +76,32 @@
   const { t } = useI18n({ useScope: "global" });
 
   const route = useRoute();
-  const router = useRouter();
-
   const appCore = useAppCore();
 
   const activeTabIndex = ref(0);
   const isLoading = ref(false);
   const isBalanceRefreshing = ref(false);
+  const panelRef = ref<any>(null);
+  const panelMinHeight = ref("auto");
+
+  const getPanelElement = (): HTMLElement | null => {
+    const target = panelRef.value;
+    if (!target) return null;
+    if (target instanceof HTMLElement) return target;
+    if (target?.$el instanceof HTMLElement) return target.$el;
+    return null;
+  };
+
+  const updatePanelMinHeight = () => {
+    if (!import.meta.client) return;
+
+    const panelEl = getPanelElement();
+    if (!panelEl) return;
+
+    const top = panelEl.getBoundingClientRect().top;
+    const minHeightPx = Math.max(0, Math.floor(window.innerHeight - top - 20));
+    panelMinHeight.value = `${minHeightPx}px`;
+  };
 
   const tabsList = computed(() => {
     return [
@@ -108,41 +130,75 @@
 
   const id = computed(() => String(route.params.id));
 
-  const getTabIndexFromQuery = (value: unknown): number => {
+  const tabSlugByIndex = ["general", "history", "trade-history"] as const;
+
+  const tabIndexBySlug: Record<string, number> = {
+    general: 0,
+    card: 0,
+    "0": 0,
+    history: 1,
+    "1": 1,
+    "trade-history": 2,
+    trades: 2,
+    "2": 2,
+  };
+
+  const getTabIndexFromQuery = (value: unknown): number | null => {
     const rawValue = Array.isArray(value) ? value[0] : value;
     const normalized = String(rawValue ?? "")
       .trim()
       .toLowerCase();
 
-    if (normalized === "2" || normalized === "trade-history" || normalized === "trades") return 2;
-    if (normalized === "1" || normalized === "history") return 1;
-    return 0;
+    if (!normalized) return null;
+
+    const index = tabIndexBySlug[normalized];
+    if (typeof index !== "number") return null;
+    if (index < 0 || index >= tabsList.value.length) return null;
+
+    return index;
   };
 
-  const handleActiveTab = async (tabIndex: number) => {
+  const getTabSlugByIndex = (tabIndex: number): string => tabSlugByIndex[tabIndex] ?? tabSlugByIndex[0];
+
+  const syncUrlTabSlug = (tabIndex: number) => {
+    if (!import.meta.client) return;
+
+    const nextSlug = getTabSlugByIndex(tabIndex);
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("tab") === nextSlug) return;
+
+    params.set("tab", nextSlug);
+    const query = params.toString();
+    const nextUrl = query
+      ? `${window.location.pathname}?${query}${window.location.hash}`
+      : `${window.location.pathname}${window.location.hash}`;
+
+    window.history.replaceState(window.history.state, "", nextUrl);
+  };
+
+  const handleActiveTab = (tabIndex: number) => {
     if (tabIndex !== 0 && tabIndex !== 1 && tabIndex !== 2) return;
+    if (activeTabIndex.value === tabIndex) return;
 
     activeTabIndex.value = tabIndex;
-
-    if (String(route.query.tab ?? "0") === String(tabIndex)) {
-      return;
-    }
-
-    await router.replace({
-      query: {
-        ...route.query,
-        tab: String(tabIndex),
-      },
-    });
+    syncUrlTabSlug(tabIndex);
   };
 
   watch(
     () => route.query.tab,
     value => {
-      activeTabIndex.value = getTabIndexFromQuery(value);
+      const nextIndex = getTabIndexFromQuery(value);
+      if (nextIndex === null || nextIndex === activeTabIndex.value) return;
+      activeTabIndex.value = nextIndex;
     },
-    { immediate: true }
+    { immediate: true, flush: "post" }
   );
+
+  watch(activeTabIndex, async () => {
+    await nextTick();
+    updatePanelMinHeight();
+  });
 
   const accountData = reactive({
     type: "",
@@ -201,7 +257,22 @@
   };
 
   onMounted(async () => {
+    const queryIndex = getTabIndexFromQuery(route.query.tab);
+    activeTabIndex.value = queryIndex ?? 0;
+    syncUrlTabSlug(activeTabIndex.value);
+
     await loadData();
+    await nextTick();
+    updatePanelMinHeight();
+
+    window.addEventListener("resize", updatePanelMinHeight);
+    window.addEventListener("orientationchange", updatePanelMinHeight);
+  });
+
+  onBeforeUnmount(() => {
+    if (!import.meta.client) return;
+    window.removeEventListener("resize", updatePanelMinHeight);
+    window.removeEventListener("orientationchange", updatePanelMinHeight);
   });
 </script>
 
@@ -235,11 +306,14 @@
 
   .account-page__panel {
     overflow: hidden;
+    display: flex;
   }
 
   .account-layout {
     display: grid;
     min-height: 0;
+    width: 100%;
+    flex: 1 1 auto;
     grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
   }
 

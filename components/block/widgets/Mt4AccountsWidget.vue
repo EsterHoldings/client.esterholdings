@@ -563,10 +563,16 @@
     window.removeEventListener("keydown", handleMenuEscape, true);
   });
 
+  const tabSlugByIndex: Record<number, string> = {
+    0: "general",
+    1: "history",
+    2: "trade-history",
+  };
+
   const accountRoute = (accountId: string | number, tab?: number): string => {
     const path = `/accounts/${encodeURIComponent(normalizeAccountId(accountId))}`;
     if (typeof tab === "number") {
-      return localePath({ path, query: { tab: String(tab) } });
+      return localePath({ path, query: { tab: tabSlugByIndex[tab] ?? "general" } });
     }
     return localePath({ path });
   };
