@@ -28,12 +28,14 @@ import LandingFooter from "~/components/block/LandingFooter";
 
   &-wrapper {
     display: flex;
-    overflow: visible;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   &-content {
     width: 100%;
     background-color: var(--ui-background);
+    position: relative;
   }
 }
 

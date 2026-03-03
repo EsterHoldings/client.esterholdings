@@ -157,7 +157,7 @@ onUnmounted(stopAutoPlay);
 <style scoped lang="scss">
 .slider-default {
   position: relative;
-  width: 100vw;
+  width: 100%;
   //height: calc(100vh - 120px);
   height: calc(100vh - 80px);
   overflow: hidden;

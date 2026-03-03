@@ -37,19 +37,20 @@ const components = [GeneralSlide, TenYearsSlide, TopTradersSlide];
 
 <style lang="scss" scoped>
 .welcome {
+  --landing-header-height: 80px;
   min-height: 100vh;
   height: 100%;
-  width: 100vw;
+  width: 100%;
   position: relative;
   overflow: hidden;
 
   &__slider {
-    height: calc(100vh - 80px);
+    height: calc(100vh - var(--landing-header-height));
     position: absolute;
-    top: 0;
+    top: var(--landing-header-height);
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: auto;
     z-index: 0;
   }
 
