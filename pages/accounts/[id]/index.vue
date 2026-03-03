@@ -311,7 +311,7 @@
 
   .account-layout {
     display: grid;
-    min-height: 0;
+    min-height: inherit;
     width: 100%;
     flex: 1 1 auto;
     grid-template-columns: minmax(210px, 260px) minmax(0, 1fr);
