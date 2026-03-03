@@ -108,7 +108,8 @@
                 <tr
                   v-for="(account, index) in accounts"
                   :key="account.id"
-                  class="border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]">
+                  class="table-account-row border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)] cursor-pointer"
+                  @click="handleOpenAccount(account.id)">
                   <td class="px-4 py-3 align-middle">
                     <div class="flex items-center gap-2 min-w-0">
                       <button
@@ -130,7 +131,9 @@
                             d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                         </svg>
                       </button>
-                      <UiIconCopy :text="account.number" />
+                      <span @click.stop>
+                        <UiIconCopy :text="account.number" />
+                      </span>
                       <span class="table-account-number">{{ account.number }}</span>
                     </div>
                   </td>
@@ -253,7 +256,13 @@
                 'account-card card-with-menu',
                 cardMenuOpenId === account.id ? 'card-open' : '',
                 viewMode === 'cards' ? 'account-card--compact' : '',
-              ]">
+              ]"
+              role="button"
+              tabindex="0"
+              :aria-label="`Open account ${account.number}`"
+              @click="handleOpenAccount(account.id)"
+              @keydown.enter.prevent="handleOpenAccount(account.id)"
+              @keydown.space.prevent="handleOpenAccount(account.id)">
               <div class="card-menu-actions">
                 <button
                   type="button"
@@ -1072,24 +1081,36 @@
     }
   };
 
-  const handleClickTransfer = async (accountId: string, tab: number | string = 0) => {
+  const handleClickTransfer = async (accountId: string | number, tab: number | string = 0) => {
     closeOptions();
     closeCardMenu();
 
-    return navigateTo({
-      path: `/accounts/${encodeURIComponent(accountId)}`,
-      query: { tab: String(tab) },
-    });
+    return navigateTo(resolveAccountRoute(accountId, tab));
   };
 
-  const handleClickHistory = (accountId: string, tab: number | string = 1) => {
+  const handleClickHistory = (accountId: string | number, tab: number | string = 1) => {
     closeOptions();
     closeCardMenu();
 
-    return navigateTo({
-      path: `/accounts/${encodeURIComponent(accountId)}`,
+    return navigateTo(resolveAccountRoute(accountId, tab));
+  };
+
+  const resolveAccountRoute = (accountId: string | number, tab?: number | string) => {
+    const path = `/accounts/${encodeURIComponent(String(accountId))}`;
+    if (tab === undefined) {
+      return { path };
+    }
+
+    return {
+      path,
       query: { tab: String(tab) },
-    });
+    };
+  };
+
+  const handleOpenAccount = async (accountId: string | number) => {
+    closeOptions();
+    closeCardMenu();
+    await navigateTo(resolveAccountRoute(accountId));
   };
 
   const handleClickDelete = async (accountId: string) => {
@@ -1215,6 +1236,12 @@
     overflow: visible;
     transition: opacity 0.2s ease;
     color: var(--ui-text-main);
+    cursor: pointer;
+  }
+
+  .account-card:focus-visible {
+    outline: 2px solid var(--ui-primary-main);
+    outline-offset: 2px;
   }
 
   .account-card:hover:not(.card-open) {
