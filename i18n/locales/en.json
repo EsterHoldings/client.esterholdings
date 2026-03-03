@@ -1030,6 +1030,18 @@
         "number": "Account number",
         "balance": "MT Balance"
       },
+      "tabs": {
+        "card": "Account card",
+        "history": "History",
+        "tradeHistory": "Trade history"
+      },
+      "tradeHistory": {
+        "sync": "Sync history",
+        "empty": "No trades yet",
+        "total": "Records",
+        "added": "Added",
+        "updated": "Updated"
+      },
       "nothingToShow": "No active accounts to show!",
       "openAccount": "Open new account!",
       "pagination": {

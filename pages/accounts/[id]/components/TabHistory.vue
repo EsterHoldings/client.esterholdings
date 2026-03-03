@@ -8,6 +8,7 @@
     number: string;
     balance: string | number;
     isLoading?: boolean;
+    isBalanceRefreshing?: boolean;
   }>();
 
   type HistoryRow = {

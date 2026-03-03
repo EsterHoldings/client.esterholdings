@@ -1,4 +1,4 @@
-import {BasicModuleInterface} from "../module.interface";
+import { BasicModuleInterface } from "../module.interface";
 import AccountsService from "~/composables/core/modules/accounts/accounts.service";
 
 interface ResponseDTO {
@@ -14,26 +14,26 @@ export class AccountsModule implements BasicModuleInterface {
     this.accountsService = new AccountsService();
   }
 
-  async get(params: {} = {}):Promise<any> {
+  async get(params: {} = {}): Promise<any> {
     return await this.accountsService.get(params);
   }
-  async getById(id:any) {
+  async getById(id: any) {
     return await this.accountsService.getById(id);
   }
 
-  async post(data:object = {}):Promise<any> {
+  async post(data: object = {}): Promise<any> {
     return await this.accountsService.post(data);
   }
 
-  async put(id:any, data:object = {}):Promise<any> {
+  async put(id: any, data: object = {}): Promise<any> {
     return await this.accountsService.put(id, data);
   }
 
-  async patch(id:any, data:object = {}):Promise<any> {
+  async patch(id: any, data: object = {}): Promise<any> {
     return await this.accountsService.patch(id, data);
   }
 
-  async delete(id:any):Promise<any> {
+  async delete(id: any): Promise<any> {
     return await this.accountsService.delete(id);
   }
 
@@ -45,7 +45,13 @@ export class AccountsModule implements BasicModuleInterface {
     return await this.accountsService.refreshBalance(id);
   }
 
+  async getTradeHistory(id: any, params: object = {}): Promise<any> {
+    return await this.accountsService.getTradeHistory(id, params);
+  }
 
+  async syncTradeHistory(id: any, data: object = {}): Promise<any> {
+    return await this.accountsService.syncTradeHistory(id, data);
+  }
 }
 
 export default AccountsModule;

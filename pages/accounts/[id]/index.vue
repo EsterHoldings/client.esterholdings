@@ -10,18 +10,6 @@
             {{ accountSubtitle }}
           </UiTextSmall>
         </div>
-
-        <div class="account-page__balance-card">
-          <UiTextSmall class="account-page__balance-label">
-            {{ t("cabinet.accounts.columns.balance") }}
-          </UiTextSmall>
-          <div class="account-page__balance-value">
-            <UiIconSpinnerDefault
-              v-if="isLoading"
-              class="!h-4 !w-4" />
-            <span v-else>$ {{ formattedBalance }}</span>
-          </div>
-        </div>
       </div>
 
       <PanelDefault class="account-page__panel">
@@ -49,7 +37,9 @@
                 :number="accountData.number"
                 :balance="accountData.balance"
                 :key="activeTabIndex"
-                :isLoading="isLoading" />
+                :isLoading="isLoading"
+                :is-balance-refreshing="isBalanceRefreshing"
+                @refresh-balance="refreshAccountBalance" />
             </transition>
           </section>
         </div>
@@ -62,7 +52,6 @@
   import UiContainer from "~/components/ui/UiContainer.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
-  import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
   import { definePageMeta } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
@@ -72,10 +61,12 @@
 
   import useAppCore from "~/composables/useAppCore";
   import TabHistory from "~/pages/accounts/[id]/components/TabHistory.vue";
+  import TabTradeHistory from "~/pages/accounts/[id]/components/TabTradeHistory.vue";
   import PanelDefault from "~/components/block/panels/PanelDefault.vue";
   import TabsAsList from "~/components/block/tabs/TabsAsList.vue";
   import UiIconUser from "~/components/ui/UiIconUser.vue";
   import UiIconHistory from "~/components/ui/UiIconHistory.vue";
+  import UiIconInstruments from "~/components/ui/UiIconInstruments.vue";
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
@@ -88,18 +79,24 @@
 
   const activeTabIndex = ref(0);
   const isLoading = ref(false);
+  const isBalanceRefreshing = ref(false);
 
   const tabsList = computed(() => {
     return [
       {
         icon: UiIconUser,
-        label: "Карта счета",
+        label: resolveText("cabinet.accounts.tabs.card", "Карта счета"),
         component: TabGeneral,
       },
       {
         icon: UiIconHistory,
-        label: "История",
+        label: resolveText("cabinet.accounts.tabs.history", "История"),
         component: TabHistory,
+      },
+      {
+        icon: UiIconInstruments,
+        label: resolveText("cabinet.accounts.tabs.tradeHistory", "История торгов"),
+        component: TabTradeHistory,
       },
     ];
   });
@@ -117,12 +114,13 @@
       .trim()
       .toLowerCase();
 
+    if (normalized === "2" || normalized === "trade-history" || normalized === "trades") return 2;
     if (normalized === "1" || normalized === "history") return 1;
     return 0;
   };
 
   const handleActiveTab = async (tabIndex: number) => {
-    if (tabIndex !== 0 && tabIndex !== 1) return;
+    if (tabIndex !== 0 && tabIndex !== 1 && tabIndex !== 2) return;
 
     activeTabIndex.value = tabIndex;
 
@@ -152,19 +150,6 @@
     balance: 0,
   });
 
-  const formattedBalance = computed(() => {
-    const parsedBalance = Number(accountData.balance);
-
-    if (Number.isFinite(parsedBalance)) {
-      return parsedBalance.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-    }
-
-    return String(accountData.balance ?? "0.00");
-  });
-
   const accountTitle = computed(() => {
     const label = resolveText("cabinet.accounts.account.title", "Account");
     return `${label}: ${accountData.number || id.value}`;
@@ -178,6 +163,26 @@
 
     return resolveText("cabinet.accounts.account.subtitle", "Trading account details and history");
   });
+
+  const refreshAccountBalance = async () => {
+    if (isLoading.value || isBalanceRefreshing.value) return;
+
+    isBalanceRefreshing.value = true;
+    try {
+      const response = await appCore.accounts.refreshBalance(id.value);
+      const balance = response?.data?.data?.balance;
+
+      if (balance !== undefined && balance !== null) {
+        accountData.balance = Number(balance);
+      } else {
+        await loadData();
+      }
+    } catch {
+      await loadData();
+    } finally {
+      isBalanceRefreshing.value = false;
+    }
+  };
 
   const loadData = async () => {
     isLoading.value = true;
@@ -228,29 +233,6 @@
     color: var(--ui-text-secondary);
   }
 
-  .account-page__balance-card {
-    border-radius: 12px;
-    border: 1px solid var(--color-stroke-ui-light);
-    background: color-mix(in srgb, var(--ui-background-card) 74%, transparent);
-    padding: 10px 12px;
-    min-width: 180px;
-  }
-
-  .account-page__balance-label {
-    color: var(--ui-text-secondary);
-  }
-
-  .account-page__balance-value {
-    margin-top: 4px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--ui-text-main);
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 1.1;
-  }
-
   .account-page__panel {
     overflow: hidden;
   }
@@ -287,20 +269,11 @@
     .account-layout__content {
       padding: 10px;
     }
-
-    .account-page__balance-card {
-      width: 100%;
-      min-width: 0;
-    }
   }
 
   @media (max-width: 640px) {
     .account-page {
       gap: 10px;
-    }
-
-    .account-page__balance-value {
-      font-size: 18px;
     }
 
     .account-layout__content {
