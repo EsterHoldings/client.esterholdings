@@ -252,18 +252,14 @@
             <div
               v-for="account in accounts"
               :key="account.id"
-              :class="[
-                'account-card card-with-menu',
-                cardMenuOpenId === account.id ? 'card-open' : '',
-                viewMode === 'cards' ? 'account-card--compact' : '',
-              ]"
+              :class="['cabinet-card card-with-actions', cardMenuOpenId === account.id ? 'card-open' : '']"
               role="button"
               tabindex="0"
               :aria-label="`Open account ${account.number}`"
               @click="handleOpenAccount(account.id)"
               @keydown.enter.prevent="handleOpenAccount(account.id)"
               @keydown.space.prevent="handleOpenAccount(account.id)">
-              <div class="card-menu-actions">
+              <div class="card-actions">
                 <button
                   type="button"
                   class="menu-btn"
@@ -284,10 +280,19 @@
                   </svg>
                 </button>
                 <button
-                  class="menu-btn"
+                  class="menu-btn copy-btn"
                   aria-label="Copy number">
                   <UiIconCopy :text="account.number" />
                 </button>
+                <button
+                  type="button"
+                  class="menu-btn action-btn card-menu-trigger"
+                  @click.stop="toggleCardMenu(account.id)"
+                  :ref="el => (cardMenuTriggerRefs[account.id] = el as HTMLElement | null)"
+                  aria-label="Open menu">
+                  <UiIconDotsVertical class="h-4 w-4" />
+                </button>
+
                 <Teleport to="body">
                   <div
                     v-if="cardMenuOpenId === account.id"
@@ -348,30 +353,22 @@
                   </div>
                 </Teleport>
               </div>
-              <button
-                type="button"
-                class="menu-btn card-menu-trigger"
-                @click.stop="toggleCardMenu(account.id)"
-                :ref="el => (cardMenuTriggerRefs[account.id] = el as HTMLElement | null)"
-                aria-label="Open menu">
-                <UiIconDotsVertical class="h-4 w-4" />
-              </button>
 
-              <div
-                class="account-card__body"
-                :class="viewMode === 'full' ? 'account-card__body--row' : 'account-card__body--compact'">
-                <template v-if="viewMode === 'full'">
-                  <div class="min-w-[160px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.accounts.columns.number") }}
-                    </UiTextSmall>
-                    <div class="font-semibold">{{ account.number }}</div>
-                  </div>
-                  <div class="min-w-[170px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+              <div class="cabinet-card__header">
+                <div class="cabinet-card__head-main">
+                  <UiTextSmall class="cabinet-card__eyebrow">
+                    {{ t("cabinet.accounts.columns.number") }}
+                  </UiTextSmall>
+                  <div class="cabinet-card__title">#{{ account.number }}</div>
+                  <div class="cabinet-card__subtitle">{{ account.account_type.name }}</div>
+                </div>
+
+                <div class="cabinet-card__head-side">
+                  <div class="account-balance-block">
+                    <UiTextSmall class="cabinet-card__eyebrow">
                       {{ t("cabinet.accounts.columns.balance") }}
                     </UiTextSmall>
-                    <div class="flex items-center gap-2 font-semibold text-[var(--ui-text-main)]">
+                    <div class="account-balance-block__value">
                       <span :class="getBalanceHighlightClass(account.id)">${{ account.balance }}</span>
                       <button
                         type="button"
@@ -385,46 +382,34 @@
                       </button>
                     </div>
                   </div>
-                  <div class="min-w-[140px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.accounts.columns.type") }}
-                    </UiTextSmall>
-                    <div class="font-semibold">{{ account.account_type.name }}</div>
-                  </div>
-                  <div class="min-w-[120px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.accounts.columns.leverage") }}
-                    </UiTextSmall>
-                    <div class="font-semibold">{{ getLeverageDisplay(account) }}</div>
-                  </div>
-                </template>
+                </div>
+              </div>
 
-                <template v-else>
-                  <div class="account-card__compact-main">
-                    <div class="account-card__compact-number">#{{ account.number }}</div>
-                    <div class="account-card__compact-type">{{ account.account_type.name }}</div>
+              <div
+                class="cabinet-card__grid"
+                :class="viewMode === 'full' ? 'cabinet-card__grid--full' : ''">
+                <div class="cabinet-card__field">
+                  <UiTextSmall class="cabinet-card__label">
+                    {{ t("cabinet.accounts.columns.type") }}
+                  </UiTextSmall>
+                  <div class="cabinet-card__value">{{ account.account_type.name }}</div>
+                </div>
+                <div class="cabinet-card__field">
+                  <UiTextSmall class="cabinet-card__label">
+                    {{ t("cabinet.accounts.columns.leverage") }}
+                  </UiTextSmall>
+                  <div class="cabinet-card__value">{{ getLeverageDisplay(account) }}</div>
+                </div>
+                <div
+                  v-if="viewMode === 'full'"
+                  class="cabinet-card__field">
+                  <UiTextSmall class="cabinet-card__label">ID</UiTextSmall>
+                  <div
+                    class="cabinet-card__value truncate"
+                    :title="account.id">
+                    {{ account.id }}
                   </div>
-
-                  <div class="account-card__compact-side">
-                    <div class="account-card__compact-balance">
-                      <span :class="getBalanceHighlightClass(account.id)">${{ account.balance }}</span>
-                      <button
-                        type="button"
-                        class="refresh-balance-btn"
-                        @click.stop="refreshAccountBalance(account)"
-                        :disabled="isBalanceRefreshing(account.id)"
-                        title="Refresh balance">
-                        <UiIconUpdate
-                          class="h-[14px] w-[14px]"
-                          :spinning="isBalanceRefreshing(account.id)" />
-                      </button>
-                    </div>
-                    <div class="account-card__compact-meta">
-                      <span>{{ t("cabinet.accounts.columns.leverage") }}</span>
-                      <strong>{{ getLeverageDisplay(account) }}</strong>
-                    </div>
-                  </div>
-                </template>
+                </div>
               </div>
             </div>
           </div>
@@ -1235,42 +1220,138 @@
     justify-content: center;
   }
 
-  .account-card {
+  .cabinet-card {
     position: relative;
     background: var(--ui-background-panel);
-    border-bottom: 1px solid var(--color-stroke-ui-light);
-    border-radius: 10px;
-    padding: 10px 14px;
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 12px;
+    padding: 12px 14px;
     overflow: visible;
-    transition: opacity 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.2s ease;
     color: var(--ui-text-main);
     cursor: pointer;
   }
 
-  .account-card:focus-visible {
+  .cabinet-card:focus-visible {
     outline: 2px solid var(--ui-primary-main);
     outline-offset: 2px;
   }
 
-  .account-card:hover:not(.card-open) {
-    opacity: 0.6;
+  .cabinet-card:hover:not(.card-open) {
+    border-color: var(--color-stroke-ui-light);
+    background: var(--color-stroke-ui-dark);
+    transform: translateY(-1px);
   }
 
-  .account-card.card-open,
-  .account-card.card-open:hover {
-    background: var(--ui-background-panel);
-    opacity: 1;
+  .cabinet-card.card-open,
+  .cabinet-card.card-open:hover {
+    border-color: var(--color-stroke-ui-light);
+    background: var(--color-stroke-ui-dark);
+    transform: none;
   }
 
-  .account-card__body {
+  .card-with-actions {
+    padding-right: 122px;
+  }
+
+  .cabinet-card__header {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 14px;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px 12px;
+    min-height: 48px;
   }
 
-  .account-card__body > div {
-    flex: 1 1 140px;
+  .cabinet-card__head-main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1 1 auto;
+  }
+
+  .cabinet-card__head-side {
+    min-width: 150px;
+    display: inline-flex;
+    justify-content: flex-end;
+  }
+
+  .cabinet-card__eyebrow {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__title {
+    color: var(--ui-text-main);
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cabinet-card__subtitle {
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cabinet-card__grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .cabinet-card__grid--full {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cabinet-card__field {
+    min-width: 0;
+  }
+
+  .cabinet-card__label {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__value {
+    margin-top: 3px;
+    color: var(--ui-text-main);
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .account-balance-block {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .account-balance-block__value {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ui-text-main);
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 700;
+    white-space: nowrap;
   }
 
   .table-account-number {
@@ -1347,74 +1428,6 @@
     white-space: nowrap;
   }
 
-  .account-card__body--compact {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 6px 12px;
-  }
-
-  .account-card__compact-main {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .account-card__compact-type {
-    font-size: 12px;
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--ui-text-secondary);
-  }
-
-  .account-card__compact-number {
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--ui-text-main);
-  }
-
-  .account-card__compact-side {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 4px;
-    min-width: 120px;
-  }
-
-  .account-card__compact-meta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    line-height: 1.1;
-    color: var(--ui-text-secondary);
-  }
-
-  .account-card__compact-meta strong {
-    font-size: 13px;
-    line-height: 1.1;
-    color: var(--ui-text-main);
-  }
-
-  .account-card__compact-balance {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 16px;
-    line-height: 1;
-    font-weight: 700;
-    color: var(--ui-text-main);
-  }
-
-  .account-card__body--row {
-    flex-wrap: nowrap;
-    gap: 10px 16px;
-  }
-
   @media (max-width: 1024px) {
     .table-account-right-head,
     .table-account-right-cell {
@@ -1422,81 +1435,73 @@
       column-gap: 12px;
     }
 
-    .account-card__body--row {
-      flex-wrap: wrap;
+    .cabinet-card__grid--full {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .card-with-actions {
+      padding-right: 108px;
     }
 
-    .account-card__body--compact {
-      grid-template-columns: 1fr;
-      align-items: stretch;
-      gap: 5px;
+    .cabinet-card__header {
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    .account-card__compact-side {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
+    .cabinet-card__head-side {
       min-width: 0;
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .account-balance-block {
+      align-items: flex-start;
+    }
+
+    .cabinet-card__grid,
+    .cabinet-card__grid--full {
+      grid-template-columns: 1fr;
     }
   }
 
-  .card-with-menu {
-    padding-left: 110px;
-  }
-
-  .account-card--compact {
-    padding: 8px 10px;
-    border-radius: 8px;
-  }
-
-  .account-card--compact.card-with-menu {
-    padding-left: 88px;
-  }
-
-  .account-card--compact .card-menu-actions {
-    top: 4px;
-    left: 4px;
-    gap: 4px;
-  }
-
-  .account-card--compact .card-menu-trigger {
-    top: 4px;
-    right: 4px;
-  }
-
-  .account-card--compact .menu-btn {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-  }
-
-  .card-menu-actions {
+  .card-actions {
     position: absolute;
-    top: 6px;
-    left: 6px;
+    top: 10px;
+    right: 10px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    z-index: 2;
   }
 
-  .menu-btn {
-    height: 28px;
-    width: 28px;
+  .menu-btn,
+  .copy-btn,
+  .action-btn {
+    height: 32px;
+    width: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     color: var(--ui-text-secondary);
     transition:
       color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease,
       transform 0.15s ease;
     position: relative;
   }
 
-  .menu-btn:hover {
+  .menu-btn:hover,
+  .copy-btn:hover,
+  .action-btn:hover {
     color: var(--ui-text-main);
+    border-color: var(--color-stroke-ui-light);
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
     transform: translateY(-1px);
   }
 
@@ -1547,14 +1552,8 @@
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   }
 
-  .card-menu-actions {
-    pointer-events: auto;
-  }
-
   .card-menu-trigger {
-    position: absolute;
-    top: 6px;
-    right: 6px;
+    position: static;
   }
 
   .card-menu__item {

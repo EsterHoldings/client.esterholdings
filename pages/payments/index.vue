@@ -251,13 +251,12 @@
             </div>
 
             <div
-              class="grid gap-2"
+              class="grid gap-3"
               :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'">
               <div
                 v-for="payment in payments"
                 :key="payment.id"
-                class="payment-card card-with-actions cursor-pointer"
-                :class="viewMode === 'full' ? 'payment-card--full' : ''"
+                class="cabinet-card card-with-actions cursor-pointer"
                 @click="handlePaymentItemClick($event, payment.id)">
                 <div
                   class="card-actions"
@@ -279,43 +278,53 @@
                   </button>
                 </div>
 
-                <div
-                  class="payment-card__body"
-                  :class="viewMode === 'full' ? 'payment-card__body--row' : ''">
-                  <div class="min-w-[140px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                <div class="cabinet-card__header">
+                  <div class="cabinet-card__head-main">
+                    <UiTextSmall class="cabinet-card__eyebrow">
                       {{ t("cabinet.billing.columns.accountNumber") }}
                     </UiTextSmall>
-                    <div class="truncate font-semibold">{{ payment.account_number }}</div>
+                    <div class="cabinet-card__title">{{ payment.account_number }}</div>
+                    <div class="cabinet-card__subtitle">{{ payment.payment_system_name || "-" }}</div>
                   </div>
-                  <div class="min-w-[120px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.billing.columns.paymentSystem") }}
-                    </UiTextSmall>
-                    <div class="truncate">{{ payment.payment_system_name || "-" }}</div>
-                  </div>
-                  <div class="min-w-[120px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.billing.columns.amount") }}
-                    </UiTextSmall>
-                    <div class="font-semibold text-[var(--color-success)]">${{ payment.amount }}</div>
-                  </div>
-                  <div class="flex min-w-[140px] items-center gap-2">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.billing.columns.status") }}
-                    </UiTextSmall>
-                    <div class="inline-flex items-center gap-2 capitalize">
+
+                  <div class="cabinet-card__head-side">
+                    <div class="status-inline">
                       <span
                         class="h-2 w-2 rounded-full"
                         :class="statusDotClass(payment.status)"></span>
                       <span>{{ statusText(payment.status) }}</span>
                     </div>
                   </div>
-                  <div class="min-w-[140px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]"
-                      >{{ t("cabinet.billing.columns.createdAt") }}
+                </div>
+
+                <div
+                  class="cabinet-card__grid"
+                  :class="viewMode === 'full' ? 'cabinet-card__grid--full' : ''">
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.billing.columns.amount") }}
                     </UiTextSmall>
-                    <div class="footer-item__value">{{ new Date(payment.created_at).toLocaleString() }}</div>
+                    <div class="cabinet-card__value cabinet-card__value--positive">${{ payment.amount }}</div>
+                  </div>
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.billing.columns.createdAt") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__value">
+                      {{ new Date(payment.created_at).toLocaleString() }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="viewMode === 'full'"
+                    class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.billing.columns.id") }}
+                    </UiTextSmall>
+                    <div
+                      class="cabinet-card__value"
+                      :title="payment.id">
+                      {{ shortId(payment.id) }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1109,86 +1118,157 @@
     }
   }
 
-  .payment-card {
+  .cabinet-card {
     position: relative;
     background: var(--ui-background-panel);
-    border-bottom: 1px solid var(--color-stroke-ui-light);
-    border-radius: 10px;
-    padding: 10px 14px;
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 12px;
+    padding: 12px 14px;
     transition:
+      border-color 0.2s ease,
       background-color 0.2s ease,
-      opacity 0.2s ease;
+      transform 0.2s ease;
   }
 
-  .payment-card--full {
-    padding: 8px 72px 8px 14px;
+  .cabinet-card:hover {
+    border-color: var(--color-stroke-ui-light);
+    background: var(--color-stroke-ui-dark);
+    transform: translateY(-1px);
   }
 
-  .payment-card:hover {
-    opacity: 0.6;
+  .card-with-actions {
+    padding-right: 86px;
   }
 
-  .payment-card__body {
+  .cabinet-card__header {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px 12px;
-    margin-top: 0;
-    color: var(--ui-text-main);
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px 12px;
+    min-height: 48px;
   }
 
-  .payment-card__body > div {
-    flex: 1 1 140px;
-  }
-
-  .payment-card__footer {
+  .cabinet-card__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
     display: flex;
-    flex-wrap: nowrap;
-    gap: 6px 12px;
-    margin-top: 4px;
+    flex-direction: column;
+    gap: 3px;
   }
 
-  .footer-item {
+  .cabinet-card__head-side {
     min-width: 120px;
-    flex: 1 1 0;
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: flex-start;
   }
 
-  .footer-item__value {
+  .cabinet-card__eyebrow {
+    color: var(--ui-text-secondary);
     font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__title {
+    color: var(--ui-text-main);
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 700;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  @media (max-width: 640px) {
-    .payment-card__body {
-      gap: 8px 12px;
-    }
+  .cabinet-card__subtitle {
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .payment-card__body--row {
-    flex-wrap: nowrap;
-    gap: 6px 12px;
-    align-items: flex-start;
+  .cabinet-card__grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .cabinet-card__grid--full {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .cabinet-card__field {
+    min-width: 0;
+  }
+
+  .cabinet-card__label {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__value {
+    margin-top: 3px;
+    color: var(--ui-text-main);
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cabinet-card__value--positive {
+    color: var(--ui-sticker-success);
+  }
+
+  .status-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ui-text-main);
+    text-transform: capitalize;
+    font-weight: 600;
   }
 
   @media (max-width: 1024px) {
-    .payment-card__body--row {
-      flex-wrap: wrap;
+    .cabinet-card__grid--full {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .card-with-actions {
-    padding-right: 68px;
+  @media (max-width: 640px) {
+    .card-with-actions {
+      padding-right: 82px;
+    }
+
+    .cabinet-card__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cabinet-card__head-side {
+      min-width: 0;
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .cabinet-card__grid,
+    .cabinet-card__grid--full {
+      grid-template-columns: 1fr;
+    }
   }
 
   .card-actions {
     position: absolute;
-    top: 6px;
-    right: 6px;
+    top: 10px;
+    right: 10px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    z-index: 2;
   }
 
   .copy-btn,
@@ -1196,20 +1276,24 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 28px;
-    width: 28px;
+    height: 32px;
+    width: 32px;
     border-radius: 8px;
     color: var(--ui-text-secondary);
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     transition:
       color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease,
       transform 0.15s ease;
   }
 
   .copy-btn:hover,
   .action-btn:hover {
     color: var(--ui-text-main);
+    border-color: var(--color-stroke-ui-light);
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
     transform: translateY(-1px);
   }
 

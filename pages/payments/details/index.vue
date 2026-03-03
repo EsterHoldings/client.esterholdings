@@ -260,7 +260,7 @@
               <div
                 v-for="paymentDetail in paymentDetails"
                 :key="paymentDetail.id"
-                class="payment-card card-with-actions cursor-pointer"
+                class="cabinet-card card-with-actions cursor-pointer"
                 @click="handleClickViewPaymentDetail(paymentDetail.id)">
                 <div
                   class="card-actions"
@@ -304,15 +304,50 @@
                   </button>
                 </div>
 
-                <div class="payment-card__body">
-                  <div class="min-w-[140px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
+                <div class="cabinet-card__header">
+                  <div class="cabinet-card__head-main">
+                    <UiTextSmall class="cabinet-card__eyebrow">
+                      {{ t("cabinet.billing.columns.account") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__title">{{ paymentDetail.name }}</div>
+                    <div class="cabinet-card__subtitle">{{ paymentDetail.payment_system_name }}</div>
+                  </div>
+
+                  <div class="cabinet-card__head-side">
+                    <div class="status-inline">
+                      <span
+                        class="status-inline__dot"
+                        :class="statusDotClass(paymentDetail.status)"></span>
+                      <span class="status-inline__text">{{ statusText(paymentDetail.status) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="cabinet-card__grid"
+                  :class="viewMode === 'full' ? 'cabinet-card__grid--full' : ''">
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
                       {{ t("cabinet.billing.columns.paymentSystem") }}
                     </UiTextSmall>
-                    <div class="truncate font-semibold">{{ paymentDetail.payment_system_name }}</div>
+                    <div class="cabinet-card__value">{{ paymentDetail.payment_system_name }}</div>
+                  </div>
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.billing.updatedAt") || "Updated at" }}
+                    </UiTextSmall>
+                    <div class="updated-at-cell">
+                      <span class="updated-at-cell__relative">{{ formatRelativeDate(paymentDetail.updated_at) }}</span>
+                      <span class="updated-at-cell__absolute">{{ formatDateTime(paymentDetail.updated_at) }}</span>
+                    </div>
+                  </div>
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.payments.details.documents", "Documents") }}
+                    </UiTextSmall>
                     <div
                       v-if="resolvePaymentDetailDocuments(paymentDetail).length > 0"
-                      class="payment-row-docs mt-2">
+                      class="payment-row-docs mt-1">
                       <span
                         v-for="(document, docIndex) in resolvePaymentDetailDocuments(paymentDetail).slice(0, 5)"
                         :key="paymentDetail.id + ':card-doc:' + docIndex"
@@ -334,31 +369,20 @@
                         +{{ resolvePaymentDetailDocuments(paymentDetail).length - 5 }}
                       </span>
                     </div>
-                  </div>
-                  <div class="min-w-[120px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.billing.columns.account") }}
-                    </UiTextSmall>
-                    <div class="truncate">{{ paymentDetail.name }}</div>
-                  </div>
-                  <div class="min-w-[120px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.billing.columns.status") }}
-                    </UiTextSmall>
-                    <div class="status-inline">
-                      <span
-                        class="status-inline__dot"
-                        :class="statusDotClass(paymentDetail.status)"></span>
-                      <span class="status-inline__text">{{ statusText(paymentDetail.status) }}</span>
+                    <div
+                      v-else
+                      class="cabinet-card__value">
+                      -
                     </div>
                   </div>
-                  <div class="min-w-[160px]">
-                    <UiTextSmall class="text-[var(--ui-text-secondary)]">
-                      {{ t("cabinet.billing.updatedAt") || "Updated at" }}
-                    </UiTextSmall>
-                    <div class="updated-at-cell">
-                      <span class="updated-at-cell__relative">{{ formatRelativeDate(paymentDetail.updated_at) }}</span>
-                      <span class="updated-at-cell__absolute">{{ formatDateTime(paymentDetail.updated_at) }}</span>
+                  <div
+                    v-if="viewMode === 'full'"
+                    class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">ID</UiTextSmall>
+                    <div
+                      class="cabinet-card__value"
+                      :title="String(paymentDetail.id)">
+                      {{ String(paymentDetail.id) }}
                     </div>
                   </div>
                 </div>
@@ -1154,60 +1178,133 @@
     }
   }
 
-  .payment-card {
+  .cabinet-card {
     background: var(--ui-background-panel);
-    border-bottom: 1px solid var(--color-stroke-ui-light);
-    border-radius: 10px;
-    padding: 8px 10px;
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 12px;
+    padding: 12px 14px;
     position: relative;
     transition:
+      border-color 0.2s ease,
       background-color 0.2s ease,
-      opacity 0.2s ease;
+      transform 0.2s ease;
   }
 
-  .payment-card:hover {
-    opacity: 0.6;
-  }
-
-  .payment-card__body {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px 12px;
-    margin-top: 4px;
-    color: var(--ui-text-main);
-  }
-
-  .payment-card__body > div {
-    flex: 1 1 140px;
+  .cabinet-card:hover {
+    border-color: var(--color-stroke-ui-light);
+    background: var(--color-stroke-ui-dark);
+    transform: translateY(-1px);
   }
 
   .card-with-actions {
-    padding-right: 58px;
+    padding-right: 86px;
+  }
+
+  .cabinet-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px 12px;
+    min-height: 48px;
+  }
+
+  .cabinet-card__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cabinet-card__head-side {
+    min-width: 120px;
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .cabinet-card__eyebrow {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__title {
+    color: var(--ui-text-main);
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cabinet-card__subtitle {
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cabinet-card__grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .cabinet-card__grid--full {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cabinet-card__field {
+    min-width: 0;
+  }
+
+  .cabinet-card__label {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__value {
+    margin-top: 3px;
+    color: var(--ui-text-main);
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .card-actions {
     position: absolute;
-    top: 6px;
-    right: 6px;
+    top: 10px;
+    right: 10px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    z-index: 2;
   }
 
   .copy-btn,
   .action-btn {
-    height: 28px;
-    width: 28px;
+    height: 32px;
+    width: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     color: var(--ui-text-secondary);
     transition:
       color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease,
       transform 0.15s ease;
     position: relative;
   }
@@ -1215,7 +1312,37 @@
   .copy-btn:hover,
   .action-btn:hover {
     color: var(--ui-text-main);
+    border-color: var(--color-stroke-ui-light);
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
     transform: translateY(-1px);
+  }
+
+  @media (max-width: 1024px) {
+    .cabinet-card__grid--full {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .card-with-actions {
+      padding-right: 82px;
+    }
+
+    .cabinet-card__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cabinet-card__head-side {
+      min-width: 0;
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .cabinet-card__grid,
+    .cabinet-card__grid--full {
+      grid-template-columns: 1fr;
+    }
   }
 
   .card-menu {

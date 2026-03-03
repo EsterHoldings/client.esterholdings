@@ -233,70 +233,70 @@
           <div
             v-for="ticket in filtered"
             :key="ticket.id"
-            class="ticket-card group cursor-pointer rounded-2xl border border-[var(--color-stroke-ui-dark)] bg-[var(--ui-background-panel)] p-3.5 shadow-[0_4px_20px_rgba(0,0,0,.14)] transition-all duration-200 hover:-translate-y-[1px] hover:border-[var(--color-stroke-ui-light)] hover:bg-[var(--color-stroke-ui-dark)]"
+            class="cabinet-card ticket-card card-with-actions cursor-pointer"
             @click="handleClickRow(ticket.id)">
-            <div class="flex items-start justify-between gap-2.5">
-              <div class="min-w-0 flex-1">
-                <div class="max-h-[40px] overflow-hidden text-sm font-semibold leading-5 break-words">
-                  {{ ticket.subject }}
-                </div>
-                <div class="mt-2 flex items-center gap-2">
-                  <span
-                    class="inline-flex items-center rounded-md border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-card)] px-2 py-1 text-[11px] leading-none text-[var(--ui-text-secondary)]">
-                    #{{ String(ticket.id).slice(0, 8) }}
-                  </span>
-                  <button
-                    class="inline-flex h-7 w-7 items-center justify-center rounded-md text-[var(--ui-text-secondary)] transition hover:bg-[var(--color-stroke-ui-light)] hover:text-[var(--ui-text-main)]"
-                    @click.stop
-                    aria-label="Copy ID">
-                    <UiIconCopy :text="ticket.id" />
-                  </button>
-                </div>
+            <div class="card-actions">
+              <button
+                class="copy-btn"
+                @click.stop
+                aria-label="Copy ID">
+                <UiIconCopy :text="ticket.id" />
+              </button>
+              <button
+                class="action-btn"
+                aria-label="More"
+                @click.stop>
+                <UiIconDotsVertical />
+              </button>
+            </div>
+
+            <div class="cabinet-card__header">
+              <div class="cabinet-card__head-main">
+                <UiTextSmall class="cabinet-card__eyebrow">
+                  {{ t("support.page.subject") }}
+                </UiTextSmall>
+                <div class="cabinet-card__title">{{ ticket.subject }}</div>
+                <div class="cabinet-card__subtitle">#{{ String(ticket.id).slice(0, 8) }}</div>
               </div>
-              <span class="inline-flex items-center gap-1.5 text-xs text-[var(--ui-text-secondary)] whitespace-nowrap">
+
+              <span class="status-inline">
                 <span
-                  class="h-1.5 w-1.5 rounded-full"
+                  class="status-inline__dot"
                   :class="getTicketStatusDotClass(ticket.status)" />
                 {{ ticket.status }}
               </span>
             </div>
 
-            <div class="mt-3 grid grid-cols-[auto_1fr] items-center gap-x-2 text-xs text-[var(--ui-text-secondary)]">
-              <span>{{ t("support.page.lastUpdate") }}</span>
-              <span class="justify-self-end whitespace-nowrap font-medium text-[var(--ui-text-main)]/90">
-                {{ ticket.last_message_at }}
-              </span>
+            <div class="cabinet-card__grid">
+              <div class="cabinet-card__field">
+                <UiTextSmall class="cabinet-card__label">{{ t("support.page.lastUpdate") }}</UiTextSmall>
+                <div class="cabinet-card__value">{{ ticket.last_message_at }}</div>
+              </div>
+              <div class="cabinet-card__field">
+                <UiTextSmall class="cabinet-card__label">Counterparty</UiTextSmall>
+                <div class="counterparty-inline">
+                  <span
+                    class="counterparty-inline__dot"
+                    :class="
+                      ticket.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
+                    " />
+                  {{ ticket.counterparty_online ? "Online" : "Offline" }}
+                </div>
+              </div>
             </div>
 
-            <div class="mt-3 flex items-center justify-between">
-              <span class="inline-flex items-center gap-1.5 text-xs text-[var(--ui-text-secondary)]">
+            <div class="cabinet-card__footer">
+              <button
+                class="chat-btn"
+                @click.stop="handleChatIconClick(ticket.id)"
+                aria-label="Open chat">
                 <span
-                  class="h-1.5 w-1.5 rounded-full"
-                  :class="
-                    ticket.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
-                  " />
-                {{ ticket.counterparty_online ? "Online" : "Offline" }}
-              </span>
-
-              <div class="flex items-center gap-1">
-                <button
-                  class="relative h-[34px] w-[34px] flex items-center justify-center rounded-md text-[var(--ui-text-secondary)] hover:bg-[var(--color-stroke-ui-light)] hover:text-[var(--ui-text-main)] active:opacity-[.5]"
-                  @click.stop="handleChatIconClick(ticket.id)"
-                  aria-label="Open chat">
-                  <span
-                    v-if="ticket.unread_messages_count > 0"
-                    class="absolute top-0.5 right-0.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--ui-sticker-danger)] text-white text-[10px] leading-none flex items-center justify-center">
-                    {{ ticket.unread_messages_count }}
-                  </span>
-                  <UiIconChat class="!h-[18px] !w-[18px]" />
-                </button>
-                <button
-                  class="h-[34px] w-[34px] flex items-center justify-center rounded-md text-[var(--ui-text-secondary)] hover:bg-[var(--color-stroke-ui-light)] hover:text-[var(--ui-text-main)] active:opacity-[.5]"
-                  aria-label="More"
-                  @click.stop>
-                  <UiIconDotsVertical />
-                </button>
-              </div>
+                  v-if="ticket.unread_messages_count > 0"
+                  class="chat-btn__badge">
+                  {{ ticket.unread_messages_count }}
+                </span>
+                <UiIconChat class="!h-[18px] !w-[18px]" />
+              </button>
             </div>
           </div>
         </div>
@@ -1079,6 +1079,225 @@
       width: auto;
       flex: none;
       justify-content: flex-end;
+    }
+  }
+
+  .cabinet-card {
+    position: relative;
+    background: var(--ui-background-panel);
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 12px;
+    padding: 12px 14px;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .cabinet-card:hover {
+    border-color: var(--color-stroke-ui-light);
+    background: var(--color-stroke-ui-dark);
+    transform: translateY(-1px);
+  }
+
+  .card-with-actions {
+    padding-right: 86px;
+  }
+
+  .card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 2;
+  }
+
+  .copy-btn,
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    border-radius: 8px;
+    color: var(--ui-text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.15s ease;
+  }
+
+  .copy-btn:hover,
+  .action-btn:hover {
+    color: var(--ui-text-main);
+    border-color: var(--color-stroke-ui-light);
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .cabinet-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px 12px;
+    min-height: 48px;
+  }
+
+  .cabinet-card__head-main {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .cabinet-card__eyebrow {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__title {
+    color: var(--ui-text-main);
+    font-size: 17px;
+    line-height: 1.25;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cabinet-card__subtitle {
+    color: var(--ui-text-secondary);
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .status-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ui-text-main);
+    text-transform: capitalize;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .status-inline__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+  }
+
+  .cabinet-card__grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .cabinet-card__field {
+    min-width: 0;
+  }
+
+  .cabinet-card__label {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .cabinet-card__value {
+    margin-top: 3px;
+    color: var(--ui-text-main);
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .counterparty-inline {
+    margin-top: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ui-text-main);
+    font-size: 13px;
+    line-height: 1.25;
+    font-weight: 500;
+  }
+
+  .counterparty-inline__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+  }
+
+  .cabinet-card__footer {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .chat-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    color: var(--ui-text-secondary);
+    background: transparent;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .chat-btn:hover {
+    color: var(--ui-text-main);
+    border-color: var(--color-stroke-ui-light);
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
+  }
+
+  .chat-btn__badge {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--ui-sticker-danger);
+    color: #fff;
+    font-size: 10px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 640px) {
+    .card-with-actions {
+      padding-right: 82px;
+    }
+
+    .cabinet-card__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cabinet-card__grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
