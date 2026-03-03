@@ -25,10 +25,8 @@ export default defineNuxtPlugin(() => {
   };
 
   const isTabActive = () => {
-    if (typeof document === "undefined" || typeof window === "undefined") return false;
-    if (document.visibilityState !== "visible") return false;
-
-    return document.hasFocus();
+    if (typeof document === "undefined") return false;
+    return document.visibilityState === "visible";
   };
 
   const shouldBeOnline = () => hasAccessToken() && isEligibleRoute() && isTabActive();
@@ -97,7 +95,15 @@ export default defineNuxtPlugin(() => {
     await leaveOnline();
   };
 
-  const handleVisibilityOrFocus = () => {
+  const handleVisibilityChange = () => {
+    void syncPresenceState();
+  };
+
+  const handlePageShow = () => {
+    void syncPresenceState();
+  };
+
+  const handleBrowserOnline = () => {
     void syncPresenceState();
   };
 
@@ -106,12 +112,11 @@ export default defineNuxtPlugin(() => {
     void leaveOnline();
   };
 
-  window.addEventListener("focus", handleVisibilityOrFocus);
-  window.addEventListener("blur", handleVisibilityOrFocus);
-  window.addEventListener("pageshow", handleVisibilityOrFocus);
+  window.addEventListener("pageshow", handlePageShow);
+  window.addEventListener("online", handleBrowserOnline);
   window.addEventListener("pagehide", handleBeforeUnload);
   window.addEventListener("beforeunload", handleBeforeUnload);
-  document.addEventListener("visibilitychange", handleVisibilityOrFocus);
+  document.addEventListener("visibilitychange", handleVisibilityChange);
 
   watch(
     () => [route.fullPath, authStore.accessToken] as const,
