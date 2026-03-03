@@ -812,6 +812,7 @@
   const SUPPORT_UNREAD_UPDATED_EVENT = "support-unread-updated";
   const SUPPORT_PRESENCE_UPDATED_EVENT = "support-presence-updated";
   const SUPPORT_ACTIVE_TICKET_CHANGED_EVENT = "support-active-ticket-changed";
+  const SUPPORT_MESSAGE_UPDATED_EVENT = "support-message-updated";
 
   type ChatAttachmentDisplay = "media" | "file";
   type ChatAttachmentKind = "image" | "video" | "file";
@@ -1764,6 +1765,19 @@
   };
 
   const appCore = useAppCore();
+  const emitSupportMessageUpdated = (message: ChatMessage) => {
+    useEventBus.emit(SUPPORT_MESSAGE_UPDATED_EVENT, {
+      ticketId: String(props.ticketId),
+      message: {
+        id: message.id,
+        user_id: message.userId,
+        type: message.type,
+        body: message.body,
+        meta: message.meta,
+        created_at: new Date(message.createdAt).toISOString(),
+      },
+    });
+  };
   const emitActiveSupportTicket = (ticketId: string | null) => {
     useEventBus.emit(SUPPORT_ACTIVE_TICKET_CHANGED_EVENT, {
       ticketId: ticketId ? String(ticketId).trim() : "",
@@ -1888,6 +1902,7 @@
       });
       messages.push(incomingMessage);
       ensureAscOrder();
+      emitSupportMessageUpdated(incomingMessage);
       await nextTick();
       await new Promise(requestAnimationFrame);
       if (shouldStick) {
@@ -2226,6 +2241,7 @@
         });
         messages.push(mappedMessage);
         ensureAscOrder();
+        emitSupportMessageUpdated(mappedMessage);
       }
 
       await nextTick();
