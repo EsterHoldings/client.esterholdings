@@ -1040,7 +1040,9 @@
         "empty": "No trades yet",
         "total": "Records",
         "added": "Added",
-        "updated": "Updated"
+        "updated": "Updated",
+        "loadMore": "Load more",
+        "loadingMore": "Loading..."
       },
       "nothingToShow": "No active accounts to show!",
       "openAccount": "Open new account!",

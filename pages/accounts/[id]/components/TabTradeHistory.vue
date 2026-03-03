@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
-  import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 
   import { computed, onMounted, ref, watch } from "vue";
@@ -28,11 +27,11 @@
     comment: string | null;
   };
 
-  type SyncResult = {
-    inserted?: number;
-    updated?: number;
-    remote_count?: number;
-    synced_at?: string;
+  type PagePayload = {
+    mapped: TradeHistoryRow[];
+    currentPage: number;
+    lastPage: number;
+    total: number;
   };
 
   const appCore = useAppCore();
@@ -41,12 +40,11 @@
   const rows = ref<TradeHistoryRow[]>([]);
   const page = ref(1);
   const lastPage = ref(1);
-  const total = ref(0);
 
   const isListLoading = ref(false);
-  const isSyncing = ref(false);
+  const isLoadingMore = ref(false);
   const hasLoadedOnce = ref(false);
-  const syncResult = ref<SyncResult | null>(null);
+  const syncedAfterEmpty = ref(false);
 
   const PER_PAGE = 20;
 
@@ -55,14 +53,16 @@
     return translated === key ? fallback : translated;
   };
 
-  const syncButtonLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.sync", "Sync history"));
   const emptyStateLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.empty", "No trades yet"));
-  const totalLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.total", "Records"));
+  const loadMoreLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.loadMore", "Load more"));
+  const loadingMoreLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.loadingMore", "Loading..."));
 
   const isBusy = computed(() => {
     if (isListLoading.value) return true;
     return !hasLoadedOnce.value && !!props.isLoading;
   });
+
+  const hasMore = computed(() => page.value < lastPage.value);
 
   const normalizeRow = (raw: Record<string, any>): TradeHistoryRow => {
     const profitValue = Number(raw?.profit ?? 0);
@@ -81,61 +81,73 @@
     };
   };
 
-  const loadHistory = async (targetPage = 1, syncIfEmpty = false) => {
-    isListLoading.value = true;
+  const fetchPage = async (targetPage: number): Promise<PagePayload> => {
+    const response = await appCore.accounts.getTradeHistory(props.id, {
+      page: targetPage,
+      per_page: PER_PAGE,
+      sort: "open_time",
+      direction: "desc",
+    });
 
-    try {
-      const response = await appCore.accounts.getTradeHistory(props.id, {
-        page: targetPage,
-        per_page: PER_PAGE,
-      });
+    const payload = response?.data?.data ?? {};
+    const list = Array.isArray(payload?.data) ? payload.data : [];
 
-      const payload = response?.data?.data ?? {};
-      const list = Array.isArray(payload?.data) ? payload.data : [];
-
-      rows.value = list.map((item: Record<string, any>) => normalizeRow(item));
-      page.value = Number(payload?.current_page ?? targetPage) || targetPage;
-      lastPage.value = Number(payload?.last_page ?? 1) || 1;
-      total.value = Number(payload?.total ?? rows.value.length) || 0;
-      hasLoadedOnce.value = true;
-
-      if (syncIfEmpty && targetPage === 1 && total.value === 0) {
-        await syncHistory();
-      }
-    } catch {
-      rows.value = [];
-      page.value = targetPage;
-      lastPage.value = 1;
-      total.value = 0;
-      hasLoadedOnce.value = true;
-    } finally {
-      isListLoading.value = false;
-    }
+    return {
+      mapped: list.map((item: Record<string, any>) => normalizeRow(item)),
+      currentPage: Number(payload?.current_page ?? targetPage) || targetPage,
+      lastPage: Number(payload?.last_page ?? 1) || 1,
+      total: Number(payload?.total ?? list.length) || 0,
+    };
   };
 
   const syncHistory = async () => {
-    if (isSyncing.value) return;
-
-    isSyncing.value = true;
     try {
-      const response = await appCore.accounts.syncTradeHistory(props.id, {});
-      syncResult.value = (response?.data?.data ?? null) as SyncResult | null;
-      await loadHistory(1);
+      await appCore.accounts.syncTradeHistory(props.id, {});
     } catch {
-      syncResult.value = null;
-    } finally {
-      isSyncing.value = false;
+      // keep UI stable when sync is unavailable
     }
   };
 
-  const goPrev = async () => {
-    if (page.value <= 1 || isListLoading.value) return;
-    await loadHistory(page.value - 1);
+  const loadHistory = async (targetPage = 1, mode: "replace" | "append" = "replace", syncIfEmpty = false) => {
+    if (mode === "append") {
+      isLoadingMore.value = true;
+    } else {
+      isListLoading.value = true;
+    }
+
+    try {
+      const payload = await fetchPage(targetPage);
+
+      rows.value = mode === "append" ? [...rows.value, ...payload.mapped] : payload.mapped;
+      page.value = payload.currentPage;
+      lastPage.value = payload.lastPage;
+      hasLoadedOnce.value = true;
+
+      if (syncIfEmpty && targetPage === 1 && payload.total === 0 && !syncedAfterEmpty.value) {
+        syncedAfterEmpty.value = true;
+        await syncHistory();
+        await loadHistory(1, "replace", false);
+      }
+    } catch {
+      if (mode === "replace") {
+        rows.value = [];
+        page.value = 1;
+        lastPage.value = 1;
+        hasLoadedOnce.value = true;
+      }
+    } finally {
+      if (mode === "append") {
+        isLoadingMore.value = false;
+      } else {
+        isListLoading.value = false;
+      }
+    }
   };
 
-  const goNext = async () => {
-    if (page.value >= lastPage.value || isListLoading.value) return;
-    await loadHistory(page.value + 1);
+  const loadMore = async () => {
+    if (!hasMore.value || isListLoading.value || isLoadingMore.value) return;
+
+    await loadHistory(page.value + 1, "append", false);
   };
 
   const formatAmount = (value: number): string => {
@@ -191,182 +203,87 @@
     return formatDate(row.open_time || row.close_time);
   };
 
-  const syncSummary = computed(() => {
-    if (!syncResult.value) return "";
-
-    const inserted = Number(syncResult.value.inserted ?? 0);
-    const updated = Number(syncResult.value.updated ?? 0);
-
-    return `${resolveText("cabinet.accounts.tradeHistory.added", "Added")}: ${inserted} • ${resolveText("cabinet.accounts.tradeHistory.updated", "Updated")}: ${updated}`;
-  });
-
   watch(
     () => props.id,
     async () => {
       hasLoadedOnce.value = false;
-      syncResult.value = null;
-      await loadHistory(1, true);
+      syncedAfterEmpty.value = false;
+      await loadHistory(1, "replace", true);
     }
   );
 
   onMounted(async () => {
-    await loadHistory(1, true);
+    await loadHistory(1, "replace", true);
   });
 </script>
 
 <template>
-  <div class="trade-history">
-    <div class="trade-history__header">
-      <UiTextSmall class="trade-history__meta"> {{ totalLabel }}: {{ total }} </UiTextSmall>
-
-      <button
-        type="button"
-        class="trade-history__sync-btn"
-        :disabled="isSyncing || isListLoading"
-        @click="syncHistory">
-        <UiIconUpdate
-          class="trade-history__sync-icon"
-          :spinning="isSyncing" />
-        <span>{{ syncButtonLabel }}</span>
-      </button>
-    </div>
-
-    <UiTextSmall
-      v-if="syncSummary"
-      class="trade-history__sync-summary">
-      {{ syncSummary }}
-    </UiTextSmall>
-
+  <div class="account-history">
     <div
       v-if="isBusy"
-      class="trade-history__loading">
+      class="account-history__loading">
       <UiIconSpinnerDefault class="!h-6 !w-6" />
     </div>
 
     <div
       v-else-if="rows.length === 0"
-      class="trade-history__empty">
+      class="account-history__empty">
       {{ emptyStateLabel }}
     </div>
 
     <div
       v-else
-      class="trade-history__list">
+      class="account-history__list">
       <article
         v-for="row in rows"
         :key="row.id"
-        class="trade-history__row">
-        <div class="trade-history__left">
-          <div class="trade-history__title">{{ resolveTitle(row) }}</div>
-          <UiTextSmall class="trade-history__details"> #{{ row.mt4_ticket_id }} </UiTextSmall>
-          <UiTextSmall class="trade-history__date">
-            {{ resolveDateLabel(row) }}
-          </UiTextSmall>
+        class="account-history__row">
+        <div class="account-history__left">
+          <div class="account-history__title">{{ resolveTitle(row) }}</div>
+          <UiTextSmall class="account-history__date">#{{ row.mt4_ticket_id }}</UiTextSmall>
+          <UiTextSmall class="account-history__date">{{ resolveDateLabel(row) }}</UiTextSmall>
         </div>
 
         <div
-          class="trade-history__amount"
+          class="account-history__amount"
           :class="row.profit > 0 ? 'is-positive' : row.profit < 0 ? 'is-negative' : 'is-neutral'">
           {{ formatAmount(row.profit) }}
         </div>
       </article>
     </div>
 
-    <div
-      v-if="!isBusy && lastPage > 1"
-      class="trade-history__pagination">
-      <button
-        type="button"
-        class="trade-history__page-btn"
-        :disabled="page <= 1 || isListLoading"
-        @click="goPrev">
-        {{ resolveText("cabinet.accounts.pagination.prev", "Prev") }}
-      </button>
-
-      <UiTextSmall class="trade-history__page-info"> {{ page }} / {{ lastPage }} </UiTextSmall>
-
-      <button
-        type="button"
-        class="trade-history__page-btn"
-        :disabled="page >= lastPage || isListLoading"
-        @click="goNext">
-        {{ resolveText("cabinet.accounts.pagination.next", "Next") }}
-      </button>
-    </div>
+    <button
+      v-if="!isBusy && hasMore"
+      type="button"
+      class="account-history__load-more"
+      :disabled="isLoadingMore"
+      @click="loadMore">
+      {{ isLoadingMore ? loadingMoreLabel : loadMoreLabel }}
+    </button>
   </div>
 </template>
 
 <style scoped lang="scss">
-  .trade-history {
+  .account-history {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
   }
 
-  .trade-history__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .trade-history__meta {
-    color: var(--ui-text-secondary);
-  }
-
-  .trade-history__sync-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid var(--color-stroke-ui-light);
-    border-radius: 8px;
-    background: transparent;
-    color: var(--ui-text-main);
-    padding: 6px 10px;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1;
-    cursor: pointer;
-  }
-
-  .trade-history__sync-btn:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--ui-background-card) 70%, transparent);
-  }
-
-  .trade-history__sync-btn:disabled {
-    opacity: 0.65;
-    cursor: default;
-  }
-
-  .trade-history__sync-icon {
-    width: 14px;
-    height: 14px;
-  }
-
-  .trade-history__sync-summary {
-    color: var(--ui-text-secondary);
-  }
-
-  .trade-history__loading,
-  .trade-history__empty {
+  .account-history__loading,
+  .account-history__empty {
     min-height: 160px;
-    border-radius: 12px;
-    border: 1px solid var(--color-stroke-ui-light);
-    background: color-mix(in srgb, var(--ui-background-card) 62%, transparent);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--ui-text-main);
   }
 
-  .trade-history__list {
+  .account-history__list {
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
-  .trade-history__row {
+  .account-history__row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -377,95 +294,78 @@
     padding: 10px 12px;
   }
 
-  .trade-history__left {
+  .account-history__left {
     min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 2px;
   }
 
-  .trade-history__title {
+  .account-history__title {
     color: var(--ui-text-main);
     font-weight: 600;
     line-height: 1.3;
     word-break: break-word;
   }
 
-  .trade-history__details,
-  .trade-history__date {
+  .account-history__date {
     color: var(--ui-text-secondary);
   }
 
-  .trade-history__amount {
+  .account-history__amount {
     white-space: nowrap;
     font-weight: 700;
     font-size: 16px;
     line-height: 1.1;
   }
 
-  .trade-history__amount.is-positive {
+  .account-history__amount.is-positive {
     color: var(--ui-sticker-success);
   }
 
-  .trade-history__amount.is-negative {
+  .account-history__amount.is-negative {
     color: var(--ui-sticker-danger);
   }
 
-  .trade-history__amount.is-neutral {
+  .account-history__amount.is-neutral {
     color: var(--ui-text-main);
   }
 
-  .trade-history__pagination {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-
-  .trade-history__page-btn {
-    min-width: 72px;
-    border: 1px solid var(--color-stroke-ui-light);
-    border-radius: 8px;
+  .account-history__load-more {
+    display: block;
+    margin: 12px auto 0;
+    border: none;
     background: transparent;
-    color: var(--ui-text-main);
-    padding: 6px 10px;
-    font-size: 13px;
-    line-height: 1;
+    color: var(--ui-text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: underline;
+    text-underline-offset: 3px;
     cursor: pointer;
+    padding: 4px 8px;
   }
 
-  .trade-history__page-btn:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--ui-background-card) 70%, transparent);
-  }
-
-  .trade-history__page-btn:disabled {
+  .account-history__load-more:disabled {
     opacity: 0.65;
     cursor: default;
   }
 
-  .trade-history__page-info {
-    color: var(--ui-text-secondary);
-  }
-
   @media (max-width: 640px) {
-    .trade-history__header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .trade-history__row {
+    .account-history__row {
       flex-direction: column;
       align-items: flex-start;
       gap: 6px;
       padding: 10px;
     }
 
-    .trade-history__amount {
+    .account-history__amount {
       font-size: 15px;
     }
 
-    .trade-history__pagination {
-      justify-content: space-between;
+    .account-history__load-more {
+      margin-top: 10px;
+      font-size: 13px;
     }
   }
 </style>
