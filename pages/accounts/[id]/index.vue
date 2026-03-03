@@ -99,7 +99,12 @@
     if (!panelEl) return;
 
     const top = panelEl.getBoundingClientRect().top;
-    const minHeightPx = Math.max(0, Math.floor(window.innerHeight - top - 20));
+    const cabinetMain = panelEl.closest(".cabinet-main") as HTMLElement | null;
+    const mainPaddingBottom = cabinetMain ? Number.parseFloat(getComputedStyle(cabinetMain).paddingBottom || "0") : 0;
+
+    // On mobile/tablet cabinet layout reserves bottom padding for fixed nav menu.
+    const mobileMenuReserve = mainPaddingBottom >= 40 ? mainPaddingBottom : 0;
+    const minHeightPx = Math.max(0, Math.floor(window.innerHeight - top - 20 - mobileMenuReserve));
     panelMinHeight.value = `${minHeightPx}px`;
   };
 
