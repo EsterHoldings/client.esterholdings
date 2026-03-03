@@ -1037,10 +1037,15 @@
       },
       "tradeHistory": {
         "sync": "Синхронизировать",
+        "syncing": "Синхронизация...",
         "empty": "Сделок пока нет",
         "total": "Записей",
         "added": "Добавлено",
         "updated": "Обновлено",
+        "searchPlaceholder": "Поиск по всем полям сделки",
+        "filterAll": "Все",
+        "filterPositive": "Прибыльные",
+        "filterNegative": "Убыточные",
         "loadMore": "Загрузить еще",
         "loadingMore": "Загрузка..."
       },

@@ -66,7 +66,7 @@
   import TabsAsList from "~/components/block/tabs/TabsAsList.vue";
   import UiIconUser from "~/components/ui/UiIconUser.vue";
   import UiIconHistory from "~/components/ui/UiIconHistory.vue";
-  import UiIconInstruments from "~/components/ui/UiIconInstruments.vue";
+  import UiIconTime from "~/components/ui/UiIconTime.vue";
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
@@ -94,7 +94,7 @@
         component: TabHistory,
       },
       {
-        icon: UiIconInstruments,
+        icon: UiIconTime,
         label: resolveText("cabinet.accounts.tabs.tradeHistory", "История торгов"),
         component: TabTradeHistory,
       },

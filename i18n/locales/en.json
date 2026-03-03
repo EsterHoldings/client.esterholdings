@@ -1037,10 +1037,15 @@
       },
       "tradeHistory": {
         "sync": "Sync history",
+        "syncing": "Syncing...",
         "empty": "No trades yet",
         "total": "Records",
         "added": "Added",
         "updated": "Updated",
+        "searchPlaceholder": "Search by all trade fields",
+        "filterAll": "All",
+        "filterPositive": "Profitable",
+        "filterNegative": "Losing",
         "loadMore": "Load more",
         "loadingMore": "Loading..."
       },

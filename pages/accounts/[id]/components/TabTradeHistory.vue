@@ -1,8 +1,9 @@
 <script setup lang="ts">
+  import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 
-  import { computed, onMounted, ref, watch } from "vue";
+  import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import useAppCore from "~/composables/useAppCore";
 
@@ -34,17 +35,24 @@
     total: number;
   };
 
+  type ProfitFilter = "all" | "positive" | "negative";
+
   const appCore = useAppCore();
   const { t, locale } = useI18n({ useScope: "global" });
 
   const rows = ref<TradeHistoryRow[]>([]);
   const page = ref(1);
   const lastPage = ref(1);
+  const searchQuery = ref("");
+  const debouncedSearchQuery = ref("");
+  const profitFilter = ref<ProfitFilter>("all");
 
   const isListLoading = ref(false);
   const isLoadingMore = ref(false);
+  const isSyncingHistory = ref(false);
   const hasLoadedOnce = ref(false);
   const syncedAfterEmpty = ref(false);
+  let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   const PER_PAGE = 20;
 
@@ -56,6 +64,14 @@
   const emptyStateLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.empty", "No trades yet"));
   const loadMoreLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.loadMore", "Load more"));
   const loadingMoreLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.loadingMore", "Loading..."));
+  const searchPlaceholder = computed(() =>
+    resolveText("cabinet.accounts.tradeHistory.searchPlaceholder", "Search by all trade fields")
+  );
+  const filterAllLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.filterAll", "All"));
+  const filterPositiveLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.filterPositive", "Profitable"));
+  const filterNegativeLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.filterNegative", "Losing"));
+  const syncLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.sync", "Sync history"));
+  const syncingLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.syncing", "Syncing..."));
 
   const isBusy = computed(() => {
     if (isListLoading.value) return true;
@@ -82,12 +98,22 @@
   };
 
   const fetchPage = async (targetPage: number): Promise<PagePayload> => {
-    const response = await appCore.accounts.getTradeHistory(props.id, {
+    const params: Record<string, string | number> = {
       page: targetPage,
       per_page: PER_PAGE,
       sort: "open_time",
       direction: "desc",
-    });
+    };
+
+    if (debouncedSearchQuery.value !== "") {
+      params.search = debouncedSearchQuery.value;
+    }
+
+    if (profitFilter.value !== "all") {
+      params.profit_filter = profitFilter.value;
+    }
+
+    const response = await appCore.accounts.getTradeHistory(props.id, params);
 
     const payload = response?.data?.data ?? {};
     const list = Array.isArray(payload?.data) ? payload.data : [];
@@ -148,6 +174,22 @@
     if (!hasMore.value || isListLoading.value || isLoadingMore.value) return;
 
     await loadHistory(page.value + 1, "append", false);
+  };
+
+  const applyFilters = async () => {
+    await loadHistory(1, "replace", false);
+  };
+
+  const syncAndReload = async () => {
+    if (isSyncingHistory.value || isListLoading.value || isLoadingMore.value) return;
+
+    isSyncingHistory.value = true;
+    try {
+      await syncHistory();
+    } finally {
+      isSyncingHistory.value = false;
+      await loadHistory(1, "replace", false);
+    }
   };
 
   const formatAmount = (value: number): string => {
@@ -212,6 +254,28 @@
     }
   );
 
+  watch(searchQuery, value => {
+    if (searchDebounceTimer) {
+      clearTimeout(searchDebounceTimer);
+    }
+
+    searchDebounceTimer = setTimeout(() => {
+      debouncedSearchQuery.value = value.trim();
+    }, 300);
+  });
+
+  watch([debouncedSearchQuery, profitFilter], async () => {
+    if (!hasLoadedOnce.value) return;
+    await applyFilters();
+  });
+
+  onBeforeUnmount(() => {
+    if (searchDebounceTimer) {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = null;
+    }
+  });
+
   onMounted(async () => {
     await loadHistory(1, "replace", true);
   });
@@ -219,6 +283,51 @@
 
 <template>
   <div class="account-history">
+    <div class="account-history__controls">
+      <div class="account-history__search-wrap">
+        <input
+          v-model="searchQuery"
+          type="text"
+          class="account-history__search-input"
+          :placeholder="searchPlaceholder" />
+      </div>
+
+      <div class="account-history__filters">
+        <button
+          type="button"
+          class="account-history__filter"
+          :class="profitFilter === 'all' ? 'is-active' : ''"
+          @click="profitFilter = 'all'">
+          {{ filterAllLabel }}
+        </button>
+        <button
+          type="button"
+          class="account-history__filter"
+          :class="profitFilter === 'positive' ? 'is-active' : ''"
+          @click="profitFilter = 'positive'">
+          {{ filterPositiveLabel }}
+        </button>
+        <button
+          type="button"
+          class="account-history__filter"
+          :class="profitFilter === 'negative' ? 'is-active' : ''"
+          @click="profitFilter = 'negative'">
+          {{ filterNegativeLabel }}
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="account-history__sync-btn"
+        :disabled="isSyncingHistory || isListLoading || isLoadingMore"
+        :title="isSyncingHistory ? syncingLabel : syncLabel"
+        @click="syncAndReload">
+        <UiIconUpdate
+          class="h-[14px] w-[14px]"
+          :spinning="isSyncingHistory" />
+      </button>
+    </div>
+
     <div
       v-if="isBusy"
       class="account-history__loading">
@@ -266,6 +375,87 @@
 <style scoped lang="scss">
   .account-history {
     width: 100%;
+  }
+
+  .account-history__controls {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .account-history__search-wrap {
+    min-width: 220px;
+    flex: 1 1 260px;
+  }
+
+  .account-history__search-input {
+    width: 100%;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--color-stroke-ui-light);
+    background: color-mix(in srgb, var(--ui-background-card) 68%, transparent);
+    color: var(--ui-text-main);
+    padding: 0 10px;
+    font-size: 13px;
+    line-height: 1.2;
+    outline: none;
+  }
+
+  .account-history__search-input::placeholder {
+    color: var(--ui-text-secondary);
+  }
+
+  .account-history__search-input:focus {
+    border-color: color-mix(in srgb, var(--ui-primary-main) 55%, var(--color-stroke-ui-light));
+  }
+
+  .account-history__filters {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .account-history__filter {
+    border: 1px solid var(--color-stroke-ui-light);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ui-background-card) 70%, transparent);
+    color: var(--ui-text-secondary);
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .account-history__filter.is-active {
+    color: var(--ui-text-main);
+    border-color: color-mix(in srgb, var(--ui-primary-main) 50%, var(--color-stroke-ui-light));
+    background: color-mix(in srgb, var(--ui-primary-main) 14%, var(--ui-background-card));
+  }
+
+  .account-history__sync-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--color-stroke-ui-light);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--ui-background-card) 70%, transparent);
+    color: var(--ui-text-main);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .account-history__sync-btn:disabled {
+    opacity: 0.65;
+    cursor: default;
   }
 
   .account-history__loading,
@@ -352,6 +542,26 @@
   }
 
   @media (max-width: 640px) {
+    .account-history__controls {
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .account-history__search-wrap {
+      min-width: 0;
+      width: 100%;
+      flex: 1 1 100%;
+    }
+
+    .account-history__filters {
+      flex: 1 1 auto;
+    }
+
+    .account-history__sync-btn {
+      margin-left: auto;
+    }
+
     .account-history__row {
       flex-direction: column;
       align-items: flex-start;

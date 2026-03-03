@@ -1032,10 +1032,15 @@
       },
       "tradeHistory": {
         "sync": "Синхронізувати",
+        "syncing": "Синхронізація...",
         "empty": "Угод поки немає",
         "total": "Записів",
         "added": "Додано",
         "updated": "Оновлено",
+        "searchPlaceholder": "Пошук за всіма полями угоди",
+        "filterAll": "Усі",
+        "filterPositive": "Прибуткові",
+        "filterNegative": "Збиткові",
         "loadMore": "Завантажити ще",
         "loadingMore": "Завантаження..."
       },
