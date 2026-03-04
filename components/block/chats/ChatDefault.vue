@@ -2800,11 +2800,11 @@
   const { $echo } = useNuxtApp() as unknown as { $echo: any };
   const hasEchoClient = () => Boolean($echo && typeof $echo.private === "function");
 
-  function subscribePrivate() {
+  function subscribePrivate(ticketId: string) {
     if (!hasEchoClient()) {
       return null;
     }
-    const ch = $echo.private(`chat.${props.ticketId}`);
+    const ch = $echo.private(`chat.${ticketId}`);
     ch.listen(".MessageSent", async (e: any) => {
       const el = listRef.value;
       const shouldStick = !!el && userIsNearBottom.value && performance.now() - lastUserScrollAt > SCROLL_IDLE_MS;
@@ -2923,20 +2923,20 @@
     emitSupportPresencePayload();
   }
 
-  function joinPresence() {
+  function joinPresence(ticketId: string) {
     if (!hasEchoClient()) {
       return;
     }
     presenceChan = $echo
-      .private(`support.ticket.${props.ticketId}`)
+      .private(`support.ticket.${ticketId}`)
       .listen(".ticket.presence.updated", (payload: any) => {
         applyPresencePayload(payload);
       });
   }
-  function leavePresence() {
+  function leavePresence(ticketId: string) {
     try {
       if ($echo && typeof $echo.leave === "function") {
-        $echo.leave(`support.ticket.${props.ticketId}`);
+        $echo.leave(`support.ticket.${ticketId}`);
       }
     } catch {}
     presenceChan = null;
@@ -2983,6 +2983,67 @@
   let privateChan: any = null;
   let resizeListenerAttached = false;
   let mobileModeResizeListenerAttached = false;
+  let appResumeListenersAttached = false;
+
+  const reconnectSocketTransport = () => {
+    if (!hasEchoClient()) return;
+    const pusher = $echo?.connector?.pusher;
+    const state = String(pusher?.connection?.state ?? "");
+    if (!pusher) return;
+
+    if (state === "disconnected" || state === "failed") {
+      try {
+        pusher.connect();
+      } catch {
+        // noop
+      }
+    }
+  };
+
+  const leavePrivate = (ticketId: string) => {
+    try {
+      if ($echo && typeof $echo.leave === "function") {
+        $echo.leave(`chat.${ticketId}`);
+      }
+    } catch {
+      // noop
+    }
+    privateChan = null;
+  };
+
+  const subscribeRealtimeForTicket = async (ticketId: string) => {
+    reconnectSocketTransport();
+    leavePrivate(ticketId);
+    leavePresence(ticketId);
+
+    if (hasEchoClient()) {
+      joinPresence(ticketId);
+      privateChan = subscribePrivate(ticketId);
+    }
+
+    stopPresenceHeartbeat();
+    await startPresenceHeartbeat(ticketId);
+  };
+
+  const handleRealtimeResume = async () => {
+    if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+
+    await subscribeRealtimeForTicket(props.ticketId).catch(() => {});
+    await syncLatestMessagesFromServer();
+  };
+
+  const handleVisibilityChange = () => {
+    if (typeof document === "undefined" || document.visibilityState !== "visible") return;
+    void handleRealtimeResume();
+  };
+
+  const handleBrowserOnline = () => {
+    void handleRealtimeResume();
+  };
+
+  const handlePageShow = () => {
+    void handleRealtimeResume();
+  };
 
   async function markReadUpToMessageId(messageId: string) {
     if (!messageId || !isIncomingMessageId(messageId)) return;
@@ -3087,7 +3148,11 @@
 
     lastReadAckMessageId.value = null;
     emitActiveSupportTicket(props.ticketId);
+    await subscribeRealtimeForTicket(props.ticketId).catch(error => {
+      console.error("[ChatDefault] subscribeRealtimeForTicket failed", error);
+    });
     await loadInitial();
+    await syncLatestMessagesFromServer();
 
     // resize listener тоже только для плавающего окна
     if (!asBlockMode.value) {
@@ -3095,23 +3160,17 @@
       resizeListenerAttached = true;
     }
 
-    await apiOpen(props.ticketId);
-    if (hasEchoClient()) {
-      joinPresence();
-      privateChan = subscribePrivate();
-    }
-    startPresenceHeartbeat(props.ticketId);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("online", handleBrowserOnline);
+    window.addEventListener("pageshow", handlePageShow);
+    appResumeListenersAttached = true;
   });
 
   onBeforeUnmount(() => {
     void stopTyping(true);
     clearAllRemoteTyping();
-    try {
-      if (privateChan && $echo && typeof $echo.leave === "function") {
-        $echo.leave(`chat.${props.ticketId}`);
-      }
-    } catch {}
-    leavePresence();
+    leavePrivate(props.ticketId);
+    leavePresence(props.ticketId);
     stopPresenceHeartbeat();
     apiClose(props.ticketId).catch(() => {});
 
@@ -3140,6 +3199,13 @@
     closeAttachMenu();
     closeMediaViewer();
 
+    if (appResumeListenersAttached) {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("online", handleBrowserOnline);
+      window.removeEventListener("pageshow", handlePageShow);
+      appResumeListenersAttached = false;
+    }
+
     emitActiveSupportTicket(null);
   });
 
@@ -3150,25 +3216,18 @@
       emitActiveSupportTicket(id);
       await stopTyping(true);
       clearAllRemoteTyping();
-      try {
-        if (privateChan && $echo && typeof $echo.leave === "function") {
-          $echo.leave(`chat.${oldId}`);
-        }
-      } catch {}
-      leavePresence();
-      await apiOpen(id);
-      if (hasEchoClient()) {
-        joinPresence();
-        privateChan = subscribePrivate();
-      }
-      stopPresenceHeartbeat();
-      await startPresenceHeartbeat(id);
+      leavePrivate(oldId);
+      leavePresence(oldId);
+      await subscribeRealtimeForTicket(id).catch(error => {
+        console.error("[ChatDefault] subscribeRealtimeForTicket failed", error);
+      });
       booting.value = true;
       messages.splice(0, messages.length);
       lastReadAckMessageId.value = null;
       nextPage = 2;
       hasMore.value = true;
       await loadInitial();
+      await syncLatestMessagesFromServer();
     }
   );
 
