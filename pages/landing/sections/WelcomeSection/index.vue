@@ -37,7 +37,7 @@ const components = [GeneralSlide, TenYearsSlide, TopTradersSlide];
 
 <style lang="scss" scoped>
 .welcome {
-  --landing-header-height: 80px;
+  // --landing-header-height: 80px;
   min-height: 100vh;
   height: 100%;
   width: 100%;
