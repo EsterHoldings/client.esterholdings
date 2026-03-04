@@ -376,6 +376,7 @@
       position: fixed;
       width: 100%;
       z-index: 10000;
+      backdrop-filter: blur(15px);
 
       .login {
         color: white;
