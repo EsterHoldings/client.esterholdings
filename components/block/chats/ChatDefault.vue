@@ -2500,6 +2500,63 @@
       a.authorInitials === b.authorInitials
     );
   }
+  const hasMessageText = (value: unknown): boolean => normalizeText(value).length > 0;
+  const getMetaAttachmentScore = (meta: ChatMessageMeta | null | undefined): number => {
+    if (!meta) return 0;
+
+    const attachments = Array.isArray(meta.attachments) ? meta.attachments : [];
+    const attachmentCount = attachments.length;
+    const resolvedUrlCount = attachments.filter(attachment => {
+      const url = normalizeText(attachment.url);
+      return url && !url.startsWith("blob:");
+    }).length;
+
+    return attachmentCount * 100 + resolvedUrlCount * 10 + toPositiveInt(meta.attachmentsCount);
+  };
+  const pickPreferredMeta = (...candidates: Array<ChatMessageMeta | null | undefined>): ChatMessageMeta | null => {
+    let best: ChatMessageMeta | null = null;
+    let bestScore = -1;
+
+    for (const candidate of candidates) {
+      if (!candidate) continue;
+
+      const score = getMetaAttachmentScore(candidate);
+      if (score > bestScore) {
+        best = candidate;
+        bestScore = score;
+      }
+    }
+
+    return best;
+  };
+  const pickPreferredBody = (...candidates: Array<string | null | undefined>): string => {
+    for (const candidate of candidates) {
+      if (hasMessageText(candidate)) return String(candidate);
+    }
+
+    const firstDefined = candidates.find(candidate => candidate !== undefined && candidate !== null);
+    return firstDefined === undefined || firstDefined === null ? "" : String(firstDefined);
+  };
+  const removeDuplicateMessagesById = (messageId: string, keepIndex: number): number => {
+    const duplicateIndices: number[] = [];
+
+    for (let index = 0; index < messages.length; index += 1) {
+      if (index === keepIndex) continue;
+      if (messages[index].id !== messageId) continue;
+      duplicateIndices.push(index);
+    }
+
+    if (!duplicateIndices.length) return keepIndex;
+
+    for (const index of duplicateIndices.sort((a, b) => b - a)) {
+      messages.splice(index, 1);
+      if (index < keepIndex) {
+        keepIndex -= 1;
+      }
+    }
+
+    return keepIndex;
+  };
   const buildPendingMessageFromPayload = (
     body: string,
     selectedAttachments: PendingAttachment[],
@@ -2548,11 +2605,14 @@
     if (index === -1) return;
 
     const pending = messages[index];
+    const mergedMeta = pickPreferredMeta(serverMessage.meta, pending.meta);
+    const mergedBody = pickPreferredBody(serverMessage.body, pending.body);
+
     messages[index] = {
       ...pending,
       type: serverMessage.type || pending.type,
-      body: serverMessage.body ?? pending.body,
-      meta: serverMessage.meta ?? pending.meta,
+      body: mergedBody,
+      meta: mergedMeta,
       createdAt: serverMessage.createdAt || pending.createdAt,
       pendingServerId: serverMessage.id,
       author: serverMessage.author ?? pending.author,
@@ -2600,21 +2660,25 @@
     const pendingIndex = findPendingMessageIndexForIncoming(incoming);
     if (pendingIndex !== -1) {
       const pendingMessage = messages[pendingIndex];
+      const mergedMeta = pickPreferredMeta(incoming.meta, pendingMessage.meta);
+      const mergedBody = pickPreferredBody(incoming.body, pendingMessage.body);
       const reconciledMessage: ChatMessage = {
         ...incoming,
         id: incoming.id,
         createdAt: incoming.createdAt || pendingMessage.createdAt,
+        body: mergedBody,
+        meta: mergedMeta,
         deliveryStatus: "sent",
         pendingServerId: undefined,
       };
 
-      if (isSameMessage(pendingMessage, reconciledMessage)) {
-        if (pendingMessage.id === incoming.id && pendingMessage.deliveryStatus === "sent") {
-          return "unchanged";
-        }
+      let targetIndex = removeDuplicateMessagesById(incoming.id, pendingIndex);
+      const currentMessage = messages[targetIndex];
+      if (isSameMessage(currentMessage, reconciledMessage)) {
+        return "unchanged";
       }
 
-      messages[pendingIndex] = reconciledMessage;
+      messages[targetIndex] = reconciledMessage;
       return "updated";
     }
 
@@ -2624,12 +2688,13 @@
       return "inserted";
     }
 
-    const current = messages[index];
+    const targetIndex = removeDuplicateMessagesById(incoming.id, index);
+    const current = messages[targetIndex];
     if (isSameMessage(current, incoming)) {
       return "unchanged";
     }
 
-    messages[index] = {
+    messages[targetIndex] = {
       ...incoming,
       deliveryStatus: "sent",
       pendingServerId: undefined,
@@ -2733,8 +2798,12 @@
   }
 
   const { $echo } = useNuxtApp() as unknown as { $echo: any };
+  const hasEchoClient = () => Boolean($echo && typeof $echo.private === "function");
 
   function subscribePrivate() {
+    if (!hasEchoClient()) {
+      return null;
+    }
     const ch = $echo.private(`chat.${props.ticketId}`);
     ch.listen(".MessageSent", async (e: any) => {
       const el = listRef.value;
@@ -2855,6 +2924,9 @@
   }
 
   function joinPresence() {
+    if (!hasEchoClient()) {
+      return;
+    }
     presenceChan = $echo
       .private(`support.ticket.${props.ticketId}`)
       .listen(".ticket.presence.updated", (payload: any) => {
@@ -2863,7 +2935,9 @@
   }
   function leavePresence() {
     try {
-      $echo.leave(`support.ticket.${props.ticketId}`);
+      if ($echo && typeof $echo.leave === "function") {
+        $echo.leave(`support.ticket.${props.ticketId}`);
+      }
     } catch {}
     presenceChan = null;
     onlineMap.clear();
@@ -3022,8 +3096,10 @@
     }
 
     await apiOpen(props.ticketId);
-    joinPresence();
-    privateChan = subscribePrivate();
+    if (hasEchoClient()) {
+      joinPresence();
+      privateChan = subscribePrivate();
+    }
     startPresenceHeartbeat(props.ticketId);
   });
 
@@ -3031,7 +3107,9 @@
     void stopTyping(true);
     clearAllRemoteTyping();
     try {
-      if (privateChan) $echo.leave(`chat.${props.ticketId}`);
+      if (privateChan && $echo && typeof $echo.leave === "function") {
+        $echo.leave(`chat.${props.ticketId}`);
+      }
     } catch {}
     leavePresence();
     stopPresenceHeartbeat();
@@ -3073,12 +3151,16 @@
       await stopTyping(true);
       clearAllRemoteTyping();
       try {
-        if (privateChan) $echo.leave(`chat.${oldId}`);
+        if (privateChan && $echo && typeof $echo.leave === "function") {
+          $echo.leave(`chat.${oldId}`);
+        }
       } catch {}
       leavePresence();
       await apiOpen(id);
-      joinPresence();
-      privateChan = subscribePrivate();
+      if (hasEchoClient()) {
+        joinPresence();
+        privateChan = subscribePrivate();
+      }
       stopPresenceHeartbeat();
       await startPresenceHeartbeat(id);
       booting.value = true;
