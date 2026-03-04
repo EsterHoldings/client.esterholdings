@@ -26,7 +26,9 @@
           :breakpoints="breakpoints">
           <SwiperSlide
             v-for="(card, index) in displayedCards"
-            :key="index">
+            :key="index"
+            @mouseenter="hoveredIndex = index"
+            @mouseleave="hoveredIndex = null">
             <TheCard
               :type="card.type"
               :title="card.title"
@@ -35,6 +37,7 @@
               :features="card.features"
               :button-text="card.buttonText"
               :is-recommended="card.isRecommended"
+              :is-expanded="getIsExpanded(card, index)"
               :theme="themeStore.currentTheme" />
           </SwiperSlide>
         </Swiper>
@@ -56,6 +59,13 @@
   const { t, tm } = useI18n();
   const themeStore = useThemeStore();
   const activeTabIndex = ref(0);
+  const hoveredIndex = ref<number | null>(null);
+
+  /* if true, the card is expanded */
+  const getIsExpanded = (card: { isRecommended: boolean }, index: number) => {
+    if (hoveredIndex.value === null) return card.isRecommended;
+    return hoveredIndex.value === index;
+  };
 
   const accountTypes = ["Demo", "Standard", "Tandem", "Islamic"] as const;
 

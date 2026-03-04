@@ -1,5 +1,5 @@
 <template>
-  <div class="card-wrapper">
+  <div class="card-wrapper" :class="{ 'is-expanded': isExpanded }">
     <!-- Background box with gradient border -->
     <div
       class="absolute inset-0 rounded-[20px] p-[1px]"
@@ -113,11 +113,13 @@
     features: string[];
     buttonText: string;
     isRecommended?: boolean;
+    isExpanded?: boolean; // if true, the card is expanded
     theme?: "dark" | "light";
   }
 
   const props = withDefaults(defineProps<Props>(), {
     isRecommended: false,
+    isExpanded: false, // if true, the card is expanded
     theme: "dark",
   });
 </script>
@@ -131,6 +133,7 @@
     width: 287px;
     min-width: 287px;
     flex-shrink: 0;
+    transition: transform 0.25s ease;
   }
 
   .card-wrapper:has(.badge-wrapper) {
@@ -140,6 +143,16 @@
   .card-wrapper:not(:has(.badge-wrapper)) {
     height: 396px;
     padding: 10px;
+  }
+
+  /* blue card when hovered */
+  .card-wrapper.is-expanded:not(:has(.badge-wrapper)) {
+    transform: scale(1.09);
+  }
+
+  /* recommended card when hovered */
+  .card-wrapper:has(.badge-wrapper):not(.is-expanded) {
+    transform: scale(0.90);
   }
 
   .blur-layer {
