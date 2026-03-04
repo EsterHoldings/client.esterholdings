@@ -1370,6 +1370,21 @@
     scheduleDesktopGridMeasure();
   };
 
+  const refreshParticipantsFromTicket = async () => {
+    try {
+      const response = await appCore.tickets.getById(id.value);
+      const ticket = response?.data ?? {};
+      const serverParticipants = Array.isArray(ticket?.participants) ? ticket.participants : [];
+      if (serverParticipants.length > 0) {
+        applyParticipantsPayload(serverParticipants);
+        return;
+      }
+      updateParticipantsOnlineFromPresence({});
+    } catch {
+      // noop
+    }
+  };
+
   const handleSupportPresenceUpdated = (payload?: any) => {
     if (!payload || typeof payload !== "object") return;
 
@@ -1401,6 +1416,18 @@
         : (payload as Record<string, unknown>);
 
     if (!rawMessage || typeof rawMessage !== "object") return;
+
+    const messageType = normalizeText(rawMessage.type).toLowerCase();
+    const messageMeta =
+      rawMessage.meta && typeof rawMessage.meta === "object" ? (rawMessage.meta as Record<string, unknown>) : null;
+    const messageEvent = normalizeText(messageMeta?.event);
+    if (
+      messageType === "system" &&
+      ["participant_joined", "participant_added", "participant_removed", "participant_left"].includes(messageEvent)
+    ) {
+      void refreshParticipantsFromTicket();
+    }
+
     mergeLibraryFromMessages([rawMessage]);
   };
 
