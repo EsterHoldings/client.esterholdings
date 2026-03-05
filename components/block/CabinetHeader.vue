@@ -124,7 +124,7 @@
 
 <template>
   <header
-    class="h-[60px] flex items-center justify-between border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
+    class="h-[60px] flex items-center justify-between lg:justify-start border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
     <div class="lg:absolute lg:top-[-100px]">
       <NuxtLink :to="addCurrentLocaleToPath('dashboard')">
         <UiIconLogo v-if="!isThemeLight" />
@@ -132,13 +132,13 @@
       </NuxtLink>
     </div>
 
-    <div
-      v-if="props.showBreadcrumbs && props.breadcrumbs.length"
-      class="hidden lg:flex min-w-0 flex-1 pr-4 items-center text-[var(--ui-text-secondary)]">
-      <UiBreadcrumb :list="props.breadcrumbs" />
+    <div class="hidden lg:flex min-w-0 flex-1 pr-4 items-center text-[var(--ui-text-secondary)]">
+      <UiBreadcrumb
+        v-if="props.showBreadcrumbs && props.breadcrumbs.length"
+        :list="props.breadcrumbs" />
     </div>
 
-    <div class="flex items-center justify-end gap-2">
+    <div class="ml-auto flex items-center justify-end gap-2">
       <div class="h-[60px] flex items-center justify-center">
         <LanguageSwitcher
           isSidebar
