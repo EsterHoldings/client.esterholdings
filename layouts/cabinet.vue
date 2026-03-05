@@ -1,6 +1,9 @@
 <template>
   <div class="cabinet-layout min-h-dvh flex flex-col bg-[var(--ui-background)] bg-blend-multiply">
-    <CabinetHeader class="cabinet-header shrink-0" />
+    <CabinetHeader
+      class="cabinet-header shrink-0"
+      :breadcrumbs="breadcrumbs"
+      :show-breadcrumbs="showBreadcrumbs" />
 
     <div class="flex-1 min-h-0 flex">
       <CabinetSidebar class="shrink-0" />
@@ -16,11 +19,6 @@
         <main
           :key="route.fullPath"
           class="cabinet-main flex-1 min-h-0 overflow-y-auto no-scrollbar box-border w-full p-1 lg:pl-[250px] text-white">
-          <UiContainer v-if="showBreadcrumbs && breadcrumbs.length">
-            <div class="cabinet-breadcrumbs text-sm text-[var(--ui-text-secondary)]">
-              <UiBreadcrumb :list="breadcrumbs" />
-            </div>
-          </UiContainer>
           <slot />
         </main>
       </Transition>
@@ -38,9 +36,7 @@
   import CabinetSidebar from "~/components/block/CabinetSidebar.vue";
   import TheFooter from "~/components/block/TheFooter.vue";
   import CabinetHeader from "~/components/block/CabinetHeader.vue";
-  import UiBreadcrumb from "~/components/ui/UiBreadcrumb.vue";
   import UiIconHome from "~/components/ui/UiIconHome.vue";
-  import UiContainer from "~/components/ui/UiContainer.vue";
 
   const route = useRoute();
   const { t, locale } = useI18n({ useScope: "global" });
@@ -134,13 +130,6 @@
     background: var(--ui-background);
   }
 
-  .cabinet-breadcrumbs {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-    padding: 6px 0 2px;
-  }
-
   .cabinet-header {
     position: fixed;
     top: 0;
@@ -178,11 +167,6 @@
     body.support-chat-fullscreen .cabinet-main {
       padding-top: 0 !important;
       padding-bottom: 0 !important;
-    }
-
-    html.support-chat-fullscreen .cabinet-breadcrumbs,
-    body.support-chat-fullscreen .cabinet-breadcrumbs {
-      display: none !important;
     }
   }
 

@@ -235,15 +235,15 @@
             :key="ticket.id"
             :class="['cabinet-card ticket-card cursor-pointer', viewMode === 'full' ? 'ticket-card--full-row' : '']"
             @click="handleClickRow(ticket.id)">
-            <div class="ticket-card__header">
-              <div class="min-w-0">
-                <div class="ticket-card__subject truncate">{{ ticket.subject }}</div>
-                <div class="ticket-card__id-row">#{{ ticket.id }}</div>
-              </div>
-            </div>
+            <template v-if="viewMode === 'full'">
+              <button
+                class="ticket-card__copy-col ticket-card__icon-btn"
+                @click.stop
+                aria-label="Copy ID">
+                <UiIconCopy :text="ticket.id" />
+              </button>
 
-            <div class="ticket-card__meta-row">
-              <div class="ticket-card__counterparty-col">
+              <div class="ticket-card__counterparty-col ticket-card__counterparty-col--full">
                 <div class="ticket-card__avatar">
                   <img
                     v-if="getTicketClientAvatarUrl(ticket)"
@@ -260,24 +260,31 @@
                     " />
                   {{ ticket.counterparty_online ? "Online" : "Offline" }}
                 </span>
-                <span class="ticket-card__updated">{{ ticket.last_message_at }}</span>
               </div>
 
-              <div class="ticket-card__actions-col">
+              <div class="ticket-card__header ticket-card__header--full">
+                <div class="min-w-0">
+                  <div class="ticket-card__subject truncate">{{ ticket.subject }}</div>
+                  <div
+                    class="ticket-card__last-message truncate"
+                    :title="getTicketLastMessagePreview(ticket)">
+                    {{ getTicketLastMessagePreview(ticket) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="ticket-card__actions-col ticket-card__actions-col--full">
                 <span class="ticket-card__status">
                   <span
                     class="ticket-card__status-dot"
                     :class="getTicketStatusDotClass(ticket.status)" />
                   {{ ticket.status }}
                 </span>
+                <span class="ticket-card__updated ticket-card__updated--under-status">{{
+                  ticket.last_message_at
+                }}</span>
 
                 <div class="ticket-card__actions">
-                  <button
-                    class="ticket-card__icon-btn"
-                    @click.stop
-                    aria-label="Copy ID">
-                    <UiIconCopy :text="ticket.id" />
-                  </button>
                   <button
                     class="ticket-card__icon-btn ticket-card__chat-btn"
                     @click.stop="handleChatIconClick(ticket.id)"
@@ -297,7 +304,73 @@
                   </button>
                 </div>
               </div>
-            </div>
+            </template>
+
+            <template v-else>
+              <div class="ticket-card__header">
+                <div class="min-w-0">
+                  <div class="ticket-card__subject truncate">{{ ticket.subject }}</div>
+                  <div class="ticket-card__id-row">#{{ ticket.id }}</div>
+                </div>
+              </div>
+
+              <div class="ticket-card__meta-row">
+                <div class="ticket-card__counterparty-col">
+                  <div class="ticket-card__avatar">
+                    <img
+                      v-if="getTicketClientAvatarUrl(ticket)"
+                      :src="getTicketClientAvatarUrl(ticket)"
+                      :alt="getTicketClientName(ticket)"
+                      class="h-full w-full object-cover" />
+                    <span v-else>{{ getTicketClientInitials(ticket) }}</span>
+                  </div>
+                  <span class="ticket-card__presence">
+                    <span
+                      class="ticket-card__presence-dot"
+                      :class="
+                        ticket.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
+                      " />
+                    {{ ticket.counterparty_online ? "Online" : "Offline" }}
+                  </span>
+                  <span class="ticket-card__updated">{{ ticket.last_message_at }}</span>
+                </div>
+
+                <div class="ticket-card__actions-col">
+                  <span class="ticket-card__status">
+                    <span
+                      class="ticket-card__status-dot"
+                      :class="getTicketStatusDotClass(ticket.status)" />
+                    {{ ticket.status }}
+                  </span>
+
+                  <div class="ticket-card__actions">
+                    <button
+                      class="ticket-card__icon-btn"
+                      @click.stop
+                      aria-label="Copy ID">
+                      <UiIconCopy :text="ticket.id" />
+                    </button>
+                    <button
+                      class="ticket-card__icon-btn ticket-card__chat-btn"
+                      @click.stop="handleChatIconClick(ticket.id)"
+                      aria-label="Open chat">
+                      <span
+                        v-if="ticket.unread_messages_count > 0"
+                        class="ticket-card__chat-badge">
+                        {{ ticket.unread_messages_count }}
+                      </span>
+                      <UiIconChat class="!h-[18px] !w-[18px]" />
+                    </button>
+                    <button
+                      class="ticket-card__icon-btn"
+                      aria-label="More"
+                      @click.stop>
+                      <UiIconDotsVertical />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
       </div>
@@ -416,9 +489,11 @@
   const SUPPORT_UNREAD_UPDATED_EVENT = "support-unread-updated";
   const SUPPORT_PRESENCE_UPDATED_EVENT = "support-presence-updated";
   const SUPPORT_LIST_RELOAD_EVENT = "loadDataForSupport";
+  const SUPPORT_PREVIEW_MAX_LENGTH = 160;
   const { $echo } = useNuxtApp() as { $echo?: any };
 
   const tickets = reactive([]);
+  const ticketLastMessagePreviewById = reactive<Record<string, string>>({});
 
   const currentUser = reactive({
     id: null,
@@ -611,9 +686,44 @@
 
   const currentTicketIdForChat = ref<string | null>(null);
 
+  const normalizePreviewText = (value: unknown): string => {
+    if (typeof value !== "string") return "";
+
+    const compact = value.replace(/\s+/g, " ").trim();
+    if (!compact) return "";
+
+    if (compact.length <= SUPPORT_PREVIEW_MAX_LENGTH) return compact;
+    return `${compact.slice(0, SUPPORT_PREVIEW_MAX_LENGTH)}...`;
+  };
+
+  const extractTicketLastMessagePreview = (ticket: any): string => {
+    const direct = normalizePreviewText(
+      ticket?.last_message_preview ?? ticket?.last_message_body ?? ticket?.last_message ?? ticket?.body
+    );
+    if (direct) return direct;
+
+    const attachmentsCount = Number(ticket?.meta?.attachments_count ?? ticket?.attachments_count ?? 0);
+    if (Number.isFinite(attachmentsCount) && attachmentsCount > 0) {
+      return "Attachment";
+    }
+
+    return "";
+  };
+
+  const getTicketLastMessagePreview = (ticket: any): string => {
+    const ticketId = String(ticket?.id ?? "").trim();
+    const direct = normalizePreviewText(ticket?.last_message_preview);
+    if (direct) return direct;
+    if (ticketId && ticketLastMessagePreviewById[ticketId]) return ticketLastMessagePreviewById[ticketId];
+
+    return extractTicketLastMessagePreview(ticket) || "No messages yet";
+  };
+
   const filtered = computed(() =>
     tickets.filter(t =>
-      `${t.id} ${t.subject} ${t.last_message_at} ${t.status}`.toLowerCase().includes(search.value.toLowerCase())
+      `${t.id} ${t.subject} ${getTicketLastMessagePreview(t)} ${t.last_message_at} ${t.status}`
+        .toLowerCase()
+        .includes(search.value.toLowerCase())
     )
   );
 
@@ -813,7 +923,23 @@
         currentPage.value = response.data.meta.current_page;
         total.value = response.data.meta.total;
 
-        tickets.splice(0, tickets.length, ...response.data.data);
+        const normalizedTickets = (response.data.data ?? []).map((ticket: any) => {
+          const ticketId = String(ticket?.id ?? "").trim();
+          const serverPreview = extractTicketLastMessagePreview(ticket);
+          const cachedPreview = ticketId ? normalizePreviewText(ticketLastMessagePreviewById[ticketId]) : "";
+          const lastMessagePreview = serverPreview || cachedPreview;
+
+          if (ticketId && lastMessagePreview) {
+            ticketLastMessagePreviewById[ticketId] = lastMessagePreview;
+          }
+
+          return {
+            ...ticket,
+            last_message_preview: lastMessagePreview || "",
+          };
+        });
+
+        tickets.splice(0, tickets.length, ...normalizedTickets);
       } finally {
         isLoading.value = false;
         isInitialLoading.value = false;
@@ -848,6 +974,74 @@
     const target = tickets.find((item: any) => String(item.id) === String(ticketId));
     if (!target) return;
     target.counterparty_online = counterpartyOnline;
+  };
+
+  const syncCurrentTicketLastMessagePreview = (ticketId: string, preview: string) => {
+    const normalizedTicketId = String(ticketId).trim();
+    if (!normalizedTicketId) return;
+
+    const normalizedPreview = normalizePreviewText(preview);
+    if (!normalizedPreview) return;
+
+    ticketLastMessagePreviewById[normalizedTicketId] = normalizedPreview;
+
+    const target = tickets.find((item: any) => String(item.id) === normalizedTicketId);
+    if (!target) return;
+    target.last_message_preview = normalizedPreview;
+  };
+
+  const normalizeSupportMessagePayload = (payload?: any): any | null => {
+    if (!payload || typeof payload !== "object") return null;
+    if (payload?.message && typeof payload.message === "object") {
+      return payload.message;
+    }
+
+    return payload;
+  };
+
+  const resolveSupportMessagePreview = (payload?: any): string => {
+    const data = normalizeSupportMessagePayload(payload);
+    if (!data) return "";
+
+    const bodyPreview = normalizePreviewText(data.body);
+    if (bodyPreview) return bodyPreview;
+
+    const normalizedType = String(data.type ?? "")
+      .trim()
+      .toLowerCase();
+    if (normalizedType === "attachment") {
+      const attachmentsCount = Number(data?.meta?.attachments_count ?? 0);
+      if (Number.isFinite(attachmentsCount) && attachmentsCount > 1) {
+        return `${attachmentsCount} attachments`;
+      }
+      return "Attachment";
+    }
+
+    if (normalizedType === "system") {
+      const eventName = String(data?.meta?.event ?? "")
+        .trim()
+        .replace(/_/g, " ");
+      if (eventName) {
+        return eventName;
+      }
+      return "System event";
+    }
+
+    return "New message";
+  };
+
+  const handleSupportMessagePayload = (payload?: any): boolean => {
+    const data = normalizeSupportMessagePayload(payload);
+    if (!data) return false;
+
+    const ticketId = String(data.ticket_id ?? data.ticketId ?? "").trim();
+    if (!ticketId) return false;
+
+    const preview = resolveSupportMessagePreview(data);
+    if (!preview) return false;
+
+    syncCurrentTicketLastMessagePreview(ticketId, preview);
+    return true;
   };
 
   const normalizeSupportUnreadPayload = (payload?: any): { ticketId: string; unread: number } | null => {
@@ -1035,7 +1229,8 @@
     currentTicketIdForChat.value = ticketId;
   };
 
-  const handleSupportListReload = () => {
+  const handleSupportListReload = (payload?: any) => {
+    handleSupportMessagePayload(payload);
     loadData().catch(() => {});
   };
 
@@ -1161,6 +1356,16 @@
     font-size: 16px;
     line-height: 1.25;
     font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ticket-card__last-message {
+    margin-top: 4px;
+    color: var(--ui-text-secondary);
+    font-size: 12px;
+    line-height: 1.25;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1298,20 +1503,47 @@
     justify-content: center;
   }
 
+  .ticket-card__copy-col {
+    justify-self: flex-start;
+  }
+
   .ticket-card--full-row {
     display: grid;
-    grid-template-columns: minmax(260px, 1.2fr) minmax(0, 1fr);
+    grid-template-columns: 40px minmax(150px, 0.7fr) minmax(260px, 1.25fr) minmax(200px, 0.8fr);
     align-items: center;
-    column-gap: 16px;
+    column-gap: 14px;
     row-gap: 8px;
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  .ticket-card__counterparty-col--full {
+    min-width: 0;
+    gap: 6px;
+  }
+
+  .ticket-card__header--full {
+    min-width: 0;
+  }
+
+  .ticket-card__actions-col--full {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .ticket-card__updated--under-status {
+    margin-left: 14px;
   }
 
   @media (max-width: 1024px) {
     .ticket-card--full-row {
       grid-template-columns: 1fr;
       row-gap: 10px;
+    }
+
+    .ticket-card__updated--under-status {
+      margin-left: 0;
     }
   }
 

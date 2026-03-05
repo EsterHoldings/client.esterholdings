@@ -28,6 +28,24 @@
   import UiIconLogo from "~/components/ui/UiIconLogo.vue";
   import UiIconLogoLight from "~/components/ui/UiIconLogoLight.vue";
   import UiSwitchToggle from "~/components/ui/UiSwitchToggle.vue";
+  import UiBreadcrumb from "~/components/ui/UiBreadcrumb.vue";
+
+  type BreadcrumbItem = {
+    name: string;
+    to?: string;
+    icon?: any;
+  };
+
+  const props = withDefaults(
+    defineProps<{
+      breadcrumbs?: BreadcrumbItem[];
+      showBreadcrumbs?: boolean;
+    }>(),
+    {
+      breadcrumbs: () => [],
+      showBreadcrumbs: false,
+    }
+  );
 
   const authStore = useAuthStore();
   const uiStore = useUiStore();
@@ -37,7 +55,7 @@
 
   const isOpen = computed({
     get: () => uiStore.notificationsOpen,
-    set: (value) => {
+    set: value => {
       uiStore.notificationsOpen = value;
     },
   });
@@ -106,13 +124,18 @@
 
 <template>
   <header
-    class="h-[60px] flex items-center justify-between lg:justify-end border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
-
+    class="h-[60px] flex items-center justify-between border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
     <div class="lg:absolute lg:top-[-100px]">
       <NuxtLink :to="addCurrentLocaleToPath('dashboard')">
         <UiIconLogo v-if="!isThemeLight" />
         <UiIconLogoLight v-else />
       </NuxtLink>
+    </div>
+
+    <div
+      v-if="props.showBreadcrumbs && props.breadcrumbs.length"
+      class="hidden lg:flex min-w-0 flex-1 pr-4 items-center text-[var(--ui-text-secondary)]">
+      <UiBreadcrumb :list="props.breadcrumbs" />
     </div>
 
     <div class="flex items-center justify-end gap-2">
@@ -146,7 +169,7 @@
               <UiTextSmall
                 state="info--outline--small"
                 class="cursor-pointer"
-              >{{ t("cabinet.header.markAllRead") }}</UiTextSmall
+                >{{ t("cabinet.header.markAllRead") }}</UiTextSmall
               >
             </div>
           </div>
@@ -237,31 +260,32 @@
             <div
               aria-label="Toggle theme"
               @click.stop="handleToggleTheme"
-              class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md cursor-pointer"
-            >
+              class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md cursor-pointer">
               <transition
                 name="fade"
-                mode="out-in"
-              >
+                mode="out-in">
                 <UiIconSun
                   v-if="themeStore.currentTheme === 'dark'"
                   :key="'sun'"
-                  class="menu-icon"
-                />
+                  class="menu-icon" />
                 <UiIconMoon
                   v-else
                   :key="'moon'"
-                  class="menu-icon"
-                />
+                  class="menu-icon" />
               </transition>
               <UiTextSmall class="w-full whitespace-nowrap">
-                {{ themeStore.currentTheme === "dark" ? t("cabinet.header.switchToLight") : t("cabinet.header.switchToDark") }}
+                {{
+                  themeStore.currentTheme === "dark"
+                    ? t("cabinet.header.switchToLight")
+                    : t("cabinet.header.switchToDark")
+                }}
               </UiTextSmall>
-              <div class="shrink-0" @click.stop>
+              <div
+                class="shrink-0"
+                @click.stop>
                 <UiSwitchToggle
                   :model-value="isThemeLight"
-                  @update:modelValue="handleToggleTheme"
-                />
+                  @update:modelValue="handleToggleTheme" />
               </div>
             </div>
 
@@ -296,9 +320,9 @@
 </template>
 
 <style lang="scss" scoped>
-.menu-icon {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-}
+  .menu-icon {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+  }
 </style>
