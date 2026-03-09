@@ -1,134 +1,91 @@
 <template>
   <UiContainer class="referrals-page">
-    <div>
-      <PanelDefault class="!p-0 overflow-hidden">
-        <div class="flex flex-row max-lg:flex-col min-w-0">
-          <div
-            class="w-[240px] shrink-0 max-lg:w-full border-[var(--ui-primary-main)] p-2 max-lg:p-2 border-r max-lg:border-r-0 max-lg:border-b"
-          >
-<!--            :style="{ background: 'var(&#45;&#45;referral-surface)' }"-->
-            <TabsAsList
-              :tabsList="tabsList"
-              @selectTab="handleActiveTab"
-              :activeTabIndex="activeTabIndex"
-            />
-          </div>
-
-          <div class="flex-1 w-full min-w-0">
-            <Transition
-              enter-active-class="transition ease-linear duration-100"
-              enter-from-class="opacity-0 translate-x-4"
-              enter-to-class="opacity-100 translate-x-0"
-              leave-active-class="transition ease-linear duration-100"
-              leave-from-class="opacity-100 translate-x-0"
-              leave-to-class="opacity-0 -translate-x-4"
-              mode="out-in"
-            >
-              <div class="w-full min-w-0">
-                <div
-                  class="text-[--ui-text-main] h-[66px] w-full px-4 sm:px-5 border-b border-solid border-[var(--ui-primary-main)] flex items-center justify-start"
-                >
-<!--                  :style="{ background: 'var(&#45;&#45;referral-surface)' }"-->
-                  {{ tabsList[activeTabIndex].label }}
-                </div>
-                <div
-                  class="p-3 sm:p-5 overflow-y-auto min-w-0"
-                >
-<!--                  :style="{ background: 'var(&#45;&#45;referral-surface)' }"-->
-                  <component
-                    :is="tabsList[activeTabIndex].component"
-                    :key="activeTabIndex"
-                  />
-                </div>
-              </div>
-            </Transition>
-          </div>
-        </div>
+    <div class="referrals-placeholder">
+      <PanelDefault class="referrals-placeholder__card">
+        <p class="referrals-placeholder__label">{{ placeholderContent.label }}</p>
+        <h1 class="referrals-placeholder__title">{{ placeholderContent.title }}</h1>
+        <p class="referrals-placeholder__description">{{ placeholderContent.description }}</p>
       </PanelDefault>
     </div>
   </UiContainer>
 </template>
 
 <script lang="ts" setup>
-import { useI18n } from "vue-i18n";
-import { ref, computed } from "vue";
-import { definePageMeta } from "~/.nuxt/imports";
+  import { useI18n } from "vue-i18n";
+  import { computed } from "vue";
+  import { definePageMeta } from "~/.nuxt/imports";
 
-import UiContainer from "~/components/ui/UiContainer.vue";
-import UiTextH4 from "~/components/ui/UiTextH4.vue";
-import PanelDefault from "~/components/block/panels/PanelDefault.vue";
-import TabsAsList from "~/components/block/tabs/TabsAsList.vue";
-import UiIconSetting from "~/components/ui/UiIconSetting.vue";
-import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
-import UiIconUser from "~/components/ui/UiIconUser.vue";
+  import UiContainer from "~/components/ui/UiContainer.vue";
+  import PanelDefault from "~/components/block/panels/PanelDefault.vue";
 
-import TabGeneral from "./components/TabGeneral.vue";
-import TabSettings from "./components/TabSettings.vue";
-import TabTerms from "./components/TabTerms.vue";
+  definePageMeta({
+    layout: "cabinet",
+    middleware: ["auth-client", "client-check-auth"],
+  });
 
-definePageMeta({
-  layout: "cabinet",
-  middleware: ["auth-client", "client-check-auth"],
-});
+  const { locale } = useI18n();
 
-const { t } = useI18n();
-const activeTabIndex = ref(0);
+  const placeholderDictionary = {
+    ru: {
+      label: "Раздел временно недоступен",
+      title: "Реферальная программа обновляется",
+      description:
+        "Мы дорабатываем этот раздел, чтобы сделать его удобнее и функциональнее. Он станет доступен в ближайшее время.",
+    },
+    uk: {
+      label: "Розділ тимчасово недоступний",
+      title: "Реферальну програму оновлюємо",
+      description:
+        "Ми вдосконалюємо цей розділ, щоб зробити його зручнішим і функціональнішим. Він буде доступний найближчим часом.",
+    },
+    en: {
+      label: "Section temporarily unavailable",
+      title: "Referral program is being updated",
+      description:
+        "We are improving this section to make it more convenient and functional. It will be available soon.",
+    },
+  } as const;
 
-const tabsList = computed(() => [
-  {
-    label: t("cabinet.referrals.index.tabs.general"),
-    icon: UiIconUser,
-    component: TabGeneral,
-  },
-  {
-    label: t("cabinet.referrals.index.tabs.settings"),
-    icon: UiIconSetting,
-    component: TabSettings,
-  },
-  {
-    label: t("cabinet.referrals.index.tabs.terms"),
-    icon: UiIconDocuments,
-    component: TabTerms,
-  },
-]);
-
-const handleActiveTab = (tabIndex: number) => {
-  activeTabIndex.value = tabIndex;
-};
+  const placeholderContent = computed(() => {
+    const localeCode = locale.value.split("-")[0] as keyof typeof placeholderDictionary;
+    return placeholderDictionary[localeCode] ?? placeholderDictionary.en;
+  });
 </script>
 
 <style scoped>
-.referrals-page {
-  --referral-surface: color-mix(in srgb, var(--ui-background) 98%, transparent);
-  --referral-panel: color-mix(in srgb, var(--ui-background-panel) 97%, transparent);
-}
+  .referrals-placeholder {
+    min-height: calc(100vh - 220px);
+    display: grid;
+    place-items: center;
+  }
 
-.referrals-page :deep(.bg-\[var\(--ui-background-panel\)\]) {
-  background: var(--referral-panel) !important;
-}
+  .referrals-placeholder__card {
+    width: min(760px, 100%);
+    padding: clamp(20px, 3vw, 36px);
+    text-align: center;
+    border-color: var(--ui-primary-main);
+  }
 
-.slide-short-enter-active,
-.slide-short-leave-active {
-  transition: opacity 0.1s ease, transform 0.1s ease;
-}
+  .referrals-placeholder__label {
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ui-text-muted);
+  }
 
-.slide-short-enter-from {
-  opacity: 0;
-  transform: translateX(30px);
-}
+  .referrals-placeholder__title {
+    margin-top: 10px;
+    font-size: clamp(22px, 3vw, 32px);
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--ui-text-main);
+  }
 
-.slide-short-enter-to {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.slide-short-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.slide-short-leave-to {
-  opacity: 0;
-  transform: translateX(-30px);
-}
+  .referrals-placeholder__description {
+    margin-top: 12px;
+    font-size: clamp(14px, 2vw, 17px);
+    line-height: 1.5;
+    color: var(--ui-text-muted);
+  }
 </style>
