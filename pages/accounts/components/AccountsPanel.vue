@@ -537,6 +537,8 @@
   const ORDER_DIRECTION_ASC = "asc";
   const ORDER_DIRECTION_DESC = "desc";
   const VIEW_MODE_STORAGE_KEY = "accountsViewMode";
+  const BALANCE_REFRESH_EVENT = "accountsBalanceRefreshRequested";
+  const BALANCE_REFRESH_STORAGE_KEY = "accountsPendingBalanceRefreshIds";
 
   const toast = useToast();
 
@@ -874,6 +876,53 @@
     isInitialLoading.value = false;
   };
 
+  const normalizeRefreshPayloadIds = (payload: any): string[] => {
+    const rawIds = Array.isArray(payload) ? payload : Array.isArray(payload?.accountIds) ? payload.accountIds : [];
+    const normalized = rawIds.map((id: unknown) => String(id ?? "").trim()).filter((id: string) => id !== "");
+    return [...new Set(normalized)];
+  };
+
+  const clearPendingBalanceRefreshIds = () => {
+    if (typeof window === "undefined") return;
+    try {
+      sessionStorage.removeItem(BALANCE_REFRESH_STORAGE_KEY);
+    } catch {}
+  };
+
+  const refreshAccountRowsByIds = async (ids: string[]) => {
+    if (ids.length === 0) return;
+
+    await nextTick();
+    const relatedAccounts = accounts.filter(account => ids.includes(String(account?.id ?? "")));
+    if (relatedAccounts.length === 0) return;
+
+    await Promise.allSettled(relatedAccounts.map(account => refreshAccountBalance(account)));
+  };
+
+  const handleBalanceRefreshRequested = async (payload: any) => {
+    const ids = normalizeRefreshPayloadIds(payload);
+    if (ids.length === 0) return;
+
+    clearPendingBalanceRefreshIds();
+    await refreshAccountRowsByIds(ids);
+  };
+
+  const consumePendingBalanceRefreshIds = async () => {
+    if (typeof window === "undefined") return;
+
+    try {
+      const raw = sessionStorage.getItem(BALANCE_REFRESH_STORAGE_KEY);
+      if (!raw) return;
+
+      const parsed = JSON.parse(raw);
+      const ids = normalizeRefreshPayloadIds(parsed);
+      clearPendingBalanceRefreshIds();
+      await refreshAccountRowsByIds(ids);
+    } catch {
+      clearPendingBalanceRefreshIds();
+    }
+  };
+
   const isViewModeValue = (value: string | null): value is "table" | "cards" | "full" =>
     value === "table" || value === "cards" || value === "full";
 
@@ -1056,7 +1105,9 @@
   onMounted(async () => {
     initViewMode();
     useEventBus.on("loadDataForAccounts", loadData);
+    useEventBus.on(BALANCE_REFRESH_EVENT, handleBalanceRefreshRequested);
     await loadData();
+    await consumePendingBalanceRefreshIds();
 
     window.addEventListener("resize", handleViewportResize);
     window.addEventListener("scroll", recalc, true);
@@ -1069,6 +1120,9 @@
   });
 
   onBeforeUnmount(() => {
+    useEventBus.off("loadDataForAccounts", loadData);
+    useEventBus.off(BALANCE_REFRESH_EVENT, handleBalanceRefreshRequested);
+
     balanceHighlightTimers.forEach(timer => clearTimeout(timer));
     balanceHighlightTimers.clear();
 

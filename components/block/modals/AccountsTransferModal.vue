@@ -108,6 +108,8 @@
   const localePath = useLocalePath();
   const { t } = useI18n({ useScope: "global" });
   const modalControl = inject("modalControl") as { closeModal: () => void };
+  const BALANCE_REFRESH_EVENT = "accountsBalanceRefreshRequested";
+  const BALANCE_REFRESH_STORAGE_KEY = "accountsPendingBalanceRefreshIds";
   const closeModal = () => modalControl?.closeModal?.();
 
   const accounts = ref<AccountDto[]>([]);
@@ -358,11 +360,14 @@
 
       const sourceAccountId = normalizeId(fromAccount.value.id);
       const destinationAccountId = normalizeId(selectedDestinationAccount.value.id);
+      const relatedAccountIds = [sourceAccountId, destinationAccountId].filter(id => id !== "");
 
-      await Promise.allSettled([
-        appCore.accounts.refreshBalance(sourceAccountId),
-        appCore.accounts.refreshBalance(destinationAccountId),
-      ]);
+      if (relatedAccountIds.length > 0) {
+        try {
+          sessionStorage.setItem(BALANCE_REFRESH_STORAGE_KEY, JSON.stringify(relatedAccountIds));
+        } catch {}
+        useEventBus.emit(BALANCE_REFRESH_EVENT, { accountIds: relatedAccountIds });
+      }
 
       useEventBus.emit("loadDataForAccounts");
       useEventBus.emit("dashboardRefresh");

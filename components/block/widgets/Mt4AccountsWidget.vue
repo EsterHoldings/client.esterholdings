@@ -252,6 +252,7 @@
   import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
   import UiIconTrash from "~/components/ui/UiIconTrash.vue";
   import useAppCore from "~/composables/useAppCore";
+  import useEventBus from "~/composables/useEventBus";
 
   type Mt4Status = "active" | "inactive" | string;
   type Mt4Account = {
@@ -297,6 +298,7 @@
   const MENU_GAP = 8;
   const VIEWPORT_OFFSET = 8;
   const FALLBACK_MENU_HEIGHT = 260;
+  const BALANCE_REFRESH_EVENT = "accountsBalanceRefreshRequested";
 
   const activeMenuAccountId = ref<string | null>(null);
   const menuStyle = ref<Record<string, string>>({});
@@ -451,6 +453,22 @@
     }
   };
 
+  const normalizeRefreshPayloadIds = (payload: any): string[] => {
+    const rawIds = Array.isArray(payload) ? payload : Array.isArray(payload?.accountIds) ? payload.accountIds : [];
+    const normalized = rawIds.map((id: unknown) => String(id ?? "").trim()).filter((id: string) => id !== "");
+    return [...new Set(normalized)];
+  };
+
+  const handleBalanceRefreshRequested = async (payload: any) => {
+    const ids = normalizeRefreshPayloadIds(payload);
+    if (ids.length === 0) return;
+
+    const relatedAccounts = visibleAccounts.value.filter(account => ids.includes(normalizeAccountId(account.id)));
+    if (relatedAccounts.length === 0) return;
+
+    await Promise.allSettled(relatedAccounts.map(account => refreshAccountBalance(account)));
+  };
+
   const visibleAccounts = computed(() => {
     const accounts = Array.isArray(props.accounts) ? props.accounts : [];
     const favorites = accounts
@@ -549,6 +567,7 @@
   };
 
   onMounted(() => {
+    useEventBus.on(BALANCE_REFRESH_EVENT, handleBalanceRefreshRequested);
     window.addEventListener("resize", recalcMenuPosition);
     window.addEventListener("scroll", recalcMenuPosition, true);
     window.addEventListener("mousedown", handleMenuOutside, true);
@@ -556,6 +575,8 @@
   });
 
   onBeforeUnmount(() => {
+    useEventBus.off(BALANCE_REFRESH_EVENT, handleBalanceRefreshRequested);
+
     balanceHighlightTimers.forEach(timer => clearTimeout(timer));
     balanceHighlightTimers.clear();
 
