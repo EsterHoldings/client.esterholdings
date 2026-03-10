@@ -167,6 +167,120 @@
           class="h-4 w-4" />
       </UiButtonDefault>
     </div>
+
+    <section class="support-simple__history">
+      <div class="support-simple__history-head">
+        <UiTextH4 class="support-simple__history-title">{{ historyText.historyTitle }}</UiTextH4>
+        <button
+          type="button"
+          class="support-simple__history-refresh"
+          :disabled="isHistoryLoading || isHistoryRefreshing"
+          :aria-label="historyText.refreshAria"
+          @click="reloadHistory">
+          <UiIconSpinnerDefault
+            v-if="isHistoryLoading || isHistoryRefreshing"
+            class="!h-4 !w-4" />
+          <UiIconUpdate
+            v-else
+            class="h-4 w-4" />
+        </button>
+      </div>
+
+      <div
+        v-if="isHistoryLoading && historyTickets.length === 0"
+        class="support-simple__history-state">
+        <UiIconSpinnerDefault class="!h-4 !w-4 !text-[var(--ui-text-main)]" />
+        <span>{{ historyText.loadingHistory }}</span>
+      </div>
+
+      <div
+        v-else-if="historyTickets.length === 0"
+        class="support-simple__history-state">
+        {{ historyText.emptyHistory }}
+      </div>
+
+      <div
+        v-else
+        class="support-simple__history-list">
+        <article
+          v-for="ticket in historyTickets"
+          :key="ticket.id"
+          class="support-simple__history-ticket">
+          <button
+            type="button"
+            class="support-simple__history-ticket-head"
+            :aria-expanded="ticket.expanded ? 'true' : 'false'"
+            @click="toggleHistoryTicket(ticket)">
+            <div class="support-simple__history-ticket-info">
+              <div class="support-simple__history-ticket-subject truncate">{{ ticket.subject }}</div>
+              <div class="support-simple__history-ticket-meta">
+                <span class="support-simple__history-ticket-status">{{ ticket.status }}</span>
+                <span>•</span>
+                <span>{{ ticket.lastMessageAtLabel }}</span>
+              </div>
+            </div>
+            <span
+              class="support-simple__history-ticket-caret"
+              :class="{ 'is-expanded': ticket.expanded }">
+              ▾
+            </span>
+          </button>
+
+          <div
+            v-if="ticket.expanded"
+            class="support-simple__history-ticket-thread">
+            <div
+              v-if="ticket.loadingThread && ticket.thread.length === 0"
+              class="support-simple__history-thread-state">
+              <UiIconSpinnerDefault class="!h-4 !w-4 !text-[var(--ui-text-main)]" />
+              <span>{{ historyText.loadingMessages }}</span>
+            </div>
+
+            <div
+              v-else-if="ticket.thread.length === 0"
+              class="support-simple__history-thread-state">
+              {{ historyText.emptyMessages }}
+            </div>
+
+            <article
+              v-for="entry in ticket.thread"
+              :key="entry.id"
+              class="support-simple__history-entry">
+              <div class="support-simple__history-entry-head">
+                <strong class="truncate">{{ entry.authorName }}</strong>
+                <span class="support-simple__history-entry-date">{{ entry.createdAtLabel }}</span>
+              </div>
+
+              <p
+                v-if="entry.bodyText"
+                class="support-simple__history-entry-body">
+                {{ entry.bodyText }}
+              </p>
+
+              <div
+                v-if="entry.attachments.length"
+                class="support-simple__history-attachments">
+                <a
+                  v-for="attachment in entry.attachments"
+                  :key="attachment.id"
+                  :href="attachment.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="support-simple__history-attachment">
+                  <UiIconDocuments class="h-4 w-4 shrink-0 text-[var(--ui-text-secondary)]" />
+                  <span class="truncate">{{ attachment.title }}</span>
+                  <span
+                    v-if="attachment.details"
+                    class="support-simple__history-attachment-details">
+                    {{ attachment.details }}
+                  </span>
+                </a>
+              </div>
+            </article>
+          </div>
+        </article>
+      </div>
+    </section>
   </PanelDefault>
 </template>
 
@@ -178,8 +292,10 @@
 
   import PanelDefault from "~/components/block/panels/PanelDefault.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
+  import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
   import UiFormControl from "~/components/ui/UiFormControl.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+  import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
   import UiInput from "~/components/ui/UiInput.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
@@ -203,6 +319,33 @@
     uploadError: string | null;
   }
 
+  interface SupportHistoryAttachment {
+    id: string;
+    title: string;
+    url: string;
+    details: string;
+  }
+
+  interface SupportHistoryEntry {
+    id: string;
+    authorName: string;
+    createdAtLabel: string;
+    bodyText: string;
+    attachments: SupportHistoryAttachment[];
+    createdAt: number;
+  }
+
+  interface SupportHistoryTicket {
+    id: string;
+    subject: string;
+    status: string;
+    lastMessageAtLabel: string;
+    expanded: boolean;
+    loadingThread: boolean;
+    threadLoaded: boolean;
+    thread: SupportHistoryEntry[];
+  }
+
   const MAX_FILES_COUNT = 10;
   const MAX_FILE_SIZE_BYTES = 200 * 1024 * 1024;
   const UPLOAD_TIMEOUT_MS = 6 * 60 * 1000;
@@ -220,7 +363,7 @@
     (event: "submitted"): void;
   }>();
 
-  const { t } = useI18n({ useScope: "global" });
+  const { t, te, locale } = useI18n({ useScope: "global" });
   const toast = useToast();
   const appCore = useAppCore();
 
@@ -236,6 +379,9 @@
   const replyEmailError = ref("");
   const subjectError = ref("");
   const messageError = ref("");
+  const isHistoryLoading = ref(false);
+  const isHistoryRefreshing = ref(false);
+  const historyTickets = ref<SupportHistoryTicket[]>([]);
 
   const hasPendingUploads = computed(() =>
     selectedFiles.value.some(file => file.uploadStatus === "queued" || file.uploadStatus === "uploading")
@@ -244,6 +390,31 @@
   const uploadedFiles = computed(() =>
     selectedFiles.value.filter(file => file.uploadStatus === "uploaded" && file.uploadedKey)
   );
+
+  const resolveText = (key: string, fallback: string): string => {
+    try {
+      if (typeof te === "function" && te(key)) {
+        return String(t(key));
+      }
+    } catch {
+      // noop
+    }
+    return fallback;
+  };
+
+  const historyText = computed(() => ({
+    historyTitle: resolveText("support.simple.historyTitle", "Request history"),
+    refreshAria: resolveText("support.simple.historyRefreshAria", "Refresh request history"),
+    loadingHistory: resolveText("support.simple.loadingHistory", "Loading request history..."),
+    emptyHistory: resolveText("support.simple.emptyHistory", "You have no requests yet."),
+    loadingMessages: resolveText("support.simple.loadingMessages", "Loading messages..."),
+    emptyMessages: resolveText("support.simple.emptyMessages", "No messages in this request yet."),
+    noSubject: resolveText("support.simple.noSubject", "No subject"),
+    noLastUpdate: resolveText("support.simple.noLastUpdate", "No updates yet"),
+    statusUnknown: resolveText("support.simple.statusUnknown", "unknown"),
+    authorSupport: resolveText("support.simple.authorSupport", "Support"),
+    attachmentFallbackTitle: resolveText("support.simple.attachmentFallbackTitle", "Attachment"),
+  }));
 
   const openFileDialog = () => {
     if (isSubmitting.value || hasPendingUploads.value) {
@@ -537,6 +708,7 @@
         editorRef.value.innerHTML = "";
       }
 
+      await loadHistoryTickets({ silent: true, expandLatest: true });
       emit("submitted");
     } catch (errorResponse) {
       console.error("support simple submit failed", errorResponse);
@@ -580,12 +752,264 @@
     return `${size.toFixed(unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
   };
 
+  const normalizeText = (value: unknown): string => (typeof value === "string" ? value.trim() : "");
+
+  const buildFullName = (firstName?: string | null, lastName?: string | null): string => {
+    return [normalizeText(firstName), normalizeText(lastName)].filter(Boolean).join(" ").trim();
+  };
+
+  const parseMessageCreatedAt = (value: unknown): number => {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    const parsed = Date.parse(String(value ?? ""));
+    return Number.isFinite(parsed) ? parsed : Date.now();
+  };
+
+  const formatThreadDate = (value: unknown): string => {
+    const timestamp = parseMessageCreatedAt(value);
+    try {
+      return new Date(timestamp).toLocaleString(locale.value || undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return new Date(timestamp).toLocaleString();
+    }
+  };
+
+  const formatAttachmentSize = (value: unknown): string => {
+    const bytes = Number(value ?? 0);
+    if (!Number.isFinite(bytes) || bytes <= 0) return "";
+    return formatFileSize(bytes);
+  };
+
+  const resolveTicketChannel = (ticket: Record<string, unknown>): "chat" | "email" => {
+    const channel = normalizeText(ticket.channel).toLowerCase();
+    if (channel === "email") return "email";
+    if (channel === "chat") return "chat";
+    return normalizeText(ticket.reply_email) !== "" ? "email" : "chat";
+  };
+
+  const resolveAttachmentUrl = (attachment: Record<string, unknown>): string => {
+    return normalizeText(
+      attachment.url ?? attachment.preview_url ?? attachment.previewUrl ?? attachment.path_url ?? attachment.pathUrl
+    );
+  };
+
+  const resolveAttachmentTitle = (attachment: Record<string, unknown>, fallbackUrl: string): string => {
+    const explicit = normalizeText(attachment.name ?? attachment.filename);
+    if (explicit) return explicit;
+
+    try {
+      const parsed = new URL(fallbackUrl);
+      const fromPath = decodeURIComponent(parsed.pathname.split("/").pop() ?? "");
+      return fromPath || historyText.value.attachmentFallbackTitle;
+    } catch {
+      return historyText.value.attachmentFallbackTitle;
+    }
+  };
+
+  const convertMessageBodyToPlainText = (value: unknown): string => {
+    const raw = String(value ?? "").trim();
+    if (!raw) return "";
+
+    return raw
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/p>/gi, "\n")
+      .replace(/<[^>]*>/g, "")
+      .replace(/\u00a0/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  };
+
+  const mapTicketMessagesToHistoryEntries = (messages: Array<Record<string, unknown>>): SupportHistoryEntry[] => {
+    return messages
+      .map((message, messageIndex) => {
+        const messageId = normalizeText(message.id) || `message-${messageIndex}`;
+        const authorName =
+          normalizeText(message.author) ||
+          buildFullName(normalizeText(message.author_first_name), normalizeText(message.author_last_name)) ||
+          normalizeText(message.author_email) ||
+          historyText.value.authorSupport;
+        const createdAtRaw = message.created_at ?? message.createdAt;
+        const createdAt = parseMessageCreatedAt(createdAtRaw);
+        const createdAtLabel = formatThreadDate(createdAtRaw);
+        const bodyText = convertMessageBodyToPlainText(message.body);
+
+        const rawMeta = message.meta;
+        const rawAttachments =
+          rawMeta && typeof rawMeta === "object" && Array.isArray((rawMeta as Record<string, unknown>).attachments)
+            ? ((rawMeta as Record<string, unknown>).attachments as Array<unknown>)
+            : [];
+
+        const attachments: SupportHistoryAttachment[] = rawAttachments
+          .map((rawAttachment, attachmentIndex) => {
+            if (!rawAttachment || typeof rawAttachment !== "object") return null;
+
+            const attachment = rawAttachment as Record<string, unknown>;
+            const url = resolveAttachmentUrl(attachment);
+            if (!url) return null;
+
+            const attachmentId = normalizeText(attachment.id) || `${messageId}-attachment-${attachmentIndex}`;
+            const title = resolveAttachmentTitle(attachment, url);
+            const sizeLabel = formatAttachmentSize(attachment.size);
+            const mimeType = normalizeText(attachment.mime_type ?? attachment.mimeType);
+
+            return {
+              id: attachmentId,
+              title,
+              url,
+              details: [sizeLabel, mimeType].filter(Boolean).join(" • "),
+            } as SupportHistoryAttachment;
+          })
+          .filter((attachment): attachment is SupportHistoryAttachment => Boolean(attachment));
+
+        return {
+          id: messageId,
+          authorName,
+          createdAtLabel,
+          bodyText,
+          attachments,
+          createdAt,
+        };
+      })
+      .sort((left, right) => left.createdAt - right.createdAt);
+  };
+
+  const fetchEmailTickets = async (): Promise<Array<Record<string, unknown>>> => {
+    const response = await appCore.tickets.get({
+      page: 1,
+      perPage: 50,
+      orderBy: "last_message_at",
+      orderDirection: "desc",
+    });
+    const payload = response?.data;
+
+    if (Array.isArray(payload?.data)) {
+      return payload.data as Array<Record<string, unknown>>;
+    }
+    if (Array.isArray(payload)) {
+      return payload as Array<Record<string, unknown>>;
+    }
+
+    return [];
+  };
+
+  const fetchAllMessagesForTicket = async (ticketId: string): Promise<Array<Record<string, unknown>>> => {
+    const messages: Array<Record<string, unknown>> = [];
+    let page = 1;
+
+    while (page <= 20) {
+      const response = await appCore.tickets.getTicketMessages(ticketId, {
+        page,
+        pageSize: 100,
+        sort: "desc",
+      });
+      const payload = response?.data;
+      const items = Array.isArray(payload?.data)
+        ? (payload.data as Array<Record<string, unknown>>)
+        : Array.isArray(payload)
+          ? (payload as Array<Record<string, unknown>>)
+          : [];
+
+      if (items.length === 0) break;
+      messages.push(...items);
+
+      const hasMore = Boolean(payload?.has_more);
+      if (!hasMore) break;
+      page += 1;
+    }
+
+    return messages;
+  };
+
+  const ensureTicketThreadLoaded = async (ticket: SupportHistoryTicket) => {
+    if (ticket.threadLoaded || ticket.loadingThread) return;
+    ticket.loadingThread = true;
+
+    try {
+      const messages = await fetchAllMessagesForTicket(ticket.id);
+      ticket.thread = mapTicketMessagesToHistoryEntries(messages);
+      ticket.threadLoaded = true;
+    } catch {
+      ticket.thread = [];
+      ticket.threadLoaded = true;
+    } finally {
+      ticket.loadingThread = false;
+    }
+  };
+
+  const loadHistoryTickets = async (options: { silent?: boolean; expandLatest?: boolean } = {}) => {
+    const silent = options.silent === true;
+    if (silent) {
+      isHistoryRefreshing.value = true;
+    } else {
+      isHistoryLoading.value = true;
+    }
+
+    try {
+      const tickets = await fetchEmailTickets();
+      const previousById = new Map(historyTickets.value.map(ticket => [ticket.id, ticket]));
+      const nextTickets: SupportHistoryTicket[] = [];
+
+      for (const rawTicket of tickets) {
+        if (resolveTicketChannel(rawTicket) !== "email") {
+          continue;
+        }
+
+        const ticketId = normalizeText(rawTicket.id);
+        if (!ticketId) continue;
+
+        const previous = previousById.get(ticketId);
+        nextTickets.push({
+          id: ticketId,
+          subject: normalizeText(rawTicket.subject) || historyText.value.noSubject,
+          status: normalizeText(rawTicket.status) || historyText.value.statusUnknown,
+          lastMessageAtLabel: normalizeText(rawTicket.last_message_at) || historyText.value.noLastUpdate,
+          expanded: previous?.expanded ?? false,
+          loadingThread: false,
+          threadLoaded: previous?.threadLoaded ?? false,
+          thread: previous?.thread ?? [],
+        });
+      }
+
+      historyTickets.value = nextTickets;
+
+      if (options.expandLatest === true && historyTickets.value.length > 0) {
+        historyTickets.value[0].expanded = true;
+        await ensureTicketThreadLoaded(historyTickets.value[0]);
+      }
+    } catch (error) {
+      console.error("support simple history load failed", error);
+    } finally {
+      if (silent) {
+        isHistoryRefreshing.value = false;
+      } else {
+        isHistoryLoading.value = false;
+      }
+    }
+  };
+
+  const reloadHistory = async () => {
+    await loadHistoryTickets({ silent: true });
+  };
+
+  const toggleHistoryTicket = async (ticket: SupportHistoryTicket) => {
+    ticket.expanded = !ticket.expanded;
+    if (ticket.expanded) {
+      await ensureTicketThreadLoaded(ticket);
+    }
+  };
+
   onMounted(async () => {
     replyEmail.value = (props.defaultEmail || "").trim();
     await nextTick();
     if (editorRef.value) {
       editorRef.value.innerHTML = "";
     }
+    await loadHistoryTickets();
   });
 </script>
 
@@ -770,6 +1194,214 @@
     min-width: 220px;
   }
 
+  .support-simple__history {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--color-stroke-ui-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .support-simple__history-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .support-simple__history-title {
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+
+  .support-simple__history-refresh {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: 1px solid var(--color-stroke-ui-dark);
+    background: transparent;
+    color: var(--ui-text-main);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .support-simple__history-refresh:hover {
+    background: var(--color-stroke-ui-dark);
+  }
+
+  .support-simple__history-refresh:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+
+  .support-simple__history-state {
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 12px;
+    background: var(--ui-background);
+    color: var(--ui-text-secondary);
+    min-height: 52px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .support-simple__history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .support-simple__history-ticket {
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 12px;
+    background: var(--ui-background);
+    overflow: hidden;
+  }
+
+  .support-simple__history-ticket-head {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--ui-text-main);
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .support-simple__history-ticket-info {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .support-simple__history-ticket-subject {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .support-simple__history-ticket-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.2;
+    color: var(--ui-text-secondary);
+  }
+
+  .support-simple__history-ticket-status {
+    text-transform: capitalize;
+  }
+
+  .support-simple__history-ticket-caret {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ui-text-secondary);
+    transition: transform 0.2s ease;
+  }
+
+  .support-simple__history-ticket-caret.is-expanded {
+    transform: rotate(180deg);
+  }
+
+  .support-simple__history-ticket-thread {
+    border-top: 1px solid var(--color-stroke-ui-dark);
+    padding: 10px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .support-simple__history-thread-state {
+    min-height: 46px;
+    border: 1px dashed var(--color-stroke-ui-dark);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--ui-text-secondary);
+    text-align: center;
+  }
+
+  .support-simple__history-entry {
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 10px;
+    background: var(--ui-background-panel);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .support-simple__history-entry-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .support-simple__history-entry-date {
+    font-size: 12px;
+    color: var(--ui-text-secondary);
+    white-space: nowrap;
+  }
+
+  .support-simple__history-entry-body {
+    white-space: pre-line;
+    color: var(--ui-text-main);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .support-simple__history-attachments {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .support-simple__history-attachment {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--color-stroke-ui-dark);
+    border-radius: 10px;
+    padding: 8px;
+    color: inherit;
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  .support-simple__history-attachment:hover {
+    background: var(--color-stroke-ui-dark);
+  }
+
+  .support-simple__history-attachment-details {
+    margin-left: auto;
+    color: var(--ui-text-secondary);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
   @media (max-width: 767px) {
     .support-simple {
       padding: 16px;
@@ -786,6 +1418,30 @@
     .support-simple__submit {
       width: 100%;
       min-width: 0;
+    }
+
+    .support-simple__history-ticket-head,
+    .support-simple__history-ticket-thread {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .support-simple__history-entry-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .support-simple__history-entry-date {
+      white-space: normal;
+    }
+
+    .support-simple__history-attachment {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .support-simple__history-attachment-details {
+      margin-left: 0;
     }
   }
 </style>
