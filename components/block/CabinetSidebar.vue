@@ -113,12 +113,9 @@
 
   const resolveFullSupportEnabled = async (): Promise<boolean> => {
     const storeMode = resolveSupportMode(authStore.user?.support_mode);
-    if (authStore.user) {
+    const hasAccessToken = String(authStore.accessToken ?? "").trim() !== "";
+    if (!hasAccessToken) {
       return storeMode === "full";
-    }
-
-    if (!String(authStore.accessToken ?? "").trim()) {
-      return false;
     }
 
     try {
@@ -131,7 +128,7 @@
       // noop
     }
 
-    return false;
+    return storeMode === "full";
   };
 
   const loadSupportUnreadCount = async () => {
