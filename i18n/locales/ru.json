@@ -1447,6 +1447,41 @@
       "status": "Статус",
       "perPage": "На странице:"
     },
+    "simple": {
+      "title": "Обращение в поддержку",
+      "subtitle": "Отправьте обращение по email, и мы ответим на указанный адрес.",
+      "replyEmailLabel": "Email для ответа",
+      "replyEmailPlaceholder": "name@example.com",
+      "subjectLabel": "Тема",
+      "subjectPlaceholder": "Кратко опишите вопрос",
+      "messageLabel": "Текст обращения",
+      "messagePlaceholder": "Опишите ваш запрос подробнее...",
+      "attachmentsLabel": "Вложения",
+      "addFiles": "Прикрепить файлы",
+      "maxSizeHint": "До 10 файлов, до 200 МБ каждый.",
+      "removeFileAria": "Удалить файл",
+      "submit": "Отправить обращение",
+      "createdSuccess": "Ваше обращение успешно отправлено.",
+      "submitFailed": "Не удалось отправить обращение. Попробуйте снова.",
+      "linkPrompt": "Вставьте ссылку",
+      "tools": {
+        "bold": "Жирный",
+        "italic": "Курсив",
+        "underline": "Подчеркивание",
+        "list": "Маркированный список",
+        "link": "Вставить ссылку",
+        "clear": "Очистить форматирование"
+      },
+      "validation": {
+        "replyEmailRequired": "Email для ответа обязателен.",
+        "replyEmailInvalid": "Введите корректный email.",
+        "subjectRequired": "Тема обязательна.",
+        "subjectMax": "Тема должна быть не длиннее 200 символов.",
+        "messageRequired": "Введите сообщение или прикрепите файлы.",
+        "maxFiles": "Можно прикрепить не более {max} файлов.",
+        "fileTooLarge": "Файл больше 200 МБ:"
+      }
+    },
     "chat": {
       "title": "Чат поддержки",
       "online": "Онлайн",

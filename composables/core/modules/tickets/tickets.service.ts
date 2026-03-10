@@ -40,8 +40,8 @@ export class TicketsService {
     return await this.useApi.get(`/client/tickets/${id}`);
   }
 
-  async post(data: object = {}): Promise<any> {
-    return await this.useApi.post("/client/tickets", data);
+  async post(data: object = {}, config: AxiosRequestConfig = {}): Promise<any> {
+    return await this.useApi.post("/client/tickets", data, config);
   }
 
   async put(id: any, data: object = {}): Promise<any> {

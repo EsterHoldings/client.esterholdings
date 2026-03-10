@@ -9,190 +9,218 @@
     <div
       v-else
       class="space-y-5 text-[var(--ui-text-main)]">
-      <div
-        class="my-5 flex w-full flex-col gap-3 text-[var(--ui-text-main)] sm:flex-row sm:items-center sm:justify-between">
-        <UiTextH4 class="truncate">{{ t("support.page.title") }}</UiTextH4>
+      <SupportSimpleRequestForm
+        v-if="!isFullSupportEnabled"
+        :default-email="currentUser.email || ''"
+        @submitted="handleSimpleSupportSubmitted" />
 
-        <UiButtonDefault
-          state="info"
-          class="w-full sm:w-auto"
-          @click="handleClickCreateNewTicket">
-          <UiIconPlus class="mr-2 fill-[var(--ui-text-main)]" />
-          <span class="truncate">{{ t("support.page.newTicket") }}</span>
-        </UiButtonDefault>
-      </div>
+      <template v-else>
+        <div
+          class="my-5 flex w-full flex-col gap-3 text-[var(--ui-text-main)] sm:flex-row sm:items-center sm:justify-between">
+          <UiTextH4 class="truncate">{{ t("support.page.title") }}</UiTextH4>
 
-      <div class="mb-5 cabinet-controls-row">
-        <div class="cabinet-controls-row__left">
-          <UiInput
-            class="w-full min-w-0"
-            @input="handleInputSearch"
-            :value="search"
-            :placeholder="t('support.page.searchPlaceholder')">
-            <template #icon-left>
-              <UiIconSearch />
-            </template>
-          </UiInput>
           <UiButtonDefault
-            state="info--small"
-            @click="handleClickUpdate">
-            <UiIconUpdate v-if="!isLoading" />
-            <UiIconSpinnerDefault v-if="isLoading" />
+            state="info"
+            class="w-full sm:w-auto"
+            @click="handleClickCreateNewTicket">
+            <UiIconPlus class="mr-2 fill-[var(--ui-text-main)]" />
+            <span class="truncate">{{ t("support.page.newTicket") }}</span>
           </UiButtonDefault>
         </div>
-        <div class="cabinet-controls-row__right">
-          <UiSelect
-            class="w-full min-w-[180px] sm:w-[200px]"
-            :value="orderBy"
-            :data="sortByFilterData"
-            :withoutNoSelect="true"
-            @change="handleChangeFilterSortBy">
-            <template #icon-left>
-              <UiIconSortBy
-                class="mr-2 !w-[16px] !h-[16px]"
-                :orderDirectionEnabled="true"
-                :orderDirection="orderDirection" />
-            </template>
-          </UiSelect>
 
-          <ViewModeToggle
-            v-if="!isMobileViewport"
-            class="w-full sm:w-[160px]"
-            bordered
-            :modelValue="viewMode"
-            :options="viewOptions"
-            @update:modelValue="handleChangeViewMode" />
+        <div class="mb-5 cabinet-controls-row">
+          <div class="cabinet-controls-row__left">
+            <UiInput
+              class="w-full min-w-0"
+              @input="handleInputSearch"
+              :value="search"
+              :placeholder="t('support.page.searchPlaceholder')">
+              <template #icon-left>
+                <UiIconSearch />
+              </template>
+            </UiInput>
+            <UiButtonDefault
+              state="info--small"
+              @click="handleClickUpdate">
+              <UiIconUpdate v-if="!isLoading" />
+              <UiIconSpinnerDefault v-if="isLoading" />
+            </UiButtonDefault>
+          </div>
+          <div class="cabinet-controls-row__right">
+            <UiSelect
+              class="w-full min-w-[180px] sm:w-[200px]"
+              :value="orderBy"
+              :data="sortByFilterData"
+              :withoutNoSelect="true"
+              @change="handleChangeFilterSortBy">
+              <template #icon-left>
+                <UiIconSortBy
+                  class="mr-2 !w-[16px] !h-[16px]"
+                  :orderDirectionEnabled="true"
+                  :orderDirection="orderDirection" />
+              </template>
+            </UiSelect>
 
-          <!--          <UiButtonDefault state="info&#45;&#45;small">-->
-          <!--            <UiIconFilters class="mr-2"/>-->
-          <!--            <UiTextSmall>Filters</UiTextSmall>-->
-          <!--          </UiButtonDefault>-->
+            <ViewModeToggle
+              v-if="!isMobileViewport"
+              class="w-full sm:w-[160px]"
+              bordered
+              :modelValue="viewMode"
+              :options="viewOptions"
+              @update:modelValue="handleChangeViewMode" />
+
+            <!--          <UiButtonDefault state="info&#45;&#45;small">-->
+            <!--            <UiIconFilters class="mr-2"/>-->
+            <!--            <UiTextSmall>Filters</UiTextSmall>-->
+            <!--          </UiButtonDefault>-->
+          </div>
         </div>
-      </div>
 
-      <!-- Таблиця тікетів -->
-      <PanelDefault
-        v-if="viewMode === 'table' && filtered.length > 0"
-        ref="panelRef"
-        class="relative rounded-2xl border border-[var(--color-stroke-ui-dark)] bg-[var(--ui-background)]">
-        <div
-          class="absolute !top-[46px] left-0 right-0 bottom-0 backdrop-blur-sm rounded-lg flex items-center justify-center"
-          v-show="isLoading">
-          <UiIconSpinnerDefault />
-        </div>
+        <!-- Таблиця тікетів -->
+        <PanelDefault
+          v-if="viewMode === 'table' && filtered.length > 0"
+          ref="panelRef"
+          class="relative rounded-2xl border border-[var(--color-stroke-ui-dark)] bg-[var(--ui-background)]">
+          <div
+            class="absolute !top-[46px] left-0 right-0 bottom-0 backdrop-blur-sm rounded-lg flex items-center justify-center"
+            v-show="isLoading">
+            <UiIconSpinnerDefault />
+          </div>
 
-        <div class="overflow-scroll no-scrollbar rounded-lg">
-          <table class="w-full text-sm">
-            <thead class="bg-[var(--color-stroke-ui-light)] h-[46px]">
-              <tr class="text-left">
-                <th class="px-4 font-semibold w-[40px]">
-                  <UiTextSmall>ID</UiTextSmall>
-                </th>
-                <th class="px-4 font-semibold w-full">
-                  <UiTextSmall>{{ t("support.page.subject") }}</UiTextSmall>
-                </th>
-                <th class="px-4 font-semibold">
-                  <div class="flex items-center justify-start gap-2">
-                    <UiTextSmall
-                      @click="handleOrderByAndDirection('last_message_at')"
-                      class="whitespace-nowrap">
-                      {{ t("support.page.lastUpdate") }}
-                    </UiTextSmall>
-                    <UiIconSort
-                      :active="orderBy === 'last_message_at'"
-                      :direction="orderDirection"
-                      @click="handleOrderByAndDirection('last_message_at')" />
-                  </div>
-                </th>
-                <th class="px-4 font-semibold">
-                  <UiTextSmall class="whitespace-nowrap">Counterparty</UiTextSmall>
-                </th>
-                <th class="px-4 font-semibold">
-                  <div class="flex items-center justify-start gap-2">
-                    <UiTextSmall @click="handleOrderByAndDirection('status')">
-                      {{ t("support.page.status") }}
-                    </UiTextSmall>
-                    <UiIconSort
-                      :active="orderBy === 'status'"
-                      :direction="orderDirection"
-                      @click="handleOrderByAndDirection('status')" />
-                  </div>
-                </th>
-                <th class="px-2 font-semibold">...</th>
-              </tr>
-            </thead>
-            <!--            <tbody v-if="!isLoading && tickets.length > 0" class="divide-y divide-[var(&#45;&#45;color-stroke-ui-dark)]">-->
-            <tbody
-              v-if="filtered.length > 0"
-              class="divide-y divide-[var(--color-stroke-ui-dark)]">
-              <tr
-                v-for="t in filtered"
-                :key="t.id"
-                class="bg-[var(--ui-background-panel)] hover:bg-[var(--color-stroke-ui-dark)] h-[60px]"
-                @click="handleClickRow(t.id)">
-                <td class="px-4 whitespace-nowrap">
-                  <UiIconCopy
-                    @click.stop
-                    :text="t.id" />
-                </td>
+          <div class="overflow-scroll no-scrollbar rounded-lg">
+            <table class="w-full text-sm">
+              <thead class="bg-[var(--color-stroke-ui-light)] h-[46px]">
+                <tr class="text-left">
+                  <th class="px-4 font-semibold w-[40px]">
+                    <UiTextSmall>ID</UiTextSmall>
+                  </th>
+                  <th class="px-4 font-semibold w-full">
+                    <UiTextSmall>{{ t("support.page.subject") }}</UiTextSmall>
+                  </th>
+                  <th class="px-4 font-semibold">
+                    <div class="flex items-center justify-start gap-2">
+                      <UiTextSmall
+                        @click="handleOrderByAndDirection('last_message_at')"
+                        class="whitespace-nowrap">
+                        {{ t("support.page.lastUpdate") }}
+                      </UiTextSmall>
+                      <UiIconSort
+                        :active="orderBy === 'last_message_at'"
+                        :direction="orderDirection"
+                        @click="handleOrderByAndDirection('last_message_at')" />
+                    </div>
+                  </th>
+                  <th class="px-4 font-semibold">
+                    <UiTextSmall class="whitespace-nowrap">Counterparty</UiTextSmall>
+                  </th>
+                  <th class="px-4 font-semibold">
+                    <div class="flex items-center justify-start gap-2">
+                      <UiTextSmall @click="handleOrderByAndDirection('status')">
+                        {{ t("support.page.status") }}
+                      </UiTextSmall>
+                      <UiIconSort
+                        :active="orderBy === 'status'"
+                        :direction="orderDirection"
+                        @click="handleOrderByAndDirection('status')" />
+                    </div>
+                  </th>
+                  <th class="px-2 font-semibold">...</th>
+                </tr>
+              </thead>
+              <!--            <tbody v-if="!isLoading && tickets.length > 0" class="divide-y divide-[var(&#45;&#45;color-stroke-ui-dark)]">-->
+              <tbody
+                v-if="filtered.length > 0"
+                class="divide-y divide-[var(--color-stroke-ui-dark)]">
+                <tr
+                  v-for="t in filtered"
+                  :key="t.id"
+                  class="bg-[var(--ui-background-panel)] hover:bg-[var(--color-stroke-ui-dark)] h-[60px]"
+                  @click="handleClickRow(t.id)">
+                  <td class="px-4 whitespace-nowrap">
+                    <UiIconCopy
+                      @click.stop
+                      :text="t.id" />
+                  </td>
 
-                <td class="px-4">
-                  <div class="truncate">
-                    {{ t.subject }}
-                  </div>
-                </td>
+                  <td class="px-4">
+                    <div class="truncate">
+                      {{ t.subject }}
+                    </div>
+                  </td>
 
-                <td class="px-4 whitespace-nowrap">
-                  {{ t.last_message_at }}
-                </td>
+                  <td class="px-4 whitespace-nowrap">
+                    {{ t.last_message_at }}
+                  </td>
 
-                <td class="px-4">
-                  <span
-                    class="inline-flex items-center gap-1.5 text-xs text-[var(--ui-text-secondary)] whitespace-nowrap">
+                  <td class="px-4">
                     <span
-                      class="h-1.5 w-1.5 rounded-full"
-                      :class="
-                        t.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
-                      " />
-                    {{ t.counterparty_online ? "Online" : "Offline" }}
-                  </span>
-                </td>
-
-                <td class="px-4">
-                  <span
-                    class="inline-flex items-center gap-1.5 text-xs text-[var(--ui-text-secondary)] whitespace-nowrap">
-                    <span
-                      class="h-1.5 w-1.5 rounded-full"
-                      :class="getTicketStatusDotClass(t.status)" />
-                    {{ t.status }}
-                  </span>
-                </td>
-
-                <td class="px-2 text-right">
-                  <div class="flex items-center justify-end gap-2">
-                    <span
-                      class="relative h-[42px] w-[42px] flex items-center justify-center rounded-full active:bg-[var(--color-stroke-ui-dark)] hover:bg-[var(--color-stroke-ui-light)]"
-                      @click.stop="handleChatIconClick(t.id)">
+                      class="inline-flex items-center gap-1.5 text-xs text-[var(--ui-text-secondary)] whitespace-nowrap">
                       <span
-                        v-if="t.unread_messages_count > 0"
-                        class="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--ui-sticker-danger)] text-white text-[10px] leading-none flex items-center justify-center">
-                        {{ t.unread_messages_count }}
-                      </span>
-                      <UiIconChat class="!h-[24px] !w-[24px]" />
+                        class="h-1.5 w-1.5 rounded-full"
+                        :class="
+                          t.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
+                        " />
+                      {{ t.counterparty_online ? "Online" : "Offline" }}
                     </span>
-                    <button
-                      class="h-8 w-8 flex items-center justify-center rounded-md hover:bg-[var(--color-stroke-ui-light)] active:opacity-[.5]"
-                      aria-label="More"
-                      @click.stop>
-                      <UiIconDotsVertical @click.stop />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  </td>
 
-          <!--          <div v-if="!isLoading && tickets.length === 0" class="w-full h-[100px] flex items-center justify-center">-->
+                  <td class="px-4">
+                    <span
+                      class="inline-flex items-center gap-1.5 text-xs text-[var(--ui-text-secondary)] whitespace-nowrap">
+                      <span
+                        class="h-1.5 w-1.5 rounded-full"
+                        :class="getTicketStatusDotClass(t.status)" />
+                      {{ t.status }}
+                    </span>
+                  </td>
+
+                  <td class="px-2 text-right">
+                    <div class="flex items-center justify-end gap-2">
+                      <span
+                        class="relative h-[42px] w-[42px] flex items-center justify-center rounded-full active:bg-[var(--color-stroke-ui-dark)] hover:bg-[var(--color-stroke-ui-light)]"
+                        @click.stop="handleChatIconClick(t.id)">
+                        <span
+                          v-if="t.unread_messages_count > 0"
+                          class="absolute top-1 right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-[var(--ui-sticker-danger)] text-white text-[10px] leading-none flex items-center justify-center">
+                          {{ t.unread_messages_count }}
+                        </span>
+                        <UiIconChat class="!h-[24px] !w-[24px]" />
+                      </span>
+                      <button
+                        class="h-8 w-8 flex items-center justify-center rounded-md hover:bg-[var(--color-stroke-ui-light)] active:opacity-[.5]"
+                        aria-label="More"
+                        @click.stop>
+                        <UiIconDotsVertical @click.stop />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!--          <div v-if="!isLoading && tickets.length === 0" class="w-full h-[100px] flex items-center justify-center">-->
+            <div
+              v-if="filtered.length === 0"
+              class="w-full h-[50vh] flex items-center justify-center">
+              <UiButtonDefault
+                state="info"
+                @click="handleClickCreateNewTicket">
+                <UiIconPlus class="mr-2 fill-[var(--ui-text-main)]" />
+                <span>{{ t("support.page.newTicket") }}</span>
+              </UiButtonDefault>
+            </div>
+          </div>
+        </PanelDefault>
+
+        <div
+          v-else
+          class="relative">
+          <div
+            class="absolute inset-0 backdrop-blur-sm rounded-lg flex items-center justify-center"
+            v-if="isLoading">
+            <UiIconSpinnerDefault />
+          </div>
+
           <div
             v-if="filtered.length === 0"
             class="w-full h-[50vh] flex items-center justify-center">
@@ -203,119 +231,25 @@
               <span>{{ t("support.page.newTicket") }}</span>
             </UiButtonDefault>
           </div>
-        </div>
-      </PanelDefault>
 
-      <div
-        v-else
-        class="relative">
-        <div
-          class="absolute inset-0 backdrop-blur-sm rounded-lg flex items-center justify-center"
-          v-if="isLoading">
-          <UiIconSpinnerDefault />
-        </div>
-
-        <div
-          v-if="filtered.length === 0"
-          class="w-full h-[50vh] flex items-center justify-center">
-          <UiButtonDefault
-            state="info"
-            @click="handleClickCreateNewTicket">
-            <UiIconPlus class="mr-2 fill-[var(--ui-text-main)]" />
-            <span>{{ t("support.page.newTicket") }}</span>
-          </UiButtonDefault>
-        </div>
-
-        <div
-          v-else
-          class="grid gap-3"
-          :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'">
           <div
-            v-for="ticket in filtered"
-            :key="ticket.id"
-            :class="['cabinet-card ticket-card cursor-pointer', viewMode === 'full' ? 'ticket-card--full-row' : '']"
-            @click="handleClickRow(ticket.id)">
-            <template v-if="viewMode === 'full'">
-              <button
-                class="ticket-card__copy-col ticket-card__icon-btn"
-                @click.stop
-                aria-label="Copy ID">
-                <UiIconCopy :text="ticket.id" />
-              </button>
+            v-else
+            class="grid gap-3"
+            :class="viewMode === 'full' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-3'">
+            <div
+              v-for="ticket in filtered"
+              :key="ticket.id"
+              :class="['cabinet-card ticket-card cursor-pointer', viewMode === 'full' ? 'ticket-card--full-row' : '']"
+              @click="handleClickRow(ticket.id)">
+              <template v-if="viewMode === 'full'">
+                <button
+                  class="ticket-card__copy-col ticket-card__icon-btn"
+                  @click.stop
+                  aria-label="Copy ID">
+                  <UiIconCopy :text="ticket.id" />
+                </button>
 
-              <div class="ticket-card__counterparty-col ticket-card__counterparty-col--full">
-                <div class="ticket-card__avatar">
-                  <img
-                    v-if="getTicketClientAvatarUrl(ticket)"
-                    :src="getTicketClientAvatarUrl(ticket)"
-                    :alt="getTicketClientName(ticket)"
-                    class="h-full w-full object-cover" />
-                  <span v-else>{{ getTicketClientInitials(ticket) }}</span>
-                </div>
-                <span class="ticket-card__presence">
-                  <span
-                    class="ticket-card__presence-dot"
-                    :class="
-                      ticket.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
-                    " />
-                  {{ ticket.counterparty_online ? "Online" : "Offline" }}
-                </span>
-              </div>
-
-              <div class="ticket-card__header ticket-card__header--full">
-                <div class="min-w-0">
-                  <div class="ticket-card__subject truncate">{{ ticket.subject }}</div>
-                  <div
-                    class="ticket-card__last-message truncate"
-                    :title="getTicketLastMessagePreview(ticket)">
-                    {{ getTicketLastMessagePreview(ticket) }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="ticket-card__actions-col ticket-card__actions-col--full">
-                <span class="ticket-card__status">
-                  <span
-                    class="ticket-card__status-dot"
-                    :class="getTicketStatusDotClass(ticket.status)" />
-                  {{ ticket.status }}
-                </span>
-                <span class="ticket-card__updated ticket-card__updated--under-status">{{
-                  ticket.last_message_at
-                }}</span>
-
-                <div class="ticket-card__actions">
-                  <button
-                    class="ticket-card__icon-btn ticket-card__chat-btn"
-                    @click.stop="handleChatIconClick(ticket.id)"
-                    aria-label="Open chat">
-                    <span
-                      v-if="ticket.unread_messages_count > 0"
-                      class="ticket-card__chat-badge">
-                      {{ ticket.unread_messages_count }}
-                    </span>
-                    <UiIconChat class="!h-[18px] !w-[18px]" />
-                  </button>
-                  <button
-                    class="ticket-card__icon-btn"
-                    aria-label="More"
-                    @click.stop>
-                    <UiIconDotsVertical />
-                  </button>
-                </div>
-              </div>
-            </template>
-
-            <template v-else>
-              <div class="ticket-card__header">
-                <div class="min-w-0">
-                  <div class="ticket-card__subject truncate">{{ ticket.subject }}</div>
-                  <div class="ticket-card__id-row">#{{ ticket.id }}</div>
-                </div>
-              </div>
-
-              <div class="ticket-card__meta-row">
-                <div class="ticket-card__counterparty-col">
+                <div class="ticket-card__counterparty-col ticket-card__counterparty-col--full">
                   <div class="ticket-card__avatar">
                     <img
                       v-if="getTicketClientAvatarUrl(ticket)"
@@ -332,24 +266,31 @@
                       " />
                     {{ ticket.counterparty_online ? "Online" : "Offline" }}
                   </span>
-                  <span class="ticket-card__updated">{{ ticket.last_message_at }}</span>
                 </div>
 
-                <div class="ticket-card__actions-col">
+                <div class="ticket-card__header ticket-card__header--full">
+                  <div class="min-w-0">
+                    <div class="ticket-card__subject truncate">{{ ticket.subject }}</div>
+                    <div
+                      class="ticket-card__last-message truncate"
+                      :title="getTicketLastMessagePreview(ticket)">
+                      {{ getTicketLastMessagePreview(ticket) }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ticket-card__actions-col ticket-card__actions-col--full">
                   <span class="ticket-card__status">
                     <span
                       class="ticket-card__status-dot"
                       :class="getTicketStatusDotClass(ticket.status)" />
                     {{ ticket.status }}
                   </span>
+                  <span class="ticket-card__updated ticket-card__updated--under-status">{{
+                    ticket.last_message_at
+                  }}</span>
 
                   <div class="ticket-card__actions">
-                    <button
-                      class="ticket-card__icon-btn"
-                      @click.stop
-                      aria-label="Copy ID">
-                      <UiIconCopy :text="ticket.id" />
-                    </button>
                     <button
                       class="ticket-card__icon-btn ticket-card__chat-btn"
                       @click.stop="handleChatIconClick(ticket.id)"
@@ -369,76 +310,144 @@
                     </button>
                   </div>
                 </div>
-              </div>
-            </template>
+              </template>
+
+              <template v-else>
+                <div class="ticket-card__header">
+                  <div class="min-w-0">
+                    <div class="ticket-card__subject truncate">{{ ticket.subject }}</div>
+                    <div class="ticket-card__id-row">#{{ ticket.id }}</div>
+                  </div>
+                </div>
+
+                <div class="ticket-card__meta-row">
+                  <div class="ticket-card__counterparty-col">
+                    <div class="ticket-card__avatar">
+                      <img
+                        v-if="getTicketClientAvatarUrl(ticket)"
+                        :src="getTicketClientAvatarUrl(ticket)"
+                        :alt="getTicketClientName(ticket)"
+                        class="h-full w-full object-cover" />
+                      <span v-else>{{ getTicketClientInitials(ticket) }}</span>
+                    </div>
+                    <span class="ticket-card__presence">
+                      <span
+                        class="ticket-card__presence-dot"
+                        :class="
+                          ticket.counterparty_online
+                            ? 'bg-[var(--ui-sticker-success)]'
+                            : 'bg-[var(--ui-text-secondary)]'
+                        " />
+                      {{ ticket.counterparty_online ? "Online" : "Offline" }}
+                    </span>
+                    <span class="ticket-card__updated">{{ ticket.last_message_at }}</span>
+                  </div>
+
+                  <div class="ticket-card__actions-col">
+                    <span class="ticket-card__status">
+                      <span
+                        class="ticket-card__status-dot"
+                        :class="getTicketStatusDotClass(ticket.status)" />
+                      {{ ticket.status }}
+                    </span>
+
+                    <div class="ticket-card__actions">
+                      <button
+                        class="ticket-card__icon-btn"
+                        @click.stop
+                        aria-label="Copy ID">
+                        <UiIconCopy :text="ticket.id" />
+                      </button>
+                      <button
+                        class="ticket-card__icon-btn ticket-card__chat-btn"
+                        @click.stop="handleChatIconClick(ticket.id)"
+                        aria-label="Open chat">
+                        <span
+                          v-if="ticket.unread_messages_count > 0"
+                          class="ticket-card__chat-badge">
+                          {{ ticket.unread_messages_count }}
+                        </span>
+                        <UiIconChat class="!h-[18px] !w-[18px]" />
+                      </button>
+                      <button
+                        class="ticket-card__icon-btn"
+                        aria-label="More"
+                        @click.stop>
+                        <UiIconDotsVertical />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Пагінація -->
-      <div class="px-5 h-[50px] mt-2 flex items-center justify-between">
-        <div class="p-0 flex items-center justify-center [&>div]:h-[33px] [&>div]:w-[33px]">
-          <UiTextSmall class="mr-2">{{ t("support.page.perPage") }}</UiTextSmall>
-          <UiSelect
-            class="!w-min flex items-center justify-center !h-[32px]"
-            :data="perPageList"
-            :value="String(perPage)"
-            @change="handleChangePerPage"
-            :withoutNoSelect="true" />
+        <!-- Пагінація -->
+        <div class="px-5 h-[50px] mt-2 flex items-center justify-between">
+          <div class="p-0 flex items-center justify-center [&>div]:h-[33px] [&>div]:w-[33px]">
+            <UiTextSmall class="mr-2">{{ t("support.page.perPage") }}</UiTextSmall>
+            <UiSelect
+              class="!w-min flex items-center justify-center !h-[32px]"
+              :data="perPageList"
+              :value="String(perPage)"
+              @change="handleChangePerPage"
+              :withoutNoSelect="true" />
+          </div>
+
+          <UiTextSmall>{{ currentPage * perPage - perPage }}-{{ currentPage * perPage }} / {{ total }}</UiTextSmall>
+
+          <div class="flex items-center justify-center gap-2">
+            <UiTextSmall
+              class="px-3 py-1.5 h-[32px] border border-[--color-stroke-ui-dark] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
+              v-if="currentPage !== 1 && total > perPage"
+              @click="goPrev">
+              {{ t("cabinet.accounts.pagination.prev") }}
+            </UiTextSmall>
+
+            <UiTextSmall
+              v-if="visiblePages[0] > 1"
+              class="px-3 py-1.5 h-[32px] border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
+              @click="setPage(1)">
+              1
+            </UiTextSmall>
+
+            <UiTextSmall v-if="visiblePages[0] > 2">...</UiTextSmall>
+
+            <UiTextSmall
+              v-for="page in visiblePages"
+              :key="page"
+              class="px-3 py-1.5 h-[32px] border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
+              :class="{ 'bg-[var(--ui-primary-main)] text-white': currentPage === page }"
+              @click="setPage(page)">
+              {{ page }}
+            </UiTextSmall>
+
+            <UiTextSmall v-if="visiblePages[visiblePages.length - 1] < totalPages">...</UiTextSmall>
+
+            <UiTextSmall
+              v-if="visiblePages[visiblePages.length - 1] < totalPages"
+              class="px-3 py-1.5 h-[32px] border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
+              @click="setPage(totalPages)"
+              >{{ totalPages }}
+            </UiTextSmall>
+
+            <UiTextSmall
+              class="px-3 py-1.5 border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
+              v-if="currentPage !== totalPages && total > perPage"
+              @click="goNext">
+              {{ t("cabinet.accounts.pagination.next") }}
+            </UiTextSmall>
+          </div>
         </div>
 
-        <UiTextSmall>{{ currentPage * perPage - perPage }}-{{ currentPage * perPage }} / {{ total }}</UiTextSmall>
-
-        <div class="flex items-center justify-center gap-2">
-          <UiTextSmall
-            class="px-3 py-1.5 h-[32px] border border-[--color-stroke-ui-dark] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
-            v-if="currentPage !== 1 && total > perPage"
-            @click="goPrev">
-            {{ t("cabinet.accounts.pagination.prev") }}
-          </UiTextSmall>
-
-          <UiTextSmall
-            v-if="visiblePages[0] > 1"
-            class="px-3 py-1.5 h-[32px] border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
-            @click="setPage(1)">
-            1
-          </UiTextSmall>
-
-          <UiTextSmall v-if="visiblePages[0] > 2">...</UiTextSmall>
-
-          <UiTextSmall
-            v-for="page in visiblePages"
-            :key="page"
-            class="px-3 py-1.5 h-[32px] border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
-            :class="{ 'bg-[var(--ui-primary-main)] text-white': currentPage === page }"
-            @click="setPage(page)">
-            {{ page }}
-          </UiTextSmall>
-
-          <UiTextSmall v-if="visiblePages[visiblePages.length - 1] < totalPages">...</UiTextSmall>
-
-          <UiTextSmall
-            v-if="visiblePages[visiblePages.length - 1] < totalPages"
-            class="px-3 py-1.5 h-[32px] border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
-            @click="setPage(totalPages)"
-            >{{ totalPages }}
-          </UiTextSmall>
-
-          <UiTextSmall
-            class="px-3 py-1.5 border border-[var(--color-stroke-ui-dark)] cursor-pointer text-[14px] rounded text-[var(--ui-text-main)]"
-            v-if="currentPage !== totalPages && total > perPage"
-            @click="goNext">
-            {{ t("cabinet.accounts.pagination.next") }}
-          </UiTextSmall>
-        </div>
-      </div>
-
-      <ChatDefault
-        v-if="currentTicketIdForChat"
-        :ticket-id="currentTicketIdForChat"
-        :currentUser="currentUser"
-        @close="handleCloseChat"
-        class="fixed inset-0 z-50" />
+        <ChatDefault
+          v-if="currentTicketIdForChat"
+          :ticket-id="currentTicketIdForChat"
+          :currentUser="currentUser"
+          @close="handleCloseChat"
+          class="fixed inset-0 z-50" />
+      </template>
     </div>
   </UiContainer>
 </template>
@@ -446,6 +455,7 @@
 <script lang="ts" setup>
   import ChatDefault from "~/components/block/chats/ChatDefault.vue";
   import PanelDefault from "~/components/block/panels/PanelDefault.vue";
+  import SupportSimpleRequestForm from "~/pages/support/components/SupportSimpleRequestForm.vue";
   import TicketsCreateNew from "~/pages/support/components/TicketsCreateNew.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiContainer from "~/components/ui/UiContainer.vue";
@@ -466,7 +476,7 @@
 
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
-  import { definePageMeta, useAuthStore } from "~/.nuxt/imports";
+  import { definePageMeta } from "~/.nuxt/imports";
   import { useNuxtApp } from "nuxt/app";
   import {
     ref,
@@ -505,8 +515,6 @@
     photoUrl: null,
   });
 
-  const authStore = useAuthStore();
-
   const sortByFilterData = reactive([
     {
       id: "created_at",
@@ -532,6 +540,7 @@
 
   const isLoading = ref(false);
   const isInitialLoading = ref(true);
+  const isFullSupportEnabled = ref(false);
   const search = ref("");
   const total = ref(0);
   const perPage = ref(7);
@@ -1269,13 +1278,23 @@
     handleSupportPresencePayload(payload);
   };
 
-  onMounted(async () => {
-    useEventBus.on(SUPPORT_LIST_RELOAD_EVENT, handleSupportListReload);
-    useEventBus.on(SUPPORT_UNREAD_UPDATED_EVENT, handleSupportUnreadUpdated);
-    useEventBus.on(SUPPORT_PRESENCE_UPDATED_EVENT, handleSupportPresenceUpdated);
-    connectSupportRealtime();
+  const resolveSupportMode = (value: unknown): "simple" | "full" => {
+    return String(value ?? "simple")
+      .trim()
+      .toLowerCase() === "full"
+      ? "full"
+      : "simple";
+  };
 
+  const handleSimpleSupportSubmitted = () => {
+    // Keep hook for future analytics/reload behavior.
+  };
+
+  onMounted(async () => {
     const response = await appCore.auth.getAuthUser();
+    const supportMode = resolveSupportMode(response.data?.support_mode);
+    isFullSupportEnabled.value = supportMode === "full";
+
     currentUser.id = response.data.id;
     currentUser.linkedUserId = response.data.user_id ?? null;
     currentUser.name = response.data.first_name;
@@ -1283,6 +1302,16 @@
     currentUser.lastName = response.data.last_name ?? null;
     currentUser.email = response.data.email ?? null;
     currentUser.photoUrl = response.data.photo_url ?? null;
+
+    if (!isFullSupportEnabled.value) {
+      isInitialLoading.value = false;
+      return;
+    }
+
+    useEventBus.on(SUPPORT_LIST_RELOAD_EVENT, handleSupportListReload);
+    useEventBus.on(SUPPORT_UNREAD_UPDATED_EVENT, handleSupportUnreadUpdated);
+    useEventBus.on(SUPPORT_PRESENCE_UPDATED_EVENT, handleSupportPresenceUpdated);
+    connectSupportRealtime();
 
     initViewMode();
 

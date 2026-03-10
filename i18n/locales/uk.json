@@ -1446,6 +1446,41 @@
       "status": "Статус",
       "perPage": "На сторінці:"
     },
+    "simple": {
+      "title": "Звернення до підтримки",
+      "subtitle": "Надішліть звернення електронною поштою, і ми відповімо на вказану адресу.",
+      "replyEmailLabel": "Email для відповіді",
+      "replyEmailPlaceholder": "name@example.com",
+      "subjectLabel": "Тема",
+      "subjectPlaceholder": "Коротко опишіть питання",
+      "messageLabel": "Текст звернення",
+      "messagePlaceholder": "Опишіть ваш запит детальніше...",
+      "attachmentsLabel": "Вкладення",
+      "addFiles": "Додати файли",
+      "maxSizeHint": "До 10 файлів, до 200 МБ кожен.",
+      "removeFileAria": "Видалити файл",
+      "submit": "Надіслати звернення",
+      "createdSuccess": "Ваше звернення успішно надіслано.",
+      "submitFailed": "Не вдалося надіслати звернення. Спробуйте ще раз.",
+      "linkPrompt": "Вставте посилання",
+      "tools": {
+        "bold": "Жирний",
+        "italic": "Курсив",
+        "underline": "Підкреслення",
+        "list": "Маркерований список",
+        "link": "Вставити посилання",
+        "clear": "Очистити форматування"
+      },
+      "validation": {
+        "replyEmailRequired": "Email для відповіді обов'язковий.",
+        "replyEmailInvalid": "Введіть коректний email.",
+        "subjectRequired": "Тема обов'язкова.",
+        "subjectMax": "Тема має бути не довша за 200 символів.",
+        "messageRequired": "Введіть повідомлення або додайте файли.",
+        "maxFiles": "Можна додати не більше {max} файлів.",
+        "fileTooLarge": "Файл більший за 200 МБ:"
+      }
+    },
     "chat": {
       "title": "Чат підтримки",
       "online": "Онлайн",

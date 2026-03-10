@@ -1443,6 +1443,41 @@
       "status": "Status",
       "perPage": "Per page:"
     },
+    "simple": {
+      "title": "Contact support",
+      "subtitle": "Send a request by email and our team will reply to the address you provide.",
+      "replyEmailLabel": "Reply email",
+      "replyEmailPlaceholder": "name@example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Briefly describe your request",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Describe your request in detail...",
+      "attachmentsLabel": "Attachments",
+      "addFiles": "Attach files",
+      "maxSizeHint": "Up to 10 files, 200 MB each.",
+      "removeFileAria": "Remove file",
+      "submit": "Send request",
+      "createdSuccess": "Your request has been sent successfully.",
+      "submitFailed": "Failed to send request. Please try again.",
+      "linkPrompt": "Insert link URL",
+      "tools": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "list": "Bullet list",
+        "link": "Insert link",
+        "clear": "Clear formatting"
+      },
+      "validation": {
+        "replyEmailRequired": "Reply email is required.",
+        "replyEmailInvalid": "Enter a valid email address.",
+        "subjectRequired": "Subject is required.",
+        "subjectMax": "Subject must be 200 characters or less.",
+        "messageRequired": "Message or files are required.",
+        "maxFiles": "You can attach up to {max} files.",
+        "fileTooLarge": "File is larger than 200 MB:"
+      }
+    },
     "chat": {
       "title": "Support Chat",
       "online": "Online",

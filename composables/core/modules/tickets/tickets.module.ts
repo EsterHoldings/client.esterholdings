@@ -46,8 +46,8 @@ export class TicketsModule implements BasicModuleInterface {
     return await this.ticketsService.getById(id);
   }
 
-  async post(data: object = {}): Promise<any> {
-    return await this.ticketsService.post(data);
+  async post(data: object = {}, config: AxiosRequestConfig = {}): Promise<any> {
+    return await this.ticketsService.post(data, config);
   }
 
   async put(id: any, data: object = {}): Promise<any> {

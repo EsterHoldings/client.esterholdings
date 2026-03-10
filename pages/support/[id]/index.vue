@@ -1805,6 +1805,14 @@
     currentUser.photoUrl = photoUrl || null;
     authStore.setUser(response.data);
 
+    const supportMode = String(response.data?.support_mode ?? "simple")
+      .trim()
+      .toLowerCase();
+    if (supportMode !== "full") {
+      await router.replace("/support");
+      return;
+    }
+
     await loadData();
     await loadLibraryFromChat();
     scheduleDesktopGridMeasure();
