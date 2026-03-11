@@ -28,7 +28,7 @@
 <script lang="ts" setup>
   import { useRoute } from "vue-router";
   import { navigateTo, useNuxtApp } from "nuxt/app";
-  import { computed, h, onBeforeUnmount, onMounted, reactive, ref } from "vue";
+  import { computed, h, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import useAppCore from "~/composables/useAppCore";
@@ -76,6 +76,8 @@
   let supportRealtimeRetryTimer: ReturnType<typeof setInterval> | null = null;
   let supportSocketStateHandler: ((states: any) => void) | null = null;
   let supportResumeListenersAttached = false;
+  let supportRealtimeInitialized = false;
+  let supportRealtimeInitInFlight = false;
   const notifications = reactive([
     { type: "info", message: "Test info notification message", wasRead: false },
     { type: "warning", message: "Test warning notification message", wasRead: false },
@@ -89,7 +91,9 @@
     { type: "info", message: "Test info notification message", wasRead: true },
   ]);
 
-  if (!authStore.user) authStore.initAuth();
+  if (!authStore.user) {
+    void authStore.initAuth().catch(() => {});
+  }
 
   const handleClickLogout = () => {
     authStore.setAccessToken("");
@@ -544,6 +548,25 @@
     supportResumeListenersAttached = false;
   };
 
+  const initializeSupportRealtime = async () => {
+    if (!isFullSupportEnabled.value) return;
+    if (supportRealtimeInitialized || supportRealtimeInitInFlight) return;
+
+    supportRealtimeInitInFlight = true;
+    try {
+      useEventBus.on(SUPPORT_UNREAD_UPDATED_EVENT, handleSupportUnreadUpdated);
+      await loadSupportUnreadCount();
+      startSupportBadgeRefresh();
+      connectSupportRealtime();
+      bindSupportSocketStateListener();
+      attachSupportResumeListeners();
+      startSupportRealtimeRetry();
+      supportRealtimeInitialized = true;
+    } finally {
+      supportRealtimeInitInFlight = false;
+    }
+  };
+
   onMounted(async () => {
     const routeTicketId = getRouteSupportTicketId();
     activeSupportTicketId.value = routeTicketId;
@@ -558,14 +581,23 @@
       return;
     }
 
-    useEventBus.on(SUPPORT_UNREAD_UPDATED_EVENT, handleSupportUnreadUpdated);
-    await loadSupportUnreadCount();
-    startSupportBadgeRefresh();
-    connectSupportRealtime();
-    bindSupportSocketStateListener();
-    attachSupportResumeListeners();
-    startSupportRealtimeRetry();
+    await initializeSupportRealtime();
   });
+
+  watch(
+    () => [authStore.accessToken, authStore.user?.support_mode],
+    () => {
+      if (supportRealtimeInitialized || supportRealtimeInitInFlight) return;
+      if (normalizeText(authStore.accessToken) === "") return;
+
+      void (async () => {
+        const enabled = await resolveFullSupportEnabled();
+        isFullSupportEnabled.value = enabled;
+        if (!enabled) return;
+        await initializeSupportRealtime();
+      })();
+    }
+  );
 
   onBeforeUnmount(() => {
     useEventBus.off(SUPPORT_UNREAD_UPDATED_EVENT, handleSupportUnreadUpdated);
@@ -579,6 +611,8 @@
       window.cancelAnimationFrame(supportUnreadRafId);
       supportUnreadRafId = null;
     }
+    supportRealtimeInitialized = false;
+    supportRealtimeInitInFlight = false;
   });
 </script>
 

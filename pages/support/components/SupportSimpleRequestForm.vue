@@ -1,286 +1,290 @@
 <template>
   <PanelDefault class="support-simple rounded-2xl border border-[var(--color-stroke-ui-dark)] p-5 md:p-6">
-    <div class="support-simple__header mb-5">
-      <UiTextH4 class="truncate">{{ t("support.simple.title") }}</UiTextH4>
-      <UiTextSmall class="support-simple__subtitle">{{ t("support.simple.subtitle") }}</UiTextSmall>
-    </div>
-
-    <div class="support-simple__grid">
-      <UiFormControl
-        :label="t('support.simple.replyEmailLabel')"
-        :errors="replyEmailError ? [replyEmailError] : []">
-        <UiInput
-          :value="replyEmail"
-          type="email"
-          :placeholder="t('support.simple.replyEmailPlaceholder')"
-          @input="replyEmail = String($event || '')"
-          @blur="validateReplyEmail()" />
-      </UiFormControl>
-
-      <UiFormControl
-        :label="t('support.simple.subjectLabel')"
-        :errors="subjectError ? [subjectError] : []">
-        <UiInput
-          :value="subject"
-          :placeholder="t('support.simple.subjectPlaceholder')"
-          @input="subject = String($event || '')"
-          @blur="validateSubject()" />
-      </UiFormControl>
-
-      <UiFormControl
-        :label="t('support.simple.messageLabel')"
-        :errors="messageError ? [messageError] : []">
-        <div class="support-simple__editor">
-          <div class="support-simple__toolbar">
-            <button
-              type="button"
-              class="support-simple__tool"
-              :title="t('support.simple.tools.bold')"
-              @click="applyEditorCommand('bold')">
-              B
-            </button>
-            <button
-              type="button"
-              class="support-simple__tool support-simple__tool--italic"
-              :title="t('support.simple.tools.italic')"
-              @click="applyEditorCommand('italic')">
-              I
-            </button>
-            <button
-              type="button"
-              class="support-simple__tool support-simple__tool--underline"
-              :title="t('support.simple.tools.underline')"
-              @click="applyEditorCommand('underline')">
-              U
-            </button>
-            <button
-              type="button"
-              class="support-simple__tool"
-              :title="t('support.simple.tools.list')"
-              @click="applyEditorCommand('insertUnorderedList')">
-              •
-            </button>
-            <button
-              type="button"
-              class="support-simple__tool"
-              :title="t('support.simple.tools.link')"
-              @click="insertLink()">
-              ⛓
-            </button>
-            <button
-              type="button"
-              class="support-simple__tool"
-              :title="t('support.simple.tools.clear')"
-              @click="applyEditorCommand('removeFormat')">
-              ⌫
-            </button>
-          </div>
-          <div
-            ref="editorRef"
-            class="support-simple__editor-input"
-            contenteditable="true"
-            :data-placeholder="t('support.simple.messagePlaceholder')"
-            @input="handleEditorInput"
-            @blur="validateMessage()"></div>
-        </div>
-      </UiFormControl>
-
-      <UiFormControl :label="t('support.simple.attachmentsLabel')">
-        <input
-          ref="fileInputRef"
-          type="file"
-          class="hidden"
-          multiple
-          @change="handleSelectFiles" />
-        <div class="support-simple__attachments">
-          <UiButtonDefault
-            state="info--small"
-            type="button"
-            :disabled="isSubmitting || hasPendingUploads"
-            @click="openFileDialog">
-            {{ t("support.simple.addFiles") }}
-          </UiButtonDefault>
-          <UiTextSmall class="support-simple__hint">{{ t("support.simple.maxSizeHint") }}</UiTextSmall>
+    <div class="support-simple__layout">
+      <section class="support-simple__form-column">
+        <div class="support-simple__header mb-5">
+          <UiTextH4 class="truncate">{{ t("support.simple.title") }}</UiTextH4>
+          <UiTextSmall class="support-simple__subtitle">{{ t("support.simple.subtitle") }}</UiTextSmall>
         </div>
 
-        <ul
-          v-if="selectedFiles.length"
-          class="support-simple__files">
-          <li
-            v-for="(file, index) in selectedFiles"
-            :key="file.id"
-            class="support-simple__file-item">
-            <div class="support-simple__file-content">
-              <div class="support-simple__file-head">
-                <span class="truncate">{{ shortFileName(file.name) }} ({{ formatFileSize(file.size) }})</span>
-                <span
-                  class="support-simple__file-status"
-                  :class="{
-                    'is-uploading': file.uploadStatus === 'uploading',
-                    'is-uploaded': file.uploadStatus === 'uploaded',
-                    'is-failed': file.uploadStatus === 'failed',
-                  }">
-                  {{ resolveUploadStatusLabel(file) }}
-                </span>
+        <div class="support-simple__grid">
+          <UiFormControl
+            :label="t('support.simple.replyEmailLabel')"
+            :errors="replyEmailError ? [replyEmailError] : []">
+            <UiInput
+              :value="replyEmail"
+              type="email"
+              :placeholder="t('support.simple.replyEmailPlaceholder')"
+              @input="replyEmail = String($event || '')"
+              @blur="validateReplyEmail()" />
+          </UiFormControl>
+
+          <UiFormControl
+            :label="t('support.simple.subjectLabel')"
+            :errors="subjectError ? [subjectError] : []">
+            <UiInput
+              :value="subject"
+              :placeholder="t('support.simple.subjectPlaceholder')"
+              @input="subject = String($event || '')"
+              @blur="validateSubject()" />
+          </UiFormControl>
+
+          <UiFormControl
+            :label="t('support.simple.messageLabel')"
+            :errors="messageError ? [messageError] : []">
+            <div class="support-simple__editor">
+              <div class="support-simple__toolbar">
+                <button
+                  type="button"
+                  class="support-simple__tool"
+                  :title="t('support.simple.tools.bold')"
+                  @click="applyEditorCommand('bold')">
+                  B
+                </button>
+                <button
+                  type="button"
+                  class="support-simple__tool support-simple__tool--italic"
+                  :title="t('support.simple.tools.italic')"
+                  @click="applyEditorCommand('italic')">
+                  I
+                </button>
+                <button
+                  type="button"
+                  class="support-simple__tool support-simple__tool--underline"
+                  :title="t('support.simple.tools.underline')"
+                  @click="applyEditorCommand('underline')">
+                  U
+                </button>
+                <button
+                  type="button"
+                  class="support-simple__tool"
+                  :title="t('support.simple.tools.list')"
+                  @click="applyEditorCommand('insertUnorderedList')">
+                  •
+                </button>
+                <button
+                  type="button"
+                  class="support-simple__tool"
+                  :title="t('support.simple.tools.link')"
+                  @click="insertLink()">
+                  ⛓
+                </button>
+                <button
+                  type="button"
+                  class="support-simple__tool"
+                  :title="t('support.simple.tools.clear')"
+                  @click="applyEditorCommand('removeFormat')">
+                  ⌫
+                </button>
               </div>
-
               <div
-                v-if="file.uploadStatus === 'uploading'"
-                class="support-simple__file-progress-track">
-                <div
-                  class="support-simple__file-progress-fill"
-                  :style="{ width: `${Math.max(0, Math.min(100, file.uploadProgress))}%` }"></div>
-              </div>
+                ref="editorRef"
+                class="support-simple__editor-input"
+                contenteditable="true"
+                :data-placeholder="t('support.simple.messagePlaceholder')"
+                @input="handleEditorInput"
+                @blur="validateMessage()"></div>
+            </div>
+          </UiFormControl>
+
+          <UiFormControl :label="t('support.simple.attachmentsLabel')">
+            <input
+              ref="fileInputRef"
+              type="file"
+              class="hidden"
+              multiple
+              @change="handleSelectFiles" />
+            <div class="support-simple__attachments">
+              <UiButtonDefault
+                state="info--small"
+                type="button"
+                :disabled="isSubmitting || hasPendingUploads"
+                @click="openFileDialog">
+                {{ t("support.simple.addFiles") }}
+              </UiButtonDefault>
+              <UiTextSmall class="support-simple__hint">{{ t("support.simple.maxSizeHint") }}</UiTextSmall>
             </div>
 
-            <div class="support-simple__file-actions">
-              <button
-                v-if="file.uploadStatus === 'failed'"
-                type="button"
-                class="support-simple__file-retry"
-                :title="t('support.simple.retryUpload')"
-                @click="retryFileUpload(file.id)">
-                ↻
-              </button>
-              <button
-                type="button"
-                class="support-simple__file-remove"
-                :aria-label="t('support.simple.removeFileAria')"
-                @click="removeFile(index)">
-                ×
-              </button>
-            </div>
-          </li>
-        </ul>
-      </UiFormControl>
-    </div>
+            <ul
+              v-if="selectedFiles.length"
+              class="support-simple__files">
+              <li
+                v-for="(file, index) in selectedFiles"
+                :key="file.id"
+                class="support-simple__file-item">
+                <div class="support-simple__file-content">
+                  <div class="support-simple__file-head">
+                    <span class="truncate">{{ shortFileName(file.name) }} ({{ formatFileSize(file.size) }})</span>
+                    <span
+                      class="support-simple__file-status"
+                      :class="{
+                        'is-uploading': file.uploadStatus === 'uploading',
+                        'is-uploaded': file.uploadStatus === 'uploaded',
+                        'is-failed': file.uploadStatus === 'failed',
+                      }">
+                      {{ resolveUploadStatusLabel(file) }}
+                    </span>
+                  </div>
 
-    <div class="support-simple__actions">
-      <UiButtonDefault
-        state="info"
-        class="support-simple__submit"
-        :disabled="isSubmitting"
-        @click="handleSubmit">
-        <span v-if="!isSubmitting">{{ t("support.simple.submit") }}</span>
-        <UiIconSpinnerDefault
-          v-else
-          class="h-4 w-4" />
-      </UiButtonDefault>
-    </div>
+                  <div
+                    v-if="file.uploadStatus === 'uploading'"
+                    class="support-simple__file-progress-track">
+                    <div
+                      class="support-simple__file-progress-fill"
+                      :style="{ width: `${Math.max(0, Math.min(100, file.uploadProgress))}%` }"></div>
+                  </div>
+                </div>
 
-    <section class="support-simple__history">
-      <div class="support-simple__history-head">
-        <UiTextH4 class="support-simple__history-title">{{ historyText.historyTitle }}</UiTextH4>
-        <button
-          type="button"
-          class="support-simple__history-refresh"
-          :disabled="isHistoryLoading || isHistoryRefreshing"
-          :aria-label="historyText.refreshAria"
-          @click="reloadHistory">
-          <UiIconSpinnerDefault
-            v-if="isHistoryLoading || isHistoryRefreshing"
-            class="!h-4 !w-4" />
-          <UiIconUpdate
-            v-else
-            class="h-4 w-4" />
-        </button>
-      </div>
+                <div class="support-simple__file-actions">
+                  <button
+                    v-if="file.uploadStatus === 'failed'"
+                    type="button"
+                    class="support-simple__file-retry"
+                    :title="t('support.simple.retryUpload')"
+                    @click="retryFileUpload(file.id)">
+                    ↻
+                  </button>
+                  <button
+                    type="button"
+                    class="support-simple__file-remove"
+                    :aria-label="t('support.simple.removeFileAria')"
+                    @click="removeFile(index)">
+                    ×
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </UiFormControl>
+        </div>
 
-      <div
-        v-if="isHistoryLoading && historyTickets.length === 0"
-        class="support-simple__history-state">
-        <UiIconSpinnerDefault class="!h-4 !w-4 !text-[var(--ui-text-main)]" />
-        <span>{{ historyText.loadingHistory }}</span>
-      </div>
+        <div class="support-simple__actions">
+          <UiButtonDefault
+            state="info"
+            class="support-simple__submit"
+            :disabled="isSubmitting"
+            @click="handleSubmit">
+            <span v-if="!isSubmitting">{{ t("support.simple.submit") }}</span>
+            <UiIconSpinnerDefault
+              v-else
+              class="h-4 w-4" />
+          </UiButtonDefault>
+        </div>
+      </section>
 
-      <div
-        v-else-if="historyTickets.length === 0"
-        class="support-simple__history-state">
-        {{ historyText.emptyHistory }}
-      </div>
-
-      <div
-        v-else
-        class="support-simple__history-list">
-        <article
-          v-for="ticket in historyTickets"
-          :key="ticket.id"
-          class="support-simple__history-ticket">
+      <section class="support-simple__history">
+        <div class="support-simple__history-head">
+          <UiTextH4 class="support-simple__history-title">{{ historyText.historyTitle }}</UiTextH4>
           <button
             type="button"
-            class="support-simple__history-ticket-head"
-            :aria-expanded="ticket.expanded ? 'true' : 'false'"
-            @click="toggleHistoryTicket(ticket)">
-            <div class="support-simple__history-ticket-info">
-              <div class="support-simple__history-ticket-subject truncate">{{ ticket.subject }}</div>
-              <div class="support-simple__history-ticket-meta">
-                <span class="support-simple__history-ticket-status">{{ ticket.status }}</span>
-                <span>•</span>
-                <span>{{ ticket.lastMessageAtLabel }}</span>
-              </div>
-            </div>
-            <span
-              class="support-simple__history-ticket-caret"
-              :class="{ 'is-expanded': ticket.expanded }">
-              ▾
-            </span>
+            class="support-simple__history-refresh"
+            :disabled="isHistoryLoading || isHistoryRefreshing"
+            :aria-label="historyText.refreshAria"
+            @click="reloadHistory">
+            <UiIconSpinnerDefault
+              v-if="isHistoryLoading || isHistoryRefreshing"
+              class="!h-4 !w-4" />
+            <UiIconUpdate
+              v-else
+              class="h-4 w-4" />
           </button>
+        </div>
 
-          <div
-            v-if="ticket.expanded"
-            class="support-simple__history-ticket-thread">
-            <div
-              v-if="ticket.loadingThread && ticket.thread.length === 0"
-              class="support-simple__history-thread-state">
-              <UiIconSpinnerDefault class="!h-4 !w-4 !text-[var(--ui-text-main)]" />
-              <span>{{ historyText.loadingMessages }}</span>
-            </div>
+        <div
+          v-if="isHistoryLoading && historyTickets.length === 0"
+          class="support-simple__history-state">
+          <UiIconSpinnerDefault class="!h-4 !w-4 !text-[var(--ui-text-main)]" />
+          <span>{{ historyText.loadingHistory }}</span>
+        </div>
 
-            <div
-              v-else-if="ticket.thread.length === 0"
-              class="support-simple__history-thread-state">
-              {{ historyText.emptyMessages }}
-            </div>
+        <div
+          v-else-if="historyTickets.length === 0"
+          class="support-simple__history-state">
+          {{ historyText.emptyHistory }}
+        </div>
 
-            <article
-              v-for="entry in ticket.thread"
-              :key="entry.id"
-              class="support-simple__history-entry">
-              <div class="support-simple__history-entry-head">
-                <strong class="truncate">{{ entry.authorName }}</strong>
-                <span class="support-simple__history-entry-date">{{ entry.createdAtLabel }}</span>
+        <div
+          v-else
+          class="support-simple__history-list">
+          <article
+            v-for="ticket in historyTickets"
+            :key="ticket.id"
+            class="support-simple__history-ticket">
+            <button
+              type="button"
+              class="support-simple__history-ticket-head"
+              :aria-expanded="ticket.expanded ? 'true' : 'false'"
+              @click="toggleHistoryTicket(ticket)">
+              <div class="support-simple__history-ticket-info">
+                <div class="support-simple__history-ticket-subject truncate">{{ ticket.subject }}</div>
+                <div class="support-simple__history-ticket-meta">
+                  <span class="support-simple__history-ticket-status">{{ ticket.status }}</span>
+                  <span>•</span>
+                  <span>{{ ticket.lastMessageAtLabel }}</span>
+                </div>
               </div>
+              <span
+                class="support-simple__history-ticket-caret"
+                :class="{ 'is-expanded': ticket.expanded }">
+                ▾
+              </span>
+            </button>
 
-              <p
-                v-if="entry.bodyText"
-                class="support-simple__history-entry-body">
-                {{ entry.bodyText }}
-              </p>
+            <div
+              v-if="ticket.expanded"
+              class="support-simple__history-ticket-thread">
+              <div
+                v-if="ticket.loadingThread && ticket.thread.length === 0"
+                class="support-simple__history-thread-state">
+                <UiIconSpinnerDefault class="!h-4 !w-4 !text-[var(--ui-text-main)]" />
+                <span>{{ historyText.loadingMessages }}</span>
+              </div>
 
               <div
-                v-if="entry.attachments.length"
-                class="support-simple__history-attachments">
-                <a
-                  v-for="attachment in entry.attachments"
-                  :key="attachment.id"
-                  :href="attachment.url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="support-simple__history-attachment">
-                  <UiIconDocuments class="h-4 w-4 shrink-0 text-[var(--ui-text-secondary)]" />
-                  <span class="truncate">{{ attachment.title }}</span>
-                  <span
-                    v-if="attachment.details"
-                    class="support-simple__history-attachment-details">
-                    {{ attachment.details }}
-                  </span>
-                </a>
+                v-else-if="ticket.thread.length === 0"
+                class="support-simple__history-thread-state">
+                {{ historyText.emptyMessages }}
               </div>
-            </article>
-          </div>
-        </article>
-      </div>
-    </section>
+
+              <article
+                v-for="entry in ticket.thread"
+                :key="entry.id"
+                class="support-simple__history-entry">
+                <div class="support-simple__history-entry-head">
+                  <strong class="truncate">{{ entry.authorName }}</strong>
+                  <span class="support-simple__history-entry-date">{{ entry.createdAtLabel }}</span>
+                </div>
+
+                <p
+                  v-if="entry.bodyText"
+                  class="support-simple__history-entry-body">
+                  {{ entry.bodyText }}
+                </p>
+
+                <div
+                  v-if="entry.attachments.length"
+                  class="support-simple__history-attachments">
+                  <a
+                    v-for="attachment in entry.attachments"
+                    :key="attachment.id"
+                    :href="attachment.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="support-simple__history-attachment">
+                    <UiIconDocuments class="h-4 w-4 shrink-0 text-[var(--ui-text-secondary)]" />
+                    <span class="truncate">{{ attachment.title }}</span>
+                    <span
+                      v-if="attachment.details"
+                      class="support-simple__history-attachment-details">
+                      {{ attachment.details }}
+                    </span>
+                  </a>
+                </div>
+              </article>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
   </PanelDefault>
 </template>
 
@@ -1018,6 +1022,18 @@
     background: var(--ui-background-panel);
   }
 
+  .support-simple__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  .support-simple__form-column,
+  .support-simple__history {
+    min-width: 0;
+  }
+
   .support-simple__subtitle {
     display: block;
     margin-top: 6px;
@@ -1195,9 +1211,6 @@
   }
 
   .support-simple__history {
-    margin-top: 20px;
-    padding-top: 18px;
-    border-top: 1px solid var(--color-stroke-ui-dark);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -1405,6 +1418,16 @@
   @media (max-width: 767px) {
     .support-simple {
       padding: 16px;
+    }
+
+    .support-simple__layout {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .support-simple__history {
+      margin-top: 4px;
+      padding-top: 14px;
+      border-top: 1px solid var(--color-stroke-ui-dark);
     }
 
     .support-simple__editor-input {
