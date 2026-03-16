@@ -17,7 +17,7 @@
 
   <nav
     class="cabinet-mobile-nav lg:hidden fixed bottom-0 inset-x-0 z-50 h-[74px] pb-[max(env(safe-area-inset-bottom,0px),8px)] bg-[var(--ui-background-sidebar)]/78 backdrop-blur-xl text-[var(--ui-text-main)] shadow-[0_-8px_24px_-16px_rgba(0,0,0,.6)]">
-    <div class="h-full px-2 flex items-center justify-evenly gap-1 overflow-hidden">
+    <div class="h-full px-2 flex items-center justify-start gap-1 overflow-x-auto overflow-y-hidden no-scrollbar">
       <CabinetSidebarMenu
         class="mobile-bottom-menu flex-1"
         :supportUnreadCount="supportUnreadCount" />
@@ -635,10 +635,16 @@
   .mobile-bottom-menu :deep(.cabinet-menu) {
     display: flex !important;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     gap: 0.25rem;
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
     height: 100%;
+    padding-inline: 0.125rem;
+  }
+
+  .mobile-bottom-menu :deep(li) {
+    flex: 0 0 auto;
   }
 
   .mobile-bottom-menu :deep(a),
