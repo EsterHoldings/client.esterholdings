@@ -4,6 +4,7 @@
   import { navigateTo, useNuxtApp } from "nuxt/app";
   import { computed, ref, onMounted, onUnmounted, watch } from "vue";
   import { useI18n } from "vue-i18n";
+  import { useToast } from "vue-toastification";
   import useAppCore from "~/composables/useAppCore";
 
   import { useThemeStore } from "~/stores/themeStore.js";
@@ -62,6 +63,7 @@
 
   const authStore = useAuthStore();
   const appCore = useAppCore();
+  const toast = useToast();
   const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
   const uiStore = useUiStore();
   const themeStore = useThemeStore();
@@ -133,11 +135,66 @@
   };
 
   const resolveNotificationTone = (raw: any): NotificationTone => {
-    const source = `${raw?.type ?? ""} ${raw?.title ?? ""} ${raw?.message ?? ""}`.toLowerCase();
+    const source = `${raw?.type ?? ""} ${raw?.title ?? ""} ${raw?.message ?? ""} ${raw?.payload?.status ?? raw?.status ?? ""}`.toLowerCase();
     if (source.includes("success")) return "success";
     if (source.includes("warning")) return "warning";
     if (source.includes("error") || source.includes("danger") || source.includes("failed")) return "danger";
     return "info";
+  };
+
+  const resolveText = (key: string, fallback: string, params?: Record<string, unknown>): string => {
+    const value = t(key, params ?? {});
+    return value === key ? fallback : value;
+  };
+
+  const statusText = (value: string): string => {
+    const normalized = String(value ?? "").trim().toLowerCase();
+    const key = `cabinet.header.notificationTemplates.statuses.${normalized}`;
+
+    switch (normalized) {
+      case "pending":
+        return resolveText(key, "Pending");
+      case "processing":
+        return resolveText(key, "Processing");
+      case "successful":
+        return resolveText(key, "Successful");
+      case "failed":
+        return resolveText(key, "Failed");
+      case "cancelled":
+        return resolveText(key, "Cancelled");
+      default:
+        return normalized || "-";
+    }
+  };
+
+  const buildWithdrawalStatusNotification = (
+    raw: any,
+    payload: Record<string, any> | null
+  ): { title: string; message: string } => {
+    const status = statusText(String(payload?.status ?? raw?.status ?? ""));
+    const amount = Number(payload?.amount ?? 0);
+    const currency = String(payload?.currency || "USD").trim();
+    const accountNumber = String(payload?.account_number || "").trim();
+    const defaultTitle = String(raw?.title ?? "").trim() || "Withdrawal request updated";
+    const defaultMessage = String(raw?.message ?? "").trim();
+
+    const title = resolveText("cabinet.header.notificationTemplates.withdrawalStatusUpdated.title", defaultTitle);
+    const fallbackMessage =
+      defaultMessage !== ""
+        ? defaultMessage
+        : `${status} • ${amount.toFixed(2)} ${currency}${accountNumber ? ` • ${accountNumber}` : ""}`;
+    const message = resolveText(
+      "cabinet.header.notificationTemplates.withdrawalStatusUpdated.message",
+      fallbackMessage,
+      {
+        status,
+        amount: amount.toFixed(2),
+        currency,
+        account: accountNumber || "-",
+      }
+    );
+
+    return { title, message };
   };
 
   const normalizeNotification = (raw: any): CabinetNotification | null => {
@@ -147,12 +204,19 @@
     const readAt = raw?.read_at ? String(raw.read_at) : null;
     const isUnread = raw?.is_unread ?? raw?.unread ?? readAt === null;
     const payload = raw?.payload && typeof raw.payload === "object" ? raw.payload : null;
-    const message = String(raw?.message ?? "").trim();
-    const title = String(raw?.title ?? "").trim();
+    const type = String(raw?.type ?? "system");
+    let message = String(raw?.message ?? "").trim();
+    let title = String(raw?.title ?? "").trim();
+
+    if (type === "payments.withdrawal.status-updated") {
+      const localized = buildWithdrawalStatusNotification(raw, payload);
+      title = localized.title;
+      message = localized.message;
+    }
 
     return {
       id,
-      type: String(raw?.type ?? "system"),
+      type,
       title: title !== "" ? title : t("cabinet.header.notifications"),
       message: message !== "" ? message : t("cabinet.header.emptyNotifications"),
       payload,
@@ -161,6 +225,30 @@
       route: typeof payload?.route === "string" && payload.route.trim() !== "" ? payload.route.trim() : null,
       tone: resolveNotificationTone(raw),
     };
+  };
+
+  const showNotificationToast = (notification: CabinetNotification) => {
+    const content =
+      notification.message && notification.message !== notification.title
+        ? `${notification.title}: ${notification.message}`
+        : notification.title;
+
+    if (notification.tone === "success") {
+      toast.success(content);
+      return;
+    }
+
+    if (notification.tone === "warning") {
+      toast.warning(content);
+      return;
+    }
+
+    if (notification.tone === "danger") {
+      toast.error(content);
+      return;
+    }
+
+    toast.info(content);
   };
 
   const upsertNotification = (notification: CabinetNotification, prepend = true) => {
@@ -311,6 +399,7 @@
       upsertNotification(normalized, true);
       if (!normalized.wasRead && (!previous || previous.wasRead)) {
         unreadCount.value += 1;
+        showNotificationToast(normalized);
       }
 
       if (isOpen.value) {

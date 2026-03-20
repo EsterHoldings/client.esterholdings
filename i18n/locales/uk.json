@@ -744,6 +744,19 @@
       "notifications": "Сповіщення",
       "markAllRead": "Позначити все прочитаним",
       "emptyNotifications": "У вас поки немає сповіщень",
+      "notificationTemplates": {
+        "withdrawalStatusUpdated": {
+          "title": "Статус заявки на виведення оновлено",
+          "message": "{status} • {amount} {currency} • рахунок {account}"
+        },
+        "statuses": {
+          "pending": "Очікує",
+          "processing": "В обробці",
+          "successful": "Успішно",
+          "failed": "Помилка",
+          "cancelled": "Відхилено"
+        }
+      },
       "accountSettings": "Налаштування акаунта",
       "switchToLight": "Перемкнути на світлу",
       "switchToDark": "Перемкнути на темну",
