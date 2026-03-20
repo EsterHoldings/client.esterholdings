@@ -730,6 +730,7 @@
               </div>
               <UiIconDelete
                 class="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-50 hover:opacity-100"
+                style="width: 14px; height: 14px"
                 @click="handleNotificationActionClick(notification, $event)" />
             </div>
 
