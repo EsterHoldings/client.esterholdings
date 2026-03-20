@@ -1,94 +1,131 @@
 <template>
-  <div class="withdrawal-form">
+  <div class="withdrawal-form-shell">
     <div
-      v-if="isLoadingAccounts || isLoadingPaymentDetails"
-      class="withdrawal-form__loading">
-      <UiIconSpinnerDefault />
+      v-if="isSubmitting"
+      class="withdrawal-form__overlay"
+      aria-live="polite"
+      aria-busy="true">
+      <div class="withdrawal-form__overlay-content">
+        <UiIconSpinnerDefault />
+        <div class="withdrawal-form__overlay-text">{{ processingLabel }}</div>
+      </div>
     </div>
 
-    <template v-else>
-      <UiFormControl :label="accountLabel" :errors="errors.accountId ? [errors.accountId] : []">
-        <UiSelect
-          :data="accountOptions"
-          :without-no-select="true"
-          :value="form.accountId"
-          @change="handleAccountChange"
-        />
-      </UiFormControl>
-
-      <UiFormControl
-        :label="paymentDetailLabel"
-        :errors="errors.paymentDetailId ? [errors.paymentDetailId] : []"
-      >
-        <UiSelect
-          :data="paymentDetailOptions"
-          :without-no-select="true"
-          :value="form.paymentDetailId"
-          :disabled="paymentDetailOptions.length === 0"
-          @change="handlePaymentDetailChange"
-        />
-      </UiFormControl>
+    <div class="withdrawal-form">
+      <UiTextH5 class="withdrawal-form__title">{{ paymentSystemTitle }}</UiTextH5>
 
       <div
-        v-if="paymentDetailOptions.length === 0"
-        class="withdrawal-form__empty-state"
-      >
-        <div class="withdrawal-form__empty-title">{{ noPaymentDetailsTitle }}</div>
-        <div class="withdrawal-form__empty-text">{{ noPaymentDetailsText }}</div>
-        <UiButtonDefault state="info--outline" @click="handleGoToPaymentDetails">
-          {{ openPaymentDetailsLabel }}
-        </UiButtonDefault>
+        v-if="isLoadingAccounts || isLoadingPaymentDetails"
+        class="withdrawal-form__loading">
+        <UiIconSpinnerDefault />
       </div>
 
-      <template v-else>
-        <div
-          v-if="selectedPaymentDetail"
-          class="withdrawal-form__detail-preview"
-        >
-          <div class="withdrawal-form__detail-title">{{ selectedPaymentDetail.name || "-" }}</div>
-          <div
-            v-for="row in paymentDetailRows"
-            :key="row.key"
-            class="withdrawal-form__detail-row"
-          >
-            <span class="withdrawal-form__detail-key">{{ row.key }}</span>
-            <span class="withdrawal-form__detail-value">{{ row.value }}</span>
-          </div>
-        </div>
-
-        <UiFormControl :label="amountLabel" :errors="errors.amount ? [errors.amount] : []">
-          <UiInput
-            type="number"
-            :value="form.amount"
-            :placeholder="amountPlaceholder"
-            @input="handleAmountInput"
+      <div
+        v-else
+        class="withdrawal-form__body">
+        <UiFormControl
+          class="withdrawal-form__field"
+          :label="accountLabel"
+          :errors="errors.accountId ? [errors.accountId] : []">
+          <UiSelect
+            :data="accountOptions"
+            :without-no-select="true"
+            :value="form.accountId"
+            @change="handleAccountChange"
           />
         </UiFormControl>
 
         <div
           v-if="selectedAccount"
-          class="withdrawal-form__hint"
-        >
-          {{ accountBalanceLabel }}: {{ formatBalance(selectedAccount.balance, selectedAccount.currency) }}
+          class="withdrawal-form__account-preview">
+          <div class="withdrawal-form__panel-caption">{{ accountLabel }}</div>
+          <div class="withdrawal-form__panel-title">{{ selectedAccount.number || "-" }}</div>
+          <div class="withdrawal-form__panel-text">
+            {{ accountBalanceLabel }}: {{ formatBalance(selectedAccount.balance, selectedAccount.currency) }}
+          </div>
         </div>
 
-        <UiFormControl :label="commentLabel" :errors="errors.comment ? [errors.comment] : []">
-          <textarea
-            class="withdrawal-form__textarea"
-            :value="form.comment"
-            :placeholder="commentPlaceholder"
-            @input="handleCommentInput"
+        <UiFormControl
+          class="withdrawal-form__field"
+          :label="paymentDetailLabel"
+          :errors="errors.paymentDetailId ? [errors.paymentDetailId] : []">
+          <UiSelect
+            :data="paymentDetailOptions"
+            :without-no-select="true"
+            :value="form.paymentDetailId"
+            :disabled="paymentDetailOptions.length === 0"
+            @change="handlePaymentDetailChange"
           />
         </UiFormControl>
 
-        <div class="withdrawal-form__actions">
-          <UiButtonDefault state="info" :disabled="isSubmitting" @click="handleSubmit">
-            <span v-if="!isSubmitting">{{ submitLabel }}</span>
-            <UiIconSpinnerDefault v-else />
+        <div
+          v-if="paymentDetailOptions.length === 0"
+          class="withdrawal-form__empty-state">
+          <div class="withdrawal-form__panel-title">{{ noPaymentDetailsTitle }}</div>
+          <div class="withdrawal-form__panel-text">{{ noPaymentDetailsText }}</div>
+          <UiButtonDefault state="info--outline" @click="handleGoToPaymentDetails">
+            {{ openPaymentDetailsLabel }}
           </UiButtonDefault>
         </div>
-      </template>
-    </template>
+
+        <template v-else>
+          <div
+            v-if="selectedPaymentDetail"
+            class="withdrawal-form__detail-preview">
+            <div class="withdrawal-form__panel-caption">{{ paymentDetailLabel }}</div>
+            <div class="withdrawal-form__detail-title">{{ selectedPaymentDetail.name || "-" }}</div>
+            <div
+              v-for="row in paymentDetailRows"
+              :key="row.key"
+              class="withdrawal-form__detail-row">
+              <span class="withdrawal-form__detail-key">{{ row.key }}</span>
+              <span class="withdrawal-form__detail-value">{{ row.value }}</span>
+            </div>
+          </div>
+
+          <UiFormControl
+            class="withdrawal-form__field"
+            :label="amountLabel"
+            :errors="errors.amount ? [errors.amount] : []">
+            <UiInput
+              type="number"
+              :value="form.amount"
+              :placeholder="amountPlaceholder"
+              @input="handleAmountInput"
+            />
+          </UiFormControl>
+
+          <div
+            v-if="selectedAccount"
+            class="withdrawal-form__hint">
+            {{ accountBalanceLabel }}: {{ formatBalance(selectedAccount.balance, selectedAccount.currency) }}
+          </div>
+
+          <UiFormControl
+            class="withdrawal-form__field"
+            :label="commentLabel"
+            :errors="errors.comment ? [errors.comment] : []">
+            <UiTextarea
+              class="withdrawal-form__textarea"
+              :value="form.comment"
+              :placeholder="commentPlaceholder"
+              @input="handleCommentInput"
+            />
+          </UiFormControl>
+
+          <div class="withdrawal-form__actions">
+            <UiButtonDefault
+              class="withdrawal-form__submit inline-flex items-center justify-center gap-2"
+              state="info--outline"
+              :disabled="isSubmitting"
+              @click="handleSubmit">
+              <span>{{ submitLabel }}</span>
+              <UiIconSpinnerDefault v-if="isSubmitting" />
+            </UiButtonDefault>
+          </div>
+        </template>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -103,6 +140,8 @@
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiInput from "~/components/ui/UiInput.vue";
   import UiSelect from "~/components/ui/UiSelect.vue";
+  import UiTextH5 from "~/components/ui/UiTextH5.vue";
+  import UiTextarea from "~/components/ui/UiTextarea.vue";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
 
@@ -188,6 +227,13 @@
   );
   const createdLabel = computed(() =>
     resolveText("cabinet.billing.withdrawalForm.created", "Withdrawal request created successfully.")
+  );
+  const paymentSystemTitle = computed(() => {
+    const value = String(props.paymentSystem?.name ?? "").trim();
+    return value !== "" ? value : resolveText("cabinet.billing.withdrawalForm.title", "Withdrawal");
+  });
+  const processingLabel = computed(() =>
+    resolveText("cabinet.billing.withdrawalForm.processing", "Processing...")
   );
 
   const accountOptions = computed(() => accounts.value.map(({ id, value, text }) => ({ id, value, text })));
@@ -427,33 +473,113 @@
 </script>
 
 <style scoped>
-  .withdrawal-form {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+  .withdrawal-form-shell {
+    position: relative;
   }
 
-  .withdrawal-form__loading {
-    min-height: 240px;
+  .withdrawal-form__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 20px;
+    background: rgb(0 0 0 / 0.2);
+    backdrop-filter: blur(2px);
   }
 
-  .withdrawal-form__detail-preview {
+  .withdrawal-form__overlay-content {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding: 14px;
-    border-radius: 12px;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px;
+    text-align: center;
+  }
+
+  .withdrawal-form__overlay-text {
+    color: rgb(255 255 255 / 0.9);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .withdrawal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .withdrawal-form__title {
+    color: var(--ui-text-main);
+  }
+
+  .withdrawal-form__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .withdrawal-form__field {
+    display: block;
+  }
+
+  .withdrawal-form__loading {
+    min-height: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
     border: 1px solid var(--color-stroke-ui-light);
     background: color-mix(in srgb, var(--ui-background-panel) 88%, transparent);
   }
 
+  .withdrawal-form__account-preview,
+  .withdrawal-form__detail-preview,
+  .withdrawal-form__empty-state {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--color-stroke-ui-light);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--ui-background-panel) 94%, transparent) 0%,
+        color-mix(in srgb, var(--ui-control-bg) 92%, transparent) 100%
+      );
+  }
+
+  .withdrawal-form__panel-caption {
+    color: var(--ui-text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .withdrawal-form__panel-title {
+    color: var(--ui-text-main);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .withdrawal-form__panel-text {
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .withdrawal-form__detail-preview {
+    gap: 0;
+  }
+
   .withdrawal-form__detail-title {
     color: var(--ui-text-main);
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
+    margin-bottom: 10px;
   }
 
   .withdrawal-form__detail-row {
@@ -462,6 +588,8 @@
     justify-content: space-between;
     gap: 12px;
     font-size: 13px;
+    padding-top: 10px;
+    border-top: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 82%, transparent);
   }
 
   .withdrawal-form__detail-key {
@@ -476,21 +604,14 @@
   }
 
   .withdrawal-form__hint {
-    margin-top: -8px;
+    margin-top: -2px;
+    padding: 0 2px;
     color: var(--ui-text-secondary);
     font-size: 12px;
   }
 
   .withdrawal-form__textarea {
-    width: 100%;
-    min-height: 120px;
-    resize: vertical;
-    border-radius: 10px;
-    border: 1px solid var(--color-stroke-ui-light);
-    background: var(--ui-control-bg);
-    color: var(--ui-text-main);
-    padding: 12px;
-    outline: none;
+    min-height: 140px;
   }
 
   .withdrawal-form__actions {
@@ -498,25 +619,8 @@
     justify-content: flex-start;
   }
 
-  .withdrawal-form__empty-state {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 16px;
-    border-radius: 12px;
-    border: 1px dashed var(--color-stroke-ui-light);
-    background: color-mix(in srgb, var(--ui-background-panel) 82%, transparent);
-  }
-
-  .withdrawal-form__empty-title {
-    color: var(--ui-text-main);
-    font-weight: 700;
-  }
-
-  .withdrawal-form__empty-text {
-    color: var(--ui-text-secondary);
-    font-size: 13px;
-    line-height: 1.45;
+  .withdrawal-form__submit {
+    min-width: 240px;
   }
 
   @media (max-width: 768px) {
@@ -529,7 +633,7 @@
       text-align: left;
     }
 
-    .withdrawal-form__actions :deep(.button-default) {
+    .withdrawal-form__submit {
       width: 100%;
     }
   }
