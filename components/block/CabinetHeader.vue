@@ -50,6 +50,15 @@
     tone: NotificationTone;
   };
 
+  const NOTIFICATIONS_POLL_MS = 10000;
+  const NOTIFICATIONS_REALTIME_RETRY_MS = 5000;
+  const NOTIFICATION_EVENT_NAMES = [
+    ".UserNotificationCreated",
+    "UserNotificationCreated",
+    ".App\\Events\\UserNotificationCreated",
+    "App\\Events\\UserNotificationCreated",
+  ];
+
   const props = withDefaults(
     defineProps<{
       breadcrumbs?: BreadcrumbItem[];
@@ -85,8 +94,12 @@
   const activeNotificationsChannel = ref<any>(null);
   const currentNotificationsChannelName = ref("");
   const isMarkAllInProgress = ref(false);
+  const knownNotificationIds = ref<Set<string>>(new Set());
   const unreadBadgeLabel = computed(() => (unreadCount.value > 99 ? "99+" : String(unreadCount.value)));
   const hasAccessToken = () => Boolean(String(authStore.accessToken ?? "").trim());
+  let notificationsSocketStateHandler: ((states: any) => void) | null = null;
+  let notificationsRealtimeRetryTimer: ReturnType<typeof setInterval> | null = null;
+  let notificationsPollTimer: ReturnType<typeof setInterval> | null = null;
 
   const handleClickLogout = () => {
     authStore.setAccessToken("");
@@ -251,6 +264,12 @@
     toast.info(content);
   };
 
+  const rememberNotifications = (items: CabinetNotification[]) => {
+    const next = new Set(knownNotificationIds.value);
+    items.forEach(item => next.add(item.id));
+    knownNotificationIds.value = next;
+  };
+
   const upsertNotification = (notification: CabinetNotification, prepend = true) => {
     const idx = notifications.value.findIndex(item => item.id === notification.id);
     if (idx === -1) {
@@ -273,11 +292,12 @@
     unreadCount.value = 0;
   };
 
-  const loadNotifications = async () => {
+  const loadNotifications = async (options: { showToastsForNew?: boolean } = {}): Promise<CabinetNotification[]> => {
     if (!hasAccessToken()) {
       notifications.value = [];
       notificationsLoaded.value = false;
-      return;
+      knownNotificationIds.value = new Set();
+      return [];
     }
 
     isLoading.value = true;
@@ -285,18 +305,32 @@
       const response = await appCore.notifications.get({ page: 1, perPage: 30 });
       const payload = response?.data?.data ?? {};
       const incomingItems = Array.isArray(payload?.data) ? payload.data : [];
-
-      notifications.value = incomingItems
+      const previousKnownIds = new Set(knownNotificationIds.value);
+      const normalizedItems = incomingItems
         .map(normalizeNotification)
         .filter((item: CabinetNotification | null): item is CabinetNotification => Boolean(item));
+      const newUnreadItems = normalizedItems.filter(item => !item.wasRead && !previousKnownIds.has(item.id));
+
+      notifications.value = normalizedItems;
+      rememberNotifications(normalizedItems);
 
       const unreadFromApi = Number(payload?.unread_count ?? NaN);
       unreadCount.value = Number.isFinite(unreadFromApi)
         ? unreadFromApi
         : notifications.value.filter(item => !item.wasRead).length;
       notificationsLoaded.value = true;
+
+      if (options.showToastsForNew) {
+        newUnreadItems
+          .slice()
+          .reverse()
+          .forEach(showNotificationToast);
+      }
+
+      return newUnreadItems;
     } catch (error) {
       notificationsLoaded.value = false;
+      return [];
     } finally {
       isLoading.value = false;
     }
@@ -361,6 +395,39 @@
     }
   };
 
+  const reconnectNotificationsSocketTransport = () => {
+    const echoClient = resolveEchoClient();
+    const pusher = echoClient?.connector?.pusher;
+    const state = String(pusher?.connection?.state ?? "");
+    if (!pusher) return;
+
+    if (state === "disconnected" || state === "failed" || state === "unavailable") {
+      try {
+        pusher.connect();
+      } catch {
+        // no-op
+      }
+    }
+  };
+
+  const handleRealtimeNotification = async (payload: any) => {
+    const normalized = normalizeNotification(payload?.notification ?? null);
+    if (!normalized) return;
+
+    const wasKnown = knownNotificationIds.value.has(normalized.id);
+    upsertNotification(normalized, true);
+    rememberNotifications([normalized]);
+
+    if (!normalized.wasRead && !wasKnown) {
+      unreadCount.value += 1;
+      showNotificationToast(normalized);
+    }
+
+    if (isOpen.value) {
+      await markNotificationRead(normalized.id, true);
+    }
+  };
+
   const handleNotificationActionClick = async (notification: CabinetNotification, event?: MouseEvent) => {
     event?.stopPropagation();
     await markNotificationRead(notification.id, true);
@@ -389,22 +456,12 @@
     const echoClient = resolveEchoClient();
     if (!echoClient) return;
 
+    reconnectNotificationsSocketTransport();
     currentNotificationsChannelName.value = channelName;
     activeNotificationsChannel.value = echoClient.private(channelName);
-    activeNotificationsChannel.value.listen(".UserNotificationCreated", async (payload: any) => {
-      const normalized = normalizeNotification(payload?.notification ?? null);
-      if (!normalized) return;
-
-      const previous = notifications.value.find(item => item.id === normalized.id) ?? null;
-      upsertNotification(normalized, true);
-      if (!normalized.wasRead && (!previous || previous.wasRead)) {
-        unreadCount.value += 1;
-        showNotificationToast(normalized);
-      }
-
-      if (isOpen.value) {
-        await markNotificationRead(normalized.id, true);
-      }
+    NOTIFICATION_EVENT_NAMES.forEach(eventName => {
+      activeNotificationsChannel.value.stopListening(eventName, handleRealtimeNotification);
+      activeNotificationsChannel.value.listen(eventName, handleRealtimeNotification);
     });
   };
 
@@ -422,6 +479,85 @@
     } catch (error) {
       // no-op
     }
+  };
+
+  const bindNotificationsSocketStateListener = () => {
+    if (notificationsSocketStateHandler) return;
+
+    const echoClient = resolveEchoClient();
+    const connection = echoClient?.connector?.pusher?.connection;
+    if (!connection || typeof connection.bind !== "function") return;
+
+    notificationsSocketStateHandler = (states: any) => {
+      const currentState = String(states?.current ?? connection?.state ?? "");
+      if (currentState === "connected") {
+        const userId = String(authStore.user?.id ?? "").trim();
+        if (userId !== "") {
+          subscribeToNotifications(userId);
+        }
+        return;
+      }
+
+      if (currentState === "failed" || currentState === "unavailable" || currentState === "disconnected") {
+        reconnectNotificationsSocketTransport();
+      }
+    };
+
+    connection.bind("state_change", notificationsSocketStateHandler);
+  };
+
+  const unbindNotificationsSocketStateListener = () => {
+    if (!notificationsSocketStateHandler) return;
+
+    const echoClient = resolveEchoClient();
+    const connection = echoClient?.connector?.pusher?.connection;
+    if (connection && typeof connection.unbind === "function") {
+      connection.unbind("state_change", notificationsSocketStateHandler);
+    }
+
+    notificationsSocketStateHandler = null;
+  };
+
+  const startNotificationsRealtimeRetry = () => {
+    if (notificationsRealtimeRetryTimer) return;
+
+    notificationsRealtimeRetryTimer = setInterval(() => {
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+
+      reconnectNotificationsSocketTransport();
+      const userId = String(authStore.user?.id ?? "").trim();
+      if (userId !== "") {
+        subscribeToNotifications(userId);
+      }
+    }, NOTIFICATIONS_REALTIME_RETRY_MS);
+  };
+
+  const stopNotificationsRealtimeRetry = () => {
+    if (!notificationsRealtimeRetryTimer) return;
+
+    clearInterval(notificationsRealtimeRetryTimer);
+    notificationsRealtimeRetryTimer = null;
+  };
+
+  const startNotificationsPolling = () => {
+    if (notificationsPollTimer) return;
+
+    notificationsPollTimer = setInterval(async () => {
+      if (!hasAccessToken()) return;
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+
+      const newUnreadItems = await loadNotifications({ showToastsForNew: true });
+      if (isOpen.value && newUnreadItems.length > 0) {
+        await markAllRead();
+      }
+    }, NOTIFICATIONS_POLL_MS);
+  };
+
+  const stopNotificationsPolling = () => {
+    if (!notificationsPollTimer) return;
+
+    clearInterval(notificationsPollTimer);
+    notificationsPollTimer = null;
   };
 
   const formatNotificationTime = (value: string | null): string => {
@@ -459,10 +595,14 @@
       const normalized = String(userId || "").trim();
       if (normalized === "") {
         unsubscribeFromNotifications();
+        knownNotificationIds.value = new Set();
+        stopNotificationsPolling();
         return;
       }
 
       subscribeToNotifications(normalized);
+      startNotificationsRealtimeRetry();
+      startNotificationsPolling();
     }
   );
 
@@ -477,17 +617,24 @@
         return;
       }
 
+      await loadNotifications();
       await loadUnreadSummary();
       const userId = String(authStore.user?.id ?? "").trim();
       if (userId !== "") {
         subscribeToNotifications(userId);
       }
+      bindNotificationsSocketStateListener();
+      startNotificationsRealtimeRetry();
+      startNotificationsPolling();
     })();
   });
 
   onUnmounted(() => {
     document.removeEventListener("click", handleClickOutside);
     unsubscribeFromNotifications();
+    unbindNotificationsSocketStateListener();
+    stopNotificationsRealtimeRetry();
+    stopNotificationsPolling();
   });
 </script>
 
