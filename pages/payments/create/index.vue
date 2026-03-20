@@ -64,14 +64,12 @@
               leave-to-class="opacity-0 translate-y-2">
               <!-- wrapper ВАЖЛИВИЙ: гарантує 1 root для Transition -->
               <div
-                v-if="isFormVisible && activePaymentSystem?.componentForm"
+                v-if="isFormVisible && activePaymentSystemForm"
                 key="payment-form">
                 <component
-                  :is="activePaymentSystem.componentForm"
+                  :is="activePaymentSystemForm"
                   :paymentSystem="
-                    paymentSystems.find(
-                      ps => (ps.config_key ?? ps.componentForm?.config_key) === activePaymentSystem.cfgKey
-                    )
+                    paymentSystems.find(ps => ps.config_key === activePaymentSystem.cfgKey)
                   " />
               </div>
             </Transition>
@@ -93,6 +91,7 @@
   import TabDepositFormUsdtErc20 from "~/pages/payments/create/components/TabDepositFormUsdtErc20.vue";
   import TabDepositFormUsdtTrc20 from "~/pages/payments/create/components/TabDepositFormUsdtTrc20.vue";
   import TabWithdrawal from "~/pages/payments/create/components/TabWithdrawal.vue";
+  import TabWithdrawalForm from "~/pages/payments/create/components/TabWithdrawalForm.vue";
   import UiIconBTC from "~/components/ui/UiIconBTC.vue";
   import UiIconPayment from "~/components/ui/UiIconPayment.vue";
   import UiIconUsdtErc20 from "~/components/ui/UiIconUsdtErc20.vue";
@@ -141,7 +140,8 @@
         cfgKey: string;
         name: string;
         icon: any;
-        componentForm: any;
+        depositComponentForm: any;
+        withdrawalComponentForm: any;
       }
     >
   >({
@@ -149,31 +149,36 @@
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_TRC20,
       name: "USDT TRC-20",
       icon: UiIconUsdtTrc20,
-      componentForm: TabDepositFormUsdtTrc20,
+      depositComponentForm: TabDepositFormUsdtTrc20,
+      withdrawalComponentForm: TabWithdrawalForm,
     },
     erc20: {
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_ERC20,
       name: "USDT ERC-20",
       icon: UiIconUsdtErc20,
-      componentForm: TabDepositFormUsdtErc20,
+      depositComponentForm: TabDepositFormUsdtErc20,
+      withdrawalComponentForm: TabWithdrawalForm,
     },
     btc: {
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_BTC,
       name: "BTC",
       icon: UiIconBTC,
-      componentForm: TabDepositFormBTC,
+      depositComponentForm: TabDepositFormBTC,
+      withdrawalComponentForm: TabWithdrawalForm,
     },
     visa_mastercard: {
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_VISA_MASTERCARD,
       name: "Visa / MasterCard",
       icon: UiIconVisaAndMasterCard,
-      componentForm: TabDepositFormUsdtErc20,
+      depositComponentForm: TabDepositFormUsdtErc20,
+      withdrawalComponentForm: TabWithdrawalForm,
     },
     custom_payment: {
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_VISA_CUSTOM_PAYMENT,
       name: "Custom Payment",
       icon: UiIconPayment,
-      componentForm: TabDepositFormUsdtErc20,
+      depositComponentForm: TabDepositFormUsdtErc20,
+      withdrawalComponentForm: TabWithdrawalForm,
     },
   });
 
@@ -186,7 +191,8 @@
       created_at: string;
       updated_at: string;
       icon: any;
-      componentForm: any;
+      depositComponentForm: any;
+      withdrawalComponentForm: any;
       cfgKey?: string;
     }>
   >([]);
@@ -205,6 +211,16 @@
   const activePaymentSystem = computed(() => {
     if (activePaymentSystemIndex.value === null) return null;
     return paymentSystems[activePaymentSystemIndex.value] || null;
+  });
+
+  const activePaymentSystemForm = computed(() => {
+    if (!activePaymentSystem.value) {
+      return null;
+    }
+
+    return tabActiveIndex.value === 1
+      ? activePaymentSystem.value.withdrawalComponentForm
+      : activePaymentSystem.value.depositComponentForm;
   });
 
   const isSelected = computed(() => activePaymentSystemIndex.value !== null);

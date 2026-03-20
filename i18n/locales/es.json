@@ -35,39 +35,74 @@
         "Trading": [
           {
             "section": "Descripción de cuentas",
-            "items": ["Estándar", "Pro", "Islámica", "Demo"]
+            "items": [
+              "Estándar",
+              "Pro",
+              "Islámica",
+              "Demo"
+            ]
           },
           {
             "section": "Instrumentos de mercado",
-            "items": ["Forex", "Metales", "CFDs de Cripto", "Índices", "Acciones", "Energía", "ETFs"]
+            "items": [
+              "Forex",
+              "Metales",
+              "CFDs de Cripto",
+              "Índices",
+              "Acciones",
+              "Energía",
+              "ETFs"
+            ]
           },
           {
             "section": "Plataforma",
-            "items": ["MT4 Desktop", "MT 4 Mobile"]
+            "items": [
+              "MT4 Desktop",
+              "MT 4 Mobile"
+            ]
           },
           {
             "section": "Condiciones de trading",
-            "items": ["Recarga de cuenta", "Retiro de fondos"]
+            "items": [
+              "Recarga de cuenta",
+              "Retiro de fondos"
+            ]
           },
           {
             "section": "HUB del Trader",
-            "items": ["Blog del trader", "Calendario económico", "Noticias del mercado"]
+            "items": [
+              "Blog del trader",
+              "Calendario económico",
+              "Noticias del mercado"
+            ]
           },
           {
             "section": "Trading TANDEM",
-            "items": ["Para trader", "Para inversor"]
+            "items": [
+              "Para trader",
+              "Para inversor"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "Asociación",
-            "items": ["Registrar IB/ Asociación", "Cómo los IB generan ingresos"]
+            "items": [
+              "Registrar IB/ Asociación",
+              "Cómo los IB generan ingresos"
+            ]
           }
         ],
         "Company": [
           {
             "section": "Empresa",
-            "items": ["Sobre la empresa", "Documentos", "Noticias de la empresa", "Contactos", "Carrera"]
+            "items": [
+              "Sobre la empresa",
+              "Documentos",
+              "Noticias de la empresa",
+              "Contactos",
+              "Carrera"
+            ]
           }
         ]
       }
@@ -200,7 +235,11 @@
           "title": "Demo",
           "subtitle": "cuenta",
           "description": "Trading sin riesgo con fondos virtuales, perfecto para principiantes para explorar mercados.",
-          "features": ["Apalancamiento hasta 1:100", "Spreads desde 0.0 pips", "No se requiere depósito"],
+          "features": [
+            "Apalancamiento hasta 1:100",
+            "Spreads desde 0.0 pips",
+            "No se requiere depósito"
+          ],
           "buttonText": "Probar Demo Ahora",
           "isRecommended": true
         },
@@ -210,7 +249,11 @@
           "title": "Estándar",
           "subtitle": "cuenta",
           "description": "Fácil acceso a mercados spot con tarifas bajas — ideal para principiantes y traders activos.",
-          "features": ["Apalancamiento hasta 1:100", "Spreads desde 1.2 pips", "Primer depósito de $50"],
+          "features": [
+            "Apalancamiento hasta 1:100",
+            "Spreads desde 1.2 pips",
+            "Primer depósito de $50"
+          ],
           "buttonText": "Abrir Cuenta Estándar",
           "isRecommended": false
         },
@@ -220,7 +263,11 @@
           "title": "Pro",
           "subtitle": "cuenta",
           "description": "Experimenta spreads ajustados, mayor apalancamiento y control total sobre cada operación.",
-          "features": ["Apalancamiento hasta 1:100", "Spreads desde 0.0 pips", "Primer depósito de $1000"],
+          "features": [
+            "Apalancamiento hasta 1:100",
+            "Spreads desde 0.0 pips",
+            "Primer depósito de $1000"
+          ],
           "buttonText": "Opera Como un Pro",
           "isRecommended": false
         },
@@ -439,7 +486,10 @@
         "career": {
           "title": "Carrera",
           "subtitle": "En este momento, la empresa está buscando los siguientes especialistas:",
-          "positions": ["GERENTE DE VENTAS", "JEFE DEL DEPARTAMENTO DE ANÁLISIS"],
+          "positions": [
+            "GERENTE DE VENTAS",
+            "JEFE DEL DEPARTAMENTO DE ANÁLISIS"
+          ],
           "cta": "SI ESTÁS LISTO PARA UN CRECIMIENTO DINÁMICO, ERES AMBICIOSO Y TALENTOSO, ENVÍA TU RESUMEN.",
           "button": "ENVIAR CV"
         },
@@ -636,15 +686,30 @@
       "description": "El objetivo principal de Ester es crear las mejores y más transparentes condiciones para traders minoristas y corporativos.",
       "trading": {
         "title": "Trading",
-        "items": ["Descripción de cuentas", "Mercados", "Plataforma", "Términos de trading", "Trading tándem"]
+        "items": [
+          "Descripción de cuentas",
+          "Mercados",
+          "Plataforma",
+          "Términos de trading",
+          "Trading tándem"
+        ]
       },
       "partnership": {
         "title": "Asociación",
-        "items": ["Registrar IB/ Asociación", "Cómo los IB generan ingresos"]
+        "items": [
+          "Registrar IB/ Asociación",
+          "Cómo los IB generan ingresos"
+        ]
       },
       "company": {
         "title": "Empresa",
-        "items": ["Sobre la empresa", "Documentos", "Noticias de la empresa", "Contactos", "Carrera"]
+        "items": [
+          "Sobre la empresa",
+          "Documentos",
+          "Noticias de la empresa",
+          "Contactos",
+          "Carrera"
+        ]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -780,6 +845,28 @@
         "list": "List",
         "cards": "Cards",
         "full": "Full width"
+      },
+      "withdrawalForm": {
+        "account": "Trading account",
+        "paymentDetail": "Payment details",
+        "amount": "Amount",
+        "amountPlaceholder": "Enter withdrawal amount",
+        "comment": "Comment",
+        "commentPlaceholder": "Add a comment for the finance team",
+        "submit": "Create withdrawal request",
+        "noPaymentDetailsTitle": "No approved payment details",
+        "noPaymentDetailsText": "Add and approve payment details for this payment method before creating a withdrawal request.",
+        "openPaymentDetails": "Open payment details",
+        "accountBalance": "Available balance",
+        "created": "Withdrawal request created successfully.",
+        "error": "Failed to create withdrawal request.",
+        "adminComment": "Admin comment",
+        "errors": {
+          "account": "Choose an account.",
+          "paymentDetail": "Choose approved payment details.",
+          "amount": "Enter a valid amount.",
+          "balance": "Withdrawal amount exceeds the account balance."
+        }
       }
     },
     "payments": {

@@ -88,6 +88,22 @@
             <div class="payment-field__value">{{ valueOrDash(payment.comment) }}</div>
           </div>
 
+          <div
+            v-if="payment.payment_detail_name"
+            class="payment-field md:col-span-2"
+          >
+            <UiTextSmall class="payment-field__label">{{ paymentDetailLabel }}</UiTextSmall>
+            <div class="payment-field__value">{{ valueOrDash(payment.payment_detail_name) }}</div>
+          </div>
+
+          <div
+            v-if="payment.admin_comment"
+            class="payment-field md:col-span-2"
+          >
+            <UiTextSmall class="payment-field__label">{{ adminCommentLabel }}</UiTextSmall>
+            <div class="payment-field__value">{{ valueOrDash(payment.admin_comment) }}</div>
+          </div>
+
           <div class="payment-field md:col-span-2">
             <UiTextSmall class="payment-field__label">{{ redirectLinkLabel }}</UiTextSmall>
             <div class="payment-field__value break-all">{{ valueOrDash(payment.redirect_link) }}</div>
@@ -158,6 +174,12 @@
   const createdAtLabel = computed(() => resolveI18nValue("cabinet.billing.columns.createdAt", "Создано"));
   const updatedAtLabel = computed(() => resolveI18nValue("cabinet.billing.updatedAt", "Обновлено"));
   const commentLabel = computed(() => resolveI18nValue("cabinet.billing.comment", "Комментарий"));
+  const paymentDetailLabel = computed(() =>
+    resolveI18nValue("cabinet.billing.withdrawalForm.paymentDetail", "Платёжные реквизиты")
+  );
+  const adminCommentLabel = computed(() =>
+    resolveI18nValue("cabinet.billing.withdrawalForm.adminComment", "Комментарий администратора")
+  );
   const redirectLinkLabel = computed(() => resolveI18nValue("cabinet.billing.redirectLink", "Ссылка оплаты"));
   const internalTransferLabel = computed(() =>
     resolveI18nValue("cabinet.billing.internalTransfer", "Transfer between accounts")
