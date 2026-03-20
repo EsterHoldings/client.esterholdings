@@ -749,6 +749,14 @@
           "title": "Withdrawal request updated",
           "message": "{status} • {amount} {currency} • account {account}"
         },
+        "supportMessage": {
+          "title": "New support message",
+          "message": "{preview}"
+        },
+        "supportTicketUpdated": {
+          "title": "Support ticket updated",
+          "message": "{preview}"
+        },
         "statuses": {
           "pending": "Pending",
           "processing": "Processing",

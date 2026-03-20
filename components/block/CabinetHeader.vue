@@ -58,6 +58,7 @@
     ".App\\Events\\UserNotificationCreated",
     "App\\Events\\UserNotificationCreated",
   ];
+  const SUPPORT_USER_NOTIFICATION_TYPES = ["support.message"];
 
   const props = withDefaults(
     defineProps<{
@@ -210,6 +211,41 @@
     return { title, message };
   };
 
+  const buildSupportNotification = (
+    raw: any,
+    payload: Record<string, any> | null
+  ): { title: string; message: string } => {
+    const preview = String(payload?.preview || raw?.message || "").trim();
+    const messageType = String(payload?.message_type || "").trim().toLowerCase();
+    const defaultTitle = String(raw?.title ?? "").trim() || "New support message";
+    const defaultMessage = String(raw?.message ?? "").trim();
+
+    if (messageType === "system") {
+      const title = resolveText("cabinet.header.notificationTemplates.supportTicketUpdated.title", "Support ticket updated");
+      const fallbackMessage = defaultMessage !== "" ? defaultMessage : preview || "Support ticket updated";
+      const message = resolveText(
+        "cabinet.header.notificationTemplates.supportTicketUpdated.message",
+        fallbackMessage,
+        { preview: preview || "-" }
+      );
+
+      return { title, message };
+    }
+
+    const title = resolveText("cabinet.header.notificationTemplates.supportMessage.title", defaultTitle);
+    const fallbackMessage = defaultMessage !== "" ? defaultMessage : preview || "New support message";
+    const message = resolveText(
+      "cabinet.header.notificationTemplates.supportMessage.message",
+      fallbackMessage,
+      { preview: preview || "-" }
+    );
+
+    return { title, message };
+  };
+
+  const shouldToastNotification = (notification: CabinetNotification): boolean =>
+    !SUPPORT_USER_NOTIFICATION_TYPES.includes(String(notification.type ?? "").trim());
+
   const normalizeNotification = (raw: any): CabinetNotification | null => {
     const id = String(raw?.id ?? "").trim();
     if (id === "") return null;
@@ -223,6 +259,12 @@
 
     if (type === "payments.withdrawal.status-updated") {
       const localized = buildWithdrawalStatusNotification(raw, payload);
+      title = localized.title;
+      message = localized.message;
+    }
+
+    if (type === "support.message") {
+      const localized = buildSupportNotification(raw, payload);
       title = localized.title;
       message = localized.message;
     }
@@ -324,6 +366,7 @@
         newUnreadItems
           .slice()
           .reverse()
+          .filter(shouldToastNotification)
           .forEach(showNotificationToast);
       }
 
@@ -420,7 +463,9 @@
 
     if (!normalized.wasRead && !wasKnown) {
       unreadCount.value += 1;
-      showNotificationToast(normalized);
+      if (shouldToastNotification(normalized)) {
+        showNotificationToast(normalized);
+      }
     }
 
     if (isOpen.value) {

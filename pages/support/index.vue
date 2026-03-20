@@ -998,6 +998,10 @@
     supportGlobalChannel.stopListening("MessageSent", handleSupportListReload);
     supportGlobalChannel.stopListening(".App\\Events\\MessageSent", handleSupportListReload);
     supportGlobalChannel.stopListening("App\\Events\\MessageSent", handleSupportListReload);
+    supportGlobalChannel.stopListening(".MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.stopListening("MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.stopListening(".App\\Events\\MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.stopListening("App\\Events\\MessageRead", handleSupportUnreadUpdated);
     supportGlobalChannel.stopListening(".ticket.presence.updated", handleSupportPresenceRealtime);
     supportGlobalChannel.stopListening("ticket.presence.updated", handleSupportPresenceRealtime);
     supportGlobalChannel.stopListening(".App\\Events\\TicketPresenceUpdated", handleSupportPresenceRealtime);
@@ -1006,6 +1010,10 @@
     supportGlobalChannel.listen("MessageSent", handleSupportListReload);
     supportGlobalChannel.listen(".App\\Events\\MessageSent", handleSupportListReload);
     supportGlobalChannel.listen("App\\Events\\MessageSent", handleSupportListReload);
+    supportGlobalChannel.listen(".MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.listen("MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.listen(".App\\Events\\MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.listen("App\\Events\\MessageRead", handleSupportUnreadUpdated);
     supportGlobalChannel.listen(".ticket.presence.updated", handleSupportPresenceRealtime);
     supportGlobalChannel.listen("ticket.presence.updated", handleSupportPresenceRealtime);
     supportGlobalChannel.listen(".App\\Events\\TicketPresenceUpdated", handleSupportPresenceRealtime);
@@ -1019,6 +1027,10 @@
     supportGlobalChannel.stopListening("MessageSent", handleSupportListReload);
     supportGlobalChannel.stopListening(".App\\Events\\MessageSent", handleSupportListReload);
     supportGlobalChannel.stopListening("App\\Events\\MessageSent", handleSupportListReload);
+    supportGlobalChannel.stopListening(".MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.stopListening("MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.stopListening(".App\\Events\\MessageRead", handleSupportUnreadUpdated);
+    supportGlobalChannel.stopListening("App\\Events\\MessageRead", handleSupportUnreadUpdated);
     supportGlobalChannel.stopListening(".ticket.presence.updated", handleSupportPresenceRealtime);
     supportGlobalChannel.stopListening("ticket.presence.updated", handleSupportPresenceRealtime);
     supportGlobalChannel.stopListening(".App\\Events\\TicketPresenceUpdated", handleSupportPresenceRealtime);

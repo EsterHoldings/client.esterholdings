@@ -394,10 +394,14 @@
     );
   };
 
-  const handleSupportGlobalMessage = (payload?: any) => {
+  const handleSupportGlobalMessage = () => {
     if (!isFullSupportEnabled.value) return;
     handleSupportUnreadUpdated();
-    handleSupportMessageToast(payload);
+  };
+
+  const handleSupportGlobalRead = () => {
+    if (!isFullSupportEnabled.value) return;
+    handleSupportUnreadUpdated();
   };
 
   const resolveEchoClient = () => {
@@ -437,10 +441,18 @@
     channel.stopListening("MessageSent", handleSupportGlobalMessage);
     channel.stopListening(".App\\Events\\MessageSent", handleSupportGlobalMessage);
     channel.stopListening("App\\Events\\MessageSent", handleSupportGlobalMessage);
+    channel.stopListening(".MessageRead", handleSupportGlobalRead);
+    channel.stopListening("MessageRead", handleSupportGlobalRead);
+    channel.stopListening(".App\\Events\\MessageRead", handleSupportGlobalRead);
+    channel.stopListening("App\\Events\\MessageRead", handleSupportGlobalRead);
     channel.listen(".MessageSent", handleSupportGlobalMessage);
     channel.listen("MessageSent", handleSupportGlobalMessage);
     channel.listen(".App\\Events\\MessageSent", handleSupportGlobalMessage);
     channel.listen("App\\Events\\MessageSent", handleSupportGlobalMessage);
+    channel.listen(".MessageRead", handleSupportGlobalRead);
+    channel.listen("MessageRead", handleSupportGlobalRead);
+    channel.listen(".App\\Events\\MessageRead", handleSupportGlobalRead);
+    channel.listen("App\\Events\\MessageRead", handleSupportGlobalRead);
     supportRealtimeChannel = channel;
   };
 
@@ -483,6 +495,10 @@
     supportRealtimeChannel.stopListening("MessageSent", handleSupportGlobalMessage);
     supportRealtimeChannel.stopListening(".App\\Events\\MessageSent", handleSupportGlobalMessage);
     supportRealtimeChannel.stopListening("App\\Events\\MessageSent", handleSupportGlobalMessage);
+    supportRealtimeChannel.stopListening(".MessageRead", handleSupportGlobalRead);
+    supportRealtimeChannel.stopListening("MessageRead", handleSupportGlobalRead);
+    supportRealtimeChannel.stopListening(".App\\Events\\MessageRead", handleSupportGlobalRead);
+    supportRealtimeChannel.stopListening("App\\Events\\MessageRead", handleSupportGlobalRead);
     supportRealtimeChannel = null;
   };
 

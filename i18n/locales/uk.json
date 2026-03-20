@@ -749,6 +749,14 @@
           "title": "Статус заявки на виведення оновлено",
           "message": "{status} • {amount} {currency} • рахунок {account}"
         },
+        "supportMessage": {
+          "title": "Нове повідомлення від підтримки",
+          "message": "{preview}"
+        },
+        "supportTicketUpdated": {
+          "title": "Тікет підтримки оновлено",
+          "message": "{preview}"
+        },
         "statuses": {
           "pending": "Очікує",
           "processing": "В обробці",

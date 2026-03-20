@@ -749,6 +749,14 @@
           "title": "Статус заявки на вывод обновлён",
           "message": "{status} • {amount} {currency} • счёт {account}"
         },
+        "supportMessage": {
+          "title": "Новое сообщение от поддержки",
+          "message": "{preview}"
+        },
+        "supportTicketUpdated": {
+          "title": "Тикет поддержки обновлён",
+          "message": "{preview}"
+        },
         "statuses": {
           "pending": "Ожидает",
           "processing": "В обработке",
