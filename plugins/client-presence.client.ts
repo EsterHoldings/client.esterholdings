@@ -70,7 +70,10 @@ export default defineNuxtPlugin(() => {
 
   const ensureOnline = async () => {
     if (!shouldBeOnline()) return;
-    await pingOnline();
+
+    if (!isMarkedOnline || !heartbeatTimer) {
+      await pingOnline();
+    }
 
     if (!heartbeatTimer) {
       heartbeatTimer = setInterval(() => {
@@ -119,7 +122,7 @@ export default defineNuxtPlugin(() => {
   document.addEventListener("visibilitychange", handleVisibilityChange);
 
   watch(
-    () => [route.fullPath, authStore.accessToken] as const,
+    () => [route.path, authStore.accessToken] as const,
     () => {
       void syncPresenceState();
     },

@@ -91,10 +91,6 @@
     { type: "info", message: "Test info notification message", wasRead: true },
   ]);
 
-  if (!authStore.user) {
-    void authStore.initAuth().catch(() => {});
-  }
-
   const handleClickLogout = () => {
     authStore.setAccessToken("");
     navigateTo("/auth/login");
@@ -116,23 +112,18 @@
   };
 
   const resolveFullSupportEnabled = async (): Promise<boolean> => {
-    const storeMode = resolveSupportMode(authStore.user?.support_mode);
     const hasAccessToken = String(authStore.accessToken ?? "").trim() !== "";
     if (!hasAccessToken) {
-      return storeMode === "full";
+      return resolveSupportMode(authStore.user?.support_mode) === "full";
     }
 
     try {
-      const response = await appCore.auth.getAuthUser();
-      if (response?.data) {
-        authStore.setUser(response.data);
-        return resolveSupportMode(response.data?.support_mode) === "full";
-      }
+      await authStore.initAuth();
     } catch {
       // noop
     }
 
-    return storeMode === "full";
+    return resolveSupportMode(authStore.user?.support_mode) === "full";
   };
 
   const loadSupportUnreadCount = async () => {

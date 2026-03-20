@@ -84,6 +84,7 @@
   const currentNotificationsChannelName = ref("");
   const isMarkAllInProgress = ref(false);
   const unreadBadgeLabel = computed(() => (unreadCount.value > 99 ? "99+" : String(unreadCount.value)));
+  const hasAccessToken = () => Boolean(String(authStore.accessToken ?? "").trim());
 
   const handleClickLogout = () => {
     authStore.setAccessToken("");
@@ -185,6 +186,12 @@
   };
 
   const loadNotifications = async () => {
+    if (!hasAccessToken()) {
+      notifications.value = [];
+      notificationsLoaded.value = false;
+      return;
+    }
+
     isLoading.value = true;
     try {
       const response = await appCore.notifications.get({ page: 1, perPage: 30 });
@@ -208,6 +215,11 @@
   };
 
   const loadUnreadSummary = async () => {
+    if (!hasAccessToken()) {
+      unreadCount.value = 0;
+      return;
+    }
+
     try {
       const response = await appCore.notifications.getUnreadSummary();
       const unread = Number(response?.data?.data?.unread_count ?? NaN);
@@ -367,15 +379,21 @@
 
   onMounted(() => {
     document.addEventListener("click", handleClickOutside);
-    authStore.initAuth()
-      .finally(async () => {
-        await loadUnreadSummary();
-        await loadNotifications();
-        const userId = String(authStore.user?.id ?? "").trim();
-        if (userId !== "") {
-          subscribeToNotifications(userId);
-        }
-      });
+    void (async () => {
+      if (!hasAccessToken()) return;
+
+      try {
+        await authStore.initAuth();
+      } catch {
+        return;
+      }
+
+      await loadUnreadSummary();
+      const userId = String(authStore.user?.id ?? "").trim();
+      if (userId !== "") {
+        subscribeToNotifications(userId);
+      }
+    })();
   });
 
   onUnmounted(() => {
