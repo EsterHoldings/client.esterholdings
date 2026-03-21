@@ -294,7 +294,7 @@
     return "SU";
   };
 
-  const truncate = (text: string, max = 120): string => {
+  const truncate = (text: string, max = 100): string => {
     if (text.length <= max) return text;
     return `${text.slice(0, max)}...`;
   };

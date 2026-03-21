@@ -173,6 +173,15 @@
     return value === key ? fallback : value;
   };
 
+  const truncateText = (value: unknown, max = 100): string => {
+    const normalized = String(value ?? "").trim();
+    if (normalized.length <= max) {
+      return normalized;
+    }
+
+    return `${normalized.slice(0, max)}...`;
+  };
+
   const statusText = (value: string): string => {
     const normalized = String(value ?? "").trim().toLowerCase();
     const key = `cabinet.header.notificationTemplates.statuses.${normalized}`;
@@ -252,10 +261,10 @@
     raw: any,
     payload: Record<string, any> | null
   ): { title: string; message: string } => {
-    const preview = String(payload?.preview || raw?.message || "").trim();
+    const preview = truncateText(payload?.preview || raw?.message || "");
     const messageType = String(payload?.message_type || "").trim().toLowerCase();
     const defaultTitle = String(raw?.title ?? "").trim() || "New support message";
-    const defaultMessage = String(raw?.message ?? "").trim();
+    const defaultMessage = truncateText(raw?.message);
 
     if (messageType === "system") {
       const title = resolveText("cabinet.header.notificationTemplates.supportTicketUpdated.title", "Support ticket updated");
