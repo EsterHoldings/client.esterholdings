@@ -307,6 +307,35 @@
   const normalizeText = (value: string): string => value.trim().toLowerCase();
   const activeLocale = computed(() => String(locale.value || "").trim() || undefined);
 
+  const normalizeBirthdateValue = (value: unknown): string => {
+    const rawValue = String(value ?? "").trim();
+    if (rawValue === "") {
+      return "";
+    }
+
+    const isoLikeDateMatch = rawValue.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (isoLikeDateMatch) {
+      return isoLikeDateMatch[1];
+    }
+
+    const dottedDateMatch = rawValue.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    if (dottedDateMatch) {
+      const [, day, month, year] = dottedDateMatch;
+      return `${year}-${month}-${day}`;
+    }
+
+    const parsedDate = new Date(rawValue);
+    if (Number.isNaN(parsedDate.getTime())) {
+      return rawValue;
+    }
+
+    const year = parsedDate.getFullYear();
+    const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+    const day = String(parsedDate.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
   const toSelectOptions = (items: LocationApiItem[]): SelectOption[] =>
     items.map(item => ({
       id: String(item.id),
@@ -708,6 +737,7 @@
 
       await appCore.users.patch({
         ...formData,
+        birthdate: normalizeBirthdateValue(formData.birthdate),
         country_id: toNullableInt(formData.country_id),
         state_id: toNullableInt(formData.state_id),
         city_id: toNullableInt(formData.city_id),
@@ -825,6 +855,7 @@
   );
 
   onMounted(async () => {
+    validatorUserDataForm.clearFieldsErrors();
     isLoadingAllComponentData.value = true;
     try {
       const { data } = await appCore.auth.getAuthUser();
@@ -833,7 +864,7 @@
       formData.first_name = data?.first_name || "";
       formData.mid_name = data?.mid_name || "";
       formData.last_name = data?.last_name || "";
-      formData.birthdate = data?.birthdate || "";
+      formData.birthdate = normalizeBirthdateValue(data?.birthdate);
       formData.phone = data?.phone || "";
       formData.country = data?.country || "";
       formData.state = data?.state || "";
