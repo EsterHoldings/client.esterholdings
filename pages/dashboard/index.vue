@@ -82,8 +82,7 @@
 <script lang="ts" setup>
   import { definePageMeta, useLocalePath, useRoute, useRouter } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
-  import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-  import { useNuxtApp } from "nuxt/app";
+  import { computed, onMounted, ref } from "vue";
   import { useToast } from "vue-toastification";
 
   import UiContainer from "~/components/ui/UiContainer.vue";
@@ -107,7 +106,6 @@
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
   const { t } = useI18n({ useScope: "global" });
-  const { $echo } = useNuxtApp();
   const localePath = useLocalePath();
   const route = useRoute();
   const router = useRouter();
@@ -212,21 +210,8 @@
   };
 
   onMounted(async () => {
-    // @ts-ignore
-    const sub = (window as any).Echo?.channel("test") ?? $echo.channel("test");
-    sub.listen(".Ping", (e: any) => {
-      console.log("[TEST] Ping received:", e);
-    });
-
     await handleEmailVerificationFromQuery();
-    await handleRefreshDashboard();
-  });
-
-  onBeforeUnmount(() => {
-    try {
-      // @ts-ignore
-      $echo.leave("test");
-    } catch {}
+    await handleRefreshDashboard({ suppressBalanceErrorToast: true });
   });
 
   type Mt4Status = "active" | "inactive";
@@ -323,6 +308,38 @@
     }
   };
   const isMt4Refreshing = ref(false);
+  const refreshAllAccountBalances = async (options: { suppressErrorToast?: boolean } = {}) => {
+    try {
+      await appCore.accounts.refreshAllBalances();
+    } catch {
+      if (!options.suppressErrorToast) {
+        toast.error(resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balances."));
+      }
+    }
+  };
+
+  const loadMt4Accounts = async () => {
+    const response = await appCore.accounts.get({
+      page: 1,
+      perPage: 100,
+      orderBy: "balance",
+      orderDirection: "desc",
+    });
+    const items = response?.data?.data?.data ?? [];
+    const mapped = items.map((account: any) => ({
+      id: account.id,
+      number: account.number ?? String(account.id ?? ""),
+      type: account.account_type?.name ?? account.accountType?.name ?? "-",
+      leverage: String(account?.leverage_display ?? account?.leverage ?? "1:100"),
+      currency: account.currency ?? "USD",
+      balance: normalizeBalance(account.balance),
+      status: account.status ?? "active",
+      is_favorite: !!account.is_favorite,
+      favorite_at: account.favorite_at ?? null,
+    }));
+    mt4Accounts.value = sortAccounts(mapped);
+  };
+
   const handleRefreshSummary = async () => {
     if (isSummaryLoading.value) return;
 
@@ -347,25 +364,7 @@
     if (isMt4Refreshing.value) return;
     isMt4Refreshing.value = true;
     try {
-      const response = await appCore.accounts.get({
-        page: 1,
-        perPage: 100,
-        orderBy: "balance",
-        orderDirection: "desc",
-      });
-      const items = response?.data?.data?.data ?? [];
-      const mapped = items.map((account: any) => ({
-        id: account.id,
-        number: account.number ?? String(account.id ?? ""),
-        type: account.account_type?.name ?? account.accountType?.name ?? "-",
-        leverage: String(account?.leverage_display ?? account?.leverage ?? "1:100"),
-        currency: account.currency ?? "USD",
-        balance: normalizeBalance(account.balance),
-        status: account.status ?? "active",
-        is_favorite: !!account.is_favorite,
-        favorite_at: account.favorite_at ?? null,
-      }));
-      mt4Accounts.value = sortAccounts(mapped);
+      await loadMt4Accounts();
     } finally {
       setTimeout(() => {
         isMt4Refreshing.value = false;
@@ -373,7 +372,11 @@
     }
   };
 
-  const handleRefreshDashboard = async () => {
+  const handleRefreshDashboard = async (options: { suppressBalanceErrorToast?: boolean } = {}) => {
+    await refreshAllAccountBalances({
+      suppressErrorToast: options.suppressBalanceErrorToast,
+    });
+
     try {
       await Promise.all([handleRefreshMt4(), handleRefreshSummary(), refreshAccountCreationEligibility()]);
     } finally {

@@ -898,6 +898,22 @@
     isInitialLoading.value = false;
   };
 
+  const refreshAllBalancesAndReload = async (options: { suppressErrorToast?: boolean } = {}) => {
+    isLoading.value = true;
+    closeOptions();
+    closeCardMenu();
+
+    try {
+      await appCore.accounts.refreshAllBalances();
+    } catch {
+      if (!options.suppressErrorToast) {
+        toast.error("Failed to refresh account balances.");
+      }
+    }
+
+    await loadData();
+  };
+
   const normalizeRefreshPayloadIds = (payload: any): string[] => {
     const rawIds = Array.isArray(payload) ? payload : Array.isArray(payload?.accountIds) ? payload.accountIds : [];
     const normalized = rawIds.map((id: unknown) => String(id ?? "").trim()).filter((id: string) => id !== "");
@@ -1162,6 +1178,7 @@
     useEventBus.on("loadDataForAccounts", loadData);
     useEventBus.on(BALANCE_REFRESH_EVENT, handleBalanceRefreshRequested);
     await loadData();
+    await refreshAllBalancesAndReload({ suppressErrorToast: true });
     await consumePendingBalanceRefreshIds();
 
     window.addEventListener("resize", handleViewportResize);
@@ -1194,7 +1211,7 @@
   const { openModal } = inject("modalControl") as { openModal: Function };
 
   const handleClickUpdate = async () => {
-    await loadData();
+    await refreshAllBalancesAndReload();
   };
 
   const handleToggleFavorite = async (account: any) => {

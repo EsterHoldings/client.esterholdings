@@ -15,7 +15,6 @@ export class AccountsService {
   }
 
   async post(data: object = {}): Promise<any> {
-    console.log("ACCOUNTS SERVICE POST", data);
     return await this.useApi.post("/client/accounts", data);
   }
 
@@ -37,6 +36,10 @@ export class AccountsService {
 
   async refreshBalance(id: any): Promise<any> {
     return await this.useApi.post(`/client/mt4/accounts/${id}/balance/refresh`, {});
+  }
+
+  async refreshAllBalances(): Promise<any> {
+    return await this.useApi.post("/client/mt4/accounts/balances/refresh", {});
   }
 
   async getTradeHistory(id: any, params: object = {}): Promise<any> {
