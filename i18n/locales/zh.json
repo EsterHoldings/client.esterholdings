@@ -394,8 +394,9 @@
         ]
       },
       "banner_section": {
-        "title": "像专业人士一样",
+        "title": "One World.\nOne Platform.\nOne Account.",
         "title_highlight": "交易市场！",
+        "tag": "Multi-Asset",
         "subtitle": "无论您是初学者还是专业人士，我们的先进工具和资源都能帮助您做出明智的交易决策。",
         "button_primary": "开始交易",
         "button_secondary": "试用模拟账户"

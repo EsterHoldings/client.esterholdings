@@ -394,8 +394,9 @@
         ]
       },
       "banner_section": {
-        "title": "Торгуйте на рынках",
+        "title": "One World.\nOne Platform.\nOne Account.",
         "title_highlight": "как профессионал!",
+        "tag": "Multi-Asset",
         "subtitle": "Будь вы новичок или опытный трейдер — наши продвинутые инструменты и ресурсы помогут принимать обоснованные решения.",
         "button_primary": "Начать торговать",
         "button_secondary": "Попробовать демо-счет"

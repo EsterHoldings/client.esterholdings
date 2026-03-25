@@ -141,19 +141,19 @@
       "advantages": [
         {
           "value": "10+",
-          "label": "Years of experience in field"
+          "label": "Years Market Experience"
         },
         {
-          "value": "1 160 000+",
-          "label": "Clients"
+          "value": "Institutional",
+          "label": "Liquidity Providers"
         },
         {
-          "value": "5* Rated",
-          "label": "Customer service"
+          "value": "Ultra-Fast",
+          "label": "Order Execution"
         },
         {
-          "value": "24/7",
-          "label": "Support"
+          "value": "Multi-Asset",
+          "label": "Trading"
         }
       ],
       "platform__title": "Legendary platform for successful\nForex and CFD trading",
@@ -394,10 +394,11 @@
         ]
       },
       "banner_section": {
-        "title": "Trade the Markets",
+        "title": "One World.\nOne Platform.\nOne Account.",
         "title_highlight": "Like a Pro!",
+        "tag": "Multi-Asset",
         "subtitle": "Whether you're a beginner or a pro, our advanced tools and resources help you make informed trading decisions.",
-        "button_primary": "Start trading",
+        "button_primary": "Start Trading",
         "button_secondary": "Try Demo Account"
       },
       "latest_updates__title": "Latest updates",

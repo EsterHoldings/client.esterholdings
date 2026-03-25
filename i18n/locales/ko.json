@@ -394,8 +394,9 @@
         ]
       },
       "banner_section": {
-        "title": "시장 거래",
+        "title": "One World.\nOne Platform.\nOne Account.",
         "title_highlight": "프로처럼!",
+        "tag": "Multi-Asset",
         "subtitle": "초보자든 프로든, 우리의 고급 도구와 리소스가 정보에 입각한 거래 결정을 내리는 데 도움을 줍니다.",
         "button_primary": "거래 시작",
         "button_secondary": "데모 계좌 체험"

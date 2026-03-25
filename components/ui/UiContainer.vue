@@ -15,11 +15,22 @@
 
 <style lang="scss" scoped>
   .container {
-    padding: 10px;
-    margin: auto;
-    //height: 100%;
     width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 40px;
     z-index: 1;
-    max-width: 1197px;
+  }
+
+  @media (max-width: 991px) {
+    .container {
+      padding: 0 20px;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .container {
+      padding: 0 12px;
+    }
   }
 </style>

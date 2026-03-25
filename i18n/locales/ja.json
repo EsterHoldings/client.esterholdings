@@ -394,8 +394,9 @@
         ]
       },
       "banner_section": {
-        "title": "市場を取引",
+        "title": "One World.\nOne Platform.\nOne Account.",
         "title_highlight": "プロのように！",
+        "tag": "Multi-Asset",
         "subtitle": "初心者でもプロでも、当社の高度なツールとリソースが情報に基づいた取引決定をサポートします。",
         "button_primary": "取引を開始",
         "button_secondary": "デモ口座を試す"
