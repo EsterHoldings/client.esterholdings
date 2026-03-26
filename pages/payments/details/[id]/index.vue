@@ -85,25 +85,33 @@
           <section class="payment-detail-card">
             <UiTextSmall class="payment-detail-card__label">Поля реквизита</UiTextSmall>
             <div
-              v-if="dataRows.length === 0"
+              v-if="dataGroups.length === 0"
               class="payment-detail-card__empty">
               Нет данных.
             </div>
             <div
               v-else
-              class="details-fields-grid">
+              class="details-groups">
               <div
-                v-for="row in dataRows"
-                :key="row.key"
-                class="details-field">
-                <div class="details-field__meta">
-                  <div class="details-field__key">{{ row.key }}</div>
-                  <div class="details-field__value">{{ row.value }}</div>
-                </div>
-                <div
-                  class="details-field__copy"
-                  :title="'Скопировать значение'">
-                  <UiIconCopy :text="row.value" />
+                v-for="group in dataGroups"
+                :key="group.key"
+                class="details-group">
+                <div class="details-group__title">{{ group.label }}</div>
+                <div class="details-fields-grid">
+                  <div
+                    v-for="row in group.rows"
+                    :key="row.id"
+                    class="details-field">
+                    <div class="details-field__meta">
+                      <div class="details-field__key">{{ row.label }}</div>
+                      <div class="details-field__value">{{ row.value }}</div>
+                    </div>
+                    <div
+                      class="details-field__copy"
+                      :title="'Скопировать значение'">
+                      <UiIconCopy :text="row.value" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -271,6 +279,18 @@
     documents: PaymentDetailDocument[];
   };
 
+  type PaymentDetailDataRow = {
+    id: string;
+    label: string;
+    value: string;
+  };
+
+  type PaymentDetailDataGroup = {
+    key: string;
+    label: string;
+    rows: PaymentDetailDataRow[];
+  };
+
   const appCore = useAppCore();
   const route = useRoute();
   const localePath = useLocalePath();
@@ -299,16 +319,88 @@
     return raw;
   });
 
-  const dataRows = computed(() => {
+  const dataGroupLabelMap: Record<string, string> = {
+    fields: "Основные поля",
+    legacy: "Legacy данные",
+  };
+
+  const dataFieldLabelMap: Record<string, string> = {
+    old_requisite_id: "Legacy ID",
+    type: "Тип",
+    status: "Статус",
+    active: "Активность",
+    comment: "Комментарий",
+    paysystem: "Платёжная система",
+    config_name: "Конфигурация",
+    name: "Название",
+    shortname: "Короткое имя",
+    merchant: "Мерчант",
+  };
+
+  const humanizeDataKey = (value: string): string => {
+    const normalized = String(value ?? "").trim();
+    if (!normalized) return "-";
+
+    const mapped = dataFieldLabelMap[normalized];
+    if (mapped) return mapped;
+
+    return normalized
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/^./, char => char.toUpperCase());
+  };
+
+  const normalizeLeafValue = (value: unknown): string => {
+    if (value === null || value === undefined || value === "") return "-";
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (typeof value === "number") return Number.isFinite(value) ? String(value) : "-";
+
+    return String(value);
+  };
+
+  const flattenDataRows = (value: unknown, path: string[] = []): PaymentDetailDataRow[] => {
+    if (value === null || value === undefined) {
+      return [];
+    }
+
+    if (Array.isArray(value)) {
+      return value.flatMap((item, index) => flattenDataRows(item, [...path, String(index + 1)]));
+    }
+
+    if (typeof value === "object") {
+      return Object.entries(value as Record<string, unknown>).flatMap(([key, nestedValue]) =>
+        flattenDataRows(nestedValue, [...path, key])
+      );
+    }
+
+    const labelPath = path.map(segment => humanizeDataKey(segment)).filter(Boolean);
+
+    return [
+      {
+        id: path.join("."),
+        label: labelPath.join(" / ") || "Значение",
+        value: normalizeLeafValue(value),
+      },
+    ];
+  };
+
+  const dataGroups = computed<PaymentDetailDataGroup[]>(() => {
     const data = paymentDetail.value?.data;
     if (!data || typeof data !== "object") return [];
 
     return Object.entries(data)
-      .map(([key, value]) => ({
-        key: String(key),
-        value: String(value ?? "-"),
-      }))
-      .filter(row => row.key.trim().length > 0);
+      .map(([key, value]) => {
+        const groupKey = String(key).trim();
+        const rows = flattenDataRows(value);
+
+        return {
+          key: groupKey,
+          label: dataGroupLabelMap[groupKey] ?? humanizeDataKey(groupKey),
+          rows,
+        };
+      })
+      .filter(group => group.key.length > 0 && group.rows.length > 0);
   });
 
   const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "avif"];
@@ -630,6 +722,26 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+
+  .details-groups {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .details-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .details-group__title {
+    color: var(--ui-text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
   .details-field {
