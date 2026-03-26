@@ -6,14 +6,22 @@
         class="verification-switch__btn"
         :class="{ 'verification-switch__btn--active': activeSection === 'client' }"
         @click="activeSection = 'client'">
-        Верификация клиента
+        <span>Верификация клиента</span>
+        <span
+          v-if="hasUnreadClientVerificationSignals"
+          class="verification-switch__indicator"
+        />
       </button>
       <button
         type="button"
         class="verification-switch__btn"
         :class="{ 'verification-switch__btn--active': activeSection === 'payout' }"
         @click="activeSection = 'payout'">
-        Реквизиты для выплат
+        <span>Реквизиты для выплат</span>
+        <span
+          v-if="hasUnreadPayoutVerificationSignals"
+          class="verification-switch__indicator"
+        />
       </button>
     </div>
 
@@ -190,7 +198,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, reactive, ref, computed } from "vue";
+  import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+  import { useRoute } from "vue-router";
   import { useI18n } from "vue-i18n";
 
   import PanelDefault from "~/components/block/panels/PanelDefault.vue";
@@ -210,6 +219,11 @@
   type VerificationStatus = "approved" | "pending" | "rejected";
   type VerificationSectionTab = "client" | "payout";
 
+  interface ClientVerificationUnreadNotification {
+    id: string;
+    section: VerificationSectionTab;
+  }
+
   interface PaymentDetailsRow {
     id: string;
     name: string;
@@ -224,13 +238,17 @@
 
   const appCore = useAppCore();
   const notificationsStore = useNotificationsStore();
+  const route = useRoute();
   const isLoading = ref(false);
   const isPaymentDetailsLoading = ref(false);
   const activeSection = ref<VerificationSectionTab>("client");
-  const CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT = "client-notifications-marked-by-types";
+  const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
+  const CLIENT_NOTIFICATIONS_MARKED_EVENT = "client-notifications-marked";
+  const VERIFICATION_NOTIFICATION_TYPE = "verification.status-updated";
 
   let verificationRequestData = reactive<Record<string, any>>({});
   const paymentDetailsRows = ref<PaymentDetailsRow[]>([]);
+  const unreadVerificationNotifications = ref<ClientVerificationUnreadNotification[]>([]);
 
   const documentsStatus = ref<VerificationStatus>("pending");
   const depositStatus = ref<VerificationStatus>("pending");
@@ -253,6 +271,12 @@
     },
     { key: "profile", title: "Profile", subtitle: "", status: infoStatus, comment: infoComment },
   ]);
+  const hasUnreadClientVerificationSignals = computed(() =>
+    unreadVerificationNotifications.value.some(item => item.section === "client")
+  );
+  const hasUnreadPayoutVerificationSignals = computed(() =>
+    unreadVerificationNotifications.value.some(item => item.section === "payout")
+  );
 
   const historyRows = computed(() => {
     const apiRows = verificationRequestData?.history as Array<any> | undefined;
@@ -295,6 +319,73 @@
     }
 
     return "pending";
+  };
+
+  const parseVerificationSection = (value: unknown): VerificationSectionTab | null => {
+    const normalized = String(value ?? "").trim().toLowerCase();
+
+    if (normalized === "client" || normalized === "payout") {
+      return normalized;
+    }
+
+    return null;
+  };
+
+  const mapNotificationStepToSection = (value: unknown): VerificationSectionTab => {
+    const normalized = String(value ?? "").trim().toLowerCase();
+    return normalized === "payout" ? "payout" : "client";
+  };
+
+  const normalizeUnreadVerificationNotification = (raw: any): ClientVerificationUnreadNotification | null => {
+    const id = String(raw?.id ?? "").trim();
+    const type = String(raw?.type ?? "").trim();
+    const payload = raw?.payload && typeof raw.payload === "object" ? raw.payload : null;
+    const readAt = raw?.read_at ? String(raw.read_at).trim() : "";
+    const isUnread = raw?.is_unread ?? readAt === "";
+
+    if (id === "" || type !== VERIFICATION_NOTIFICATION_TYPE || !isUnread) {
+      return null;
+    }
+
+    return {
+      id,
+      section: mapNotificationStepToSection(payload?.step),
+    };
+  };
+
+  const upsertUnreadVerificationNotification = (notification: ClientVerificationUnreadNotification): void => {
+    const index = unreadVerificationNotifications.value.findIndex(item => item.id === notification.id);
+    if (index === -1) {
+      unreadVerificationNotifications.value.unshift(notification);
+      return;
+    }
+
+    unreadVerificationNotifications.value.splice(index, 1, notification);
+  };
+
+  const removeUnreadVerificationNotifications = (ids: string[]): void => {
+    if (ids.length === 0) {
+      return;
+    }
+
+    const idSet = new Set(ids);
+    unreadVerificationNotifications.value = unreadVerificationNotifications.value.filter(item => !idSet.has(item.id));
+  };
+
+  const loadUnreadVerificationNotifications = async (): Promise<void> => {
+    try {
+      const response = await appCore.notifications.get({
+        page: 1,
+        perPage: 100,
+      });
+
+      const rows = Array.isArray(response?.data?.data?.data) ? response.data.data.data : [];
+      unreadVerificationNotifications.value = rows
+        .map(normalizeUnreadVerificationNotification)
+        .filter((item: ClientVerificationUnreadNotification | null): item is ClientVerificationUnreadNotification => Boolean(item));
+    } catch {
+      unreadVerificationNotifications.value = [];
+    }
   };
 
   const loadVerificationData = async () => {
@@ -358,27 +449,107 @@
     await loadVerificationData();
   };
 
-  const markVerificationNotificationsSeen = async () => {
-    if (notificationsStore.unreadVerificationNotificationsCount <= 0) {
+  const markVisibleVerificationNotificationsSeen = async (section: VerificationSectionTab): Promise<void> => {
+    const targetIds = unreadVerificationNotifications.value
+      .filter(item => item.section === section)
+      .map(item => item.id);
+
+    if (targetIds.length === 0) {
       return;
     }
 
-    try {
-      const response = await appCore.notifications.markReadByTypes(["verification.status-updated"]);
-      const summaryPayload = response?.data?.data ?? {};
-      notificationsStore.applySummary(summaryPayload);
-      useEventBus.emit(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, {
-        types: ["verification.status-updated"],
-        summary: summaryPayload,
-      });
-    } catch {
-      // no-op
+    let latestSummary: Record<string, unknown> | null = null;
+
+    for (const notificationId of targetIds) {
+      try {
+        const response = await appCore.notifications.markRead(notificationId);
+        latestSummary = response?.data?.data ?? latestSummary;
+      } catch {
+        // no-op
+      }
     }
+
+    removeUnreadVerificationNotifications(targetIds);
+
+    if (latestSummary) {
+      notificationsStore.applySummary(latestSummary);
+    }
+
+    useEventBus.emit(CLIENT_NOTIFICATIONS_MARKED_EVENT, {
+      ids: targetIds,
+      summary: latestSummary ?? undefined,
+    });
   };
 
+  const handleClientNotificationReceived = (payload?: { notification?: any }): void => {
+    const notification = normalizeUnreadVerificationNotification(payload?.notification ?? null);
+    if (!notification) {
+      return;
+    }
+
+    upsertUnreadVerificationNotification(notification);
+
+    if (notification.section === "payout") {
+      void loadPayoutVerificationData().then(async () => {
+        if (activeSection.value === "payout") {
+          await nextTick();
+          await markVisibleVerificationNotificationsSeen("payout");
+        }
+      });
+
+      return;
+    }
+
+    void loadVerificationData().then(async () => {
+      if (activeSection.value === "client") {
+        await nextTick();
+        await markVisibleVerificationNotificationsSeen("client");
+      }
+    });
+  };
+
+  const handleMarkedNotifications = (payload?: { ids?: string[] }) => {
+    const ids = Array.isArray(payload?.ids)
+      ? payload.ids.map(item => String(item ?? "").trim()).filter(Boolean)
+      : [];
+
+    removeUnreadVerificationNotifications(ids);
+  };
+
+  watch(activeSection, section => {
+    void nextTick(async () => {
+      await markVisibleVerificationNotificationsSeen(section);
+    });
+  });
+
+  watch(
+    () => route.query.verificationSection,
+    value => {
+      const section = parseVerificationSection(value);
+      if (!section) {
+        return;
+      }
+
+      activeSection.value = section;
+    }
+  );
+
   onMounted(async () => {
-    await Promise.all([loadVerificationData(), loadPayoutVerificationData()]);
-    await markVerificationNotificationsSeen();
+    useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
+    useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
+
+    const initialSection = parseVerificationSection(route.query.verificationSection);
+    if (initialSection) {
+      activeSection.value = initialSection;
+    }
+
+    await Promise.all([loadVerificationData(), loadPayoutVerificationData(), loadUnreadVerificationNotifications()]);
+    await markVisibleVerificationNotificationsSeen(activeSection.value);
+  });
+
+  onBeforeUnmount(() => {
+    useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
+    useEventBus.off(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
   });
 </script>
 
@@ -393,6 +564,10 @@
   }
 
   .verification-switch__btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     height: 34px;
     border-radius: 999px;
     padding: 0 14px;
@@ -416,6 +591,14 @@
     border-color: var(--ui-primary-main);
     color: var(--ui-text-main);
     background: color-mix(in srgb, var(--ui-primary-main) 22%, transparent);
+  }
+
+  .verification-switch__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-warning);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-warning) 18%, transparent);
   }
 
   .payout-empty {

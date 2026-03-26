@@ -53,6 +53,8 @@
 
   const NOTIFICATIONS_POLL_MS = 10000;
   const NOTIFICATIONS_REALTIME_RETRY_MS = 5000;
+  const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
+  const CLIENT_NOTIFICATIONS_MARKED_EVENT = "client-notifications-marked";
   const NOTIFICATION_EVENT_NAMES = [
     ".UserNotificationCreated",
     "UserNotificationCreated",
@@ -492,6 +494,10 @@
           .forEach(showNotificationToast);
       }
 
+      newUnreadItems.forEach(item => {
+        useEventBus.emit(CLIENT_NOTIFICATION_RECEIVED_EVENT, { notification: item });
+      });
+
       return newUnreadItems;
     } catch (error) {
       notificationsLoaded.value = false;
@@ -619,6 +625,8 @@
       if (shouldToastNotification(normalized)) {
         showNotificationToast(normalized);
       }
+
+      useEventBus.emit(CLIENT_NOTIFICATION_RECEIVED_EVENT, { notification: normalized });
     }
 
     if (isOpen.value) {
@@ -810,6 +818,21 @@
     notificationsStore.applySummary(payload?.summary ?? {});
   };
 
+  const handleMarkedNotifications = (payload?: { ids?: string[]; summary?: Record<string, unknown> }) => {
+    const ids = Array.isArray(payload?.ids)
+      ? payload.ids.map(item => String(item ?? "").trim()).filter(Boolean)
+      : [];
+
+    if (ids.length > 0) {
+      const idSet = new Set(ids);
+      notifications.value = notifications.value.map(item =>
+        idSet.has(item.id) ? { ...item, wasRead: true } : item
+      );
+    }
+
+    notificationsStore.applySummary(payload?.summary ?? {});
+  };
+
   const syncNotificationsState = async (showToastsForNew = false) => {
     if (!hasAccessToken()) {
       return;
@@ -902,6 +925,7 @@
   onMounted(() => {
     document.addEventListener("click", handleClickOutside);
     useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, handleMarkedByTypes);
+    useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
     attachNotificationsResumeListeners();
     void (async () => {
       if (!hasAccessToken()) return;
@@ -928,6 +952,7 @@
   onUnmounted(() => {
     document.removeEventListener("click", handleClickOutside);
     useEventBus.off(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, handleMarkedByTypes);
+    useEventBus.off(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
     detachNotificationsResumeListeners();
     unsubscribeFromNotifications();
     unbindNotificationsSocketStateListener();
