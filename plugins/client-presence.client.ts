@@ -5,6 +5,25 @@ import { useAuthStore } from "~/stores/authStore";
 
 const HEARTBEAT_INTERVAL_MS = 10_000;
 const PRESENCE_TTL_SECONDS = 30;
+const SESSION_STORAGE_KEY = "ester_client_presence_session_id";
+
+const resolvePresenceSessionId = (): string => {
+  if (typeof window === "undefined") return "";
+
+  const existing = window.sessionStorage.getItem(SESSION_STORAGE_KEY);
+  if (existing && existing.trim() !== "") {
+    return existing;
+  }
+
+  const generated =
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+  window.sessionStorage.setItem(SESSION_STORAGE_KEY, generated);
+
+  return generated;
+};
 
 export default defineNuxtPlugin(() => {
   const authStore = useAuthStore();
@@ -14,6 +33,7 @@ export default defineNuxtPlugin(() => {
   let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
   let isMarkedOnline = false;
   let inFlight = false;
+  const presenceSessionId = resolvePresenceSessionId();
 
   const hasAccessToken = () => Boolean(String(authStore.accessToken ?? "").trim());
 
@@ -44,6 +64,7 @@ export default defineNuxtPlugin(() => {
       await appCore.clientPresence.ping({
         active: true,
         ttl_seconds: PRESENCE_TTL_SECONDS,
+        session_id: presenceSessionId,
       });
       isMarkedOnline = true;
     } catch {
@@ -59,6 +80,7 @@ export default defineNuxtPlugin(() => {
     try {
       await appCore.clientPresence.leave({
         active: false,
+        session_id: presenceSessionId,
       });
     } catch {
       // noop
