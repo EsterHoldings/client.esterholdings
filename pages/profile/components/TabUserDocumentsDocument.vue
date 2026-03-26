@@ -13,11 +13,13 @@
         :class="imageUrl ? 'cursor-pointer' : 'cursor-default'"
         @click="handleOpenImage"
     >
-      <template v-if="thumbUrl">
-        <img :src="thumbUrl" alt="" class="h-full w-full object-cover" />
+      <template v-if="previewMeta.type === 'image' && previewMeta.src">
+        <img :src="previewMeta.src" alt="" class="h-full w-full object-cover" />
       </template>
       <template v-else>
-        <UiIconImage class="w-6 h-6" />
+        <span class="document-file-badge" :class="`is-${previewMeta.type}`">
+          {{ previewMeta.label }}
+        </span>
       </template>
     </button>
 
@@ -59,7 +61,6 @@ import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import useAppCore from "~/composables/useAppCore";
 
-import UiIconImage from "~/components/ui/UiIconImage.vue";
 import UiIconTrash from "~/components/ui/UiIconTrash.vue";
 import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
@@ -76,6 +77,9 @@ interface DocData {
   thumb_url?: string;
   preview_url?: string;
   url?: string;
+  mime_type?: string;
+  path?: string;
+  name?: string;
 }
 
 const props = defineProps<{ data: DocData }>();
@@ -87,6 +91,8 @@ const appCore = useAppCore();
 const inProcessRemoving = ref(false);
 
 const { t } = useI18n({ useScope: "global" });
+const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "avif"];
+const textExtensions = ["txt", "text", "md", "csv", "json", "xml", "log"];
 
 const displayName = computed(() => {
   if (props.data?.document_data?.number) return props.data.document_data.number;
@@ -118,13 +124,42 @@ const statusClass = computed(() => {
   }
 });
 
+const extractFileExtension = (value: string): string => {
+  const normalized = String(value || "").split("?")[0].split("#")[0].trim().toLowerCase();
+  const segments = normalized.split(".");
+
+  return segments.length > 1 ? segments.pop() || "" : "";
+};
+
+const resolvePreviewKind = (): "image" | "pdf" | "text" | "file" => {
+  const mimeType = String(props.data.mime_type || "").trim().toLowerCase();
+  if (mimeType.startsWith("image/")) return "image";
+  if (mimeType.includes("pdf")) return "pdf";
+  if (mimeType.startsWith("text/") || mimeType.includes("json") || mimeType.includes("xml")) return "text";
+
+  const extension = extractFileExtension(
+    props.data.thumb_url || props.data.preview_url || props.data.document_url || props.data.url || props.data.path || props.data.name || ""
+  );
+
+  if (imageExtensions.includes(extension)) return "image";
+  if (extension === "pdf") return "pdf";
+  if (textExtensions.includes(extension)) return "text";
+  return "file";
+};
+
 const imageUrl = computed(
-    () => props.data.document_url || props.data.url || props.data.preview_url || props.data.thumb_url || ""
+  () => props.data.document_url || props.data.url || props.data.preview_url || props.data.thumb_url || props.data.path || ""
 );
 
-const thumbUrl = computed(
-    () => props.data.thumb_url || props.data.preview_url || props.data.document_url || props.data.url || ""
-);
+const previewMeta = computed(() => {
+  const type = resolvePreviewKind();
+
+  return {
+    type,
+    src: type === "image" ? String(props.data.thumb_url || props.data.preview_url || props.data.document_url || props.data.url || "").trim() : "",
+    label: type === "pdf" ? "PDF" : type === "text" ? "TXT" : "FILE",
+  };
+});
 
 const handleOpenImage = () => {
   if (!imageUrl.value) return;
@@ -138,3 +173,36 @@ const handleRemoveDocument = async () => {
   emits("documentWasRemoved");
 };
 </script>
+
+<style scoped>
+.document-file-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0 6px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--ui-text-main);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.document-file-badge.is-pdf {
+  background: rgba(220, 38, 38, 0.18);
+  color: #fca5a5;
+}
+
+.document-file-badge.is-text {
+  background: rgba(59, 130, 246, 0.16);
+  color: #93c5fd;
+}
+
+.document-file-badge.is-file {
+  background: rgba(148, 163, 184, 0.16);
+  color: #cbd5e1;
+}
+</style>

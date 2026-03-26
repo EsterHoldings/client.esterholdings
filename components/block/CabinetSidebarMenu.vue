@@ -43,10 +43,12 @@
     defineProps<{
       supportUnreadCount?: number;
       billingNotificationsCount?: number;
+      verificationNotificationsCount?: number;
     }>(),
     {
       supportUnreadCount: 0,
       billingNotificationsCount: 0,
+      verificationNotificationsCount: 0,
     }
   );
 
@@ -80,7 +82,12 @@
   ]);
 
   const secondMenuItems = computed(() => [
-    { title: t("cabinet.menu.settings"), to: addCurrentLocaleToPath("profile"), icon: UiIconSetting },
+    {
+      title: t("cabinet.menu.settings"),
+      to: addCurrentLocaleToPath("profile"),
+      icon: UiIconSetting,
+      notificationsCount: props.verificationNotificationsCount,
+    },
   ]);
 
   const handleClickMenuItem = (to: string) => {

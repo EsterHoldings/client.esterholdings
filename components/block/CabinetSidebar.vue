@@ -13,7 +13,8 @@
     <div class="flex-1 w-full flex items-start justify-center p-2">
       <CabinetSidebarMenu
         :supportUnreadCount="supportMenuUnreadCount"
-        :billingNotificationsCount="notificationsStore.unreadWithdrawalNotificationsCount" />
+        :billingNotificationsCount="notificationsStore.unreadWithdrawalNotificationsCount"
+        :verificationNotificationsCount="notificationsStore.unreadVerificationNotificationsCount" />
     </div>
   </aside>
 
@@ -23,7 +24,8 @@
       <CabinetSidebarMenu
         class="mobile-bottom-menu flex-1"
         :supportUnreadCount="supportMenuUnreadCount"
-        :billingNotificationsCount="notificationsStore.unreadWithdrawalNotificationsCount" />
+        :billingNotificationsCount="notificationsStore.unreadWithdrawalNotificationsCount"
+        :verificationNotificationsCount="notificationsStore.unreadVerificationNotificationsCount" />
     </div>
   </nav>
 </template>

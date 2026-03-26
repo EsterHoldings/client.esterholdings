@@ -6,6 +6,7 @@
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import useAppCore from "~/composables/useAppCore";
+  import useEventBus from "~/composables/useEventBus";
 
   import { useThemeStore } from "~/stores/themeStore.js";
   import { useAuthStore } from "~/stores/authStore";
@@ -59,8 +60,8 @@
     "App\\Events\\UserNotificationCreated",
   ];
   const SUPPORT_USER_NOTIFICATION_TYPES = ["support.message"];
-  const VERIFICATION_USER_NOTIFICATION_TYPES = ["verification.status-updated"];
   const BILLING_USER_NOTIFICATION_TYPES = ["payments.withdrawal.status-updated"];
+  const CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT = "client-notifications-marked-by-types";
 
   const props = withDefaults(
     defineProps<{
@@ -104,6 +105,7 @@
   let notificationsSocketStateHandler: ((states: any) => void) | null = null;
   let notificationsRealtimeRetryTimer: ReturnType<typeof setInterval> | null = null;
   let notificationsPollTimer: ReturnType<typeof setInterval> | null = null;
+  let notificationsResumeListenersAttached = false;
 
   const handleClickLogout = () => {
     authStore.setAccessToken("");
@@ -118,11 +120,6 @@
   const route = useRoute();
   const isSupportRoute = computed(() => String(route.path ?? "").includes("/support"));
   const isPaymentsRoute = computed(() => String(route.path ?? "").includes("/payments"));
-  const isVerificationRoute = computed(
-    () =>
-      String(route.path ?? "").includes("/profile") &&
-      String(route.query?.tab ?? "").trim().toLowerCase() === "verification"
-  );
   const isProfileRoute = computed(() => route.path.split("/").pop() === "profile");
   const profileMenuIsOpen = ref(false);
   const profileMenuRef = ref(null);
@@ -584,11 +581,6 @@
   };
 
   const markCurrentSectionNotificationsSeen = async () => {
-    if (isVerificationRoute.value && notificationsStore.unreadVerificationNotificationsCount > 0) {
-      await markNotificationsByTypes(VERIFICATION_USER_NOTIFICATION_TYPES);
-      return;
-    }
-
     if (isSupportRoute.value && notificationsStore.unreadSupportNotificationsCount > 0) {
       await markNotificationsByTypes(SUPPORT_USER_NOTIFICATION_TYPES);
       return;
@@ -635,11 +627,6 @@
     }
 
     if (isSupportRoute.value && SUPPORT_USER_NOTIFICATION_TYPES.includes(normalized.type)) {
-      await markNotificationRead(normalized.id, true);
-      return;
-    }
-
-    if (isVerificationRoute.value && VERIFICATION_USER_NOTIFICATION_TYPES.includes(normalized.type)) {
       await markNotificationRead(normalized.id, true);
       return;
     }
@@ -774,16 +761,6 @@
       }
 
       if (
-        isVerificationRoute.value &&
-        newUnreadItems.some(
-          item => VERIFICATION_USER_NOTIFICATION_TYPES.includes(String(item.type ?? "").trim()) && !item.wasRead
-        )
-      ) {
-        await markNotificationsByTypes(VERIFICATION_USER_NOTIFICATION_TYPES);
-        return;
-      }
-
-      if (
         isSupportRoute.value &&
         newUnreadItems.some(item => SUPPORT_USER_NOTIFICATION_TYPES.includes(String(item.type ?? "").trim()) && !item.wasRead)
       ) {
@@ -819,6 +796,67 @@
       hour: "2-digit",
       minute: "2-digit",
     }).format(date);
+  };
+
+  const handleMarkedByTypes = (payload?: { types?: string[]; summary?: Record<string, unknown> }) => {
+    const types = Array.isArray(payload?.types) ? payload.types.map(item => String(item ?? "").trim()).filter(Boolean) : [];
+
+    if (types.length > 0) {
+      notifications.value = notifications.value.map(item =>
+        types.includes(item.type) ? { ...item, wasRead: true } : item
+      );
+    }
+
+    notificationsStore.applySummary(payload?.summary ?? {});
+  };
+
+  const syncNotificationsState = async (showToastsForNew = false) => {
+    if (!hasAccessToken()) {
+      return;
+    }
+
+    await Promise.all([
+      loadNotifications({ showToastsForNew }),
+      loadUnreadSummary(),
+    ]);
+
+    if (isOpen.value && unreadCount.value > 0) {
+      await markAllRead();
+    }
+  };
+
+  const handleNotificationsResume = () => {
+    if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+      return;
+    }
+
+    reconnectNotificationsSocketTransport();
+    const userId = String(authStore.user?.id ?? "").trim();
+    if (userId !== "") {
+      subscribeToNotifications(userId);
+    }
+
+    void syncNotificationsState(true);
+  };
+
+  const attachNotificationsResumeListeners = () => {
+    if (notificationsResumeListenersAttached || typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
+
+    window.addEventListener("focus", handleNotificationsResume);
+    document.addEventListener("visibilitychange", handleNotificationsResume);
+    notificationsResumeListenersAttached = true;
+  };
+
+  const detachNotificationsResumeListeners = () => {
+    if (!notificationsResumeListenersAttached || typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
+
+    window.removeEventListener("focus", handleNotificationsResume);
+    document.removeEventListener("visibilitychange", handleNotificationsResume);
+    notificationsResumeListenersAttached = false;
   };
 
   watch(
@@ -863,6 +901,8 @@
 
   onMounted(() => {
     document.addEventListener("click", handleClickOutside);
+    useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, handleMarkedByTypes);
+    attachNotificationsResumeListeners();
     void (async () => {
       if (!hasAccessToken()) return;
 
@@ -887,6 +927,8 @@
 
   onUnmounted(() => {
     document.removeEventListener("click", handleClickOutside);
+    useEventBus.off(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, handleMarkedByTypes);
+    detachNotificationsResumeListeners();
     unsubscribeFromNotifications();
     unbindNotificationsSocketStateListener();
     stopNotificationsRealtimeRetry();

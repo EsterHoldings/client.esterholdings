@@ -201,9 +201,11 @@
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
   import useAppCore from "~/composables/useAppCore";
+  import useEventBus from "~/composables/useEventBus";
   import UiIconSuccessFull from "~/components/ui/UiIconSuccessFull.vue";
   import UiIconWarningFull from "~/components/ui/UiIconWarningFull.vue";
   import UiIconDangerFull from "~/components/ui/UiIconDangerFull.vue";
+  import { useNotificationsStore } from "~/stores/notificationsStore";
 
   type VerificationStatus = "approved" | "pending" | "rejected";
   type VerificationSectionTab = "client" | "payout";
@@ -221,9 +223,11 @@
   const { t } = useI18n({ useScope: "global" });
 
   const appCore = useAppCore();
+  const notificationsStore = useNotificationsStore();
   const isLoading = ref(false);
   const isPaymentDetailsLoading = ref(false);
   const activeSection = ref<VerificationSectionTab>("client");
+  const CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT = "client-notifications-marked-by-types";
 
   let verificationRequestData = reactive<Record<string, any>>({});
   const paymentDetailsRows = ref<PaymentDetailsRow[]>([]);
@@ -354,8 +358,27 @@
     await loadVerificationData();
   };
 
+  const markVerificationNotificationsSeen = async () => {
+    if (notificationsStore.unreadVerificationNotificationsCount <= 0) {
+      return;
+    }
+
+    try {
+      const response = await appCore.notifications.markReadByTypes(["verification.status-updated"]);
+      const summaryPayload = response?.data?.data ?? {};
+      notificationsStore.applySummary(summaryPayload);
+      useEventBus.emit(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, {
+        types: ["verification.status-updated"],
+        summary: summaryPayload,
+      });
+    } catch {
+      // no-op
+    }
+  };
+
   onMounted(async () => {
     await Promise.all([loadVerificationData(), loadPayoutVerificationData()]);
+    await markVerificationNotificationsSeen();
   });
 </script>
 

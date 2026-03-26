@@ -22,7 +22,14 @@
         />
         <div
             class="w-[70px] h-[70px] border border-[var(--color-stroke-ui-dark)] rounded overflow-hidden flex items-center justify-center">
-          <UiImage :src="getPreviewUrl(file)"/>
+          <UiImage v-if="isPreviewableImage(file)" :src="getPreviewUrl(file)"/>
+          <span
+            v-else
+            class="document-preview-badge"
+            :class="`is-${getSelectedFileKind(file)}`"
+          >
+            {{ getSelectedFileLabel(file) }}
+          </span>
         </div>
         <div class="flex flex-col gap-1.5">
           <UiFormControl :label="file.name">
@@ -181,6 +188,32 @@ function getPreviewUrl(file: FileWithPreview): string {
   return url;
 }
 
+function isPreviewableImage(file: File): boolean {
+  return String(file.type || "").trim().toLowerCase().startsWith("image/");
+}
+
+function getSelectedFileKind(file: File): "pdf" | "text" | "file" {
+  const mimeType = String(file.type || "").trim().toLowerCase();
+  const name = String(file.name || "").trim().toLowerCase();
+
+  if (mimeType.includes("pdf") || name.endsWith(".pdf")) {
+    return "pdf";
+  }
+
+  if (mimeType.startsWith("text/") || name.endsWith(".txt") || name.endsWith(".md") || name.endsWith(".csv")) {
+    return "text";
+  }
+
+  return "file";
+}
+
+function getSelectedFileLabel(file: File): string {
+  const kind = getSelectedFileKind(file);
+  if (kind === "pdf") return "PDF";
+  if (kind === "text") return "TXT";
+  return "FILE";
+}
+
 function handleFilesSelected(files: File[] | undefined) {
   if (!files || !Array.isArray(files)) return;
   const invalid = files.filter((f) => !isValidFormat(f)).map((f) => f.name);
@@ -295,11 +328,9 @@ async function uploadFiles() {
 }
 
 const loadUploadedDocuments = async () => {
-  console.log('---');
   isLoading.value = true;
   const response = await appCore.documents.get();
   documents.splice(0, documents.length, ...response.data.data.data);
-  console.log(documents);
   setTimeout(() => {
     isLoading.value = false;
   }, 300);
@@ -308,7 +339,6 @@ const loadUploadedDocuments = async () => {
 const loadVerificationData = async () => {
   isLoading.value = true;
   const response = await appCore.verifications.get();
-  console.log(response.data.data)
   verificationAddressStatus.value = response.data.data.address?.verification_status;
   verificationDocumentsStatus.value = response.data.data.documents?.verification_status;
   verificationAddressComment.value = response.data.data.address?.comment;
@@ -331,10 +361,39 @@ onBeforeUnmount(() => {
 });
 
 onMounted(async () => {
-  console.log('012');
   await loadUploadedDocuments();
-  console.log('123');
   await loadVerificationData();
-  console.log('234');
 });
 </script>
+
+<style scoped>
+.document-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ui-text-main);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.document-preview-badge.is-pdf {
+  background: rgba(220, 38, 38, 0.18);
+  color: #fca5a5;
+}
+
+.document-preview-badge.is-text {
+  background: rgba(59, 130, 246, 0.16);
+  color: #93c5fd;
+}
+
+.document-preview-badge.is-file {
+  background: rgba(148, 163, 184, 0.16);
+  color: #cbd5e1;
+}
+</style>

@@ -161,14 +161,15 @@
                           :key="paymentDetail.id + ':table-doc:' + docIndex"
                           class="payment-row-docs__thumb">
                           <img
-                            v-if="resolveDocumentPreviewSrc(document)"
-                            :src="resolveDocumentPreviewSrc(document)"
+                            v-if="resolveDocumentPreviewMeta(document).type === 'image' && resolveDocumentPreviewMeta(document).src"
+                            :src="resolveDocumentPreviewMeta(document).src"
                             :alt="`Preview #${docIndex + 1}`"
                             class="payment-row-docs__thumb-img" />
                           <span
                             v-else
                             class="payment-row-docs__thumb-fallback"
-                            >DOC</span
+                            :class="`is-${resolveDocumentPreviewMeta(document).type}`"
+                            >{{ resolveDocumentPreviewMeta(document).label }}</span
                           >
                         </span>
                         <span
@@ -356,14 +357,15 @@
                         :key="paymentDetail.id + ':card-doc:' + docIndex"
                         class="payment-row-docs__thumb">
                         <img
-                          v-if="resolveDocumentPreviewSrc(document)"
-                          :src="resolveDocumentPreviewSrc(document)"
+                          v-if="resolveDocumentPreviewMeta(document).type === 'image' && resolveDocumentPreviewMeta(document).src"
+                          :src="resolveDocumentPreviewMeta(document).src"
                           :alt="`Preview #${docIndex + 1}`"
                           class="payment-row-docs__thumb-img" />
                         <span
                           v-else
                           class="payment-row-docs__thumb-fallback"
-                          >DOC</span
+                          :class="`is-${resolveDocumentPreviewMeta(document).type}`"
+                          >{{ resolveDocumentPreviewMeta(document).label }}</span
                         >
                       </span>
                       <span
@@ -811,14 +813,45 @@
     return [];
   };
 
-  const resolveDocumentPreviewSrc = (document: any): string => {
+  const textExtensions = ["txt", "text", "md", "csv", "json", "xml", "log"];
+  const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg", "avif"];
+
+  const extractFileExtension = (value: string): string => {
+    const normalized = String(value || "").split("?")[0].split("#")[0].trim().toLowerCase();
+    const segments = normalized.split(".");
+
+    return segments.length > 1 ? segments.pop() || "" : "";
+  };
+
+  const resolveDocumentPreviewMeta = (document: any): { type: "image" | "pdf" | "text" | "file"; src: string; label: string } => {
+    const mimeType = String(document?.mime_type ?? document?.mimeType ?? "").trim().toLowerCase();
     const previewUrl = String(document?.preview_url ?? document?.previewUrl ?? "").trim();
-    if (previewUrl) {
-      return previewUrl;
+    const path = String(document?.path ?? "").trim();
+    const name = String(document?.name ?? "").trim();
+
+    let type: "image" | "pdf" | "text" | "file" = "file";
+    if (mimeType.startsWith("image/")) {
+      type = "image";
+    } else if (mimeType.includes("pdf")) {
+      type = "pdf";
+    } else if (mimeType.startsWith("text/") || mimeType.includes("json") || mimeType.includes("xml")) {
+      type = "text";
+    } else {
+      const extension = extractFileExtension(previewUrl || path || name);
+      if (imageExtensions.includes(extension)) {
+        type = "image";
+      } else if (extension === "pdf") {
+        type = "pdf";
+      } else if (textExtensions.includes(extension)) {
+        type = "text";
+      }
     }
 
-    const path = String(document?.path ?? "").trim();
-    return path;
+    return {
+      type,
+      src: type === "image" ? previewUrl || path : "",
+      label: type === "pdf" ? "PDF" : type === "text" ? "TXT" : type === "file" ? "FILE" : "IMG",
+    };
   };
 
   const statusDotClass = (value: unknown): string => {
@@ -1507,6 +1540,18 @@
     font-size: 9px;
     font-weight: 700;
     line-height: 1;
+  }
+
+  .payment-row-docs__thumb-fallback.is-pdf {
+    color: #fca5a5;
+  }
+
+  .payment-row-docs__thumb-fallback.is-text {
+    color: #93c5fd;
+  }
+
+  .payment-row-docs__thumb-fallback.is-file {
+    color: #cbd5e1;
   }
 
   .payment-row-docs__more {
