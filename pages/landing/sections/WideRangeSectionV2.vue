@@ -3,11 +3,12 @@
     <UiContainer>
       <div class="range-v2__inner">
         <h2 class="range-v2__title">{{ t("landing.sections.wide_range__title") }}</h2>
-        <div class="range-v2__list">
+        <div ref="listRef" class="range-v2__list" :class="{ 'range-v2__list--visible': isVisible }">
           <NuxtLink
             v-for="(item, index) in items"
             :key="index"
             :to="`/market-instruments?index=${index}`"
+            :style="{ '--i': index }"
             class="range-v2__card">
             <div class="range-v2__thumb">
               <img
@@ -30,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from "vue";
+  import { computed, ref, onMounted, onUnmounted } from "vue";
   import { useI18n } from "vue-i18n";
   import UiContainer from "~/components/ui/UiContainer.vue";
   import UiIconArrowV2 from "~/components/ui/UiArrowV2.vue";
@@ -43,6 +44,25 @@
   import imgEtfs from "~/assets/landing/static-v2/etfs.png";
 
   const { t } = useI18n();
+
+  const listRef = ref<HTMLElement | null>(null);
+  const isVisible = ref(false);
+  let observer: IntersectionObserver | null = null;
+
+  onMounted(() => {
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          isVisible.value = true;
+          observer?.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (listRef.value) observer.observe(listRef.value);
+  });
+
+  onUnmounted(() => observer?.disconnect());
 
   const IMAGES: Record<string, { img: string; img2?: string }> = {
     Forex: { img: imgForex },
@@ -103,10 +123,17 @@
       background: linear-gradient(-9.47deg, #f1f1f1 0%, #fff 42.48%);
       text-decoration: none;
       transition: box-shadow 0.25s ease;
+      opacity: 0;
+      transform: translateX(80px);
 
       &:hover {
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
       }
+    }
+
+    &__list--visible &__card {
+      animation: card-slide-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: calc(var(--i) * 0.1s);
     }
 
     &__thumb {
@@ -162,6 +189,13 @@
       width: 40px;
       height: 40px;
       flex-shrink: 0;
+    }
+  }
+
+  @keyframes card-slide-in {
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 

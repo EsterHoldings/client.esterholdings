@@ -74,9 +74,7 @@
               @click.stop="handleClick(link.key)" />
           </nav>
 
-          <!-- В ДИЗАЙНІ ЧОМУСЬ ЦЬОГО НЕМАЄ В ХЕДЕРІ, ПОКИ ЗАЛИШИВ ТАК -->
-
-          <!-- <div class="actions">
+          <div class="actions">
             <LanguageSwitcher :isInvert="true" />
             <button
               class="theme-btn"
@@ -101,7 +99,7 @@
                 {{ t("landing.header.auth.register") }}
               </UiButtonDefault>
             </NuxtLink>
-          </div> -->
+          </div>
 
           <button
             class="burger"
@@ -149,25 +147,24 @@
             @click="handleClick(link.key)" />
         </div>
         <div class="mobile-menu__footer">
-          <div class="mobile-menu__meta">
-            <div class="mobile-menu__line mobile-menu__line--lang">
-              <LanguageSwitcher />
-              <span>{{ currentLocaleLabel }}</span>
-            </div>
-            <button
-              class="theme-inline mobile-menu__line"
-              type="button"
-              @click="themeStore.toggleTheme()">
-              <UiIconMoon v-if="themeStore.currentTheme === 'light'" />
-              <UiIconSun v-else />
-              <span>{{ themeStore.currentTheme === "light" ? "Night Mode" : "Day Mode" }}</span>
-            </button>
-            <NuxtLink
-              to="/auth/login"
-              class="auth-link auth-link--mobile mobile-menu__line">
-              {{ t("landing.header.auth.login") }}
-            </NuxtLink>
+          <div class="mobile-menu__line mobile-menu__line--lang">
+            <LanguageSwitcher />
+            <span>{{ currentLocaleLabel }}</span>
           </div>
+          <button
+            class="theme-inline mobile-menu__line"
+            type="button"
+            @click="themeStore.toggleTheme()">
+            <UiIconMoon v-if="themeStore.currentTheme === 'light'" />
+            <UiIconSun v-else />
+            <span>{{ themeStore.currentTheme === "light" ? "Night Mode" : "Day Mode" }}</span>
+          </button>
+          <NuxtLink
+            to="/auth/login"
+            class="auth-link auth-link--mobile mobile-menu__line">
+            <UiIconLogout class="login-icon" />
+            {{ t("landing.header.auth.login") }}
+          </NuxtLink>
           <NuxtLink
             to="/auth/registration"
             class="mobile-register">
@@ -192,6 +189,7 @@
   import useTrackScroll, { isSlideWithoutPicture } from "./LandingHeader/composables/trackScroll";
   import UiIconMoon from "~/components/ui/UiIconMoon.vue";
   import UiIconSun from "~/components/ui/UiIconSun.vue";
+  import UiIconLogout from "~/components/ui/UiIconLogout.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import HeaderLink from "./LandingHeader/components/HeaderLink.vue";
   import HeaderMobileLink from "./LandingHeader/components/HeaderMobileLink.vue";
@@ -357,7 +355,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 195px;
+      gap: 20px;
       padding: 20px;
 
       &--menu-open {
@@ -379,8 +377,10 @@
 
   .desktop-nav {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     gap: 60px;
+    flex: 1;
+    justify-content: center;
 
     :deep(.header__link) {
       gap: 4px;
@@ -388,9 +388,9 @@
     }
 
     :deep(.h5) {
-      font-size: 18px;
-      line-height: 1.302;
-      font-weight: 500;
+      font-size: 16px;
+      line-height: normal;
+      font-weight: 700;
       color: #7b7b7b !important;
     }
 
@@ -404,7 +404,7 @@
   .actions {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
 
     :deep(.language-wrapper .icon) {
       display: inline-flex;
@@ -445,19 +445,19 @@
   .auth-link {
     color: #7b7b7b;
     text-decoration: none;
-    font-size: 18px;
-    line-height: 1.302;
-    font-weight: 500;
+    font-size: 16px;
+    line-height: normal;
+    font-weight: 700;
   }
 
   :deep(.auth-register.btn) {
-    height: 53px;
-    min-width: 170px;
+    height: auto;
+    min-width: unset;
     border-radius: 12px;
     padding: 10px 16px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    line-height: 1.302;
+    line-height: normal;
     background: #0051ff !important;
     color: #fff !important;
   }
@@ -552,14 +552,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 16px;
-    }
-
-    &__meta {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 14px;
+      gap: 30px;
     }
 
     &__line {
@@ -568,13 +561,13 @@
       gap: 10px;
       color: #6b6b6b;
       text-decoration: none;
-      font-size: 18px;
-      line-height: 1.1;
-      font-weight: 500;
+      font-size: 16px;
+      line-height: normal;
+      font-weight: 600;
 
       :deep(svg) {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
       }
     }
 
@@ -588,6 +581,11 @@
 
   .auth-link--mobile {
     color: #6b6b6b;
+
+    .login-icon {
+      transform: rotate(180deg);
+      flex-shrink: 0;
+    }
   }
 
   .mobile-register :deep(button) {
@@ -606,10 +604,10 @@
 
   .mobile-menu .theme-inline {
     color: #6b6b6b;
-
-    :deep(svg) {
-      color: #6b6b6b;
-    }
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
   }
 
   .svg-invert {
@@ -625,9 +623,7 @@
 
     .desktop-nav,
     .desktop-menu,
-    .actions .auth-link,
-    .actions :deep(.auth-register),
-    .actions :deep(.lang-switcher) {
+    .actions {
       display: none;
     }
 
@@ -635,8 +631,5 @@
       display: inline-flex;
     }
 
-    .actions {
-      margin-left: auto;
-    }
   }
 </style>

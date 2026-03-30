@@ -8,8 +8,8 @@
       <div class="hero__content">
         <h1 class="hero__title">Trade <span>10 asset classes</span> from one margin account</h1>
         <p class="hero__subtitle">
-          One platform for FX, Crypto, Metals, Commodities, Indices, Stocks and more
-          &mdash; with institutional-grade execution.
+          One platform for FX, Crypto, Metals, Commodities, Indices, Stocks and more &mdash; with institutional-grade
+          execution.
         </p>
         <ul class="hero__benefits">
           <li
@@ -106,7 +106,7 @@
   .hero {
     position: relative;
     width: 100%;
-    max-width: 1440px;
+    // max-width: 1440px;
     margin: 0 auto;
     overflow: hidden;
     padding: 174px 40px 146px;
@@ -185,6 +185,11 @@
       img {
         width: 62px;
         height: 15px;
+        transition: transform 0.25s ease;
+      }
+
+      &:hover img {
+        transform: translateX(6px);
       }
     }
 

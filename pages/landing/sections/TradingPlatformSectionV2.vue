@@ -1,7 +1,7 @@
 <template>
   <section class="platform-v2">
     <UiContainer class="platform">
-      <div class="platform__left">
+      <div ref="leftRef" class="platform__left" :class="{ 'platform__left--visible': isVisible }">
         <h2 class="platform__title">
           {{ t("landing.sections.platform__title") }}
         </h2>
@@ -9,6 +9,7 @@
           <div
             v-for="(card, i) in cards"
             :key="i"
+            :style="{ '--i': i }"
             class="platform__card">
             <div class="platform__card-icon">
               <component :is="card.icon" />
@@ -46,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+  import { ref, onMounted, onUnmounted } from "vue";
   import { useI18n } from "vue-i18n";
   import UiContainer from "~/components/ui/UiContainer.vue";
   import UiIconTradingChart from "~/components/ui/UiIconTradingChart.vue";
@@ -53,6 +55,25 @@
   import UiIconEclipce from "~/components/ui/UiIconEclipce.vue";
 
   const { t } = useI18n();
+
+  const leftRef = ref<HTMLElement | null>(null);
+  const isVisible = ref(false);
+  let observer: IntersectionObserver | null = null;
+
+  onMounted(() => {
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          isVisible.value = true;
+          observer?.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (leftRef.value) observer.observe(leftRef.value);
+  });
+
+  onUnmounted(() => observer?.disconnect());
 
   const cards = [
     {
@@ -92,6 +113,12 @@
       font-weight: 500;
       line-height: 1.2;
       max-width: 420px;
+      opacity: 0;
+      transform: translateX(-80px);
+    }
+
+    &__left--visible &__title {
+      animation: platform-card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
     &__cards {
@@ -105,6 +132,13 @@
       flex-direction: column;
       gap: 16px;
       width: 198px;
+      opacity: 0;
+      transform: translateX(-80px);
+    }
+
+    &__left--visible &__card {
+      animation: platform-card-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: calc(0.15s + var(--i) * 0.12s);
     }
 
     &__card-icon {
@@ -268,6 +302,13 @@
           font-size: 13px;
         }
       }
+    }
+  }
+
+  @keyframes platform-card-in {
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 

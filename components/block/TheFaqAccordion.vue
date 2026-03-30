@@ -11,7 +11,11 @@
         <UiIconArrowDown :rotate180="item.isActive" />
       </div>
 
-      <transition name="expand">
+      <transition
+        @enter="onEnter"
+        @after-enter="onAfterEnter"
+        @leave="onLeave"
+        @after-leave="onAfterLeave">
         <div
           v-if="item.isActive"
           class="faq-answer">
@@ -48,6 +52,40 @@
       ...item,
       isActive: i === index ? !item.isActive : false,
     }));
+  };
+
+  const onEnter = (el: Element) => {
+    const element = el as HTMLElement;
+    element.style.height = "0";
+    element.style.overflow = "hidden";
+    requestAnimationFrame(() => {
+      element.style.transition = "height 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
+      element.style.height = `${element.scrollHeight}px`;
+    });
+  };
+
+  const onAfterEnter = (el: Element) => {
+    const element = el as HTMLElement;
+    element.style.height = "";
+    element.style.overflow = "";
+    element.style.transition = "";
+  };
+
+  const onLeave = (el: Element) => {
+    const element = el as HTMLElement;
+    element.style.height = `${element.scrollHeight}px`;
+    element.style.overflow = "hidden";
+    requestAnimationFrame(() => {
+      element.style.transition = "height 0.35s cubic-bezier(0.4, 0, 0.2, 1)";
+      element.style.height = "0";
+    });
+  };
+
+  const onAfterLeave = (el: Element) => {
+    const element = el as HTMLElement;
+    element.style.height = "";
+    element.style.overflow = "";
+    element.style.transition = "";
   };
 </script>
 
@@ -111,16 +149,4 @@
     margin: 12px 0;
   }
 
-  .expand-enter-active,
-  .expand-leave-active {
-    transition: all 0.3s ease;
-    max-height: 200px;
-  }
-
-  .expand-enter-from,
-  .expand-leave-to {
-    max-height: 0;
-    opacity: 0;
-    padding: 0;
-  }
 </style>

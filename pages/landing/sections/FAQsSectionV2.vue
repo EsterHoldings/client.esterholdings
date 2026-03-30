@@ -137,7 +137,7 @@
   }
 
   .left {
-    padding-top: 89px;
+    padding-top: 0;
   }
 
   .help {
@@ -145,9 +145,10 @@
     color: #000;
     font-size: 16px;
     line-height: 1.302;
-    font-weight: 400;
+    font-weight: 700;
 
     a {
+      font-weight: 700;
       color: #f75709;
       text-decoration: underline;
 
@@ -168,10 +169,14 @@
     font-weight: 700 !important;
   }
 
+  :deep(.faq-answer) {
+    padding: 0 0 30px !important;
+  }
+
   :deep(.faq-answer p) {
     color: #7b7b7b !important;
     font-size: 16px !important;
-    font-weight: 500 !important;
+    font-weight: 400 !important;
   }
 
   :deep(.faq-divider) {
@@ -180,7 +185,7 @@
   }
 
   :deep(.faq-question) {
-    padding: 15px 0 !important;
+    padding: 30px 0 !important;
     gap: 12px;
   }
 

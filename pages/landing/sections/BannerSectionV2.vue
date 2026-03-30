@@ -5,10 +5,7 @@
         <div
           class="banner__bg"
           aria-hidden="true">
-          <img
-            :src="imgChart"
-            alt=""
-            class="banner__bg-img" />
+          <UiIllustrationChartBg class="banner__bg-img" />
         </div>
 
         <div class="banner__header">
@@ -50,7 +47,7 @@
   import { useI18n } from "vue-i18n";
   import UiContainer from "~/components/ui/UiContainer.vue";
   import UiIconArrow from "~/components/ui/UiIconArrow.vue";
-  import imgChart from "~/assets/landing/banner-v2/chart-bg.svg";
+  import UiIllustrationChartBg from "~/components/ui/UiIllustrationChartBg.vue";
   import imgLogoMark from "~/assets/landing/banner-v2/logo-mark.png";
   import imgLogoName from "~/assets/landing/banner-v2/logo-name.png";
 
@@ -163,6 +160,14 @@
       text-decoration: none;
       white-space: nowrap;
       cursor: pointer;
+
+      :deep(svg) {
+        transition: transform 0.25s ease;
+      }
+
+      &:hover :deep(svg) {
+        transform: translateX(5px);
+      }
 
       &--primary {
         width: 325px;

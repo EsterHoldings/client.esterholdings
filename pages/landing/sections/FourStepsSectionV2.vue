@@ -163,10 +163,6 @@
     cursor: pointer;
     transition: background 0.2s ease;
 
-    &:hover {
-      background: #0040cc;
-    }
-
     span {
       color: #fff;
       font-size: 24px;
@@ -177,6 +173,11 @@
     &__arrow {
       width: 60px;
       flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+
+    &:hover &__arrow {
+      transform: translateX(5px);
     }
   }
 
