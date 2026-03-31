@@ -316,6 +316,7 @@
       grid-row: 2;
       align-self: start;
       margin-top: 43px;
+      width: 325px;
     }
 
     &__content {
