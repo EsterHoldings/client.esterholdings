@@ -25,18 +25,14 @@
         <p class="banner__tag">{{ t("landing.sections.banner_section.tag") }}</p>
 
         <div class="banner__actions">
-          <NuxtLink
-            to="/auth/registration"
-            class="banner__btn banner__btn--primary">
+          <UiButtonV2 to="/auth/registration">
             {{ t("landing.sections.banner_section.button_primary") }}
-            <UiIconArrow />
-          </NuxtLink>
-          <NuxtLink
+          </UiButtonV2>
+          <UiButtonV2
             to="/auth/registration"
-            class="banner__btn banner__btn--secondary">
+            variant="secondary">
             {{ t("landing.sections.banner_section.button_secondary") }}
-            <UiIconArrow />
-          </NuxtLink>
+          </UiButtonV2>
         </div>
       </div>
     </UiContainer>
@@ -46,7 +42,7 @@
 <script setup lang="ts">
   import { useI18n } from "vue-i18n";
   import UiContainer from "~/components/ui/UiContainer.vue";
-  import UiIconArrow from "~/components/ui/UiIconArrow.vue";
+  import UiButtonV2 from "~/components/ui/UiButtonV2.vue";
   import UiIllustrationChartBg from "~/components/ui/UiIllustrationChartBg.vue";
   import imgLogoMark from "~/assets/landing/banner-v2/logo-mark.png";
   import imgLogoName from "~/assets/landing/banner-v2/logo-name.png";
@@ -147,42 +143,6 @@
       align-items: center;
     }
 
-    &__btn {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      height: 70px;
-      padding: 12px 22px;
-      border-radius: 18px;
-      font-size: 24px;
-      font-weight: 700;
-      text-decoration: none;
-      white-space: nowrap;
-      cursor: pointer;
-
-      :deep(svg) {
-        transition: transform 0.25s ease;
-      }
-
-      &:hover :deep(svg) {
-        transform: translateX(5px);
-      }
-
-      &--primary {
-        width: 325px;
-        background: #0051ff;
-        color: #fff;
-        border: none;
-      }
-
-      &--secondary {
-        width: 352px;
-        background: #fff;
-        color: #f75709;
-        border: 1px solid #f75709;
-      }
-    }
   }
 
   @media (max-width: 991px) {
@@ -241,13 +201,6 @@
         margin-top: 16px;
         flex-direction: column;
         align-items: stretch;
-      }
-
-      &__btn {
-        width: 100% !important;
-        font-size: 18px;
-        height: 56px;
-        top: 0;
       }
     }
   }

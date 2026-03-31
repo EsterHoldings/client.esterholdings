@@ -156,33 +156,40 @@
 
   @media (max-width: 991px) {
     .running-line-v2 {
-      margin-top: 20px;
+      margin-top: 12px;
 
       &__track {
-        gap: 14px;
+        gap: 10px;
       }
 
       &__card {
-        min-width: 320px;
-        padding: 16px;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 18px;
+        padding: 10px 14px;
+        gap: 14px;
+        border-radius: 14px;
       }
 
       &__head {
-        gap: 16px;
+        gap: 8px;
       }
 
       &__icon {
-        width: 64px;
-        height: 64px;
+        width: 32px;
+        height: 32px;
+      }
+
+      &__symbol {
+        font-size: 13px;
+      }
+
+      &__price {
+        font-size: 11px;
       }
 
       &__btn {
-        width: 100%;
-        height: 64px;
-        border-radius: 18px;
+        height: 32px;
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 8px;
       }
     }
   }

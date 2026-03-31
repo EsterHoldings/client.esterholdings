@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+  import { computed } from "vue";
   import { useI18n } from "vue-i18n";
   import UiContainer from "~/components/ui/UiContainer.vue";
   import UiIconReverage from "~/components/ui/UiIconReverage.vue";
@@ -49,47 +50,48 @@
 
   const { t } = useI18n();
 
-  const cards = [
+  // Индексы соответствуют порядку в accounts__options: demo=0, standard=1, tandem=3
+  const cards = computed(() => [
     {
       id: "demo",
       theme: "orange",
-      badge: "RECOMMENDED",
-      title: "Demo",
-      subtitle: "Risk-free trading with virtual funds, perfect for beginners to explore markets.",
+      badge: t("landing.sections.accounts__badge_recommended"),
+      title: t("landing.sections.accounts__options[0].title"),
+      subtitle: t("landing.sections.accounts__options[0].description"),
       features: [
-        { icon: UiIconReverage, text: "Leverage up to 1:100" },
-        { icon: UiIconSpreads, text: "Spreads from 0.0 pips" },
-        { icon: UiIconDeposit, text: "No deposit required" },
+        { icon: UiIconReverage, text: t("landing.sections.accounts__options[0].features[0]") },
+        { icon: UiIconSpreads, text: t("landing.sections.accounts__options[0].features[1]") },
+        { icon: UiIconDeposit, text: t("landing.sections.accounts__options[0].features[2]") },
       ],
-      buttonText: "Try Demo Now",
+      buttonText: t("landing.sections.accounts__options[0].buttonText"),
     },
     {
       id: "standard",
       theme: "blue",
       badge: null,
-      title: "Standard",
-      subtitle: "Easy access to spot markets with low fees and — ideal for beginners and active traders.",
+      title: t("landing.sections.accounts__options[1].title"),
+      subtitle: t("landing.sections.accounts__options[1].description"),
       features: [
-        { icon: UiIconReverage, text: "Leverage up to 1:100" },
-        { icon: UiIconSpreads, text: "Spreads from 1.2 pips" },
-        { icon: UiIconFirstDeposit, text: "First deposit of $50" },
+        { icon: UiIconReverage, text: t("landing.sections.accounts__options[1].features[0]") },
+        { icon: UiIconSpreads, text: t("landing.sections.accounts__options[1].features[1]") },
+        { icon: UiIconFirstDeposit, text: t("landing.sections.accounts__options[1].features[2]") },
       ],
-      buttonText: "Open Standard Account",
+      buttonText: t("landing.sections.accounts__options[1].buttonText"),
     },
     {
       id: "tandem",
       theme: "blue",
       badge: null,
-      title: "Tandem",
-      subtitle: "Pair with a partner, mentor, or co-trader and grow together with synchronized strategies.",
+      title: t("landing.sections.accounts__options[3].title"),
+      subtitle: t("landing.sections.accounts__options[3].description"),
       features: [
-        { icon: UiIconReverage, text: "Leverage up to 1:100" },
-        { icon: UiIconShareDeposit, text: "Shared account access" },
-        { icon: UiIconRealTime, text: "Real-time trade mirroring" },
+        { icon: UiIconReverage, text: t("landing.sections.accounts__options[3].features[0]") },
+        { icon: UiIconShareDeposit, text: t("landing.sections.accounts__options[3].features[1]") },
+        { icon: UiIconRealTime, text: t("landing.sections.accounts__options[3].features[2]") },
       ],
-      buttonText: "Trade Together",
+      buttonText: t("landing.sections.accounts__options[3].buttonText"),
     },
-  ];
+  ]);
 </script>
 
 <style lang="scss" scoped>
@@ -132,7 +134,6 @@
 
         .accounts-v2__btn {
           background: #f75709;
-          width: 145px;
         }
       }
 
@@ -211,20 +212,28 @@
       }
     }
 
+    &__link {
+      display: block;
+    }
+
     &__btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 42px;
-      padding: 0 16px;
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 16px;
       border: none;
       border-radius: 12px;
       color: #fff;
       font-size: 16px;
       font-weight: 700;
+      line-height: 1.3;
       cursor: pointer;
       transition: opacity 0.2s;
-      white-space: nowrap;
+      font-family: inherit;
+      text-align: center;
+      word-break: break-word;
 
       &:hover {
         opacity: 0.88;
@@ -270,15 +279,6 @@
 
       &__card--orange {
         border-top-right-radius: 20px;
-      }
-
-      &__link {
-        display: block;
-        width: 100%;
-      }
-
-      &__card .accounts-v2__btn {
-        width: 100%;
       }
 
       &__badge {

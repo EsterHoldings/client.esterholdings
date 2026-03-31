@@ -394,7 +394,7 @@
         ]
       },
       "banner_section": {
-        "title": "One World.\nOne Platform.\nOne Account.",
+        "title": "ひとつの世界.\nひとつのプラットフォーム.\nひとつの口座.",
         "title_highlight": "プロのように！",
         "tag": "Multi-Asset",
         "subtitle": "初心者でもプロでも、当社の高度なツールとリソースが情報に基づいた取引決定をサポートします。",
@@ -450,8 +450,62 @@
         }
       ],
       "accounts__badge_recommended": "おすすめ",
+      "faqs__title": "よくある質問",
+      "faqs__dropzone_text": "ファイルをここにドラッグ＆ドロップするか、クリックして選択",
+      "faqs__dropzone_aria": "ファイルをアップロード",
+      "news_row__items": [
+        { "title": "SECがステーブルコイン禁止を発表後、ビットコインが12%下落" },
+        { "title": "テスラが1:10の株式分割を発表 — 株価が12%上昇" },
+        { "title": "米インフレの予想外の上昇を受けてダウ平均が1,200ポイント急落" },
+        { "title": "決算報告後にNVIDIA株が15%急騰" }
+      ],
       "helpSection": "ヘルプが必要ですか？",
-      "helpLinkText": "ヘルプセクション"
+      "helpLinkText": "ヘルプセクション",
+      "welcomeV2": {
+        "cta": "試してみる",
+        "slides": [
+          {
+            "line1Prefix": "1つの",
+            "line1Accent": "マージン",
+            "line1Suffix": "口座から",
+            "line2Prefix": "",
+            "line2Accent": "10資産",
+            "line2Suffix": "クラスを取引",
+            "subtitle": "FX、暗号通貨、金属、コモディティ、指数、株式などに対応する1つのプラットフォーム — 機関レベルの執行品質で。",
+            "benefits": [
+              "単一のワークフローでマルチアセットにアクセス",
+              "アクティブトレードのための深い流動性と安定したフィル",
+              "10年の会社経験に基づいて構築"
+            ]
+          },
+          {
+            "line1Prefix": "機関レベルの",
+            "line1Accent": "流動性",
+            "line1Suffix": "。",
+            "line2Prefix": "クリーンな執行。",
+            "line2Accent": "",
+            "line2Suffix": "",
+            "subtitle": "安定したフィルとスケーラブルな注文フローのために設計された深い集約流動性プール。",
+            "benefits": [
+              "Tier-1流動性アグリゲーション",
+              "取引所全体の深さ"
+            ]
+          },
+          {
+            "line1Prefix": "",
+            "line1Accent": "高速",
+            "line1Suffix": "インフラ",
+            "line2Prefix": "アクティブな",
+            "line2Accent": "取引",
+            "line2Suffix": "のために",
+            "subtitle": "高速注文処理速度、0のリミット/ストップレベル — アクティブトレードフローのために構築。",
+            "benefits": [
+              "高速サーバー技術",
+              "機関レベルの流動性セットアップ"
+            ]
+          }
+        ]
+      }
     },
     "pages": {
       "company": {

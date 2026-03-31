@@ -394,7 +394,7 @@
         ]
       },
       "banner_section": {
-        "title": "One World.\nOne Platform.\nOne Account.",
+        "title": "Un mundo.\nUna plataforma.\nUna cuenta.",
         "title_highlight": "¡Como un Pro!",
         "tag": "Multi-Asset",
         "subtitle": "Ya seas principiante o profesional, nuestras herramientas y recursos avanzados te ayudan a tomar decisiones de trading informadas.",
@@ -449,9 +449,63 @@
           "description": "Ofrecemos una amplia gama de instrumentos incluyendo Forex, CFDs, materias primas, índices y criptomonedas."
         }
       ],
-      "accounts__badge_recommended": "Recomendado",
+      "accounts__badge_recommended": "RECOMENDADO",
+      "faqs__title": "Preguntas frecuentes",
+      "faqs__dropzone_text": "Arrastra archivos aquí o haz clic para seleccionar archivos",
+      "faqs__dropzone_aria": "Subir archivo",
+      "news_row__items": [
+        { "title": "Bitcoin cae un 12% tras el anuncio de la SEC de prohibir las stablecoins" },
+        { "title": "Tesla anuncia una división de acciones 1:10 – las cotizaciones subieron un 12%" },
+        { "title": "El Dow Jones cae 1.200 puntos tras un inesperado aumento de la inflación en EE.UU." },
+        { "title": "Las acciones de NVIDIA subieron un 15% tras el informe" }
+      ],
       "helpSection": "¿Necesitas Ayuda? Visita nuestra",
-      "helpLinkText": "Sección de Ayuda"
+      "helpLinkText": "Sección de Ayuda",
+      "welcomeV2": {
+        "cta": "Pruébalo",
+        "slides": [
+          {
+            "line1Prefix": "Opera ",
+            "line1Accent": "10 clases",
+            "line1Suffix": " de activos desde una sola",
+            "line2Prefix": "",
+            "line2Accent": "cuenta",
+            "line2Suffix": " de margen",
+            "subtitle": "Una plataforma para FX, Cripto, Metales, Materias primas, Índices, Acciones y más — con ejecución de nivel institucional.",
+            "benefits": [
+              "Acceso multi-activo en un único flujo de trabajo",
+              "Liquidez profunda y ejecuciones estables para trading activo",
+              "Construido sobre 10 años de experiencia de la empresa"
+            ]
+          },
+          {
+            "line1Prefix": "Liquidez ",
+            "line1Accent": "institucional",
+            "line1Suffix": ".",
+            "line2Prefix": "Ejecución limpia.",
+            "line2Accent": "",
+            "line2Suffix": "",
+            "subtitle": "Pools de liquidez agregados profundos diseñados para ejecuciones estables y flujo de órdenes escalable.",
+            "benefits": [
+              "Agregación de liquidez Tier-1",
+              "Profundidad en múltiples venues"
+            ]
+          },
+          {
+            "line1Prefix": "",
+            "line1Accent": "Infraestructura",
+            "line1Suffix": " rápida",
+            "line2Prefix": "para trading ",
+            "line2Accent": "activo",
+            "line2Suffix": "",
+            "subtitle": "Alta velocidad de procesamiento de órdenes, 0 niveles de límite/stop — diseñado para el flujo de trading activo.",
+            "benefits": [
+              "Tecnologías de servidor rápidas",
+              "Configuración de liquidez institucional"
+            ]
+          }
+        ]
+      }
     },
     "pages": {
       "company": {

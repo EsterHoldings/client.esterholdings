@@ -1,7 +1,7 @@
 <template>
   <section class="faq-v2">
     <UiContainer>
-      <h2>FAQs</h2>
+      <h2>{{ t("landing.sections.faqs__title") }}</h2>
       <div class="layout">
         <div class="left">
           <TheFaqAccordion :items="faqData" />
@@ -46,13 +46,13 @@
             :class="{ 'form__dropzone--hover': isDragging }"
             role="button"
             tabindex="0"
-            aria-label="Upload file"
+            :aria-label="t('landing.sections.faqs__dropzone_aria')"
             @click="triggerFileInput"
             @keydown.enter.space.prevent="triggerFileInput"
             @dragover.prevent="isDragging = true"
             @dragleave.prevent="isDragging = false"
             @drop.prevent="onDrop">
-            <span>Drag 'n' drop some files here, or click to select files</span>
+            <span>{{ t("landing.sections.faqs__dropzone_text") }}</span>
             <input
               ref="fileInputRef"
               type="file"

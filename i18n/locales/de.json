@@ -394,7 +394,7 @@
         ]
       },
       "banner_section": {
-        "title": "One World.\nOne Platform.\nOne Account.",
+        "title": "Eine Welt.\nEine Plattform.\nEin Konto.",
         "title_highlight": "Wie ein Profi!",
         "tag": "Multi-Asset",
         "subtitle": "Egal ob Sie Anfänger oder Profi sind, unsere fortschrittlichen Tools und Ressourcen helfen Ihnen, fundierte Handelsentscheidungen zu treffen.",
@@ -449,9 +449,63 @@
           "description": "Wir bieten eine breite Palette von Instrumenten an, darunter Forex, CFDs, Rohstoffe, Indizes und Kryptowährungen."
         }
       ],
-      "accounts__badge_recommended": "Empfohlen",
+      "accounts__badge_recommended": "EMPFOHLEN",
+      "faqs__title": "FAQs",
+      "faqs__dropzone_text": "Dateien hierher ziehen oder klicken, um Dateien auszuwählen",
+      "faqs__dropzone_aria": "Datei hochladen",
+      "news_row__items": [
+        { "title": "Bitcoin fällt um 12% nachdem die SEC ein Stablecoin-Verbot ankündigt" },
+        { "title": "Tesla kündigte einen 1:10-Aktiensplit an – Kurse stiegen um 12%" },
+        { "title": "Dow Jones bricht um 1.200 Punkte ein nach unerwartetem Anstieg der US-Inflation" },
+        { "title": "NVIDIA-Aktien stiegen nach dem Quartalsbericht um 15%" }
+      ],
       "helpSection": "Benötigen Sie Hilfe? Besuchen Sie unseren",
-      "helpLinkText": "Hilfebereich"
+      "helpLinkText": "Hilfebereich",
+      "welcomeV2": {
+        "cta": "Jetzt testen",
+        "slides": [
+          {
+            "line1Prefix": "Handel mit ",
+            "line1Accent": "10 Asset",
+            "line1Suffix": "-Klassen von einem",
+            "line2Prefix": "",
+            "line2Accent": "Margin",
+            "line2Suffix": "-Konto",
+            "subtitle": "Eine Plattform für FX, Krypto, Metalle, Rohstoffe, Indizes, Aktien und mehr — mit Ausführung auf institutionellem Niveau.",
+            "benefits": [
+              "Multi-Asset-Zugang in einem einzigen Workflow",
+              "Tiefe Liquidität und stabile Ausführungen für aktiven Handel",
+              "Aufgebaut auf 10 Jahren Unternehmenserfahrung"
+            ]
+          },
+          {
+            "line1Prefix": "Institutionelle ",
+            "line1Accent": "Liquidität",
+            "line1Suffix": ".",
+            "line2Prefix": "Saubere Ausführung.",
+            "line2Accent": "",
+            "line2Suffix": "",
+            "subtitle": "Tiefe aggregierte Liquiditätspools für stabile Ausführungen und skalierbaren Auftragsfluss.",
+            "benefits": [
+              "Tier-1-Liquiditätsaggregation",
+              "Tiefe über Handelsplätze hinweg"
+            ]
+          },
+          {
+            "line1Prefix": "",
+            "line1Accent": "Schnelle",
+            "line1Suffix": " Infrastruktur",
+            "line2Prefix": "für aktiven ",
+            "line2Accent": "Handel",
+            "line2Suffix": "",
+            "subtitle": "Hohe Auftragsverarbeitungsgeschwindigkeit, 0 Limit-/Stop-Level — für aktiven Handelsfluss konzipiert.",
+            "benefits": [
+              "Schnelle Servertechnologien",
+              "Institutioneller Liquiditätsaufbau"
+            ]
+          }
+        ]
+      }
     },
     "pages": {
       "company": {

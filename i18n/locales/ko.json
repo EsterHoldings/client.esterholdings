@@ -394,7 +394,7 @@
         ]
       },
       "banner_section": {
-        "title": "One World.\nOne Platform.\nOne Account.",
+        "title": "하나의 세계.\n하나의 플랫폼.\n하나의 계정.",
         "title_highlight": "프로처럼!",
         "tag": "Multi-Asset",
         "subtitle": "초보자든 프로든, 우리의 고급 도구와 리소스가 정보에 입각한 거래 결정을 내리는 데 도움을 줍니다.",
@@ -450,8 +450,62 @@
         }
       ],
       "accounts__badge_recommended": "추천",
+      "faqs__title": "자주 묻는 질문",
+      "faqs__dropzone_text": "파일을 여기에 드래그하거나 클릭하여 선택하세요",
+      "faqs__dropzone_aria": "파일 업로드",
+      "news_row__items": [
+        { "title": "SEC의 스테이블코인 금지 발표 후 비트코인 12% 폭락" },
+        { "title": "테슬라 1:10 주식 분할 발표 – 주가 12% 상승" },
+        { "title": "미국 인플레이션 예상치 못한 상승으로 다우존스 1,200포인트 급락" },
+        { "title": "실적 발표 후 NVIDIA 주가 15% 급등" }
+      ],
       "helpSection": "도움이 필요하신가요?",
-      "helpLinkText": "도움말 섹션"
+      "helpLinkText": "도움말 섹션",
+      "welcomeV2": {
+        "cta": "시작하기",
+        "slides": [
+          {
+            "line1Prefix": "하나의 ",
+            "line1Accent": "마진",
+            "line1Suffix": " 계좌에서",
+            "line2Prefix": "",
+            "line2Accent": "10개 자산",
+            "line2Suffix": " 클래스 거래",
+            "subtitle": "FX, 암호화폐, 금속, 원자재, 지수, 주식 등을 위한 하나의 플랫폼 — 기관급 실행 품질로.",
+            "benefits": [
+              "단일 워크플로우에서 다중 자산 접근",
+              "활성 거래를 위한 깊은 유동성 및 안정적 체결",
+              "10년 회사 경험을 바탕으로 구축"
+            ]
+          },
+          {
+            "line1Prefix": "기관급 ",
+            "line1Accent": "유동성",
+            "line1Suffix": ".",
+            "line2Prefix": "명확한 실행.",
+            "line2Accent": "",
+            "line2Suffix": "",
+            "subtitle": "안정적 체결과 확장 가능한 주문 흐름을 위한 깊은 집계 유동성 풀.",
+            "benefits": [
+              "Tier-1 유동성 집계",
+              "거래소 간 깊이"
+            ]
+          },
+          {
+            "line1Prefix": "",
+            "line1Accent": "빠른",
+            "line1Suffix": " 인프라",
+            "line2Prefix": "활성 ",
+            "line2Accent": "거래",
+            "line2Suffix": "를 위한",
+            "subtitle": "높은 주문 처리 속도, 0 제한/스탑 레벨 — 활성 거래 흐름을 위해 구축.",
+            "benefits": [
+              "빠른 서버 기술",
+              "기관급 유동성 설정"
+            ]
+          }
+        ]
+      }
     },
     "pages": {
       "company": {

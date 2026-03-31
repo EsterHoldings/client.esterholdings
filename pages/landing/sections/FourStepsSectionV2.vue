@@ -23,18 +23,11 @@
           </div>
         </article>
       </div>
-      <NuxtLink
+      <UiButtonV2
         to="/auth/registration"
-        class="cta-link">
-        <button class="cta-btn">
-          <span>{{ t("landing.sections.four_steps_section.button") }}</span>
-          <img
-            :src="ctaArrow"
-            alt=""
-            class="cta-btn__arrow"
-            aria-hidden="true" />
-        </button>
-      </NuxtLink>
+        class="steps-v2__cta">
+        {{ t("landing.sections.four_steps_section.button") }}
+      </UiButtonV2>
     </UiContainer>
   </section>
 </template>
@@ -42,7 +35,7 @@
 <script setup lang="ts">
   import { computed } from "vue";
   import { useI18n } from "vue-i18n";
-  import ctaArrow from "~/assets/landing/welcome-v2/cta-arrow.svg";
+  import UiButtonV2 from "~/components/ui/UiButtonV2.vue";
   import UiContainer from "~/components/ui/UiContainer.vue";
 
   const { t, tm } = useI18n();
@@ -143,42 +136,8 @@
     }
   }
 
-  .cta-link {
-    display: inline-block;
+  .steps-v2__cta {
     margin-top: 34px;
-    text-decoration: none;
-  }
-
-  .cta-btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    height: 70px;
-    width: 325px;
-    padding: 12px 22px;
-    background: #0051ff;
-    border: none;
-    border-radius: 18px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-
-    span {
-      color: #fff;
-      font-size: 24px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    &__arrow {
-      width: 60px;
-      flex-shrink: 0;
-      transition: transform 0.25s ease;
-    }
-
-    &:hover &__arrow {
-      transform: translateX(5px);
-    }
   }
 
   @media (max-width: 991px) {
@@ -200,12 +159,7 @@
       grid-template-columns: 1fr;
     }
 
-    .cta-link {
-      display: block;
-      width: 100%;
-    }
-
-    .cta-btn {
+    .steps-v2__cta {
       width: 100%;
     }
   }

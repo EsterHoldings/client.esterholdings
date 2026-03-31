@@ -394,7 +394,7 @@
         ]
       },
       "banner_section": {
-        "title": "One World.\nOne Platform.\nOne Account.",
+        "title": "Bir Dünya.\nBir Platform.\nBir Hesap.",
         "title_highlight": "Bir Pro Gibi!",
         "tag": "Multi-Asset",
         "subtitle": "İster yeni başlayan ister profesyonel olun, gelişmiş araçlarımız ve kaynaklarımız bilinçli işlem kararları almanıza yardımcı olur.",
@@ -449,9 +449,63 @@
           "description": "Forex, CFD'ler, emtialar, endeksler ve kripto paralar dahil olmak üzere geniş bir araç yelpazesi sunuyoruz."
         }
       ],
-      "accounts__badge_recommended": "Önerilen",
+      "accounts__badge_recommended": "ÖNERİLEN",
+      "faqs__title": "Sıkça Sorulan Sorular",
+      "faqs__dropzone_text": "Dosyaları buraya sürükleyin veya seçmek için tıklayın",
+      "faqs__dropzone_aria": "Dosya yükle",
+      "news_row__items": [
+        { "title": "Bitcoin, SEC'in stablecoin yasağını açıklamasının ardından %12 düştü" },
+        { "title": "Tesla 1:10 hisse bölünmesi açıkladı – fiyatlar %12 arttı" },
+        { "title": "Dow Jones, ABD enflasyonunun beklenmedik yükselişinin ardından 1.200 puan geriledi" },
+        { "title": "NVIDIA hisseleri rapor sonrasında %15 yükseldi" }
+      ],
       "helpSection": "Yardıma İhtiyacınız Var mı? Ziyaret edin",
-      "helpLinkText": "Yardım Bölümü"
+      "helpLinkText": "Yardım Bölümü",
+      "welcomeV2": {
+        "cta": "Dene",
+        "slides": [
+          {
+            "line1Prefix": "Tek bir ",
+            "line1Accent": "marjin",
+            "line1Suffix": " hesabından",
+            "line2Prefix": "",
+            "line2Accent": "10 varlık",
+            "line2Suffix": " sınıfı işlemi yapın",
+            "subtitle": "FX, Kripto, Metaller, Emtialar, Endeksler, Hisseler ve daha fazlası için tek platform — kurumsal düzeyde işlem kalitesiyle.",
+            "benefits": [
+              "Tek iş akışında çoklu varlık erişimi",
+              "Aktif işlemler için derin likidite ve istikrarlı dolumlar",
+              "10 yıllık şirket deneyimi üzerine kurulmuş"
+            ]
+          },
+          {
+            "line1Prefix": "Kurumsal ",
+            "line1Accent": "likidite",
+            "line1Suffix": ".",
+            "line2Prefix": "Temiz işlem.",
+            "line2Accent": "",
+            "line2Suffix": "",
+            "subtitle": "İstikrarlı dolumlar ve ölçeklenebilir emir akışı için tasarlanmış derin agrega likidite havuzları.",
+            "benefits": [
+              "Tier-1 likidite agregasyonu",
+              "Platformlar arası derinlik"
+            ]
+          },
+          {
+            "line1Prefix": "",
+            "line1Accent": "Hızlı",
+            "line1Suffix": " altyapı",
+            "line2Prefix": "aktif ",
+            "line2Accent": "işlem",
+            "line2Suffix": " için",
+            "subtitle": "Yüksek emir işleme hızları, 0 limit/stop seviyeleri — aktif işlem akışı için tasarlandı.",
+            "benefits": [
+              "Hızlı sunucu teknolojileri",
+              "Kurumsal likidite kurulumu"
+            ]
+          }
+        ]
+      }
     },
     "pages": {
       "company": {

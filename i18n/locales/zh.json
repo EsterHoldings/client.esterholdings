@@ -394,7 +394,7 @@
         ]
       },
       "banner_section": {
-        "title": "One World.\nOne Platform.\nOne Account.",
+        "title": "一个世界.\n一个平台.\n一个账户.",
         "title_highlight": "交易市场！",
         "tag": "Multi-Asset",
         "subtitle": "无论您是初学者还是专业人士，我们的先进工具和资源都能帮助您做出明智的交易决策。",
@@ -450,8 +450,62 @@
         }
       ],
       "accounts__badge_recommended": "推荐",
+      "faqs__title": "常见问题",
+      "faqs__dropzone_text": "将文件拖放到此处，或点击选择文件",
+      "faqs__dropzone_aria": "上传文件",
+      "news_row__items": [
+        { "title": "SEC宣布禁止稳定币后比特币暴跌12%" },
+        { "title": "特斯拉宣布1:10股票拆分——股价上涨12%" },
+        { "title": "美国通胀意外上升后道琼斯指数暴跌1200点" },
+        { "title": "季报发布后英伟达股价飙升15%" }
+      ],
       "helpSection": "需要帮助？访问我们的",
-      "helpLinkText": "帮助部分"
+      "helpLinkText": "帮助部分",
+      "welcomeV2": {
+        "cta": "立即试用",
+        "slides": [
+          {
+            "line1Prefix": "从单一",
+            "line1Accent": "保证金",
+            "line1Suffix": "账户",
+            "line2Prefix": "交易",
+            "line2Accent": "10类",
+            "line2Suffix": "资产",
+            "subtitle": "一个平台涵盖外汇、加密货币、金属、大宗商品、指数、股票等——提供机构级执行。",
+            "benefits": [
+              "单一工作流中的多资产访问",
+              "深度流动性与稳定成交，适合活跃交易",
+              "依托公司10年丰富经验"
+            ]
+          },
+          {
+            "line1Prefix": "机构级",
+            "line1Accent": "流动性",
+            "line1Suffix": "。",
+            "line2Prefix": "清洁执行。",
+            "line2Accent": "",
+            "line2Suffix": "",
+            "subtitle": "深度聚合流动性池，专为稳定成交和可扩展订单流设计。",
+            "benefits": [
+              "Tier-1流动性聚合",
+              "跨场所深度"
+            ]
+          },
+          {
+            "line1Prefix": "",
+            "line1Accent": "高速",
+            "line1Suffix": "基础设施",
+            "line2Prefix": "助力活跃",
+            "line2Accent": "交易",
+            "line2Suffix": "",
+            "subtitle": "高速订单处理，0限价/止损水平——专为活跃交易流量构建。",
+            "benefits": [
+              "快速服务器技术",
+              "机构级流动性配置"
+            ]
+          }
+        ]
+      }
     },
     "pages": {
       "company": {

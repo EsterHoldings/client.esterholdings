@@ -394,7 +394,7 @@
         ]
       },
       "banner_section": {
-        "title": "One World.\nOne Platform.\nOne Account.",
+        "title": "Um mundo.\nUma plataforma.\nUma conta.",
         "title_highlight": "Como um Pro!",
         "tag": "Multi-Asset",
         "subtitle": "Seja você um iniciante ou um profissional, nossas ferramentas e recursos avançados ajudam você a tomar decisões de negociação informadas.",
@@ -449,9 +449,63 @@
           "description": "Oferecemos uma ampla gama de instrumentos, incluindo Forex, CFDs, commodities, índices e criptomoedas."
         }
       ],
-      "accounts__badge_recommended": "Recomendado",
+      "accounts__badge_recommended": "RECOMENDADO",
+      "faqs__title": "Perguntas frequentes",
+      "faqs__dropzone_text": "Arraste arquivos aqui ou clique para selecionar arquivos",
+      "faqs__dropzone_aria": "Fazer upload de arquivo",
+      "news_row__items": [
+        { "title": "Bitcoin cai 12% após a SEC anunciar proibição de stablecoins" },
+        { "title": "Tesla anuncia desdobramento de ações 1:10 – cotações subiram 12%" },
+        { "title": "Dow Jones despenca 1.200 pontos após aumento inesperado da inflação nos EUA" },
+        { "title": "Ações da NVIDIA dispararam 15% após o relatório" }
+      ],
       "helpSection": "Precisa de Ajuda? Visite nossa",
-      "helpLinkText": "Seção de Ajuda"
+      "helpLinkText": "Seção de Ajuda",
+      "welcomeV2": {
+        "cta": "Experimente",
+        "slides": [
+          {
+            "line1Prefix": "Negocie ",
+            "line1Accent": "10 classes",
+            "line1Suffix": " de ativos de uma única",
+            "line2Prefix": "",
+            "line2Accent": "conta",
+            "line2Suffix": " de margem",
+            "subtitle": "Uma plataforma para FX, Cripto, Metais, Commodities, Índices, Ações e mais — com execução de nível institucional.",
+            "benefits": [
+              "Acesso multi-ativo em um único fluxo de trabalho",
+              "Liquidez profunda e execuções estáveis para negociação ativa",
+              "Construído sobre 10 anos de experiência da empresa"
+            ]
+          },
+          {
+            "line1Prefix": "Liquidez ",
+            "line1Accent": "institucional",
+            "line1Suffix": ".",
+            "line2Prefix": "Execução limpa.",
+            "line2Accent": "",
+            "line2Suffix": "",
+            "subtitle": "Pools de liquidez agregados profundos projetados para execuções estáveis e fluxo de ordens escalável.",
+            "benefits": [
+              "Agregação de liquidez Tier-1",
+              "Profundidade entre venues"
+            ]
+          },
+          {
+            "line1Prefix": "",
+            "line1Accent": "Infraestrutura",
+            "line1Suffix": " rápida",
+            "line2Prefix": "para negociação ",
+            "line2Accent": "ativa",
+            "line2Suffix": "",
+            "subtitle": "Alta velocidade de processamento de ordens, 0 níveis de limit/stop — construído para fluxo de negociação ativa.",
+            "benefits": [
+              "Tecnologias de servidor rápidas",
+              "Configuração de liquidez institucional"
+            ]
+          }
+        ]
+      }
     },
     "pages": {
       "company": {

@@ -18,29 +18,29 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, onMounted, onUnmounted, ref } from 'vue';
+  import { computed, onMounted, onUnmounted, ref } from "vue";
+  import { useI18n } from "vue-i18n";
 
-  const baseItems = [
-    {
-      title: 'Bitcoin crashes 12% after SEC announces ban on stablecoins',
-      image:
-        'https://render.fineartamerica.com/images/rendered/default/flat/beach-towel/images/artworkimages/medium/1/pixel-bitcoin-concept-allan-swart.jpg?&targetx=0&targety=-76&imagewidth=952&imageheight=628&modelwidth=952&modelheight=476&backgroundcolor=52514D&orientation=1&producttype=beachtowel-32-64',
-    },
-    {
-      title: 'Tesla announced a 1:10 stock split - quotes rose by 12%',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4L9_huULFPV-ewqaz3Hpf9iGK0njUL-HvHQ&s',
-    },
-    {
-      title: 'Dow Jones plummets 1,200 points after unexpected rise in US inflation',
-      image: 'https://d1-invdn-com.investing.com/content/07858a634c1563800bd81d442dfd96cf.png',
-    },
-    {
-      title: 'NVIDIA shares soared 15% after the report',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ecfGnvuktF2LkwRKXrzXlJfAKQ_Os9Vqrw&s',
-    },
+  const { t, tm } = useI18n();
+
+  const images = [
+    "https://render.fineartamerica.com/images/rendered/default/flat/beach-towel/images/artworkimages/medium/1/pixel-bitcoin-concept-allan-swart.jpg?&targetx=0&targety=-76&imagewidth=952&imageheight=628&modelwidth=952&modelheight=476&backgroundcolor=52514D&orientation=1&producttype=beachtowel-32-64",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4L9_huULFPV-ewqaz3Hpf9iGK0njUL-HvHQ&s",
+    "https://d1-invdn-com.investing.com/content/07858a634c1563800bd81d442dfd96cf.png",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ecfGnvuktF2LkwRKXrzXlJfAKQ_Os9Vqrw&s",
   ];
 
-  const items = computed(() => [...baseItems, ...baseItems]);
+  const baseItems = computed(() => {
+    const raw = tm("landing.sections.news_row__items") as any[];
+    return Array.isArray(raw)
+      ? raw.map((_, i) => ({
+          title: t(`landing.sections.news_row__items[${i}].title`),
+          image: images[i],
+        }))
+      : [];
+  });
+
+  const items = computed(() => [...baseItems.value, ...baseItems.value]);
   const track = ref<HTMLElement | null>(null);
   const position = ref(0);
   let animationFrameId: number | null = null;
@@ -116,14 +116,27 @@
 
   @media (max-width: 991px) {
     .news-row-v2 {
-      margin-top: 48px;
+      margin-top: 32px;
 
       &__track {
-        gap: 14px;
+        gap: 10px;
       }
 
       &__card {
-        width: 340px;
+        width: 240px;
+        padding: 8px;
+        gap: 10px;
+        border-radius: 14px;
+
+        p {
+          font-size: 11px;
+        }
+      }
+
+      &__thumb {
+        width: 72px;
+        height: 48px;
+        border-radius: 8px;
       }
     }
   }
