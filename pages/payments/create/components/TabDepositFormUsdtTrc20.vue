@@ -12,7 +12,9 @@
       </div>
     </div>
 
-    <UiTextH5 class="mb-5 text-[var(--ui-text-main)]"> USDT TRC-20 </UiTextH5>
+    <UiTextH5 class="mb-5 text-[var(--ui-text-main)]">
+      {{ props.paymentSystem?.name || "Deposit" }}
+    </UiTextH5>
 
     <div class="flex flex-col gap-3">
       <UiFormControl

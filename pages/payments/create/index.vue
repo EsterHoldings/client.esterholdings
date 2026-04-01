@@ -93,7 +93,6 @@
   import { useI18n } from "vue-i18n";
 
   import TabDeposit from "~/pages/payments/create/components/TabDeposit.vue";
-  import TabDepositFormBTC from "~/pages/payments/create/components/TabDepositFormBTC.vue";
   import TabDepositFormUsdtErc20 from "~/pages/payments/create/components/TabDepositFormUsdtErc20.vue";
   import TabDepositFormUsdtTrc20 from "~/pages/payments/create/components/TabDepositFormUsdtTrc20.vue";
   import TabWithdrawal from "~/pages/payments/create/components/TabWithdrawal.vue";
@@ -170,14 +169,14 @@
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_ERC20,
       name: "USDT ERC-20",
       icon: UiIconUsdtErc20,
-      depositComponentForm: TabDepositFormUsdtErc20,
+      depositComponentForm: TabDepositFormUsdtTrc20,
       withdrawalComponentForm: TabWithdrawalForm,
     },
     btc: {
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_BTC,
       name: "BTC",
       icon: UiIconBTC,
-      depositComponentForm: TabDepositFormBTC,
+      depositComponentForm: TabDepositFormUsdtTrc20,
       withdrawalComponentForm: TabWithdrawalForm,
     },
     visa_mastercard: {
