@@ -795,7 +795,7 @@
         }
       },
       "transactions": {
-        "title": "Deposit",
+        "title": "עסקאות",
         "sort": {
           "createdAt": "Created",
           "amount": "Amount",

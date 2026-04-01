@@ -843,7 +843,7 @@
         }
       },
       "transactions": {
-        "title": "Депозит",
+        "title": "Транзакції",
         "sort": {
           "createdAt": "Створено",
           "amount": "Сума",

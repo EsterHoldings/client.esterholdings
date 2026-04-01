@@ -1,10 +1,17 @@
 <template>
   <UiContainer>
     <div class="dashboard-page text-[var(--ui-text-main)]">
-      <div class="mb-6 flex w-full min-w-0 items-center justify-between gap-2">
-        <UiTextH4 class="min-w-0 flex-1 truncate text-[var(--ui-text-main)]">
-          {{ t("cabinet.dashboard.title") }}
-        </UiTextH4>
+      <div class="mb-6 flex w-full min-w-0 items-center justify-between gap-3">
+        <div class="flex min-w-0 flex-1 items-center gap-3">
+          <NuxtLink
+            :to="newDepositLink"
+            class="shrink-0">
+            <UiButtonDefault state="success">{{ t("cabinet.dashboard.actions.newDeposit") }}</UiButtonDefault>
+          </NuxtLink>
+          <UiTextH4 class="min-w-0 flex-1 truncate text-[var(--ui-text-main)]">
+            {{ t("cabinet.dashboard.title") }}
+          </UiTextH4>
+        </div>
         <div class="ml-2 flex shrink-0 items-center">
           <UiButtonDefault
             state="info--small"
@@ -114,6 +121,7 @@
   const uiStore = useUiStore();
   const appCore = useAppCore();
   const { canCreateAccount, refreshAccountCreationEligibility } = useAccountCreationEligibility();
+  const newDepositLink = computed(() => localePath({ path: "/payments", query: { openDeposit: "1" } }));
 
   type DashboardSummary = {
     totalAmount: number;

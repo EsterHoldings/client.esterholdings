@@ -844,7 +844,7 @@
         }
       },
       "transactions": {
-        "title": "Deposit",
+        "title": "Transactions",
         "sort": {
           "createdAt": "Created",
           "amount": "Amount",

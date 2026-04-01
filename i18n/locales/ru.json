@@ -844,7 +844,7 @@
         }
       },
       "transactions": {
-        "title": "Пополнение",
+        "title": "Транзакции",
         "sort": {
           "createdAt": "Создано",
           "amount": "Сумма",
