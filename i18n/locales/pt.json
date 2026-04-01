@@ -995,6 +995,18 @@
         "empty": "Ainda não há transações",
         "error": "Não foi possível carregar as transações.",
         "transferToAccount": "Transferência para a conta"
+      },
+      "transfer": {
+        "fromAccount": "From account",
+        "toAccount": "To account",
+        "amount": "Amount",
+        "amountPlaceholder": "Enter amount",
+        "submit": "Create transfer request",
+        "success": "Transfer request created successfully.",
+        "failed": "Failed to create transfer request.",
+        "sourceNotFound": "Source account not found.",
+        "noDestinations": "You do not have another account available for transfer.",
+        "exceedsBalance": "Amount exceeds available balance."
       }
     },
     "referrals": {

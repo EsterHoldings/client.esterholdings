@@ -71,7 +71,6 @@
 
 <script lang="ts" setup>
   import { computed, inject, onMounted, reactive, ref } from "vue";
-  import { navigateTo, useLocalePath } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
 
@@ -105,11 +104,8 @@
 
   const appCore = useAppCore();
   const toast = useToast();
-  const localePath = useLocalePath();
   const { t } = useI18n({ useScope: "global" });
   const modalControl = inject("modalControl") as { closeModal: () => void };
-  const BALANCE_REFRESH_EVENT = "accountsBalanceRefreshRequested";
-  const BALANCE_REFRESH_STORAGE_KEY = "accountsPendingBalanceRefreshIds";
   const closeModal = () => modalControl?.closeModal?.();
 
   const accounts = ref<AccountDto[]>([]);
@@ -134,10 +130,10 @@
   const cancelLabel = computed(() => resolveText("cabinet.common.cancel", "Cancel"));
   const submitLabel = computed(() => resolveText("cabinet.accounts.transfer.submit", "Create transfer"));
   const transferSuccessLabel = computed(() =>
-    resolveText("cabinet.accounts.transfer.success", "Transfer created successfully.")
+    resolveText("cabinet.accounts.transfer.success", "Transfer request created successfully.")
   );
   const transferFailedLabel = computed(() =>
-    resolveText("cabinet.accounts.transfer.failed", "Failed to create transfer.")
+    resolveText("cabinet.accounts.transfer.failed", "Failed to create transfer request.")
   );
   const sourceAccountNotFoundLabel = computed(() =>
     resolveText("cabinet.accounts.transfer.sourceNotFound", "Source account not found.")
@@ -352,21 +348,10 @@
       const payload = response?.data?.data ?? {};
       const status = String(payload.status ?? "")
         .trim()
-        .toUpperCase();
-      if (status !== "OK") {
+        .toLowerCase();
+      if (status !== "" && status !== "pending") {
         toast.error(response?.data?.message ?? transferFailedLabel.value);
         return;
-      }
-
-      const sourceAccountId = normalizeId(fromAccount.value.id);
-      const destinationAccountId = normalizeId(selectedDestinationAccount.value.id);
-      const relatedAccountIds = [sourceAccountId, destinationAccountId].filter(id => id !== "");
-
-      if (relatedAccountIds.length > 0) {
-        try {
-          sessionStorage.setItem(BALANCE_REFRESH_STORAGE_KEY, JSON.stringify(relatedAccountIds));
-        } catch {}
-        useEventBus.emit(BALANCE_REFRESH_EVENT, { accountIds: relatedAccountIds });
       }
 
       useEventBus.emit("loadDataForAccounts");
@@ -374,7 +359,6 @@
 
       closeModal();
       toast.success(transferSuccessLabel.value);
-      await navigateTo(localePath({ path: "/accounts" }));
     } catch (error: any) {
       toast.error(extractApiErrorMessage(error) ?? transferFailedLabel.value);
     } finally {
