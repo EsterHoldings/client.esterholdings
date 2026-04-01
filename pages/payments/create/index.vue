@@ -371,7 +371,7 @@
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 24px 40px;
   }
 
