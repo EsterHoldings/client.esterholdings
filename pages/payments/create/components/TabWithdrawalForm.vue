@@ -27,18 +27,23 @@
           class="withdrawal-form__field"
           :label="accountLabel"
           :errors="errors.accountId ? [errors.accountId] : []">
+          <div
+            v-if="isAccountLocked && lockedAccount"
+            class="withdrawal-form__account-preview">
+            <div class="withdrawal-form__account-preview-value">{{ lockedAccount.text }}</div>
+          </div>
           <UiSelect
+            v-else
             :data="accountOptions"
             :without-no-select="true"
             :value="form.accountId"
-            @change="handleAccountChange"
-          />
+            @change="handleAccountChange" />
         </UiFormControl>
 
         <div
-          v-if="selectedAccount"
+          v-if="currentAccount"
           class="withdrawal-form__hint">
-          {{ accountBalanceLabel }}: {{ formatBalance(selectedAccount.balance, selectedAccount.currency) }}
+          {{ accountBalanceLabel }}: {{ formatBalance(currentAccount.balance, currentAccount.currency) }}
         </div>
 
         <UiFormControl
@@ -50,8 +55,7 @@
             :without-no-select="true"
             :value="form.paymentDetailId"
             :disabled="paymentDetailOptions.length === 0"
-            @change="handlePaymentDetailChange"
-          />
+            @change="handlePaymentDetailChange" />
         </UiFormControl>
 
         <div
@@ -59,7 +63,9 @@
           class="withdrawal-form__empty-state">
           <div class="withdrawal-form__empty-title">{{ noPaymentDetailsTitle }}</div>
           <div class="withdrawal-form__empty-text">{{ noPaymentDetailsText }}</div>
-          <UiButtonDefault state="info--outline" @click="handleGoToPaymentDetails">
+          <UiButtonDefault
+            state="info--outline"
+            @click="handleGoToPaymentDetails">
             {{ openPaymentDetailsLabel }}
           </UiButtonDefault>
         </div>
@@ -73,8 +79,7 @@
               type="number"
               :value="form.amount"
               :placeholder="amountPlaceholder"
-              @input="handleAmountInput"
-            />
+              @input="handleAmountInput" />
           </UiFormControl>
 
           <UiFormControl
@@ -85,8 +90,7 @@
               class="withdrawal-form__textarea"
               :value="form.comment"
               :placeholder="commentPlaceholder"
-              @input="handleCommentInput"
-            />
+              @input="handleCommentInput" />
           </UiFormControl>
 
           <div class="withdrawal-form__actions">
@@ -214,16 +218,22 @@
     const propValue = String(props.paymentSystem?.name ?? "").trim();
     return propValue !== "" ? propValue : resolveText("cabinet.billing.withdrawalForm.title", "Withdrawal request");
   });
-  const processingLabel = computed(() =>
-    resolveText("cabinet.billing.withdrawalForm.processing", "Processing...")
-  );
+  const processingLabel = computed(() => resolveText("cabinet.billing.withdrawalForm.processing", "Processing..."));
 
   const accountOptions = computed(() => accounts.value.map(({ id, value, text }) => ({ id, value, text })));
-  const paymentDetailOptions = computed(() =>
-    paymentDetails.value.map(({ id, value, text }) => ({ id, value, text }))
-  );
+  const paymentDetailOptions = computed(() => paymentDetails.value.map(({ id, value, text }) => ({ id, value, text })));
 
+  const lockedAccount = computed(() => {
+    const initialAccountId = String(props.initialAccountId ?? "").trim();
+    if (initialAccountId === "") {
+      return null;
+    }
+
+    return accounts.value.find(item => item.id === initialAccountId) ?? null;
+  });
+  const isAccountLocked = computed(() => lockedAccount.value !== null);
   const selectedAccount = computed(() => accounts.value.find(item => item.id === form.accountId) ?? null);
+  const currentAccount = computed(() => lockedAccount.value ?? selectedAccount.value);
   const selectedPaymentDetail = computed(
     () => paymentDetails.value.find(item => item.id === form.paymentDetailId) ?? null
   );
@@ -388,7 +398,7 @@
       errors.amount = resolveText("cabinet.billing.withdrawalForm.errors.amount", "Enter a valid amount.");
     }
 
-    if (selectedAccount.value && Number.isFinite(amount) && amount > selectedAccount.value.balance) {
+    if (currentAccount.value && Number.isFinite(amount) && amount > currentAccount.value.balance) {
       errors.amount = resolveText(
         "cabinet.billing.withdrawalForm.errors.balance",
         "Withdrawal amount exceeds the account balance."
@@ -422,7 +432,10 @@
       closeModal();
       useEventBus.emit("loadDataForPayments");
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || resolveText("cabinet.billing.withdrawalForm.error", "Failed to create withdrawal request."));
+      toast.error(
+        error?.response?.data?.message ||
+          resolveText("cabinet.billing.withdrawalForm.error", "Failed to create withdrawal request.")
+      );
     } finally {
       isSubmitting.value = false;
     }
@@ -483,6 +496,23 @@
 
   .withdrawal-form__field {
     display: block;
+  }
+
+  .withdrawal-form__account-preview {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    border-radius: var(--ui-border--raduis);
+    border: 1px solid var(--color-stroke-ui-light);
+    background: var(--ui-background-panel);
+    padding: 0 16px;
+    color: var(--ui-text-main);
+  }
+
+  .withdrawal-form__account-preview-value {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
   }
 
   .withdrawal-form__loading {

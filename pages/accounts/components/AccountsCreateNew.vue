@@ -53,6 +53,7 @@
 
   const isLoading = ref(false);
   const { t } = useI18n({ useScope: "global" });
+  const CLIENT_ALLOWED_ACCOUNT_TYPE = "standard";
   const props = defineProps({
     title: {
       type: String,
@@ -72,20 +73,42 @@
     formData.accountType = val;
   };
 
+  const syncDefaultAccountType = () => {
+    if (accountTypes.length !== 1) return;
+
+    const standardAccountTypeId = String(accountTypes[0]?.value ?? "");
+    if (standardAccountTypeId === "") return;
+
+    formData.accountType = standardAccountTypeId;
+    validatorAccountForm?.clearFieldsErrors?.();
+  };
+
   const getAccountTypes = async () => {
     const response = await app.accountTypes.get({ perPage: 20 });
+    const rows = Array.isArray(response?.data?.data?.data) ? response.data.data.data : [];
+    const standardRows = rows.filter(
+      ({ name }) =>
+        String(name ?? "")
+          .trim()
+          .toLowerCase() === CLIENT_ALLOWED_ACCOUNT_TYPE
+    );
+
     accountTypes.splice(
       0,
       accountTypes.length,
-      ...response.data.data.data.map(({ id, name }) => ({
+      ...standardRows.map(({ id, name }) => ({
         id: String(id),
         value: String(id),
         text: String(name),
       }))
     );
+
+    syncDefaultAccountType();
   };
 
   const handleSubmitForm = async () => {
+    syncDefaultAccountType();
+
     validateAccountForm(async () => {
       try {
         isLoading.value = true;

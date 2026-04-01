@@ -135,6 +135,11 @@
   const appCore = useAppCore();
   const { closeModal } = inject("modalControl") as { closeModal: () => void };
   const { t } = useI18n({ useScope: "global" });
+  const ALLOWED_DEPOSIT_PAYMENT_SYSTEM_KEYS = new Set([
+    PAYMENT_SYSTEM_CONFIG_KEY_TRC20,
+    PAYMENT_SYSTEM_CONFIG_KEY_ERC20,
+    PAYMENT_SYSTEM_CONFIG_KEY_BTC,
+  ]);
   const isWithdrawalMode = computed(() => props.initialTab === "withdrawal");
   const backToMethodLabel = computed(() => {
     const key = "cabinet.billing.backToMethodSelection";
@@ -305,7 +310,7 @@
       0,
       paymentSystems.length,
       ...data
-        .filter((x: any) => x.isActive)
+        .filter((x: any) => x.isActive && ALLOWED_DEPOSIT_PAYMENT_SYSTEM_KEYS.has(String(x.config_key ?? "")))
         .map((item: any) => {
           const cfg = Object.values(configMap).find(c => c.cfgKey === item.config_key) || ({} as any);
           return { ...item, ...cfg };

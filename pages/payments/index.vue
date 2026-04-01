@@ -14,12 +14,6 @@
               @click="handleClickCreateNewDeposit">
               {{ createDepositLabel }}
             </UiButtonDefault>
-            <UiButtonDefault
-              state="info--outline"
-              class="w-full md:w-auto"
-              @click="handleClickCreateNewWithdrawal">
-              {{ createWithdrawalLabel }}
-            </UiButtonDefault>
           </template>
           <UiButtonDefault
             v-else
@@ -407,12 +401,6 @@
               @click="handleClickCreateNewDeposit">
               {{ createDepositLabel }}
             </UiButtonDefault>
-            <UiButtonDefault
-              state="info--outline"
-              class="payments-empty-state__button"
-              @click="handleClickCreateNewWithdrawal">
-              {{ createWithdrawalLabel }}
-            </UiButtonDefault>
           </div>
           <UiButtonDefault
             v-else
@@ -602,9 +590,7 @@
 
   const canCreatePayment = computed(() => canCreateAccount.value);
   const isVerificationRequired = computed(() => isEligibilityLoaded.value && !canCreateAccount.value);
-  const createDepositLabel = computed(() =>
-    resolveI18nValue("cabinet.accounts.actions.deposit", "Пополнить счет")
-  );
+  const createDepositLabel = computed(() => resolveI18nValue("cabinet.accounts.actions.deposit", "Пополнить счет"));
   const createWithdrawalLabel = computed(() =>
     resolveI18nValue("cabinet.accounts.actions.withdraw", "Вывести средства")
   );
@@ -997,10 +983,6 @@
       initialTab,
       initialAccountId,
     });
-  };
-
-  const handleClickCreateNewWithdrawal = async () => {
-    await handleClickCreateNewDeposit("withdrawal");
   };
 
   const handleClickUpdate = async () => {
