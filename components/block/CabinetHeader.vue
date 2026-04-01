@@ -30,6 +30,7 @@
   import UiIconSupport from "~/components/ui/UiIconSupport.vue";
   import UiIconLogo from "~/components/ui/UiIconLogo.vue";
   import UiIconLogoLight from "~/components/ui/UiIconLogoLight.vue";
+  import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiSwitchToggle from "~/components/ui/UiSwitchToggle.vue";
   import UiBreadcrumb from "~/components/ui/UiBreadcrumb.vue";
 
@@ -123,6 +124,8 @@
   const isSupportRoute = computed(() => String(route.path ?? "").includes("/support"));
   const isPaymentsRoute = computed(() => String(route.path ?? "").includes("/payments"));
   const isProfileRoute = computed(() => route.path.split("/").pop() === "profile");
+  const isDashboardRoute = computed(() => route.path.split("/").filter(Boolean).pop() === "dashboard");
+  const newDepositLink = computed(() => `${addCurrentLocaleToPath("payments")}?openDeposit=1`);
   const profileMenuIsOpen = ref(false);
   const profileMenuRef = ref(null);
   const profileContainerRef = ref(null);
@@ -971,7 +974,19 @@
       </NuxtLink>
     </div>
 
-    <div class="hidden lg:flex min-w-0 flex-1 pr-4 items-center text-[var(--ui-text-secondary)]">
+    <div
+      v-if="isDashboardRoute"
+      class="flex min-w-0 flex-1 items-center">
+      <NuxtLink
+        :to="newDepositLink"
+        class="shrink-0">
+        <UiButtonDefault state="success--small">{{ t("cabinet.dashboard.actions.newDeposit") }}</UiButtonDefault>
+      </NuxtLink>
+    </div>
+
+    <div
+      v-else
+      class="hidden lg:flex min-w-0 flex-1 pr-4 items-center text-[var(--ui-text-secondary)]">
       <UiBreadcrumb
         v-if="props.showBreadcrumbs && props.breadcrumbs.length"
         :list="props.breadcrumbs" />
