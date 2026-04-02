@@ -334,7 +334,7 @@
     const fromNumber = normalizeNumber(fromAccount.value);
     const toNumber = normalizeNumber(selectedDestinationAccount.value);
     const amount = parsedAmount.value.toFixed(2);
-    const comment = `Internal transfer ${fromNumber} -> ${toNumber}`;
+    const comment = `${fromNumber} -> ${toNumber}`;
 
     isSubmitting.value = true;
     try {
