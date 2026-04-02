@@ -109,6 +109,7 @@
     PAYMENT_SYSTEM_CONFIG_KEY_BTC,
     PAYMENT_SYSTEM_CONFIG_KEY_ERC20,
     PAYMENT_SYSTEM_CONFIG_KEY_TRC20,
+    PAYMENT_SYSTEM_CONFIG_KEY_USDC,
     PAYMENT_SYSTEM_CONFIG_KEY_VISA_MASTERCARD,
     PAYMENT_SYSTEM_CONFIG_KEY_VISA_CUSTOM_PAYMENT,
   } from "~/constants/paymentSystemsCfgKeys";
@@ -137,6 +138,7 @@
   const ALLOWED_DEPOSIT_PAYMENT_SYSTEM_KEYS = new Set([
     PAYMENT_SYSTEM_CONFIG_KEY_TRC20,
     PAYMENT_SYSTEM_CONFIG_KEY_ERC20,
+    PAYMENT_SYSTEM_CONFIG_KEY_USDC,
     PAYMENT_SYSTEM_CONFIG_KEY_BTC,
   ]);
   const isWithdrawalMode = computed(() => props.initialTab === "withdrawal");
@@ -176,6 +178,13 @@
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_BTC,
       name: "BTC",
       icon: UiIconBTC,
+      depositComponentForm: TabDepositFormUsdtTrc20,
+      withdrawalComponentForm: TabWithdrawalForm,
+    },
+    usdc: {
+      cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_USDC,
+      name: "USDC",
+      icon: UiIconPayment,
       depositComponentForm: TabDepositFormUsdtTrc20,
       withdrawalComponentForm: TabWithdrawalForm,
     },
