@@ -31,7 +31,10 @@
 
       <div
         v-else-if="payment"
-        class="rounded-xl border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] p-4 md:p-5">
+        :class="[
+          'rounded-xl border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] p-4 md:p-5',
+          isPaymentHighlighted ? 'payment-detail-highlight' : '',
+        ]">
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div class="payment-field">
             <UiTextSmall class="payment-field__label">ID</UiTextSmall>
@@ -55,7 +58,7 @@
 
           <div class="payment-field">
             <UiTextSmall class="payment-field__label">{{ statusLabel }}</UiTextSmall>
-            <div class="payment-field__value capitalize">{{ valueOrDash(payment.status) }}</div>
+            <div class="payment-field__value capitalize">{{ displayStatus(payment.status) }}</div>
           </div>
 
           <div class="payment-field">
@@ -135,9 +138,11 @@
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import { useAuthStore } from "~/stores/authStore";
+  import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
 
   definePageMeta({
     layout: "cabinet",
@@ -147,6 +152,8 @@
   const appCore = useAppCore();
   const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
   const BILLING_NOTIFICATION_TYPES = ["payments.withdrawal.status-updated", "payments.deposit.status-updated"];
+  const PAYMENT_DETAIL_HIGHLIGHT_SCOPE = "payments-detail";
+  const PAYMENT_HIGHLIGHT_DURATION_MS = 4500;
   const PAYMENT_REALTIME_EVENT_NAMES = [
     ".user.payment.updated",
     "user.payment.updated",
@@ -159,6 +166,7 @@
   const localePath = useLocalePath();
   const { t } = useI18n({ useScope: "global" });
   const authStore = useAuthStore();
+  const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
 
   const isLoading = ref(true);
@@ -166,6 +174,8 @@
   const payment = ref<any | null>(null);
   const paymentRealtimeChannel = ref<any>(null);
   const currentPaymentRealtimeChannelName = ref("");
+  const isPaymentHighlighted = ref(false);
+  let paymentHighlightTimer: ReturnType<typeof setTimeout> | null = null;
 
   const paymentId = computed(() => String(route.params.id ?? "").trim());
   const paymentsListLink = computed(() => localePath("/payments"));
@@ -185,7 +195,7 @@
   const paymentSystemLabel = computed(() =>
     resolveI18nValue("cabinet.billing.columns.paymentSystem", "Платежная система")
   );
-  const gatewayLabel = computed(() => "Gateway");
+  const gatewayLabel = computed(() => resolveI18nValue("cabinet.billing.gateway", "Gateway"));
   const createdAtLabel = computed(() => resolveI18nValue("cabinet.billing.columns.createdAt", "Создано"));
   const updatedAtLabel = computed(() => resolveI18nValue("cabinet.billing.updatedAt", "Обновлено"));
   const commentLabel = computed(() => resolveI18nValue("cabinet.billing.comment", "Комментарий"));
@@ -235,7 +245,53 @@
       return internalTransferLabel.value;
     }
 
-    return valueOrDash(paymentItem?.type);
+    const typeValue = String(paymentItem?.type ?? "").trim();
+    if (typeValue === "") {
+      return "-";
+    }
+
+    return resolveI18nValue(`cabinet.billing.types.${typeValue.toLowerCase()}`, typeValue);
+  };
+
+  const displayStatus = (status: unknown): string => {
+    const statusValue = String(status ?? "").trim();
+    if (statusValue === "") {
+      return "-";
+    }
+
+    return resolveI18nValue(`cabinet.header.notificationTemplates.statuses.${statusValue.toLowerCase()}`, statusValue);
+  };
+
+  const registerRecentPaymentUpdate = (payload: any, fallbackUpdatedAt?: string) => {
+    const updatedPaymentId = String(payload?.payment_id ?? payload?.id ?? "").trim();
+    if (updatedPaymentId === "") {
+      return;
+    }
+
+    recentPaymentUpdatesStore.registerUpdate({
+      paymentId: updatedPaymentId,
+      status: payload?.status,
+      amount: payload?.amount,
+      updatedAt: String(payload?.updated_at ?? payload?.created_at ?? fallbackUpdatedAt ?? "").trim(),
+    });
+  };
+
+  const applyRecentPaymentHighlight = () => {
+    const matchedIds = recentPaymentUpdatesStore.takeMatchesForScope(PAYMENT_DETAIL_HIGHLIGHT_SCOPE, [paymentId.value]);
+    if (matchedIds.length === 0) {
+      return;
+    }
+
+    isPaymentHighlighted.value = true;
+
+    if (paymentHighlightTimer) {
+      clearTimeout(paymentHighlightTimer);
+    }
+
+    paymentHighlightTimer = setTimeout(() => {
+      isPaymentHighlighted.value = false;
+      paymentHighlightTimer = null;
+    }, PAYMENT_HIGHLIGHT_DURATION_MS);
   };
 
   const fetchPayment = async () => {
@@ -254,11 +310,15 @@
 
       if (!payment.value) {
         errorMessage.value = resolveI18nValue("cabinet.billing.paymentNotFound", "Платеж не найден.");
+      } else {
+        applyRecentPaymentHighlight();
       }
     } catch (error: any) {
       errorMessage.value =
-        error?.response?.data?.message ??
-        resolveI18nValue("cabinet.billing.paymentLoadError", "Не удалось загрузить платеж.");
+        extractApiErrorMessage(
+          error,
+          resolveI18nValue("cabinet.billing.paymentLoadError", "Не удалось загрузить платеж.")
+        ) ?? resolveI18nValue("cabinet.billing.paymentLoadError", "Не удалось загрузить платеж.");
     } finally {
       isLoading.value = false;
     }
@@ -277,6 +337,7 @@
       return;
     }
 
+    registerRecentPaymentUpdate(notification?.payload, notification?.createdAt ?? notification?.created_at);
     await fetchPayment();
   };
 
@@ -301,6 +362,7 @@
       return;
     }
 
+    registerRecentPaymentUpdate(payload);
     await fetchPayment();
   };
 
@@ -367,6 +429,10 @@
   onBeforeUnmount(() => {
     useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     unsubscribeFromPaymentRealtime();
+    if (paymentHighlightTimer) {
+      clearTimeout(paymentHighlightTimer);
+      paymentHighlightTimer = null;
+    }
   });
 </script>
 
@@ -382,5 +448,37 @@
   .payment-field__value {
     color: var(--ui-text-main);
     font-weight: 600;
+  }
+
+  .payment-detail-highlight {
+    animation: payment-detail-highlight-flash 4.5s ease;
+    border-color: color-mix(in srgb, var(--ui-primary-main) 58%, transparent) !important;
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--ui-primary-main) 16%, transparent) 0%,
+        color-mix(in srgb, var(--ui-sticker-success) 12%, transparent) 100%
+      ),
+      var(--ui-background-panel) !important;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 18%, transparent);
+  }
+
+  @keyframes payment-detail-highlight-flash {
+    0% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ui-primary-main) 0%, transparent);
+    }
+    12% {
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--ui-primary-main) 18%, transparent);
+    }
+    65% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 12%, transparent);
+    }
+    100% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ui-primary-main) 0%, transparent);
+    }
   }
 </style>

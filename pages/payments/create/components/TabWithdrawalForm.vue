@@ -122,6 +122,7 @@
   import UiSelect from "~/components/ui/UiSelect.vue";
   import UiTextH5 from "~/components/ui/UiTextH5.vue";
   import UiTextarea from "~/components/ui/UiTextarea.vue";
+  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
 
@@ -428,13 +429,15 @@
         comment: form.comment.trim(),
       });
 
-      toast.success(response?.data?.message || createdLabel.value);
+      toast.success(resolveApiMessage(response?.data?.message, createdLabel.value) ?? createdLabel.value);
       closeModal();
       useEventBus.emit("loadDataForPayments");
     } catch (error: any) {
       toast.error(
-        error?.response?.data?.message ||
+        extractApiErrorMessage(
+          error,
           resolveText("cabinet.billing.withdrawalForm.error", "Failed to create withdrawal request.")
+        ) ?? resolveText("cabinet.billing.withdrawalForm.error", "Failed to create withdrawal request.")
       );
     } finally {
       isSubmitting.value = false;

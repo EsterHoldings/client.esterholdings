@@ -104,9 +104,9 @@
                   <div class="flex items-center">
                     <span
                       class="mr-2.5 cursor-pointer truncate max-w-[90px]"
-                      title="Номер счёта"
+                      :title="accountNumberLabel"
                       @click="handleOrderByAndDirection('account_number')">
-                      № счёта
+                      {{ accountNumberShortLabel }}
                     </span>
                     <UiIconSort
                       :active="orderBy === 'account_number'"
@@ -119,9 +119,9 @@
                   <div class="flex items-center">
                     <span
                       class="mr-2.5 cursor-pointer truncate max-w-[90px]"
-                      title="Платёжная система"
+                      :title="paymentSystemLabel"
                       @click="handleOrderByAndDirection('payment_system')">
-                      ПС
+                      {{ paymentSystemShortLabel }}
                     </span>
                     <UiIconSort
                       :active="orderBy === 'payment_system'"
@@ -187,12 +187,15 @@
                 <tr
                   v-for="payment in payments"
                   :key="payment.id"
-                  class="cursor-pointer border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]"
+                  :class="[
+                    'cursor-pointer border-t border-[var(--color-ui-border)] hover:bg-[var(--color-stroke-ui-dark)]',
+                    isPaymentHighlighted(payment.id) ? 'payment-row-highlight' : '',
+                  ]"
                   @click="handlePaymentItemClick($event, payment.id)">
                   <td class="px-2 py-3 font-bold flex justify-center items-center">
                     <button
                       class="cursor-pointer"
-                      aria-label="Copy id"
+                      :aria-label="copyIdLabel"
                       @click.stop>
                       <UiIconCopy :text="payment.id" />
                     </button>
@@ -262,6 +265,7 @@
                 :class="[
                   'cabinet-card card-with-actions cursor-pointer',
                   viewMode === 'full' ? 'cabinet-card--full-row' : '',
+                  isPaymentHighlighted(payment.id) ? 'payment-card-highlight' : '',
                 ]"
                 @click="handlePaymentItemClick($event, payment.id)">
                 <div
@@ -269,7 +273,7 @@
                   aria-hidden="true">
                   <button
                     class="copy-btn"
-                    aria-label="Copy id"
+                    :aria-label="copyIdLabel"
                     @click.stop>
                     <UiIconCopy :text="payment.id" />
                   </button>
@@ -352,7 +356,7 @@
                 class="flex h-8 items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
                 @click="handleOpenPayment(activePaymentMenuId)">
                 <UiIconEye class="!h-[14px] !w-[14px]" />
-                <UiTextSmall class="whitespace-nowrap">{{ openMenuLabel }}</UiTextSmall>
+                <UiTextSmall class="whitespace-nowrap">{{ openPaymentLabel }}</UiTextSmall>
               </button>
 
               <button
@@ -464,9 +468,11 @@
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
   import useAccountCreationEligibility from "~/composables/useAccountCreationEligibility";
+  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import { useAuthStore } from "~/stores/authStore";
+  import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
 
   import { definePageMeta, navigateTo, useLocalePath, useNuxtApp } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
@@ -487,6 +493,7 @@
   const localePath = useLocalePath();
   const toast = useToast();
   const authStore = useAuthStore();
+  const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
 
   const appCore = useAppCore();
@@ -497,6 +504,8 @@
   const VIEW_MODE_STORAGE_KEY = "paymentsViewMode";
   const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
   const BILLING_NOTIFICATION_TYPES = ["payments.withdrawal.status-updated", "payments.deposit.status-updated"];
+  const PAYMENT_LIST_HIGHLIGHT_SCOPE = "payments-list";
+  const PAYMENT_HIGHLIGHT_DURATION_MS = 4500;
   const PAYMENT_REALTIME_EVENT_NAMES = [
     ".user.payment.updated",
     "user.payment.updated",
@@ -516,11 +525,27 @@
   const isInitialLoading = ref(true);
   const viewMode = ref<"table" | "cards" | "full">("table");
   const isMobileViewport = ref(false);
-  const sortByFilterData = reactive([
-    { id: "created_at", value: "created_at", text: "Created at" },
-    { id: "amount", value: "amount", text: "Amount" },
-    { id: "status", value: "status", text: "Status" },
-    { id: "payment_system", value: "payment_system", text: "Payment system" },
+  const sortByFilterData = computed(() => [
+    {
+      id: "created_at",
+      value: "created_at",
+      text: resolveI18nValue("cabinet.billing.columns.createdAt", "Created at"),
+    },
+    {
+      id: "amount",
+      value: "amount",
+      text: resolveI18nValue("cabinet.billing.columns.amount", "Amount"),
+    },
+    {
+      id: "status",
+      value: "status",
+      text: resolveI18nValue("cabinet.billing.columns.status", "Status"),
+    },
+    {
+      id: "payment_system",
+      value: "payment_system",
+      text: resolveI18nValue("cabinet.billing.columns.paymentSystem", "Payment system"),
+    },
   ]);
   const viewOptions = [
     {
@@ -611,6 +636,8 @@
   const paymentMenuPosition = reactive({ top: 0, left: 0 });
   const paymentRealtimeChannel = ref<any>(null);
   const currentPaymentRealtimeChannelName = ref("");
+  const highlightedPaymentIds = ref<string[]>([]);
+  const paymentHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   const resolveI18nValue = (key: string, fallback: string): string => {
     const translated = t(key);
@@ -646,7 +673,19 @@
       : resolveI18nValue("cabinet.billing.emptySubtitle", "Создайте первый платёж, чтобы начать работу.")
   );
 
-  const openMenuLabel = computed(() => resolveI18nValue("cabinet.billing.openPayment", "Открыть"));
+  const copyIdLabel = computed(() => resolveI18nValue("cabinet.common.copyId", "Copy ID"));
+  const accountNumberLabel = computed(() =>
+    resolveI18nValue("cabinet.billing.columns.accountNumber", "Account number")
+  );
+  const accountNumberShortLabel = computed(() =>
+    resolveI18nValue("cabinet.billing.columns.accountNumberShort", "Acc.")
+  );
+  const paymentSystemLabel = computed(() =>
+    resolveI18nValue("cabinet.billing.columns.paymentSystem", "Payment system")
+  );
+  const paymentSystemShortLabel = computed(() => resolveI18nValue("cabinet.billing.columns.paymentSystemShort", "PS"));
+  const openMenuLabel = computed(() => resolveI18nValue("cabinet.common.openMenu", "Open menu"));
+  const openPaymentLabel = computed(() => resolveI18nValue("cabinet.billing.openPayment", "Open"));
   const syncMenuLabel = computed(() => resolveI18nValue("cabinet.billing.syncPayment", "Синхронизировать"));
   const deleteMenuLabel = computed(() => resolveI18nValue("cabinet.billing.deletePayment", "Удалить"));
   const syncPaymentSuccessLabel = computed(() =>
@@ -728,7 +767,65 @@
 
   const statusText = (status?: string): string => {
     const value = String(status ?? "").trim();
-    return value === "" ? "-" : value;
+    const normalizedValue = value.toLowerCase();
+
+    return value === ""
+      ? "-"
+      : resolveI18nValue(`cabinet.header.notificationTemplates.statuses.${normalizedValue}`, value);
+  };
+
+  const clearPaymentHighlightTimer = (paymentId: string) => {
+    const activeTimer = paymentHighlightTimers.get(paymentId);
+    if (!activeTimer) {
+      return;
+    }
+
+    clearTimeout(activeTimer);
+    paymentHighlightTimers.delete(paymentId);
+  };
+
+  const isPaymentHighlighted = (paymentId: string | number): boolean =>
+    highlightedPaymentIds.value.includes(String(paymentId));
+
+  const schedulePaymentHighlights = (paymentIds: Array<string | number | null | undefined>) => {
+    Array.from(new Set(paymentIds.map(item => String(item ?? "").trim()).filter(Boolean))).forEach(paymentId => {
+      if (!highlightedPaymentIds.value.includes(paymentId)) {
+        highlightedPaymentIds.value = [...highlightedPaymentIds.value, paymentId];
+      }
+
+      clearPaymentHighlightTimer(paymentId);
+      const timer = setTimeout(() => {
+        highlightedPaymentIds.value = highlightedPaymentIds.value.filter(item => item !== paymentId);
+        paymentHighlightTimers.delete(paymentId);
+      }, PAYMENT_HIGHLIGHT_DURATION_MS);
+
+      paymentHighlightTimers.set(paymentId, timer);
+    });
+  };
+
+  const registerRecentPaymentUpdate = (payload: any, fallbackUpdatedAt?: string) => {
+    const paymentId = String(payload?.payment_id ?? payload?.id ?? "").trim();
+    if (paymentId === "") {
+      return;
+    }
+
+    recentPaymentUpdatesStore.registerUpdate({
+      paymentId,
+      status: payload?.status,
+      amount: payload?.amount,
+      updatedAt: String(payload?.updated_at ?? payload?.created_at ?? fallbackUpdatedAt ?? "").trim(),
+    });
+  };
+
+  const applyRecentPaymentHighlights = (paymentItems: any[] = payments) => {
+    const matchedIds = recentPaymentUpdatesStore.takeMatchesForScope(
+      PAYMENT_LIST_HIGHLIGHT_SCOPE,
+      paymentItems.map(item => item?.id)
+    );
+
+    if (matchedIds.length > 0) {
+      schedulePaymentHighlights(matchedIds);
+    }
   };
 
   const isInternalTransfer = (payment: any): boolean =>
@@ -907,7 +1004,7 @@
       await loadData();
       toast.success(deletePaymentSuccessLabel.value);
     } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? deletePaymentErrorLabel.value);
+      toast.error(extractApiErrorMessage(error, deletePaymentErrorLabel.value) ?? deletePaymentErrorLabel.value);
     } finally {
       deletingPaymentId.value = null;
     }
@@ -937,10 +1034,13 @@
 
     try {
       const response = await appCore.payments.sync(id);
+      registerRecentPaymentUpdate(response?.data?.data, new Date().toISOString());
       await loadData({ silent: true });
-      toast.success(response?.data?.message ?? syncPaymentSuccessLabel.value);
+      toast.success(
+        resolveApiMessage(response?.data?.message, syncPaymentSuccessLabel.value) ?? syncPaymentSuccessLabel.value
+      );
     } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? syncPaymentErrorLabel.value);
+      toast.error(extractApiErrorMessage(error, syncPaymentErrorLabel.value) ?? syncPaymentErrorLabel.value);
     } finally {
       syncingPaymentId.value = null;
     }
@@ -1022,6 +1122,7 @@
       });
 
       payments.splice(0, payments.length, ...paymentsData);
+      applyRecentPaymentHighlights(paymentsData);
     } finally {
       if (shouldShowLoader) {
         isLoading.value = false;
@@ -1037,6 +1138,8 @@
     if (!BILLING_NOTIFICATION_TYPES.includes(type)) {
       return;
     }
+
+    registerRecentPaymentUpdate(notification?.payload, notification?.createdAt ?? notification?.created_at);
 
     try {
       await loadData({ silent: true });
@@ -1060,7 +1163,9 @@
     return null;
   };
 
-  const handlePaymentRealtimeUpdated = async () => {
+  const handlePaymentRealtimeUpdated = async (payload: any) => {
+    registerRecentPaymentUpdate(payload);
+
     try {
       await loadData({ silent: true });
     } catch {
@@ -1258,6 +1363,8 @@
     useEventBus.off("loadDataForPayments", loadData);
     useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     unsubscribeFromPaymentRealtime();
+    paymentHighlightTimers.forEach(timer => clearTimeout(timer));
+    paymentHighlightTimers.clear();
     window.removeEventListener("resize", handleViewportResize);
     window.removeEventListener("scroll", recalcPaymentMenu, true);
     window.removeEventListener("mousedown", handlePaymentMenuOutside, true);
@@ -1437,6 +1544,20 @@
       border-color 0.2s ease,
       background-color 0.2s ease,
       transform 0.2s ease;
+  }
+
+  .payment-row-highlight,
+  .payment-card-highlight {
+    animation: payment-highlight-flash 4.5s ease;
+    border-color: color-mix(in srgb, var(--ui-primary-main) 58%, transparent) !important;
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--ui-primary-main) 16%, transparent) 0%,
+        color-mix(in srgb, var(--ui-sticker-success) 12%, transparent) 100%
+      ),
+      var(--ui-background-panel) !important;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 18%, transparent);
   }
 
   .cabinet-card:hover {
@@ -1640,5 +1761,24 @@
   .action-btn:disabled {
     opacity: 0.6;
     pointer-events: none;
+  }
+
+  @keyframes payment-highlight-flash {
+    0% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ui-primary-main) 0%, transparent);
+    }
+    12% {
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-primary-main) 20%, transparent);
+    }
+    65% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 14%, transparent);
+    }
+    100% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ui-primary-main) 0%, transparent);
+    }
   }
 </style>

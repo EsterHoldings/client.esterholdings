@@ -81,6 +81,7 @@
   import UiSelect from "~/components/ui/UiSelect.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
+  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useEventBus from "~/composables/useEventBus";
   import useAppCore from "~/composables/useAppCore";
 
@@ -292,35 +293,11 @@
 
       form.toAccountId = destinationOptions.value[0]?.value ?? "";
     } catch (error: any) {
-      toast.error(error?.response?.data?.message ?? transferFailedLabel.value);
+      toast.error(extractApiErrorMessage(error, transferFailedLabel.value) ?? transferFailedLabel.value);
       closeModal();
     } finally {
       isLoadingAccounts.value = false;
     }
-  };
-
-  const extractApiErrorMessage = (error: any): string | null => {
-    const mt4ErrorSource = error?.response?.data?.errors?.mt4;
-    const mt4Error = Array.isArray(mt4ErrorSource)
-      ? String(mt4ErrorSource[0] ?? "").trim()
-      : String(mt4ErrorSource ?? "").trim();
-    if (mt4Error !== "") {
-      return mt4Error;
-    }
-
-    const firstValidationError = Object.values(error?.response?.data?.errors ?? {}).find(
-      (value: any) => Array.isArray(value) && String(value[0] ?? "").trim() !== ""
-    ) as any[] | undefined;
-    if (firstValidationError) {
-      return String(firstValidationError[0] ?? "").trim();
-    }
-
-    const apiMessage = String(error?.response?.data?.message ?? "").trim();
-    if (apiMessage !== "") {
-      return apiMessage;
-    }
-
-    return null;
   };
 
   const handleSubmit = async () => {
@@ -350,7 +327,7 @@
         .trim()
         .toLowerCase();
       if (status !== "" && status !== "pending") {
-        toast.error(response?.data?.message ?? transferFailedLabel.value);
+        toast.error(resolveApiMessage(response?.data?.message, transferFailedLabel.value) ?? transferFailedLabel.value);
         return;
       }
 
@@ -358,7 +335,9 @@
       useEventBus.emit("dashboardRefresh");
 
       closeModal();
-      toast.success(transferSuccessLabel.value);
+      toast.success(
+        resolveApiMessage(response?.data?.message, transferSuccessLabel.value) ?? transferSuccessLabel.value
+      );
     } catch (error: any) {
       toast.error(extractApiErrorMessage(error) ?? transferFailedLabel.value);
     } finally {

@@ -9,16 +9,21 @@
 
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
+  import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
 
   const { t } = useI18n({ useScope: "global" });
   const localePath = useLocalePath();
   const appCore = useAppCore();
+  const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
+  const DASHBOARD_TRANSACTIONS_HIGHLIGHT_SCOPE = "dashboard-transactions";
+  const PAYMENT_HIGHLIGHT_DURATION_MS = 4500;
 
   const payments = reactive<any[]>([]);
   const isLoading = ref(false);
   const errorMsg = ref<string | null>(null);
-
-  const paymentsPageLink = computed(() => localePath("/payments"));
+  const highlightedPaymentIds = ref<string[]>([]);
+  const highlightedPaymentPriorities = ref<Record<string, number>>({});
+  const paymentHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   const statusKey = (status: unknown): string =>
     String(status ?? "")
@@ -42,10 +47,39 @@
     return Number.isFinite(timestamp) ? timestamp : 0;
   };
 
+  const getPendingUpdateTimestamp = (paymentId: unknown): number => {
+    const normalizedPaymentId = String(paymentId ?? "").trim();
+    if (normalizedPaymentId === "") {
+      return 0;
+    }
+
+    return (
+      highlightedPaymentPriorities.value[normalizedPaymentId] ??
+      recentPaymentUpdatesStore.getPendingTimestampForScope(
+        DASHBOARD_TRANSACTIONS_HIGHLIGHT_SCOPE,
+        normalizedPaymentId
+      ) ??
+      0
+    );
+  };
+
   const displayedPayments = computed(() => {
     const rows = [...payments];
 
     rows.sort((a, b) => {
+      const aUpdatedAt = getPendingUpdateTimestamp(a?.id);
+      const bUpdatedAt = getPendingUpdateTimestamp(b?.id);
+      const aHasFreshUpdate = aUpdatedAt > 0;
+      const bHasFreshUpdate = bUpdatedAt > 0;
+
+      if (aHasFreshUpdate !== bHasFreshUpdate) {
+        return aHasFreshUpdate ? -1 : 1;
+      }
+
+      if (aUpdatedAt !== bUpdatedAt) {
+        return bUpdatedAt - aUpdatedAt;
+      }
+
       const aPending = isPendingStatus(statusKey(a?.status));
       const bPending = isPendingStatus(statusKey(b?.status));
 
@@ -58,6 +92,56 @@
 
     return rows.slice(0, 5);
   });
+
+  const clearPaymentHighlightTimer = (paymentId: string) => {
+    const activeTimer = paymentHighlightTimers.get(paymentId);
+    if (!activeTimer) {
+      return;
+    }
+
+    clearTimeout(activeTimer);
+    paymentHighlightTimers.delete(paymentId);
+  };
+
+  const isPaymentHighlighted = (paymentId: string | number): boolean =>
+    highlightedPaymentIds.value.includes(String(paymentId));
+
+  const schedulePaymentHighlights = (paymentIds: Array<string | number | null | undefined>) => {
+    Array.from(new Set(paymentIds.map(item => String(item ?? "").trim()).filter(Boolean))).forEach(paymentId => {
+      if (!highlightedPaymentIds.value.includes(paymentId)) {
+        highlightedPaymentIds.value = [...highlightedPaymentIds.value, paymentId];
+      }
+
+      highlightedPaymentPriorities.value = {
+        ...highlightedPaymentPriorities.value,
+        [paymentId]: Date.now(),
+      };
+
+      clearPaymentHighlightTimer(paymentId);
+      const timer = setTimeout(() => {
+        highlightedPaymentIds.value = highlightedPaymentIds.value.filter(item => item !== paymentId);
+        const nextPriorities = { ...highlightedPaymentPriorities.value };
+        delete nextPriorities[paymentId];
+        highlightedPaymentPriorities.value = nextPriorities;
+        paymentHighlightTimers.delete(paymentId);
+      }, PAYMENT_HIGHLIGHT_DURATION_MS);
+
+      paymentHighlightTimers.set(paymentId, timer);
+    });
+  };
+
+  const applyRecentPaymentHighlights = () => {
+    const matchedIds = recentPaymentUpdatesStore.takeMatchesForScope(
+      DASHBOARD_TRANSACTIONS_HIGHLIGHT_SCOPE,
+      displayedPayments.value.map(payment => payment?.id)
+    );
+
+    if (matchedIds.length > 0) {
+      schedulePaymentHighlights(matchedIds);
+    }
+  };
+
+  const paymentDetailLink = (payment: any) => localePath(`/payments/${String(payment?.id ?? "").trim()}`);
 
   const amountClass = (payment: any) => {
     const type = String(payment?.type ?? "").toLowerCase();
@@ -103,6 +187,7 @@
       const rows = Array.isArray(payload?.data) ? payload.data : [];
 
       payments.splice(0, payments.length, ...rows);
+      applyRecentPaymentHighlights();
     } catch (error: any) {
       errorMsg.value = error?.message ?? t("cabinet.dashboard.transactions.errorLoad");
     } finally {
@@ -117,6 +202,9 @@
 
   onBeforeUnmount(() => {
     useEventBus.off("dashboardRefresh", loadPaymentsData);
+    paymentHighlightTimers.forEach(timer => clearTimeout(timer));
+    paymentHighlightTimers.clear();
+    highlightedPaymentPriorities.value = {};
   });
 </script>
 
@@ -152,8 +240,8 @@
           <NuxtLink
             v-for="(payment, index) in displayedPayments"
             :key="payment.id || index"
-            :to="paymentsPageLink"
-            class="transaction-row">
+            :to="paymentDetailLink(payment)"
+            :class="['transaction-row', isPaymentHighlighted(payment.id) ? 'transaction-row--highlight' : '']">
             <div class="hidden md:grid transaction-row__desktop">
               <div class="min-w-0">
                 <div class="transaction-label">{{ t("cabinet.dashboard.transactions.accountNumber") }}</div>
@@ -325,6 +413,19 @@
     opacity: 0.95;
   }
 
+  .transaction-row--highlight {
+    animation: transaction-highlight-flash 4.5s ease;
+    border-color: color-mix(in srgb, var(--ui-primary-main) 58%, transparent);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--ui-primary-main) 16%, transparent) 0%,
+        color-mix(in srgb, var(--ui-sticker-success) 12%, transparent) 100%
+      ),
+      var(--ui-background-panel);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 18%, transparent);
+  }
+
   .transaction-row__desktop {
     grid-template-columns: 1.2fr 0.9fr 0.8fr 0.9fr 1fr auto;
     gap: 10px;
@@ -386,5 +487,24 @@
     color: var(--ui-text-secondary);
     border-color: var(--color-stroke-ui-light);
     background: transparent;
+  }
+
+  @keyframes transaction-highlight-flash {
+    0% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ui-primary-main) 0%, transparent);
+    }
+    12% {
+      transform: translateY(-1px);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-primary-main) 20%, transparent);
+    }
+    65% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 14%, transparent);
+    }
+    100% {
+      transform: translateY(0);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ui-primary-main) 0%, transparent);
+    }
   }
 </style>

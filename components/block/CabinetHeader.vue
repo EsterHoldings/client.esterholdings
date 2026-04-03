@@ -11,6 +11,7 @@
   import { useThemeStore } from "~/stores/themeStore.js";
   import { useAuthStore } from "~/stores/authStore";
   import { useNotificationsStore } from "~/stores/notificationsStore";
+  import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
   import { useUiStore } from "~/stores/uiStore";
 
   import LanguageSwitcher from "~/components/block/LandingHeader/components/LanguageSwitcher.vue";
@@ -79,6 +80,7 @@
 
   const authStore = useAuthStore();
   const notificationsStore = useNotificationsStore();
+  const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const appCore = useAppCore();
   const toast = useToast();
   const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
@@ -163,6 +165,24 @@
   });
 
   const handleClickNotifications = () => uiStore.toggleNotifications();
+
+  const registerRecentPaymentUpdate = (notification: CabinetNotification) => {
+    if (!BILLING_USER_NOTIFICATION_TYPES.includes(String(notification.type ?? "").trim())) {
+      return;
+    }
+
+    const paymentId = normalizeText(notification.payload?.payment_id);
+    if (paymentId === "") {
+      return;
+    }
+
+    recentPaymentUpdatesStore.registerUpdate({
+      paymentId,
+      status: normalizeText(notification.payload?.status),
+      amount: notification.payload?.amount,
+      updatedAt: notification.createdAt ?? new Date().toISOString(),
+    });
+  };
 
   const handleClickProfileMenu = () => {
     profileMenuIsOpen.value = !profileMenuIsOpen.value;
@@ -554,6 +574,7 @@
       }
 
       newUnreadItems.forEach(item => {
+        registerRecentPaymentUpdate(item);
         useEventBus.emit(CLIENT_NOTIFICATION_RECEIVED_EVENT, { notification: item });
       });
 
@@ -678,6 +699,7 @@
     const wasKnown = knownNotificationIds.value.has(normalized.id);
     upsertNotification(normalized, true);
     rememberNotifications([normalized]);
+    registerRecentPaymentUpdate(normalized);
 
     if (!normalized.wasRead && !wasKnown) {
       notificationsStore.incrementForNotification(normalized.type);

@@ -3,6 +3,7 @@ import { useAuthStore } from "~/stores/authStore";
 import { ROUTE_AUTH_LOGIN, ROUTE_AUTH_REFRESH } from "~/constants/routes";
 import { useCookie, useNuxtApp, useRuntimeConfig } from "nuxt/app";
 import useAppCore from "~/composables/useAppCore";
+import { localizeApiErrors, resolveApiMessage } from "~/composables/useApiMessages";
 import { useErrorStack } from "~/stores/errors";
 
 export class useApi {
@@ -79,15 +80,15 @@ export class useApi {
         if (err.response?.status === 401 && err.response.data && err.response.data.message) {
           errorsStack.$patch({
             errors: {},
-            message: err.response.data?.message,
+            message: resolveApiMessage(err.response.data?.message, err.response.data?.message),
           });
         }
 
         // validation errors
         if (err.response?.status === 422 && err.response.data) {
           errorsStack.$patch({
-            errors: err.response.data?.errors || {},
-            message: err.response.data?.message || null,
+            errors: localizeApiErrors(err.response.data?.errors || {}),
+            message: resolveApiMessage(err.response.data?.message, err.response.data?.message),
           });
         }
 

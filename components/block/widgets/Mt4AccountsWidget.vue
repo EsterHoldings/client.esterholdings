@@ -112,7 +112,7 @@
             class="mt4-star flex h-8 w-8 items-center justify-center rounded-md transition text-[var(--ui-text-secondary)]"
             type="button"
             :aria-pressed="account.is_favorite"
-            :title="account.is_favorite ? 'Remove from favorites' : 'Add to favorites'"
+            :title="account.is_favorite ? favoriteRemoveLabel : favoriteAddLabel"
             @click.stop="handleToggleFavorite(account.id)">
             <svg
               viewBox="0 0 24 24"
@@ -317,6 +317,8 @@
   const profileVerificationLink = computed(() => localePath({ path: "/profile", query: { tab: "verification" } }));
   const canCreateAccount = computed(() => !!props.canCreateAccount);
   const openMenuLabel = computed(() => resolveText("cabinet.common.openMenu", "Open menu"));
+  const favoriteAddLabel = computed(() => resolveText("cabinet.accounts.favoriteAdd", "Add to favorites"));
+  const favoriteRemoveLabel = computed(() => resolveText("cabinet.accounts.favoriteRemove", "Remove from favorites"));
   const refreshBalanceLabel = computed(() => resolveText("cabinet.accounts.refreshBalance", "Refresh balance"));
 
   const resolveText = (key: string, fallback: string): string => {
@@ -663,10 +665,7 @@
     return resolveText("cabinet.accounts.actions.deposit", "Deposit");
   };
 
-  const openPaymentModal = async (
-    initialTab: "deposit" | "withdrawal",
-    accountId: string | number
-  ): Promise<void> => {
+  const openPaymentModal = async (initialTab: "deposit" | "withdrawal", accountId: string | number): Promise<void> => {
     closeMenu();
 
     if (!canCreateAccount.value) {

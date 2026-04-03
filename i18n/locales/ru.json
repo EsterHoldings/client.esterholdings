@@ -671,6 +671,13 @@
       "support": "Поддержка",
       "settings": "Настройки"
     },
+    "common": {
+      "openMenu": "Открыть меню",
+      "close": "Закрыть",
+      "cancel": "Отмена",
+      "copyId": "Скопировать ID",
+      "copyNumber": "Скопировать номер"
+    },
     "header": {
       "notifications": "Уведомления",
       "markAllRead": "Отметить все прочитанными",
@@ -719,6 +726,10 @@
     },
     "dashboard": {
       "title": "Панель управления",
+      "emailVerification": {
+        "success": "Email подтверждён.",
+        "error": "Не удалось подтвердить email."
+      },
       "accountVerification": {
         "title": "Проверка аккаунта",
         "subtitle": "Проверка в процессе",
@@ -806,6 +817,11 @@
       "backToMethodSelection": "Вернуться к выбору способа оплаты",
       "backToList": "К списку платежей",
       "openPayment": "Открыть",
+      "syncPayment": "Синхронизировать",
+      "syncPaymentSuccess": "Платёж успешно синхронизирован.",
+      "syncPaymentError": "Не удалось синхронизировать платёж.",
+      "transferCreated": "Перевод между счетами создан.",
+      "internalTransfer": "Перевод между счетами",
       "deletePayment": "Удалить",
       "deletePaymentConfirm": "Удалить платеж?",
       "deletePaymentSuccess": "Платеж удален.",
@@ -813,6 +829,7 @@
       "paymentNotFound": "Платеж не найден.",
       "paymentLoadError": "Не удалось загрузить платеж.",
       "updatedAt": "Обновлено",
+      "gateway": "Шлюз",
       "comment": "Комментарий",
       "redirectLink": "Ссылка оплаты",
       "search": "Поиск",
@@ -828,9 +845,15 @@
         "currency": "Валюта",
         "amount": "Сумма",
         "createdAt": "Дата создания",
+        "accountNumberShort": "Счёт",
+        "paymentSystemShort": "ПС",
         "accountNumber": "Номер счёта",
         "paymentSystem": "Платёжная система",
         "account": "Название"
+      },
+      "types": {
+        "deposit": "Пополнение",
+        "withdrawal": "Вывод"
       },
       "nothingToShow": "Нет данных =(",
       "pagination": {
@@ -1012,6 +1035,16 @@
       },
       "title": "Счета",
       "openNew": "Открыть новый счёт",
+      "openBlocked": "Открытие счёта будет доступно после верификации данных профиля и документов.",
+      "openAccountLabel": "Открыть счёт {number}",
+      "favoriteAdd": "Добавить в избранное",
+      "favoriteRemove": "Убрать из избранного",
+      "refreshBalance": "Обновить баланс",
+      "refreshBalanceError": "Не удалось обновить баланс счёта.",
+      "refreshBalancesError": "Не удалось обновить балансы счетов.",
+      "deleteConfirm": "Архивировать этот счёт?",
+      "deleteSuccess": "Счёт архивирован.",
+      "deleteError": "Не удалось архивировать счёт.",
       "search": "Поиск",
       "columns": {
         "type": "Тип счёта",
@@ -1063,12 +1096,12 @@
         }
       },
       "actions": {
-        "deposit": "Deposit",
-        "withdraw": "Withdraw",
-        "transfer": "Transfer",
+        "deposit": "Пополнить",
+        "withdraw": "Вывести",
+        "transfer": "Перевод",
         "history": "Транзакции",
-        "changeType": "Change type",
-        "remove": "Remove"
+        "changeType": "Сменить тип",
+        "remove": "Удалить"
       },
       "transactions": {
         "empty": "Транзакций пока нет",
@@ -1076,6 +1109,7 @@
         "transferToAccount": "Перевод на счёт"
       },
       "transfer": {
+        "title": "Перевод между моими счетами",
         "fromAccount": "Со счёта",
         "toAccount": "На счёт",
         "amount": "Сумма",
@@ -1633,31 +1667,45 @@
       "addAdminFailed": "Не удалось добавить админа в чат"
     }
   },
+  "apiMessages": {
+    "unauthorized": "Требуется авторизация.",
+    "forbidden": "Доступ запрещён.",
+    "validationError": "Ошибка валидации.",
+    "methodNotAllowed": "Метод не поддерживается.",
+    "notFound": "Ничего не найдено.",
+    "mt4RequestFailed": "Ошибка запроса к MT4.",
+    "paymentDetailCreated": "Платёжные реквизиты успешно созданы.",
+    "paymentDetailUpdated": "Платёжные реквизиты успешно обновлены.",
+    "paymentDetailDeleted": "Платёжные реквизиты удалены.",
+    "paymentDetailRestored": "Платёжные реквизиты восстановлены.",
+    "accountCreated": "Счёт успешно создан.",
+    "invalidCallbackSignature": "Некорректная подпись callback."
+  },
   "cabinetExtra": {
     "transactions": {
-      "title": "Deposit",
+      "title": "Транзакции",
       "sort": {
-        "createdAt": "Created",
-        "amount": "Amount",
-        "currency": "Currency",
-        "status": "Status",
-        "type": "Type",
-        "accountNumber": "MT4 account"
+        "createdAt": "Создано",
+        "amount": "Сумма",
+        "currency": "Валюта",
+        "status": "Статус",
+        "type": "Тип",
+        "accountNumber": "MT4 счёт"
       },
-      "accountNumber": "MT4 account",
-      "amount": "Amount",
-      "currency": "Currency",
-      "type": "Type",
-      "createdAt": "Created",
-      "searchPlaceholder": "Search payments…",
-      "errorLoad": "Failed to load payments",
-      "empty": "No records yet.",
-      "show": "Show",
-      "shownRange": "Showing {from}–{to} of {total}",
-      "firstPage": "First page",
-      "prevPage": "Previous page",
-      "nextPage": "Next page",
-      "lastPage": "Last page"
+      "accountNumber": "MT4 счёт",
+      "amount": "Сумма",
+      "currency": "Валюта",
+      "type": "Тип",
+      "createdAt": "Создано",
+      "searchPlaceholder": "Поиск платежей…",
+      "errorLoad": "Не удалось загрузить платежи",
+      "empty": "Записей пока нет.",
+      "show": "Показать",
+      "shownRange": "Показано {from}–{to} из {total}",
+      "firstPage": "Первая страница",
+      "prevPage": "Предыдущая страница",
+      "nextPage": "Следующая страница",
+      "lastPage": "Последняя страница"
     }
   }
 }

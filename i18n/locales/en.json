@@ -667,6 +667,13 @@
       "support": "Support",
       "settings": "Settings"
     },
+    "common": {
+      "openMenu": "Open menu",
+      "close": "Close",
+      "cancel": "Cancel",
+      "copyId": "Copy ID",
+      "copyNumber": "Copy number"
+    },
     "header": {
       "notifications": "Notifications",
       "markAllRead": "Mark all read",
@@ -715,6 +722,10 @@
     },
     "dashboard": {
       "title": "Dashboard",
+      "emailVerification": {
+        "success": "Email verified.",
+        "error": "Failed to verify email."
+      },
       "accountVerification": {
         "title": "Account Verification",
         "subtitle": "Verification in progress",
@@ -802,6 +813,11 @@
       "backToMethodSelection": "Back to payment method selection",
       "backToList": "Back to payments list",
       "openPayment": "Open",
+      "syncPayment": "Sync",
+      "syncPaymentSuccess": "Payment synchronized successfully.",
+      "syncPaymentError": "Failed to synchronize payment.",
+      "transferCreated": "Transfer between accounts created.",
+      "internalTransfer": "Transfer between accounts",
       "deletePayment": "Delete",
       "deletePaymentConfirm": "Delete payment?",
       "deletePaymentSuccess": "Payment deleted.",
@@ -809,6 +825,7 @@
       "paymentNotFound": "Payment not found.",
       "paymentLoadError": "Failed to load payment.",
       "updatedAt": "Updated At",
+      "gateway": "Gateway",
       "comment": "Comment",
       "redirectLink": "Payment link",
       "search": "Search",
@@ -824,9 +841,15 @@
         "currency": "Currency",
         "amount": "Amount",
         "createdAt": "Created At",
+        "accountNumberShort": "Acc.",
+        "paymentSystemShort": "PS",
         "accountNumber": "Account number",
         "paymentSystem": "Payment system",
         "account": "Account"
+      },
+      "types": {
+        "deposit": "Deposit",
+        "withdrawal": "Withdrawal"
       },
       "nothingToShow": "Nothing to show =(",
       "pagination": {
@@ -1008,6 +1031,16 @@
       },
       "title": "Accounts",
       "openNew": "Open new account",
+      "openBlocked": "Account opening will be available after profile and document verification.",
+      "openAccountLabel": "Open account {number}",
+      "favoriteAdd": "Add to favorites",
+      "favoriteRemove": "Remove from favorites",
+      "refreshBalance": "Refresh balance",
+      "refreshBalanceError": "Failed to refresh account balance.",
+      "refreshBalancesError": "Failed to refresh account balances.",
+      "deleteConfirm": "Archive this account?",
+      "deleteSuccess": "Account archived!",
+      "deleteError": "Failed to archive account.",
       "search": "Search",
       "columns": {
         "type": "Account type",
@@ -1072,6 +1105,7 @@
         "transferToAccount": "Transfer to account"
       },
       "transfer": {
+        "title": "Transfer between my accounts",
         "fromAccount": "From account",
         "toAccount": "To account",
         "amount": "Amount",
@@ -1629,9 +1663,23 @@
       "addAdminFailed": "Failed to add admin to chat"
     }
   },
+  "apiMessages": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "validationError": "Validation error.",
+    "methodNotAllowed": "Method not allowed.",
+    "notFound": "Not found.",
+    "mt4RequestFailed": "MT4 request failed.",
+    "paymentDetailCreated": "Payment detail created successfully.",
+    "paymentDetailUpdated": "Payment detail updated successfully.",
+    "paymentDetailDeleted": "Payment detail deleted successfully.",
+    "paymentDetailRestored": "Payment detail restored successfully.",
+    "accountCreated": "Account created successfully.",
+    "invalidCallbackSignature": "Invalid callback signature."
+  },
   "cabinetExtra": {
     "transactions": {
-      "title": "Deposit",
+      "title": "Transactions",
       "sort": {
         "createdAt": "Created",
         "amount": "Amount",

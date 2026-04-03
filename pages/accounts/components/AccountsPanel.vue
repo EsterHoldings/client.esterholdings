@@ -116,7 +116,7 @@
                         class="flex h-8 w-8 items-center justify-center rounded-md transition text-[var(--ui-text-secondary)]"
                         type="button"
                         :aria-pressed="account.is_favorite"
-                        :title="account.is_favorite ? 'Remove from favorites' : 'Add to favorites'"
+                        :title="account.is_favorite ? favoriteRemoveLabel : favoriteAddLabel"
                         @click.stop="handleToggleFavorite(account)">
                         <svg
                           viewBox="0 0 24 24"
@@ -155,7 +155,7 @@
                           type="button"
                           class="refresh-balance-btn"
                           :disabled="isBalanceRefreshing(account.id)"
-                          title="Refresh balance"
+                          :title="refreshBalanceLabel"
                           @click.stop="refreshAccountBalance(account)">
                           <UiIconUpdate
                             class="h-[14px] w-[14px]"
@@ -167,7 +167,7 @@
                         @click.stop="toggleRowOptions(index)"
                         class="table-account-col table-account-col--actions relative flex items-center justify-center h-[32px] w-[32px] rounded-md hover:border-[var(--color-stroke-ui-light)] border border-transparent transition-colors transition-opacity cursor-pointer"
                         :ref="el => (triggerRefs[index] = el as HTMLElement)"
-                        aria-label="Open menu">
+                        :aria-label="openMenuLabel">
                         <UiIconDotsVertical />
                       </button>
                     </div>
@@ -261,7 +261,7 @@
               ]"
               role="button"
               tabindex="0"
-              :aria-label="`Open account ${account.number}`"
+              :aria-label="getOpenAccountLabel(account.number)"
               @click="handleOpenAccount(account.id)"
               @keydown.enter.prevent="handleOpenAccount(account.id)"
               @keydown.space.prevent="handleOpenAccount(account.id)">
@@ -270,7 +270,7 @@
                   type="button"
                   class="menu-btn"
                   :aria-pressed="account.is_favorite"
-                  :title="account.is_favorite ? 'Remove from favorites' : 'Add to favorites'"
+                  :title="account.is_favorite ? favoriteRemoveLabel : favoriteAddLabel"
                   @click.stop="handleToggleFavorite(account)">
                   <svg
                     viewBox="0 0 24 24"
@@ -287,7 +287,7 @@
                 </button>
                 <button
                   class="menu-btn copy-btn"
-                  aria-label="Copy number">
+                  :aria-label="copyNumberLabel">
                   <UiIconCopy :text="account.number" />
                 </button>
                 <button
@@ -295,7 +295,7 @@
                   class="menu-btn action-btn card-menu-trigger"
                   @click.stop="toggleCardMenu(account.id)"
                   :ref="el => (cardMenuTriggerRefs[account.id] = el as HTMLElement | null)"
-                  aria-label="Open menu">
+                  :aria-label="openMenuLabel">
                   <UiIconDotsVertical class="h-4 w-4" />
                 </button>
 
@@ -383,7 +383,7 @@
                         class="refresh-balance-btn"
                         @click.stop="refreshAccountBalance(account)"
                         :disabled="isBalanceRefreshing(account.id)"
-                        title="Refresh balance">
+                        :title="refreshBalanceLabel">
                         <UiIconUpdate
                           class="h-[14px] w-[14px]"
                           :spinning="isBalanceRefreshing(account.id)" />
@@ -505,6 +505,7 @@
   import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
   import UiInput from "~/components/ui/UiInput.vue";
   import UiSelect from "~/components/ui/UiSelect.vue";
+  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import { computed, inject, onMounted, reactive, ref, nextTick, onBeforeUnmount, watch, h } from "vue";
@@ -560,9 +561,17 @@
   const currentRowActiveOptions = ref<number | null>(null);
   const isMobileViewport = ref(false);
 
-  const sortByFilterData = reactive([
-    { id: "number", value: "number", text: "Number" },
-    { id: "balance", value: "balance", text: "Balance" },
+  const sortByFilterData = computed(() => [
+    {
+      id: "number",
+      value: "number",
+      text: resolveText("cabinet.accounts.columns.number", "Account number"),
+    },
+    {
+      id: "balance",
+      value: "balance",
+      text: resolveText("cabinet.accounts.columns.balance", "MT Balance"),
+    },
   ]);
 
   const accounts = reactive<any[]>([]);
@@ -753,6 +762,20 @@
   const emptySubtitle = computed(() =>
     resolveText("cabinet.accounts.emptySubtitle", "Откройте первый торговый счет, чтобы начать работу.")
   );
+  const favoriteAddLabel = computed(() => resolveText("cabinet.accounts.favoriteAdd", "Add to favorites"));
+  const favoriteRemoveLabel = computed(() => resolveText("cabinet.accounts.favoriteRemove", "Remove from favorites"));
+  const copyNumberLabel = computed(() => resolveText("cabinet.common.copyNumber", "Copy number"));
+  const openMenuLabel = computed(() => resolveText("cabinet.common.openMenu", "Open menu"));
+  const refreshBalanceLabel = computed(() => resolveText("cabinet.accounts.refreshBalance", "Refresh balance"));
+  const refreshBalanceErrorLabel = computed(() =>
+    resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance.")
+  );
+  const refreshBalancesErrorLabel = computed(() =>
+    resolveText("cabinet.accounts.refreshBalancesError", "Failed to refresh account balances.")
+  );
+  const archiveConfirmLabel = computed(() => resolveText("cabinet.accounts.deleteConfirm", "Archive this account?"));
+  const archiveSuccessLabel = computed(() => resolveText("cabinet.accounts.deleteSuccess", "Account archived!"));
+  const archiveErrorLabel = computed(() => resolveText("cabinet.accounts.deleteError", "Failed to archive account."));
   const verifyTitle = computed(() =>
     resolveText("cabinet.dashboard.mt4.verifyTitle", "Завершите верификацию для открытия счёта")
   );
@@ -773,6 +796,11 @@
     isVerificationRequired.value ? verifySubtitle.value : emptySubtitle.value
   );
   const verificationLink = computed(() => localePath({ path: "/profile", query: { tab: "verification" } }));
+  const getOpenAccountLabel = (accountNumber: unknown): string =>
+    resolveText("cabinet.accounts.openAccountLabel", "Open account {number}").replace(
+      "{number}",
+      String(accountNumber ?? "").trim()
+    );
 
   const refreshAccountBalance = async (account: any, options: { suppressErrorToast?: boolean } = {}) => {
     const key = refreshKey(account.id);
@@ -803,11 +831,11 @@
       }
 
       if (!options.suppressErrorToast) {
-        toast.error("Failed to refresh account balance.");
+        toast.error(refreshBalanceErrorLabel.value);
       }
     } catch {
       if (!options.suppressErrorToast) {
-        toast.error("Failed to refresh account balance.");
+        toast.error(refreshBalanceErrorLabel.value);
       }
     } finally {
       refreshingBalanceIds[key] = false;
@@ -907,7 +935,7 @@
       await appCore.accounts.refreshAllBalances();
     } catch {
       if (!options.suppressErrorToast) {
-        toast.error("Failed to refresh account balances.");
+        toast.error(refreshBalancesErrorLabel.value);
       }
     }
 
@@ -1301,10 +1329,16 @@
   };
 
   const handleClickDelete = async (accountId: string) => {
-    if (confirm("Archive this account?")) {
-      await appCore.accounts.delete(accountId);
-      await loadData();
-      toast.success("Account archived!");
+    if (confirm(archiveConfirmLabel.value)) {
+      try {
+        const response = await appCore.accounts.delete(accountId);
+        await loadData();
+        toast.success(
+          resolveApiMessage(response?.data?.message, archiveSuccessLabel.value) ?? archiveSuccessLabel.value
+        );
+      } catch (error: any) {
+        toast.error(extractApiErrorMessage(error, archiveErrorLabel.value) ?? archiveErrorLabel.value);
+      }
     }
     closeOptions();
     closeCardMenu();

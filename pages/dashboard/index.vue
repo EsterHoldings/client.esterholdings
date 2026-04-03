@@ -100,6 +100,8 @@
   import Mt4AccountsWidget from "~/components/block/widgets/Mt4AccountsWidget.vue";
   import { useUiStore } from "~/stores/uiStore";
   import { useAuthStore } from "~/stores/authStore";
+  import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
+  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import useAccountCreationEligibility from "~/composables/useAccountCreationEligibility";
@@ -112,6 +114,7 @@
   const router = useRouter();
   const toast = useToast();
   const authStore = useAuthStore();
+  const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const uiStore = useUiStore();
   const appCore = useAppCore();
   const { canCreateAccount, refreshAccountCreationEligibility } = useAccountCreationEligibility();
@@ -141,6 +144,8 @@
   const EMAIL_VERIFY_QUERY_HASH = "verify_hash";
   const EMAIL_VERIFY_QUERY_EXPIRES = "verify_expires";
   const EMAIL_VERIFY_QUERY_SIGNATURE = "verify_signature";
+  const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
+  const BILLING_NOTIFICATION_TYPES = ["payments.withdrawal.status-updated", "payments.deposit.status-updated"];
 
   const normalizeQueryValue = (value: unknown): string => {
     if (Array.isArray(value)) return typeof value[0] === "string" ? value[0] : "";
@@ -209,13 +214,18 @@
     try {
       const response = await appCore.auth.verifyEmail(payload);
       const message =
-        response?.data?.message || resolveText("cabinet.dashboard.emailVerification.success", "Email verified.");
+        resolveApiMessage(
+          response?.data?.message,
+          resolveText("cabinet.dashboard.emailVerification.success", "Email verified.")
+        ) ?? resolveText("cabinet.dashboard.emailVerification.success", "Email verified.");
       toast.success(message);
       await refreshAuthUser();
     } catch (error: any) {
       const message =
-        error?.response?.data?.message ||
-        resolveText("cabinet.dashboard.emailVerification.error", "Failed to verify email.");
+        extractApiErrorMessage(
+          error,
+          resolveText("cabinet.dashboard.emailVerification.error", "Failed to verify email.")
+        ) ?? resolveText("cabinet.dashboard.emailVerification.error", "Failed to verify email.");
       toast.error(message);
     } finally {
       await clearEmailVerificationQuery();
@@ -237,7 +247,39 @@
     return null;
   };
 
-  const handlePaymentRealtimeUpdated = async () => {
+  const registerRecentPaymentUpdate = (payload: any, fallbackUpdatedAt?: string) => {
+    const paymentId = String(payload?.payment_id ?? payload?.id ?? "").trim();
+    if (paymentId === "") {
+      return;
+    }
+
+    recentPaymentUpdatesStore.registerUpdate({
+      paymentId,
+      status: payload?.status,
+      amount: payload?.amount,
+      updatedAt: String(payload?.updated_at ?? payload?.created_at ?? fallbackUpdatedAt ?? "").trim(),
+    });
+  };
+
+  const handlePaymentRealtimeUpdated = async (payload: any) => {
+    registerRecentPaymentUpdate(payload);
+
+    try {
+      await handleRefreshDashboard({ suppressBalanceErrorToast: true });
+    } catch {
+      // no-op
+    }
+  };
+
+  const handleClientNotificationReceived = async (payload: any) => {
+    const notification = payload?.notification;
+    const type = String(notification?.type ?? "").trim();
+    if (!BILLING_NOTIFICATION_TYPES.includes(type)) {
+      return;
+    }
+
+    registerRecentPaymentUpdate(notification?.payload, notification?.createdAt ?? notification?.created_at);
+
     try {
       await handleRefreshDashboard({ suppressBalanceErrorToast: true });
     } catch {
@@ -294,6 +336,7 @@
 
   onMounted(async () => {
     await handleEmailVerificationFromQuery();
+    useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     subscribeToPaymentRealtime();
     await handleRefreshDashboard({ suppressBalanceErrorToast: true });
   });
@@ -404,7 +447,7 @@
       await appCore.accounts.refreshAllBalances();
     } catch {
       if (!options.suppressErrorToast) {
-        toast.error(resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balances."));
+        toast.error(resolveText("cabinet.accounts.refreshBalancesError", "Failed to refresh account balances."));
       }
     }
   };
@@ -484,6 +527,7 @@
   };
 
   onBeforeUnmount(() => {
+    useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     unsubscribeFromPaymentRealtime();
   });
 </script>
