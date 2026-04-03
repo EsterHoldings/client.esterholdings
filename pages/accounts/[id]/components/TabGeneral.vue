@@ -12,11 +12,9 @@
     balance: string | number;
     isLoading?: boolean;
     isBalanceRefreshing?: boolean;
-    isPaymentsSyncing?: boolean;
   }>();
   const emit = defineEmits<{
     (event: "refresh-balance"): void;
-    (event: "sync-payments"): void;
   }>();
 
   const { t } = useI18n({ useScope: "global" });
@@ -24,11 +22,6 @@
     const translated = t("cabinet.accounts.refreshBalance");
     return translated === "cabinet.accounts.refreshBalance" ? "Refresh balance" : translated;
   });
-  const syncPaymentsLabel = computed(() => {
-    const translated = t("cabinet.accounts.syncPayments");
-    return translated === "cabinet.accounts.syncPayments" ? "Synchronize" : translated;
-  });
-
   const formattedBalance = computed(() => {
     const parsedBalance = Number(props.balance);
 
@@ -96,17 +89,6 @@
             <UiIconUpdate
               class="h-[14px] w-[14px]"
               :spinning="!!props.isBalanceRefreshing" />
-          </button>
-          <button
-            v-if="row.refreshable"
-            type="button"
-            class="account-overview__sync-btn"
-            :disabled="!!props.isPaymentsSyncing"
-            @click.stop="emit('sync-payments')">
-            <UiIconUpdate
-              class="h-[14px] w-[14px]"
-              :spinning="!!props.isPaymentsSyncing" />
-            <span>{{ syncPaymentsLabel }}</span>
           </button>
         </div>
         <UiIconSpinnerDefault
@@ -188,36 +170,6 @@
   }
 
   .account-overview__refresh-btn:disabled {
-    cursor: default;
-    opacity: 0.6;
-  }
-
-  .account-overview__sync-btn {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 28%, transparent);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--ui-primary-main) 12%, transparent);
-    color: var(--ui-text-main);
-    padding: 6px 10px;
-    font-size: 12px;
-    line-height: 1;
-    font-weight: 600;
-    cursor: pointer;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      opacity 0.2s ease;
-  }
-
-  .account-overview__sync-btn:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--ui-primary-main) 18%, transparent);
-    border-color: color-mix(in srgb, var(--ui-primary-main) 40%, transparent);
-  }
-
-  .account-overview__sync-btn:disabled {
     cursor: default;
     opacity: 0.6;
   }

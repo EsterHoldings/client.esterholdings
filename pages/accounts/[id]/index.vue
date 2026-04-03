@@ -42,9 +42,7 @@
                 :key="activeTabIndex"
                 :isLoading="isLoading"
                 :is-balance-refreshing="isBalanceRefreshing"
-                :is-payments-syncing="isPaymentsSyncing"
-                @refresh-balance="refreshAccountBalance"
-                @sync-payments="syncAccountPayments" />
+                @refresh-balance="refreshAccountBalance" />
             </transition>
           </section>
         </div>
@@ -57,7 +55,6 @@
   import UiContainer from "~/components/ui/UiContainer.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
-  import { useToast } from "vue-toastification";
 
   import { definePageMeta } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
@@ -73,8 +70,6 @@
   import UiIconUser from "~/components/ui/UiIconUser.vue";
   import UiIconHistory from "~/components/ui/UiIconHistory.vue";
   import UiIconTime from "~/components/ui/UiIconTime.vue";
-  import useEventBus from "~/composables/useEventBus";
-  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
@@ -82,12 +77,10 @@
 
   const route = useRoute();
   const appCore = useAppCore();
-  const toast = useToast();
 
   const activeTabIndex = ref(0);
   const isLoading = ref(false);
   const isBalanceRefreshing = ref(false);
-  const isPaymentsSyncing = ref(false);
   const panelRef = ref<any>(null);
   const panelMinHeight = ref("auto");
 
@@ -231,13 +224,6 @@
 
     return resolveText("cabinet.accounts.account.subtitle", "Trading account details and history");
   });
-  const syncPaymentsSuccessLabel = computed(() =>
-    resolveText("cabinet.accounts.syncPaymentsSuccess", "Account payments synchronized successfully.")
-  );
-  const syncPaymentsErrorLabel = computed(() =>
-    resolveText("cabinet.accounts.syncPaymentsError", "Failed to synchronize account payments.")
-  );
-
   const refreshAccountBalance = async () => {
     if (isLoading.value || isBalanceRefreshing.value) return;
 
@@ -255,29 +241,6 @@
       await loadData();
     } finally {
       isBalanceRefreshing.value = false;
-    }
-  };
-
-  const syncAccountPayments = async () => {
-    if (isLoading.value || isPaymentsSyncing.value) return;
-
-    isPaymentsSyncing.value = true;
-    try {
-      const response = await appCore.accounts.syncPayments(id.value);
-
-      await loadData();
-      useEventBus.emit("loadDataForPayments");
-
-      toast.success(
-        resolveApiMessage(response?.data?.message, syncPaymentsSuccessLabel.value) ?? syncPaymentsSuccessLabel.value
-      );
-    } catch (error) {
-      await loadData();
-      useEventBus.emit("loadDataForPayments");
-
-      toast.error(extractApiErrorMessage(error, syncPaymentsErrorLabel.value) ?? syncPaymentsErrorLabel.value);
-    } finally {
-      isPaymentsSyncing.value = false;
     }
   };
 

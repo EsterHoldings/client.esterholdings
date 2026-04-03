@@ -818,6 +818,7 @@
       "backToList": "К списку платежей",
       "openPayment": "Открыть",
       "syncPayment": "Синхронизировать",
+      "syncPaymentLoading": "Синхронизация...",
       "syncPaymentSuccess": "Платёж успешно синхронизирован.",
       "syncPaymentError": "Не удалось синхронизировать платёж.",
       "transferCreated": "Перевод между счетами создан.",

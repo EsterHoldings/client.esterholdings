@@ -814,6 +814,7 @@
       "backToList": "Back to payments list",
       "openPayment": "Open",
       "syncPayment": "Sync",
+      "syncPaymentLoading": "Syncing...",
       "syncPaymentSuccess": "Payment synchronized successfully.",
       "syncPaymentError": "Failed to synchronize payment.",
       "transferCreated": "Transfer between accounts created.",
