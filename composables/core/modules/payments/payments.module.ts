@@ -1,4 +1,4 @@
-import {BasicModuleInterface} from "../module.interface";
+import { BasicModuleInterface } from "../module.interface";
 import PaymentsService from "~/composables/core/modules/payments/payments.service";
 
 interface ResponseDTO {
@@ -14,30 +14,32 @@ export class PaymentsModule implements BasicModuleInterface {
     this.paymentsService = new PaymentsService();
   }
 
-  async get(params: {} = {}):Promise<any> {
+  async get(params: {} = {}): Promise<any> {
     return await this.paymentsService.get(params);
   }
-  async getById(id:any) {
+  async getById(id: any) {
     return await this.paymentsService.getById(id);
   }
 
-  async post(data:object = {}):Promise<any> {
+  async post(data: object = {}): Promise<any> {
     return await this.paymentsService.post(data);
   }
 
-  async put(id:any, data:object = {}):Promise<any> {
+  async put(id: any, data: object = {}): Promise<any> {
     return await this.paymentsService.put(id, data);
   }
 
-  async patch(id:any, data:object = {}):Promise<any> {
+  async patch(id: any, data: object = {}): Promise<any> {
     return await this.paymentsService.patch(id, data);
   }
 
-  async delete(id:any):Promise<any> {
+  async delete(id: any): Promise<any> {
     return await this.paymentsService.delete(id);
   }
 
-
+  async sync(id: any): Promise<any> {
+    return await this.paymentsService.sync(id);
+  }
 }
 
 export default PaymentsModule;
