@@ -1,39 +1,43 @@
 <template>
-  <main class="landing">
-    <div ref="welcomeRef"><WelcomeSection /></div>
-    <AdvantagesSection />
-    <TradingPlatformSection />
-    <FeaturesSection />
-    <AccountTypesSection />
-    <WideRangeSection />
-    <FourStepsSection />
-    <BannerSection />
-    <LatestUpdatesSection />
-    <FAQsSection />
-
+  <main class="landing-v2">
+    <div ref="welcomeRef">
+      <WelcomeSectionV2 />
+    </div>
+    <TickerSectionV2 />
+    <AdvantagesSectionV2 />
+    <TradingPlatformSectionV2 />
+    <NewsRowSectionV2 />
+    <FeaturesSectionV2 />
+    <WideRangeSectionV2 />
+    <AccountTypesSectionV2 />
+    <FourStepsSectionV2 />
+    <BannerSectionV2 />
+    <LatestUpdatesSectionV2 />
+    <FAQsSectionV2 />
     <CookieModal />
   </main>
 </template>
 
 <script lang="ts" setup>
   import { definePageMeta } from "~/.nuxt/imports";
-  import { ref, onMounted, onUnmounted } from "vue";
+  import { onMounted, onUnmounted, ref } from "vue";
   import { useUiStore } from "~/stores/uiStore";
-
-  import WelcomeSection from "~/pages/landing/sections/WelcomeSection";
-  import AdvantagesSection from "~/pages/landing/sections/AdvantagesSection.vue";
-  import FeaturesSection from "~/pages/landing/sections/FeaturesSection.vue";
-  import AccountTypesSection from "~/pages/landing/sections/AccountTypesSection";
-  import WideRangeSection from "~/pages/landing/sections/WideRangeSection";
-  import FourStepsSection from "~/pages/landing/sections/FourStepsSection.vue";
-  import BannerSection from "~/pages/landing/sections/BannerSection.vue";
-  import TradingPlatformSection from "~/pages/landing/sections/TradingPlatformSection.vue";
-  import LatestUpdatesSection from "~/pages/landing/sections/LatestUpdatesSection.vue";
-  import FAQsSection from "~/pages/landing/sections/FAQsSection.vue";
+  import WelcomeSectionV2 from "~/pages/landing/sections/WelcomeSectionV2.vue";
+  import TickerSectionV2 from "~/pages/landing/sections/TickerSectionV2.vue";
+  import AdvantagesSectionV2 from "~/pages/landing/sections/AdvantagesSectionV2.vue";
+  import TradingPlatformSectionV2 from "~/pages/landing/sections/TradingPlatformSectionV2.vue";
+  import NewsRowSectionV2 from "~/pages/landing/sections/NewsRowSectionV2.vue";
+  import FeaturesSectionV2 from "~/pages/landing/sections/FeaturesSectionV2.vue";
+  import AccountTypesSectionV2 from "~/pages/landing/sections/AccountTypesSectionV2.vue";
+  import WideRangeSectionV2 from "~/pages/landing/sections/WideRangeSectionV2.vue";
+  import FourStepsSectionV2 from "~/pages/landing/sections/FourStepsSectionV2.vue";
+  import BannerSectionV2 from "~/pages/landing/sections/BannerSectionV2.vue";
+  import LatestUpdatesSectionV2 from "~/pages/landing/sections/LatestUpdatesSectionV2.vue";
+  import FAQsSectionV2 from "~/pages/landing/sections/FAQsSectionV2.vue";
   import CookieModal from "~/components/block/modals/CookieModal.vue";
 
   definePageMeta({
-    layout: "main",
+    layout: "main-v2",
   });
 
   const uiStore = useUiStore();
@@ -43,14 +47,13 @@
     if (!welcomeRef.value) return;
 
     const rect = welcomeRef.value.getBoundingClientRect();
-    const scrolledPast = rect.bottom <= 210;
-
-    uiStore.headerScrolled = scrolledPast;
+    uiStore.headerScrolled = rect.bottom <= 210;
   };
 
   onMounted(() => {
     const body = document.body;
     const html = document.documentElement;
+
     body.classList.add("scroll-unlocked");
     html.classList.add("scroll-unlocked");
     body.style.setProperty("overflow", "auto", "important");
@@ -72,18 +75,17 @@
 </script>
 
 <style lang="scss" scoped>
-  .landing {
+  .landing-v2 {
     min-height: 100vh;
-    height: 100%;
-
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    background: #f6f6f6;
+    overflow: hidden;
   }
 
   @media (max-width: 991px) {
-    .landing {
-      gap: 50px;
+    .landing-v2 {
+      overflow: visible;
     }
   }
 </style>
