@@ -20,7 +20,7 @@ export default defineNuxtConfig({
   ssr: true,
   routeRules: {
     "/**": { ssr: false } as any,
-    "/": { ssr: true } as any,
+    "/": { ssr: false } as any,
   },
   css: ["~/assets/styles/main.scss"],
   modules: ["@pinia/nuxt", "@nuxtjs/i18n", "@nuxtjs/tailwindcss", "@vite-pwa/nuxt"],
@@ -211,7 +211,7 @@ export default defineNuxtConfig({
       reverbScheme: process.env.NUXT_PUBLIC_REVERB_SCHEME || process.env.VITE_REVERB_SCHEME || "",
 
       baseApi: process.env.NUXT_PUBLIC_BASE_API || "https://server.esterholdings.com/api/",
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || "https://server.esterholdings.com/",
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || "https://my.esterholdings.website/",
       cliFacebook: process.env.NUXT_PUBLIC_CLI_FACEBOOK || "1668019407177142",
       cliGoogle:
         process.env.NUXT_PUBLIC_CLI_GOOGLE ||

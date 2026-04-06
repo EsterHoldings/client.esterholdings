@@ -5,7 +5,9 @@
     </template>
 
     <template #content>
-      <PageStructureContent :plain="true" v-if="!isInitialLoading">
+      <PageStructureContent
+        :plain="true"
+        v-if="!isInitialLoading">
         <template #content>
           <div class="about-company">
             <UiTextH3 class="about-company_title">AML Policy</UiTextH3>
@@ -19,15 +21,15 @@
               </UiTextParagraph>
 
               <UiTextParagraph>
-                The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing the
-                customer and understanding their instructions enables better risk assessment.
+                The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing
+                the customer and understanding their instructions enables better risk assessment.
               </UiTextParagraph>
             </div>
 
             <UiTextH3 class="about-company_title">Customer Due Diligence</UiTextH3>
             <ul class="about-company_list">
               <li>Identify and verify individual and corporate customers using valid documentation.</li>
-              <li>Collect personal or company details during registration at my.esterholdings.com.</li>
+              <li>Collect personal or company details during registration at my.esterholdings.website.</li>
               <li>Require proof of identity and address via valid documents (passport, utility bill, etc.).</li>
               <li>Verify credit/debit card for transactions while masking sensitive data.</li>
               <li>Request source of funds/wealth in high-risk cases.</li>
@@ -36,8 +38,8 @@
 
             <UiTextH3 class="about-company_title">Payments Policy</UiTextH3>
             <UiTextParagraph>
-              Payments are regulated under the "Regulations for Non-Trading Operations," available on the Company Website
-              under “Regulatory Documents and Agreements.”
+              Payments are regulated under the "Regulations for Non-Trading Operations," available on the Company
+              Website under “Regulatory Documents and Agreements.”
             </UiTextParagraph>
 
             <UiTextH3 class="about-company_title">Personnel</UiTextH3>
@@ -67,8 +69,8 @@
             <UiTextH3 class="about-company_title">Reporting Suspicious Activity</UiTextH3>
             <UiTextParagraph>
               All suspicious activities must be reported to the AML Compliance Officer. The company may conduct internal
-              investigations, freeze or close accounts, and inform authorities, cooperating fully with law enforcement where
-              required by law.
+              investigations, freeze or close accounts, and inform authorities, cooperating fully with law enforcement
+              where required by law.
             </UiTextParagraph>
           </div>
         </template>
@@ -85,21 +87,21 @@
 </template>
 
 <script lang="ts" setup>
-import { definePageMeta } from "~/.nuxt/imports";
-import { nextTick, ref } from "vue";
+  import { definePageMeta } from "~/.nuxt/imports";
+  import { nextTick, ref } from "vue";
 
-import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
-import PageStructureContent from "~/components/block/pages/PageStructureContent.vue";
-import UiTextH3 from "~/components/ui/UiTextH3.vue";
-import UiTextH4 from "~/components/ui/UiTextH4.vue";
-import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
-import UiIconLogo from "~/components/ui/UiIconLogo.vue";
-import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+  import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
+  import PageStructureContent from "~/components/block/pages/PageStructureContent.vue";
+  import UiTextH3 from "~/components/ui/UiTextH3.vue";
+  import UiTextH4 from "~/components/ui/UiTextH4.vue";
+  import UiTextParagraph from "~/components/ui/UiTextParagraph.vue";
+  import UiIconLogo from "~/components/ui/UiIconLogo.vue";
+  import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
-definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
+  definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
-const isInitialLoading = ref(true);
-nextTick(() => {
-  isInitialLoading.value = false;
-});
+  const isInitialLoading = ref(true);
+  nextTick(() => {
+    isInitialLoading.value = false;
+  });
 </script>
