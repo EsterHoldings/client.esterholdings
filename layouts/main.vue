@@ -1,51 +1,64 @@
 <template>
   <div class="page-wrapper">
+    <TheGuestHeader class="header" />
+    <UiImage
+      class="bg-image"
+      src="/space.gif" />
     <div class="page-content">
-      <LandingHeader class="header" />
-
-      <transition name="fade" mode="out-in">
-        <div class="page"><slot /></div>
+      <transition
+        name="fade"
+        mode="out-in">
+        <main class="page">
+          <slot />
+        </main>
       </transition>
-
-      <LandingFooter />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import LandingHeader from "~/components/block/LandingHeader.vue";
-import LandingFooter from "~/components/block/LandingFooter";
+  import TheGuestHeader from "~/components/block/TheGuestHeader.vue";
+  import UiImage from "~/components/ui/UiImage.vue";
 </script>
 
 <style lang="scss" scoped>
-.header {
-  z-index: 9999;
-}
-
-.page {
-  //min-height: 100vh;
-  overflow: unset;
-
-  &-wrapper {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  .header {
+    z-index: 10;
   }
 
-  &-content {
-    width: 100%;
-    background-color: var(--ui-background);
-    position: relative;
+  .bg-image {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
   }
-}
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
+  .page {
+    min-height: 100vh;
+    padding-top: 100px;
+    overflow: unset;
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+    &-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: var(--ui-background-admin);
+    }
+
+    &-content {
+      min-height: 100vh;
+      width: 100%;
+      position: relative;
+    }
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.3s ease;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
 </style>
