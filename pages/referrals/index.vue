@@ -86,6 +86,6 @@
     margin-top: 12px;
     font-size: clamp(14px, 2vw, 17px);
     line-height: 1.5;
-    color: var(--ui-text-muted);
+    color: var(--ui-text-main);
   }
 </style>
