@@ -798,6 +798,7 @@
         "notComplete": "Рахунок ще не повністю верифіковано",
         "complete": "Рахунок повністю верифіковано",
         "progressTitle": "Прогрес верифікації",
+        "tooltipLabel": "Про верифікацію акаунта",
         "verifiedCount": "Перевірено {done}/{total}",
         "stepsRemaining": "Залишилось кроків: {count}",
         "stepsProgress": "Перевірено {done}/{total}. Залишилось: {left}",
@@ -817,6 +818,7 @@
       "mt4": {
         "title": "Обрані або нові рахунки MT4",
         "description": "Швидкий доступ до обраних рахунків і відкриття нового MT4 рахунку.",
+        "tooltipLabel": "Про рахунки MT4",
         "openNewAccount": "Відкрити новий рахунок",
         "table": {
           "account": "Рахунок",

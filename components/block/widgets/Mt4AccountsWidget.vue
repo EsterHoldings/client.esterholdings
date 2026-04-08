@@ -2,12 +2,14 @@
   <div class="mt4-widget dashboard-side-widget text-[var(--ui-text-main)]">
     <div class="mt4-header-card">
       <div class="mt4-header-card__copy">
-        <div class="mt4-header-card__title">
-          {{ t("cabinet.dashboard.mt4.title") }}
+        <div class="mt4-header-card__title-row">
+          <div class="mt4-header-card__title">
+            {{ t("cabinet.dashboard.mt4.title") }}
+          </div>
+          <UiInfoHint
+            :label="t('cabinet.dashboard.mt4.tooltipLabel')"
+            :content="mt4Description" />
         </div>
-        <UiTextSmall class="mt4-header-card__description">
-          {{ mt4Description }}
-        </UiTextSmall>
       </div>
       <div class="mt4-header-card__actions">
         <NuxtLink
@@ -247,6 +249,7 @@
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
 
+  import UiInfoHint from "~/components/ui/UiInfoHint.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiIconCardCheck from "~/components/ui/UiIconCardCheck.vue";
@@ -783,18 +786,20 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0;
+  }
+
+  .mt4-header-card__title-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
   }
 
   .mt4-header-card__title {
     font-size: 17px;
     font-weight: 700;
     line-height: 1.1;
-  }
-
-  .mt4-header-card__description {
-    color: var(--ui-text-secondary);
-    line-height: 1.35;
   }
 
   .mt4-header-card__actions {
@@ -804,16 +809,17 @@
     gap: 8px;
   }
 
-  .mt4-header-card__cta {
+  :deep(.mt4-header-card__cta) {
     min-width: 0;
     justify-content: center;
-    border-radius: 10px;
+    min-height: 42px;
+    border-radius: 999px !important;
     padding-inline: 18px;
     font-weight: 700;
     color: white !important;
   }
 
-  .mt4-header-card__cta--outline {
+  :deep(.mt4-header-card__cta--outline) {
     color: var(--ui-primary-main) !important;
   }
 

@@ -1072,7 +1072,11 @@
       <NuxtLink
         :to="newDepositLink"
         class="shrink-0">
-        <UiButtonDefault state="success--small">{{ t("cabinet.dashboard.actions.newDeposit") }}</UiButtonDefault>
+        <UiButtonDefault
+          state="success--small"
+          class="dashboard-header-deposit-button">
+          {{ t("cabinet.dashboard.actions.newDeposit") }}
+        </UiButtonDefault>
       </NuxtLink>
     </div>
 
@@ -1278,6 +1282,14 @@
 </template>
 
 <style lang="scss" scoped>
+  :deep(.dashboard-header-deposit-button) {
+    min-height: 42px;
+    border-radius: 999px !important;
+    padding-inline: 18px;
+    font-weight: 700;
+    color: white !important;
+  }
+
   .menu-icon {
     width: 18px;
     height: 18px;

@@ -805,6 +805,7 @@
         "notComplete": "Аккаунт не верифицирован полностью",
         "complete": "Аккаунт полностью верифицирован",
         "progressTitle": "Прогресс верификации",
+        "tooltipLabel": "О верификации аккаунта",
         "verifiedCount": "Проверено {done}/{total}",
         "stepsRemaining": "Осталось шагов: {count}",
         "stepsProgress": "Проверено {done}/{total}. Осталось: {left}",
@@ -824,6 +825,7 @@
       "mt4": {
         "title": "Избранные или новые счета MT4",
         "description": "Быстрый доступ к избранным счетам и открытию нового MT4 счета.",
+        "tooltipLabel": "О счетах MT4",
         "openNewAccount": "Открыть новый счёт",
         "empty": "Счетов пока нет.",
         "table": {

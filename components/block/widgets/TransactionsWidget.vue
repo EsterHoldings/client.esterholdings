@@ -3,6 +3,7 @@
   import { useI18n } from "vue-i18n";
   import { useLocalePath } from "~/.nuxt/imports";
 
+  import UiInfoHint from "~/components/ui/UiInfoHint.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiTextH5 from "~/components/ui/UiTextH5.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
@@ -21,9 +22,6 @@
   const payments = reactive<any[]>([]);
   const isLoading = ref(false);
   const errorMsg = ref<string | null>(null);
-  const isInfoTooltipOpen = ref(false);
-  const infoTooltipRef = ref<HTMLElement | null>(null);
-  const infoTriggerRef = ref<HTMLElement | null>(null);
   const highlightedPaymentIds = ref<string[]>([]);
   const highlightedPaymentPriorities = ref<Record<string, number>>({});
   const paymentHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -146,31 +144,6 @@
 
   const paymentDetailLink = (payment: any) => localePath(`/payments/${String(payment?.id ?? "").trim()}`);
 
-  const openInfoTooltip = () => {
-    isInfoTooltipOpen.value = true;
-  };
-
-  const closeInfoTooltip = () => {
-    isInfoTooltipOpen.value = false;
-  };
-
-  const toggleInfoTooltip = () => {
-    isInfoTooltipOpen.value = !isInfoTooltipOpen.value;
-  };
-
-  const handleTooltipOutside = (event: PointerEvent) => {
-    const target = event.target;
-    if (!(target instanceof Node)) {
-      return;
-    }
-
-    if (infoTooltipRef.value?.contains(target) || infoTriggerRef.value?.contains(target)) {
-      return;
-    }
-
-    closeInfoTooltip();
-  };
-
   const amountClass = (payment: any) => {
     const type = String(payment?.type ?? "").toLowerCase();
 
@@ -226,7 +199,6 @@
   onMounted(() => {
     loadPaymentsData();
     useEventBus.on("dashboardRefresh", loadPaymentsData);
-    window.addEventListener("pointerdown", handleTooltipOutside, true);
   });
 
   onBeforeUnmount(() => {
@@ -234,7 +206,6 @@
     paymentHighlightTimers.forEach(timer => clearTimeout(timer));
     paymentHighlightTimers.clear();
     highlightedPaymentPriorities.value = {};
-    window.removeEventListener("pointerdown", handleTooltipOutside, true);
   });
 </script>
 
@@ -242,38 +213,11 @@
   <PanelDefault>
     <div class="transactions-widget">
       <div class="transactions-widget__header">
-        <div class="transactions-widget__title-group">
-          <div
-            class="transactions-widget__title-wrap"
-            @mouseenter="openInfoTooltip"
-            @mouseleave="closeInfoTooltip">
-            <UiTextH5 class="!text-[var(--ui-text-main)]">{{ t("cabinet.dashboard.transactions.title") }}</UiTextH5>
-            <button
-              ref="infoTriggerRef"
-              type="button"
-              class="transactions-widget__info-trigger"
-              :aria-label="t('cabinet.dashboard.transactions.tooltipLabel')"
-              :aria-expanded="isInfoTooltipOpen"
-              @click.stop="toggleInfoTooltip"
-              @focus="openInfoTooltip"
-              @blur="closeInfoTooltip">
-              <span aria-hidden="true">!</span>
-            </button>
-
-            <transition name="transactions-tooltip">
-              <div
-                v-if="isInfoTooltipOpen"
-                ref="infoTooltipRef"
-                class="transactions-widget__tooltip"
-                role="tooltip">
-                {{ t("cabinet.dashboard.transactions.tooltip") }}
-              </div>
-            </transition>
-          </div>
-
-          <UiTextSmall class="transactions-widget__description">
-            {{ t("cabinet.dashboard.transactions.description") }}
-          </UiTextSmall>
+        <div class="transactions-widget__title-wrap">
+          <UiTextH5 class="!text-[var(--ui-text-main)]">{{ t("cabinet.dashboard.transactions.title") }}</UiTextH5>
+          <UiInfoHint
+            :label="t('cabinet.dashboard.transactions.tooltipLabel')"
+            :content="t('cabinet.dashboard.transactions.tooltip')" />
         </div>
       </div>
 
@@ -436,64 +380,6 @@
     min-width: 0;
   }
 
-  .transactions-widget__title-group {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .transactions-widget__description {
-    color: var(--ui-text-secondary);
-    line-height: 1.35;
-  }
-
-  .transactions-widget__info-trigger {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 45%, transparent);
-    background: color-mix(in srgb, var(--ui-primary-main) 14%, transparent);
-    color: var(--ui-primary-main);
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
-  }
-
-  .transactions-widget__info-trigger:hover,
-  .transactions-widget__info-trigger:focus-visible,
-  .transactions-widget__info-trigger[aria-expanded="true"] {
-    border-color: color-mix(in srgb, var(--ui-primary-main) 68%, transparent);
-    background: color-mix(in srgb, var(--ui-primary-main) 20%, transparent);
-    color: var(--ui-primary-main);
-    outline: none;
-  }
-
-  .transactions-widget__tooltip {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    z-index: 5;
-    width: min(320px, calc(100vw - 24px));
-    border-radius: 12px;
-    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 24%, var(--color-stroke-ui-light) 76%);
-    background: color-mix(in srgb, var(--ui-background-panel) 94%, var(--ui-background-card) 6%);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14);
-    padding: 10px 12px;
-    color: var(--ui-text-main);
-    font-size: 12px;
-    line-height: 1.45;
-  }
-
   .transactions-widget__body {
     position: relative;
     min-height: 160px;
@@ -555,10 +441,9 @@
   }
 
   .transaction-row__desktop {
-    grid-template-columns: minmax(128px, 1.25fr) minmax(82px, 0.58fr) minmax(74px, 0.52fr) minmax(110px, 0.82fr) minmax(
-        168px,
-        0.95fr
-      ) auto;
+    grid-template-columns:
+      minmax(128px, 1.25fr) minmax(82px, 0.58fr) minmax(74px, 0.52fr) minmax(110px, 0.82fr) minmax(168px, 0.95fr)
+      auto;
     gap: 14px;
     align-items: center;
   }
@@ -645,27 +530,6 @@
     100% {
       transform: translateY(0);
       box-shadow: 0 0 0 0 color-mix(in srgb, var(--ui-primary-main) 0%, transparent);
-    }
-  }
-
-  .transactions-tooltip-enter-active,
-  .transactions-tooltip-leave-active {
-    transition:
-      opacity 0.18s ease,
-      transform 0.18s ease;
-  }
-
-  .transactions-tooltip-enter-from,
-  .transactions-tooltip-leave-to {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-
-  @media (max-width: 767px) {
-    .transactions-widget__tooltip {
-      left: 0;
-      right: auto;
-      width: min(280px, calc(100vw - 32px));
     }
   }
 </style>

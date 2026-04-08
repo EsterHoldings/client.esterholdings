@@ -580,7 +580,7 @@
 
     .dashboard-top-grid__verification {
       grid-column: 2;
-      grid-row: 2;
+      grid-row: 1 / span 2;
     }
   }
 

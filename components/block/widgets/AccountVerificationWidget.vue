@@ -2,13 +2,13 @@
   <div class="verification-widget dashboard-side-widget text-[var(--ui-text-main)]">
     <div class="verification-header-card">
       <div class="verification-header-card__left">
-        <div class="verification-title">
-          {{ t("cabinet.dashboard.accountVerification.title") }}
-        </div>
-        <div
-          class="verification-subtitle"
-          :title="summaryText">
-          {{ summaryText }}
+        <div class="verification-title-row">
+          <div class="verification-title">
+            {{ t("cabinet.dashboard.accountVerification.title") }}
+          </div>
+          <UiInfoHint
+            :label="t('cabinet.dashboard.accountVerification.tooltipLabel')"
+            :content="summaryText" />
         </div>
       </div>
 
@@ -104,6 +104,7 @@
 
   import CreateNewDeposit from "~/pages/payments/create/index.vue";
   import UiImageCircle from "~/components/ui/UiImageCircle.vue";
+  import UiInfoHint from "~/components/ui/UiInfoHint.vue";
   import UiIconProfile from "~/components/ui/UiIconProfile.vue";
   import UiIconMails from "~/components/ui/UiIconMails.vue";
   import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
@@ -358,20 +359,17 @@
     min-width: 0;
   }
 
+  .verification-title-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
   .verification-title {
     font-size: 17px;
     font-weight: 700;
     line-height: 1.1;
-  }
-
-  .verification-subtitle {
-    margin-top: 4px;
-    font-size: 12px;
-    line-height: 1.25;
-    color: var(--ui-text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .verification-profile {
