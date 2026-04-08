@@ -1,8 +1,13 @@
 <template>
   <div class="mt4-widget dashboard-side-widget text-[var(--ui-text-main)]">
     <div class="mt4-header-card">
-      <div class="mt4-header-card__title">
-        {{ t("cabinet.dashboard.mt4.title") }}
+      <div class="mt4-header-card__copy">
+        <div class="mt4-header-card__title">
+          {{ t("cabinet.dashboard.mt4.title") }}
+        </div>
+        <UiTextSmall class="mt4-header-card__description">
+          {{ mt4Description }}
+        </UiTextSmall>
       </div>
       <div class="mt4-header-card__actions">
         <NuxtLink
@@ -10,8 +15,8 @@
           :to="profileAccountsCreateLink"
           class="w-full sm:w-auto">
           <UiButtonDefault
-            state="success"
-            class="w-full sm:w-auto">
+            state="success--small"
+            class="mt4-header-card__cta w-full sm:w-auto">
             {{ t("cabinet.dashboard.mt4.openNewAccount") }}
           </UiButtonDefault>
         </NuxtLink>
@@ -21,7 +26,7 @@
           class="w-full sm:w-auto">
           <UiButtonDefault
             state="info--outline"
-            class="w-full sm:w-auto">
+            class="mt4-header-card__cta mt4-header-card__cta--outline w-full sm:w-auto">
             {{ verifyActionLabel }}
           </UiButtonDefault>
         </NuxtLink>
@@ -354,6 +359,9 @@
   const openAccountLabel = computed(() => resolveText("cabinet.accounts.openAccount", "Открыть счет"));
   const verifyActionLabel = computed(() =>
     resolveText("cabinet.dashboard.accountVerification.goToVerification", "Перейти к верификации")
+  );
+  const mt4Description = computed(() =>
+    resolveText("cabinet.dashboard.mt4.description", "Быстрый доступ к избранным счетам и открытию нового MT4 счета.")
   );
   const currentEmptyTitle = computed(() => (canCreateAccount.value ? emptyTitle.value : verifyTitle.value));
   const currentEmptySubtitle = computed(() => (canCreateAccount.value ? emptySubtitle.value : verifySubtitle.value));
@@ -771,10 +779,22 @@
       var(--ui-background-card);
   }
 
+  .mt4-header-card__copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
   .mt4-header-card__title {
     font-size: 17px;
     font-weight: 700;
     line-height: 1.1;
+  }
+
+  .mt4-header-card__description {
+    color: var(--ui-text-secondary);
+    line-height: 1.35;
   }
 
   .mt4-header-card__actions {
@@ -782,6 +802,19 @@
     width: 100%;
     flex-direction: column;
     gap: 8px;
+  }
+
+  .mt4-header-card__cta {
+    min-width: 0;
+    justify-content: center;
+    border-radius: 10px;
+    padding-inline: 18px;
+    font-weight: 700;
+    color: white !important;
+  }
+
+  .mt4-header-card__cta--outline {
+    color: var(--ui-primary-main) !important;
   }
 
   .mt4-list-wrap {
@@ -1086,6 +1119,10 @@
       width: auto;
       flex-direction: row;
       align-items: center;
+    }
+
+    .mt4-header-card__cta {
+      width: auto;
     }
   }
 

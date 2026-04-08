@@ -819,6 +819,7 @@
       },
       "mt4": {
         "title": "Favorite or new MT4 accounts",
+        "description": "Quick access to favorite accounts and opening a new MT4 account.",
         "openNewAccount": "Open new account",
         "empty": "No accounts yet.",
         "table": {
@@ -832,6 +833,7 @@
       },
       "transactions": {
         "title": "Latest transactions",
+        "description": "Recent deposits and withdrawals across accounts so changes are visible immediately.",
         "tooltipLabel": "About latest transactions",
         "tooltip": "This block shows the latest deposits and withdrawals so the client can immediately notice updated payments and open the needed transaction.",
         "sort": {

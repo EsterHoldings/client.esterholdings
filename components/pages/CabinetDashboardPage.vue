@@ -1,6 +1,6 @@
 <template>
   <UiContainer>
-    <div class="dashboard-page text-[var(--ui-text-main)]">
+    <div class="dashboard-page pt-5 text-[var(--ui-text-main)]">
       <div class="mb-6 flex w-full min-w-0 items-center justify-between gap-2">
         <UiTextH4 class="min-w-0 flex-1 truncate text-[var(--ui-text-main)]">
           {{ t("cabinet.dashboard.title") }}
@@ -16,29 +16,31 @@
       </div>
 
       <div class="grid grid-cols-1 gap-5">
-        <div class="dashboard-summary-grid items-stretch">
-          <NuxtLink
-            :to="localePath('/accounts')"
-            class="dashboard-widget-link">
-            <TotalAmountWidget
-              class="dashboard-widget-card"
-              :amount="dashboardSummary.totalAmount"
-              :currency="dashboardSummary.currency"
-              :is-loading="isSummaryLoading" />
-          </NuxtLink>
-          <NuxtLink
-            :to="localePath('/referrals')"
-            class="dashboard-widget-link">
-            <ReferralTotalAmount
-              class="dashboard-widget-card"
-              :amount="dashboardSummary.referralTotal"
-              :currency="dashboardSummary.currency"
-              :is-loading="isSummaryLoading" />
-          </NuxtLink>
-        </div>
+        <div class="dashboard-top-grid">
+          <div class="dashboard-top-grid__summary">
+            <div class="dashboard-summary-grid items-stretch">
+              <NuxtLink
+                :to="localePath('/accounts')"
+                class="dashboard-widget-link">
+                <TotalAmountWidget
+                  class="dashboard-widget-card"
+                  :amount="dashboardSummary.totalAmount"
+                  :currency="dashboardSummary.currency"
+                  :is-loading="isSummaryLoading" />
+              </NuxtLink>
+              <NuxtLink
+                :to="localePath('/referrals')"
+                class="dashboard-widget-link">
+                <ReferralTotalAmount
+                  class="dashboard-widget-card"
+                  :amount="dashboardSummary.referralTotal"
+                  :currency="dashboardSummary.currency"
+                  :is-loading="isSummaryLoading" />
+              </NuxtLink>
+            </div>
+          </div>
 
-        <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <div class="col-span-1 flex h-full flex-col gap-5 text-[var(--ui-text-main)]">
+          <div class="dashboard-top-grid__mt4 flex min-w-0 flex-col text-[var(--ui-text-main)]">
             <Mt4AccountsWidget
               class="h-full"
               :accounts="mt4Accounts"
@@ -49,7 +51,7 @@
               @refresh-requested="handleRefreshDashboard" />
           </div>
 
-          <div class="col-span-1 flex h-full flex-col gap-3 text-[var(--ui-text-main)]">
+          <div class="dashboard-top-grid__verification flex min-w-0 flex-col text-[var(--ui-text-main)]">
             <AccountVerificationWidget class="h-full" />
           </div>
         </div>
@@ -539,9 +541,46 @@
     gap: 0.5rem;
   }
 
+  .dashboard-top-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+
+  .dashboard-top-grid__summary {
+    min-width: 0;
+  }
+
+  .dashboard-top-grid__mt4,
+  .dashboard-top-grid__verification {
+    min-width: 0;
+  }
+
   @media (min-width: 640px) {
     .dashboard-summary-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .dashboard-top-grid {
+      grid-template-columns: minmax(0, 1.28fr) minmax(320px, 0.92fr);
+      align-items: start;
+    }
+
+    .dashboard-top-grid__summary {
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    .dashboard-top-grid__mt4 {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .dashboard-top-grid__verification {
+      grid-column: 2;
+      grid-row: 2;
     }
   }
 

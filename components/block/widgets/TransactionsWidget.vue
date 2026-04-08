@@ -242,32 +242,38 @@
   <PanelDefault>
     <div class="transactions-widget">
       <div class="transactions-widget__header">
-        <div
-          class="transactions-widget__title-wrap"
-          @mouseenter="openInfoTooltip"
-          @mouseleave="closeInfoTooltip">
-          <UiTextH5 class="!text-[var(--ui-text-main)]">{{ t("cabinet.dashboard.transactions.title") }}</UiTextH5>
-          <button
-            ref="infoTriggerRef"
-            type="button"
-            class="transactions-widget__info-trigger"
-            :aria-label="t('cabinet.dashboard.transactions.tooltipLabel')"
-            :aria-expanded="isInfoTooltipOpen"
-            @click.stop="toggleInfoTooltip"
-            @focus="openInfoTooltip"
-            @blur="closeInfoTooltip">
-            <span aria-hidden="true">!</span>
-          </button>
+        <div class="transactions-widget__title-group">
+          <div
+            class="transactions-widget__title-wrap"
+            @mouseenter="openInfoTooltip"
+            @mouseleave="closeInfoTooltip">
+            <UiTextH5 class="!text-[var(--ui-text-main)]">{{ t("cabinet.dashboard.transactions.title") }}</UiTextH5>
+            <button
+              ref="infoTriggerRef"
+              type="button"
+              class="transactions-widget__info-trigger"
+              :aria-label="t('cabinet.dashboard.transactions.tooltipLabel')"
+              :aria-expanded="isInfoTooltipOpen"
+              @click.stop="toggleInfoTooltip"
+              @focus="openInfoTooltip"
+              @blur="closeInfoTooltip">
+              <span aria-hidden="true">!</span>
+            </button>
 
-          <transition name="transactions-tooltip">
-            <div
-              v-if="isInfoTooltipOpen"
-              ref="infoTooltipRef"
-              class="transactions-widget__tooltip"
-              role="tooltip">
-              {{ t("cabinet.dashboard.transactions.tooltip") }}
-            </div>
-          </transition>
+            <transition name="transactions-tooltip">
+              <div
+                v-if="isInfoTooltipOpen"
+                ref="infoTooltipRef"
+                class="transactions-widget__tooltip"
+                role="tooltip">
+                {{ t("cabinet.dashboard.transactions.tooltip") }}
+              </div>
+            </transition>
+          </div>
+
+          <UiTextSmall class="transactions-widget__description">
+            {{ t("cabinet.dashboard.transactions.description") }}
+          </UiTextSmall>
         </div>
       </div>
 
@@ -430,6 +436,18 @@
     min-width: 0;
   }
 
+  .transactions-widget__title-group {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .transactions-widget__description {
+    color: var(--ui-text-secondary);
+    line-height: 1.35;
+  }
+
   .transactions-widget__info-trigger {
     position: relative;
     z-index: 1;
@@ -537,9 +555,19 @@
   }
 
   .transaction-row__desktop {
-    grid-template-columns: 1.2fr 0.9fr 0.8fr 0.9fr 1fr auto;
-    gap: 10px;
+    grid-template-columns: minmax(128px, 1.25fr) minmax(82px, 0.58fr) minmax(74px, 0.52fr) minmax(110px, 0.82fr) minmax(
+        168px,
+        0.95fr
+      ) auto;
+    gap: 14px;
     align-items: center;
+  }
+
+  .transaction-row__desktop > div {
+    min-height: 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .transaction-row__mobile-grid {
@@ -556,10 +584,12 @@
   .transaction-label {
     font-size: 11px;
     color: var(--ui-text-secondary);
+    margin-bottom: 2px;
   }
 
   .transaction-value {
     color: var(--ui-text-main);
+    line-height: 1.28;
   }
 
   .transaction-status {
