@@ -80,6 +80,7 @@
   import UiTextH3 from "~/components/ui/UiTextH3.vue";
 
   import { navigateTo, useRoute } from "nuxt/app";
+  import { useLocalePath } from "#imports";
   import { reactive, ref } from "vue";
   import { useAppCore } from "~/composables/useAppCore";
   import { useAuthStore } from "~/stores/authStore";
@@ -105,6 +106,7 @@
   const appCore = useAppCore();
   const toast = useToast();
   const route = useRoute();
+  const localePath = useLocalePath();
   const emit = defineEmits(["input2Fa"]);
 
   const twoFaErrors = ref<string[]>([]);
@@ -121,7 +123,7 @@
       return raw;
     }
 
-    return "/dashboard";
+    return localePath("/");
   };
 
   const doSendForm = async () => {

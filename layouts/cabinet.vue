@@ -81,7 +81,7 @@
     });
     const dashCrumb = {
       name: labels.dashboard ?? "Dashboard",
-      to: basePrefix + "/dashboard",
+      to: basePrefix || "/",
       icon: UiIconHome,
     };
     if (!list.length) return [dashCrumb];
@@ -94,7 +94,7 @@
     const currentLocale = locale.value?.toLowerCase?.();
     const startIdx = currentLocale && segments[0]?.toLowerCase() === currentLocale ? 1 : 0;
     const visibleSegments = segments.slice(startIdx);
-    return visibleSegments.join("/") !== "dashboard";
+    return visibleSegments.join("/") !== "";
   });
 </script>
 

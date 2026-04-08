@@ -14,7 +14,7 @@
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
   import { useUiStore } from "~/stores/uiStore";
 
-  import LanguageSwitcher from "~/components/block/LandingHeader/components/LanguageSwitcher.vue";
+  import LanguageSwitcher from "~/components/block/LanguageSwitcher.vue";
   import UiIconArrowDown from "~/components/ui/UiIconArrowDown.vue";
   import UiIconBell from "~/components/ui/UiIconBell.vue";
   import UiIconDelete from "~/components/ui/UiIconDelete.vue";
@@ -126,7 +126,22 @@
   const isSupportRoute = computed(() => String(route.path ?? "").includes("/support"));
   const isPaymentsRoute = computed(() => String(route.path ?? "").includes("/payments"));
   const isProfileRoute = computed(() => route.path.split("/").pop() === "profile");
-  const isDashboardRoute = computed(() => route.path.split("/").filter(Boolean).pop() === "dashboard");
+  const isDashboardRoute = computed(() => {
+    const segments = route.path.split("/").filter(Boolean);
+    const localeSegment = String(locale.value ?? "")
+      .trim()
+      .toLowerCase();
+
+    if (segments.length === 0) {
+      return true;
+    }
+
+    if (segments.length === 1 && segments[0]?.toLowerCase() === localeSegment) {
+      return true;
+    }
+
+    return segments[segments.length - 1]?.toLowerCase() === "dashboard";
+  });
   const newDepositLink = computed(() => `${addCurrentLocaleToPath("payments")}?openDeposit=1`);
   const profileMenuIsOpen = ref(false);
   const profileMenuRef = ref(null);
@@ -1045,7 +1060,7 @@
   <header
     class="h-[60px] flex items-center justify-between lg:justify-start border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
     <div class="lg:absolute lg:top-[-100px]">
-      <NuxtLink :to="addCurrentLocaleToPath('dashboard')">
+      <NuxtLink :to="`/${locale}`">
         <UiIconLogo v-if="!isThemeLight" />
         <UiIconLogoLight v-else />
       </NuxtLink>

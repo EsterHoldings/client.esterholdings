@@ -1,12 +1,9 @@
-<template>
-  <div>
-    <h2>auth page</h2>
-  </div>
-</template>
-<script setup>
-// @ts-ignore
-definePageMeta({
-  layout: "empty"
-});
+<script lang="ts" setup>
+  definePageMeta({
+    middleware: ["auth-root-redirect"],
+  });
 </script>
-<style lang="scss" scoped></style>
+
+<template>
+  <div />
+</template>

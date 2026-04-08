@@ -1,34 +1,35 @@
 <template>
-  <UiIconGoogleOauth @click="loginWithGoogle"/>
+  <UiIconGoogleOauth @click="loginWithGoogle" />
 </template>
 
 <script setup lang="ts">
-import {navigateTo} from "nuxt/app";
-import {useAppCore} from "~/composables/useAppCore";
-import {useAuthStore} from "~/stores/authStore";
-import UiIconGoogleOauth from "~/components/ui/UiIconGoogleOauth.vue";
+  import { navigateTo } from "nuxt/app";
+  import { useLocalePath } from "#imports";
+  import { useAppCore } from "~/composables/useAppCore";
+  import { useAuthStore } from "~/stores/authStore";
+  import UiIconGoogleOauth from "~/components/ui/UiIconGoogleOauth.vue";
 
-const {public: pub} = useRuntimeConfig()
-const {$recaptcha} = useNuxtApp()
+  const { public: pub } = useRuntimeConfig();
+  const { $recaptcha } = useNuxtApp();
 
-const appCore = useAppCore();
-const authStore = useAuthStore();
+  const appCore = useAppCore();
+  const authStore = useAuthStore();
+  const localePath = useLocalePath();
 
+  const clientId = `${pub.cliGoogle}`;
+  const redirectUri = `${pub.baseUrl}auth/callback`;
+  const scope = "openid email profile";
+  const responseType = "id_token";
 
-const clientId = `${pub.cliGoogle}`
-const redirectUri = `${pub.baseUrl}auth/callback`;
-const scope = "openid email profile";
-const responseType = "id_token";
+  async function loginWithGoogle() {
+    // if (!(await $recaptcha('registration'))) {
+    //   return
+    // }
+    localStorage.setItem("social_login_type", "google");
+    const state = crypto.randomUUID();
+    const nonce = crypto.randomUUID();
 
-async function loginWithGoogle() {
-  // if (!(await $recaptcha('registration'))) {
-  //   return
-  // }
-  localStorage.setItem("social_login_type", "google");
-  const state = crypto.randomUUID();
-  const nonce = crypto.randomUUID();
-
-  const authUrl =
+    const authUrl =
       "https://accounts.google.com/o/oauth2/v2/auth?" +
       `client_id=${clientId}&` +
       `redirect_uri=${encodeURIComponent(redirectUri)}&` +
@@ -38,39 +39,39 @@ async function loginWithGoogle() {
       `nonce=${nonce}&` +
       `prompt=select_account`;
 
-  const popup = window.open(authUrl, "googleLogin", "width=500,height=600");
+    const popup = window.open(authUrl, "googleLogin", "width=500,height=600");
 
-  const popupListener = async (event: MessageEvent) => {
-    if (event.origin !== window.location.origin) return;
+    const popupListener = async (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
 
-    const {id_token} = event.data;
-    if (id_token) {
-      await handleGoogleAuth(id_token);
-      window.removeEventListener("message", popupListener);
-    }
-  };
+      const { id_token } = event.data;
+      if (id_token) {
+        await handleGoogleAuth(id_token);
+        window.removeEventListener("message", popupListener);
+      }
+    };
 
-  window.addEventListener("message", popupListener);
-}
-
-async function handleGoogleAuth(idToken: string) {
-  try {
-    const res = await appCore.auth.doSocialLogin({
-      type: "google",
-      token: idToken,
-    });
-
-    const responseData = res.data;
-
-    const accessToken = await responseData.data.access_token;
-
-    localStorage.setItem("user_access_token", accessToken);
-
-    authStore.setAccessToken(accessToken);
-
-    navigateTo("/dashboard");
-  } catch (e: any) {
-    console.error("❌ Ошибка входа через Google:", e);
+    window.addEventListener("message", popupListener);
   }
-}
+
+  async function handleGoogleAuth(idToken: string) {
+    try {
+      const res = await appCore.auth.doSocialLogin({
+        type: "google",
+        token: idToken,
+      });
+
+      const responseData = res.data;
+
+      const accessToken = await responseData.data.access_token;
+
+      localStorage.setItem("user_access_token", accessToken);
+
+      authStore.setAccessToken(accessToken);
+
+      navigateTo(localePath("/"));
+    } catch (e: any) {
+      console.error("❌ Ошибка входа через Google:", e);
+    }
+  }
 </script>

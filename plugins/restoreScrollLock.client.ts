@@ -1,7 +1,8 @@
 import { defineNuxtPlugin } from "#app";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
 
-const CABINET_ROUTE_RE = /^\/(?:[a-z]{2}\/)?(?:dashboard|accounts|payments|profile|support|referrals|settings|admin)(?:\/|$)/i;
+const CABINET_ROUTE_RE =
+  /^\/(?:[a-z]{2}(?:\/(?:accounts|payments|profile|support|referrals|settings|admin)(?:\/|$)|\/?$)|(?:accounts|payments|profile|support|referrals|settings|admin)(?:\/|$))/i;
 
 const resolveLayoutMeta = (route: RouteLocationNormalizedLoaded): string => {
   const layoutMeta = route.meta?.layout;

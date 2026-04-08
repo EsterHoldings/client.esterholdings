@@ -57,9 +57,10 @@
 
   const router = useRouter();
   const sideBarIsOpen = ref(true);
+  const dashboardRootPath = computed(() => `/${locale.value}`);
 
   const menuItems = computed(() => [
-    { title: t("cabinet.menu.dashboard"), to: addCurrentLocaleToPath("dashboard"), icon: UiIconHome },
+    { title: t("cabinet.menu.dashboard"), to: dashboardRootPath.value, icon: UiIconHome },
     { title: t("cabinet.menu.accounts"), to: addCurrentLocaleToPath("accounts"), icon: UiIconUser },
     {
       title: t("cabinet.menu.billing"),
