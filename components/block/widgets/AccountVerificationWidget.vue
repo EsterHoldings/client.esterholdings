@@ -21,62 +21,16 @@
 
     <div class="verification-progress-card">
       <div class="verification-progress-card__top">
-        <span class="verification-progress-card__title">{{ progressTitle }}</span>
+        <span class="verification-progress-card__count">{{ verifiedCountText }}</span>
+        <span class="verification-progress-card__percent">{{ verificationProgressPercent }}%</span>
       </div>
 
       <div
-        class="verification-step-progress"
+        class="verification-progress-bar"
         :aria-label="verifiedCountText">
-        <button
-          v-for="step in orderedSteps"
-          :key="`progress-${step.key}`"
-          type="button"
-          class="verification-step-progress__item"
-          :class="`is-${step.status}`"
-          :title="step.title"
-          @click="handleOpenStep(step.key)">
-          <span
-            class="verification-step-progress__icon"
-            aria-hidden="true">
-            <svg
-              v-if="step.status === 'approved'"
-              viewBox="0 0 16 16"
-              class="verification-step-progress__icon-svg"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M3.5 8.5l3 3 6-7" />
-            </svg>
-            <svg
-              v-else-if="step.status === 'rejected'"
-              viewBox="0 0 16 16"
-              class="verification-step-progress__icon-svg"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round">
-              <path d="M4 4l8 8M12 4l-8 8" />
-            </svg>
-            <svg
-              v-else
-              viewBox="0 0 16 16"
-              class="verification-step-progress__icon-svg"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round">
-              <circle
-                cx="8"
-                cy="8"
-                r="5.5" />
-              <path d="M8 5.2v3.1l2.1 1.3" />
-            </svg>
-          </span>
-          <span class="verification-step-progress__label">{{ step.title }}</span>
-        </button>
+        <span
+          class="verification-progress-bar__fill"
+          :style="{ width: `${verificationProgressPercent}%` }"></span>
       </div>
     </div>
 
@@ -123,19 +77,12 @@
                   :title="step.title">
                   {{ step.title }}
                 </div>
-
-                <UiBadge
-                  :state="step.badgeState"
-                  outline
-                  class="verification-step__badge !px-2.5 !py-0.5 text-xs">
+                <div class="verification-step__status verification-step__status--inline">
+                  <span
+                    class="verification-step__status-dot"
+                    :class="step.stateClass"></span>
                   {{ step.statusLabel }}
-                </UiBadge>
-              </div>
-              <div class="verification-step__status">
-                <span
-                  class="verification-step__status-dot"
-                  :class="step.stateClass"></span>
-                <span>{{ step.statusLabel }}</span>
+                </div>
               </div>
               <div
                 v-if="step.comment"
@@ -157,7 +104,6 @@
 
   import CreateNewDeposit from "~/pages/payments/create/index.vue";
   import UiImageCircle from "~/components/ui/UiImageCircle.vue";
-  import UiBadge from "~/components/ui/UiBadge.vue";
   import UiIconProfile from "~/components/ui/UiIconProfile.vue";
   import UiIconMails from "~/components/ui/UiIconMails.vue";
   import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
@@ -168,7 +114,6 @@
   import { useAuthStore } from "~/stores/authStore";
 
   type VerificationStatus = "pending" | "approved" | "rejected";
-  type BadgeState = "warning" | "success" | "danger";
   type VerificationStepKey = "profile" | "email" | "documents" | "deposit";
 
   const { t } = useI18n({ useScope: "global" });
@@ -220,12 +165,6 @@
     return "warning";
   };
 
-  const badgeState = (status: VerificationStatus): BadgeState => {
-    if (status === "approved") return "success";
-    if (status === "rejected") return "danger";
-    return "warning";
-  };
-
   const getComment = (key: string): string => {
     const raw = verificationRequestData?.[key]?.comment;
     if (typeof raw !== "string") return "";
@@ -239,7 +178,6 @@
       status: infoStatus.value,
       statusLabel: statusLabel(infoStatus.value),
       stateClass: stateClass(infoStatus.value),
-      badgeState: badgeState(infoStatus.value),
       comment: getComment("info"),
       icon: UiIconProfile,
     },
@@ -249,7 +187,6 @@
       status: emailStatus.value,
       statusLabel: statusLabel(emailStatus.value),
       stateClass: stateClass(emailStatus.value),
-      badgeState: badgeState(emailStatus.value),
       comment: getComment("email"),
       icon: UiIconMails,
     },
@@ -259,7 +196,6 @@
       status: documentsStatus.value,
       statusLabel: statusLabel(documentsStatus.value),
       stateClass: stateClass(documentsStatus.value),
-      badgeState: badgeState(documentsStatus.value),
       comment: getComment("documents"),
       icon: UiIconDocuments,
     },
@@ -269,7 +205,6 @@
       status: depositStatus.value,
       statusLabel: statusLabel(depositStatus.value),
       stateClass: stateClass(depositStatus.value),
-      badgeState: badgeState(depositStatus.value),
       comment: getComment("deposit"),
       icon: UiIconPayment,
     },
@@ -302,15 +237,19 @@
     () => totalCount.value > 0 && allSteps.value.every(step => step.status === "approved")
   );
 
-  const progressTitle = computed(() =>
-    resolveText("cabinet.dashboard.accountVerification.progressTitle", "Verification progress")
-  );
-
   const verifiedCountText = computed(() =>
     resolveText("cabinet.dashboard.accountVerification.verifiedCount", "Verified {done}/{total}")
       .replace("{done}", String(approvedCount.value))
       .replace("{total}", String(totalCount.value))
   );
+
+  const verificationProgressPercent = computed(() => {
+    if (totalCount.value === 0) {
+      return 0;
+    }
+
+    return Math.round((approvedCount.value / totalCount.value) * 100);
+  });
 
   const summaryText = computed(() => {
     if (isFullyVerified.value) {
@@ -445,7 +384,7 @@
   .verification-progress-card {
     border-radius: 12px;
     background: transparent;
-    padding: 8px 0 0;
+    padding: 8px 0 2px;
   }
 
   .verification-progress-card__top {
@@ -455,93 +394,32 @@
     gap: 8px;
   }
 
-  .verification-progress-card__title {
+  .verification-progress-card__count,
+  .verification-progress-card__percent {
     font-size: 12px;
+    font-weight: 600;
     color: var(--ui-text-secondary);
   }
 
-  .verification-step-progress {
+  .verification-progress-bar {
     margin-top: 8px;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0;
     border-radius: 12px;
     overflow: hidden;
-    background: var(--color-stroke-ui-light);
+    height: 10px;
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 82%, transparent);
     border: 1px solid color-mix(in srgb, var(--ui-text-main) 10%, transparent);
   }
 
-  .verification-step-progress__item {
-    min-height: 30px;
-    height: 30px;
-    max-height: 30px;
-    width: 100%;
-    border: 0;
-    cursor: pointer;
-    border-radius: 0;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 6px;
-    padding: 0 8px;
-    min-width: 0;
-    color: var(--ui-text-main);
-  }
-
-  .verification-step-progress__item:focus-visible {
-    outline: 1px solid var(--ui-primary-main);
-    outline-offset: -1px;
-  }
-
-  .verification-step-progress__icon {
-    width: 12px;
-    height: 12px;
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--ui-text-secondary);
-  }
-
-  .verification-step-progress__icon-svg {
-    width: 12px;
-    height: 12px;
-  }
-
-  .verification-step-progress__label {
-    font-size: 10px;
-    line-height: 1;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-    width: 100%;
-  }
-
-  .verification-step-progress__item.is-approved {
-    background: color-mix(in srgb, var(--color-success, var(--ui-primary-accent)) 24%, transparent);
-  }
-
-  .verification-step-progress__item.is-approved .verification-step-progress__icon {
-    color: var(--color-success);
-  }
-
-  .verification-step-progress__item.is-pending {
-    background: color-mix(in srgb, var(--color-ui-warning, var(--ui-primary-accent)) 22%, transparent);
-  }
-
-  .verification-step-progress__item.is-pending .verification-step-progress__icon {
-    color: var(--color-ui-warning);
-  }
-
-  .verification-step-progress__item.is-rejected {
-    background: color-mix(in srgb, var(--color-danger, var(--ui-primary-accent)) 22%, transparent);
-  }
-
-  .verification-step-progress__item.is-rejected .verification-step-progress__icon {
-    color: var(--color-danger);
+  .verification-progress-bar__fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ui-primary-main) 82%, transparent) 0%,
+      color-mix(in srgb, var(--color-success) 88%, transparent) 100%
+    );
+    transition: width 0.25s ease;
   }
 
   .verification-list-wrap {
@@ -592,7 +470,7 @@
     gap: 10px;
     border: 1px solid transparent;
     background: var(--ui-background-card);
-    padding: 10px 12px;
+    padding: 9px 12px;
     border-radius: 12px;
     transition:
       background-color 0.2s ease,
@@ -603,7 +481,7 @@
 
   .verification-step__button:hover {
     background: transparent;
-    border-color: var(--ui-background-card);
+    border-color: var(--color-stroke-ui-light);
   }
 
   .verification-step__button:focus-visible {
@@ -650,7 +528,7 @@
 
   .verification-step__title-row {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 8px;
   }
@@ -665,20 +543,17 @@
   }
 
   .verification-step__status {
-    margin-top: 4px;
     font-size: 11px;
     color: var(--ui-text-secondary);
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    min-width: 0;
-    width: 100%;
   }
 
-  .verification-step__status > span:last-child {
-    min-width: 0;
-    white-space: normal;
-    overflow-wrap: anywhere;
+  .verification-step__status--inline {
+    margin-top: 0;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .verification-step__status-dot {
@@ -699,10 +574,6 @@
     background: var(--color-danger);
   }
 
-  .verification-step__badge {
-    flex-shrink: 0;
-  }
-
   .verification-step__comment {
     margin-top: 4px;
     font-size: 12px;
@@ -713,17 +584,9 @@
   }
 
   @media (max-width: 767px) {
-    .verification-step-progress {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .verification-step-progress__item:last-child {
-      grid-column: span 2;
-    }
-
     .verification-step__title-row {
-      flex-direction: column;
-      gap: 6px;
+      align-items: flex-start;
+      flex-wrap: wrap;
     }
   }
 

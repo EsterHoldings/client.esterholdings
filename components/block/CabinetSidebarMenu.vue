@@ -73,16 +73,16 @@
       to: addCurrentLocaleToPath("payments/details"),
       icon: UiIconPaymentDetail,
     },
+    { title: t("cabinet.menu.referral_system"), to: addCurrentLocaleToPath("referrals"), icon: UiIconReferral },
+  ]);
+
+  const secondMenuItems = computed(() => [
     {
       title: t("cabinet.menu.support"),
       to: addCurrentLocaleToPath("support"),
       icon: UiIconSupport,
       notificationsCount: props.supportUnreadCount,
     },
-    { title: t("cabinet.menu.referral_system"), to: addCurrentLocaleToPath("referrals"), icon: UiIconReferral },
-  ]);
-
-  const secondMenuItems = computed(() => [
     {
       title: t("cabinet.menu.settings"),
       to: addCurrentLocaleToPath("profile"),

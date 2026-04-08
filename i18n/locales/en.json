@@ -431,10 +431,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Deep aggregated liquidity pools designed for stable fills and scalable order flow.",
-            "benefits": [
-              "Tier-1 liquidity aggregation",
-              "Depth across venues"
-            ]
+            "benefits": ["Tier-1 liquidity aggregation", "Depth across venues"]
           },
           {
             "line1Prefix": "",
@@ -444,10 +441,7 @@
             "line2Accent": "trading",
             "line2Suffix": "",
             "subtitle": "High order processing speeds, 0 limit/stop levels — built for active trading flow.",
-            "benefits": [
-              "Fast server technologies",
-              "Institutional liquidity setup"
-            ]
+            "benefits": ["Fast server technologies", "Institutional liquidity setup"]
           }
         ]
       }
@@ -782,7 +776,7 @@
         "error": "Failed to verify email."
       },
       "accountVerification": {
-        "title": "Account Verification",
+        "title": "Account verification",
         "subtitle": "Verification in progress",
         "statuses": {
           "required": "Required",
@@ -824,7 +818,7 @@
         "chartPlaceholder": "Chart will go here"
       },
       "mt4": {
-        "title": "MT4 Accounts",
+        "title": "Favorite or new MT4 accounts",
         "openNewAccount": "Open new account",
         "empty": "No accounts yet.",
         "table": {
@@ -837,7 +831,9 @@
         }
       },
       "transactions": {
-        "title": "Transactions",
+        "title": "Latest transactions",
+        "tooltipLabel": "About latest transactions",
+        "tooltip": "This block shows the latest deposits and withdrawals so the client can immediately notice updated payments and open the needed transaction.",
         "sort": {
           "createdAt": "Created",
           "amount": "Amount",

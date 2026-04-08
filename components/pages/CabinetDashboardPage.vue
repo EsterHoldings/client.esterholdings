@@ -35,23 +35,6 @@
               :currency="dashboardSummary.currency"
               :is-loading="isSummaryLoading" />
           </NuxtLink>
-          <NuxtLink
-            :to="localePath('/payments')"
-            class="dashboard-widget-link">
-            <PendingTransactionsWidget
-              class="dashboard-widget-card"
-              :total="dashboardSummary.pendingTransactions"
-              :is-loading="isSummaryLoading" />
-          </NuxtLink>
-          <button
-            type="button"
-            class="dashboard-widget-link"
-            @click="handleOpenNotifications">
-            <MissedNotificationsWidget
-              class="dashboard-widget-card"
-              :total="dashboardSummary.missedNotifications"
-              :is-loading="isSummaryLoading" />
-          </button>
         </div>
 
         <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
@@ -81,11 +64,12 @@
 
 <script lang="ts" setup>
   import type Echo from "laravel-echo";
-  import { useLocalePath, useNuxtApp } from "#imports";
+  import { useNuxtApp } from "nuxt/app";
   import { useI18n } from "vue-i18n";
   import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
   import { useRoute, useRouter } from "vue-router";
   import { useToast } from "vue-toastification";
+  import { useLocalePath } from "~/.nuxt/imports";
 
   import UiContainer from "~/components/ui/UiContainer.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
@@ -94,12 +78,9 @@
 
   import TransactionsWidget from "~/components/block/widgets/TransactionsWidget.vue";
   import TotalAmountWidget from "~/components/block/widgets/TotalAmountWidget.vue";
-  import PendingTransactionsWidget from "~/components/block/widgets/PendingTransactionsWidget.vue";
-  import MissedNotificationsWidget from "~/components/block/widgets/MissedNotificationsWidget.vue";
   import ReferralTotalAmount from "~/components/block/widgets/ReferralTotalAmount.vue";
   import AccountVerificationWidget from "~/components/block/widgets/AccountVerificationWidget.vue";
   import Mt4AccountsWidget from "~/components/block/widgets/Mt4AccountsWidget.vue";
-  import { useUiStore } from "~/stores/uiStore";
   import { useAuthStore } from "~/stores/authStore";
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
   import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
@@ -114,7 +95,6 @@
   const toast = useToast();
   const authStore = useAuthStore();
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
-  const uiStore = useUiStore();
   const appCore = useAppCore();
   const { canCreateAccount, refreshAccountCreationEligibility } = useAccountCreationEligibility();
   const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
@@ -517,10 +497,6 @@
     }
   };
 
-  const handleOpenNotifications = () => {
-    uiStore.openNotifications();
-  };
-
   const handleManualRefresh = () => {
     handleRefreshDashboard();
   };
@@ -532,6 +508,10 @@
 </script>
 
 <style scoped>
+  .dashboard-page {
+    padding-top: 20px;
+  }
+
   .row-item {
     background: var(--color-stroke-ui-dark);
     border-bottom: 1px solid var(--color-stroke-ui-light);
@@ -555,13 +535,13 @@
 
   .dashboard-summary-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.5rem;
   }
 
-  @media (min-width: 1440px) {
+  @media (min-width: 640px) {
     .dashboard-summary-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
@@ -583,13 +563,13 @@
   }
 
   .dashboard-page :deep(.dashboard-widget-card) {
-    border: none !important;
+    border: 1px solid var(--color-stroke-ui-light) !important;
   }
 
   .dashboard-page :deep(.transactions-widget__loading),
   .dashboard-page :deep(.transactions-widget__error),
   .dashboard-page :deep(.transactions-widget__empty) {
-    border: none !important;
+    border: 1px solid var(--color-stroke-ui-light) !important;
   }
 
   .dashboard-page :deep(.transactions-widget__empty) {
@@ -598,14 +578,14 @@
   }
 
   .dashboard-page :deep(.transaction-row) {
-    border: none !important;
+    border: 1px solid var(--color-stroke-ui-light) !important;
   }
 
   .dashboard-page :deep(.verification-header-card),
   .dashboard-page :deep(.verification-progress-card),
   .dashboard-page :deep(.verification-step),
   .dashboard-page :deep(.verification-item) {
-    border: none !important;
+    border-color: var(--color-stroke-ui-light) !important;
   }
 
   /* MT4 and verification styles moved into widgets */

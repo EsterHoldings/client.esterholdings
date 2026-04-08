@@ -10,7 +10,7 @@
           :to="profileAccountsCreateLink"
           class="w-full sm:w-auto">
           <UiButtonDefault
-            state="primary"
+            state="success"
             class="w-full sm:w-auto">
             {{ t("cabinet.dashboard.mt4.openNewAccount") }}
           </UiButtonDefault>
@@ -128,19 +128,19 @@
           </button>
           <div class="mt4-type min-w-0 text-[var(--ui-text-main)]">
             <UiTextSmall class="text-[var(--ui-text-secondary)]">
-              {{ t("cabinet.dashboard.mt4.table.type") }}
+              {{ t("cabinet.accounts.columns.number") }}
             </UiTextSmall>
-            <div class="truncate font-semibold">{{ getAccountType(account) }}</div>
+            <div class="truncate font-semibold">{{ getAccountNumber(account) }}</div>
             <UiTextSmall class="text-[var(--ui-text-secondary)] truncate">
               {{ t("cabinet.accounts.columns.leverage") }}: {{ getLeverageDisplay(account) }}
             </UiTextSmall>
           </div>
           <div class="mt4-account min-w-0 text-[var(--ui-text-main)]">
             <UiTextSmall class="text-[var(--ui-text-secondary)]">
-              {{ t("cabinet.accounts.columns.number") }}
+              {{ t("cabinet.dashboard.mt4.table.type") }}
             </UiTextSmall>
             <UiTextSmall class="mt4-account-number text-[var(--ui-text-main)] font-semibold truncate">
-              {{ getAccountNumber(account) }}
+              {{ getAccountType(account) }}
             </UiTextSmall>
           </div>
           <div class="mt4-balance min-w-0 text-[var(--ui-text-main)]">
@@ -470,7 +470,7 @@
   const normalizeRefreshPayloadIds = (payload: any): string[] => {
     const rawIds = Array.isArray(payload) ? payload : Array.isArray(payload?.accountIds) ? payload.accountIds : [];
     const normalized = rawIds.map((id: unknown) => String(id ?? "").trim()).filter((id: string) => id !== "");
-    return [...new Set(normalized)];
+    return Array.from(new Set(normalized));
   };
 
   const findAccountById = (id: string): Mt4Account | null => {
@@ -859,7 +859,7 @@
 
   .mt4-card:hover {
     background: transparent;
-    border-color: var(--ui-background-card);
+    border-color: var(--color-stroke-ui-light);
   }
 
   .mt4-grid {
@@ -981,7 +981,7 @@
 
   .verification-item:hover {
     background: transparent;
-    border-color: var(--ui-background-card);
+    border-color: var(--color-stroke-ui-light);
   }
 
   .card-menu {
@@ -990,12 +990,13 @@
     min-width: 160px;
     width: 180px;
     border-radius: 10px;
-    border: 1px solid var(--color-stroke-ui-light);
-    background: var(--ui-background-panel);
+    border: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 82%, var(--ui-text-main) 18%);
+    background: color-mix(in srgb, var(--ui-background-panel) 94%, var(--ui-background-card) 6%);
+    backdrop-filter: blur(20px) saturate(125%);
     opacity: 1;
     pointer-events: auto;
     padding: 8px;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
   }
 
   .card-menu__item {
