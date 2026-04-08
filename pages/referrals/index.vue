@@ -2,9 +2,9 @@
   <UiContainer class="referrals-page">
     <div class="referrals-placeholder">
       <PanelDefault class="referrals-placeholder__card">
-        <p class="referrals-placeholder__label">{{ placeholderContent.label }}</p>
-        <h1 class="referrals-placeholder__title">{{ placeholderContent.title }}</h1>
-        <p class="referrals-placeholder__description">{{ placeholderContent.description }}</p>
+        <p class="referrals-placeholder__label text-[var(--ui-text-main)]">{{ placeholderContent.label }}</p>
+        <h1 class="referrals-placeholder__title text-[var(--ui-text-main)]">{{ placeholderContent.title }}</h1>
+        <p class="referrals-placeholder__description text-[var(--ui-text-main)]">{{ placeholderContent.description }}</p>
       </PanelDefault>
     </div>
   </UiContainer>
