@@ -763,7 +763,7 @@
   }
 
   .dashboard-side-widget {
-    --dashboard-side-widget-height: clamp(360px, 43vh, 440px);
+    --dashboard-side-widget-height: 100%;
     min-height: var(--dashboard-side-widget-height);
     height: var(--dashboard-side-widget-height);
   }
