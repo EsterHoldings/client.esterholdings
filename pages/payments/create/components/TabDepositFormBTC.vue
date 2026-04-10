@@ -4,11 +4,11 @@
     <div class="tab-deposit__form">
       <UiFormControl
         class="tab-deposit__form_field"
-        label="Сумма"
-        :errors="validatorBTCDataForm?.errorsFormData?.amount?.errors">
+        :label="amountLabel"
+        :errors="amountErrors">
         <UiInput
           type="text"
-          placeholder="Сумма USD"
+          :placeholder="amountPlaceholder"
           @input="validatorBTCDataForm?.doValidateField('amount', $event.target.value)"
           @blur="validatorBTCDataForm?.doValidateField('amount', $event.target.value)"
           :value="formData.amount"
@@ -18,11 +18,11 @@
 
       <UiFormControl
         class="tab-deposit__form_field"
-        label="Комментарий"
-        :errors="validatorBTCDataForm?.errorsFormData?.comment?.errors">
+        :label="commentLabel"
+        :errors="commentErrors">
         <UiTextarea
           type="text"
-          placeholder="Ваш коментарий"
+          :placeholder="commentPlaceholder"
           @input="validatorBTCDataForm?.doValidateField('comment', $event.target.value)"
           @blur="validatorBTCDataForm?.doValidateField('comment', $event.target.value)"
           :value="formData.comment"
@@ -34,14 +34,16 @@
         class="mt-3"
         state="info--outline"
         @click="validateBTCDataForm(handleSubmit)">
-        Создать депозит
+        {{ submitLabel }}
       </UiButtonDefault>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { onMounted } from "vue";
+  import { computed, onMounted } from "vue";
+  import { useI18n } from "vue-i18n";
+  import { resolveApiMessage } from "~/composables/useApiMessages";
   import { formData } from "~/pages/payments/create/composables/TabDepositFormBTC";
   import {
     resetFormData,
@@ -56,9 +58,32 @@
   import UiTextarea from "~/components/ui/UiTextarea.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 
-  const handleSubmit = () => {
-    console.log("BTC");
+  const { t } = useI18n({ useScope: "global" });
+  const resolveText = (key: string, fallback: string): string => {
+    const translated = t(key);
+    return translated === key ? fallback : translated;
   };
+  const amountLabel = computed(() => resolveText("cabinet.billing.depositForm.amount", "Amount"));
+  const amountPlaceholder = computed(() =>
+    resolveText("cabinet.billing.depositForm.amountPlaceholder", "Amount in USD")
+  );
+  const commentLabel = computed(() => resolveText("cabinet.billing.depositForm.comment", "Comment"));
+  const commentPlaceholder = computed(() =>
+    resolveText("cabinet.billing.depositForm.commentPlaceholder", "Add a comment for the finance team")
+  );
+  const submitLabel = computed(() => resolveText("cabinet.billing.depositForm.submit", "Create deposit"));
+  const amountErrors = computed(() =>
+    (validatorBTCDataForm?.errorsFormData?.amount?.errors ?? []).map(
+      (message: string) => resolveApiMessage(message, message) ?? message
+    )
+  );
+  const commentErrors = computed(() =>
+    (validatorBTCDataForm?.errorsFormData?.comment?.errors ?? []).map(
+      (message: string) => resolveApiMessage(message, message) ?? message
+    )
+  );
+
+  const handleSubmit = () => undefined;
 
   onMounted(() => {
     resetFormData();

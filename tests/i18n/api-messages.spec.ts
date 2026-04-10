@@ -31,6 +31,9 @@ const translateFromRu = (key: string, fallback: string): string => {
 describe("useApiMessages translator helpers", () => {
   it("maps normalized backend messages to localized text", () => {
     expect(resolveApiMessageWithTranslator("Unauthorized", translateFromRu)).toBe("Требуется авторизация.");
+    expect(resolveApiMessageWithTranslator("Payment was successfully created.", translateFromRu)).toBe(
+      "Депозит успешно создан."
+    );
     expect(resolveApiMessageWithTranslator("payment synchronized successfully", translateFromRu)).toBe(
       "Платёж успешно синхронизирован."
     );
@@ -45,6 +48,13 @@ describe("useApiMessages translator helpers", () => {
     ).toBe("Открытие счёта будет доступно после верификации данных профиля и документов.");
     expect(resolveApiMessageWithTranslator("Client account is blocked.", translateFromRu)).toBe(
       "Клиентский аккаунт заблокирован."
+    );
+    expect(resolveApiMessageWithTranslator("Payment system not found.", translateFromRu)).toBe(
+      "Платёжная система не найдена."
+    );
+    expect(resolveApiMessageWithTranslator("Account not found.", translateFromRu)).toBe("Счёт не найден.");
+    expect(resolveApiMessageWithTranslator("Deposit account not found.", translateFromRu)).toBe(
+      "Счёт для пополнения не найден."
     );
   });
 
@@ -109,5 +119,29 @@ describe("useApiMessages translator helpers", () => {
     expect(message).toBe(
       "Заполните обязательные поля профиля перед открытием MT4 счёта: имя, фамилия, почтовый индекс"
     );
+  });
+
+  it("localizes validator-like field messages used in cabinet forms", () => {
+    expect(resolveApiMessageWithTranslator("Field amount is required!", translateFromRu)).toBe(
+      "Поле обязательно для заполнения."
+    );
+    expect(resolveApiMessageWithTranslator("Field amount is incorrect! (Example: 15.25)", translateFromRu)).toBe(
+      "Введите корректное значение."
+    );
+    expect(resolveApiMessageWithTranslator("Field comment length should be less than 254!", translateFromRu)).toBe(
+      "Значение слишком длинное. Максимум: 254."
+    );
+  });
+
+  it("localizes Laravel validation bag messages used in billing flows", () => {
+    expect(resolveApiMessageWithTranslator("The selected payment detail id is invalid.", translateFromRu)).toBe(
+      "Выбранное значение недоступно."
+    );
+    expect(resolveApiMessageWithTranslator("The amount field must be greater than 0.", translateFromRu)).toBe(
+      "Введите сумму больше 0."
+    );
+    expect(
+      resolveApiMessageWithTranslator("The comment field may not be greater than 5000 characters.", translateFromRu)
+    ).toBe("Значение слишком длинное. Максимум: 5000.");
   });
 });

@@ -8,18 +8,18 @@
       aria-busy="true">
       <div class="flex flex-col items-center gap-3 px-6 py-5 text-center">
         <UiIconSpinnerDefault />
-        <div class="text-[15px] font-semibold text-white/90">Processing...</div>
+        <div class="text-[15px] font-semibold text-white/90">{{ processingLabel }}</div>
       </div>
     </div>
 
     <UiTextH5 class="mb-5 text-[var(--ui-text-main)]">
-      {{ props.paymentSystem?.name || "Deposit" }}
+      {{ paymentSystemTitle }}
     </UiTextH5>
 
     <div class="flex flex-col gap-3">
       <UiFormControl
-        label="Номер счета (аккаунт)"
-        :errors="validatorUsdtTrcDataForm?.errorsFormData?.accountId?.errors">
+        :label="accountLabel"
+        :errors="accountErrors">
         <UiSelect
           :without-no-select="true"
           :data="accounts"
@@ -30,11 +30,11 @@
       </UiFormControl>
 
       <UiFormControl
-        label="Сумма"
-        :errors="validatorUsdtTrcDataForm?.errorsFormData?.amount?.errors">
+        :label="amountLabel"
+        :errors="amountErrors">
         <UiInput
           type="number"
-          placeholder="Сумма USD"
+          :placeholder="amountPlaceholder"
           @input="validatorUsdtTrcDataForm.doValidateField('amount', $event.target.value)"
           @blur="validatorUsdtTrcDataForm.doValidateField('amount', $event.target.value)"
           :value="formData.amount"
@@ -43,11 +43,11 @@
       </UiFormControl>
 
       <UiFormControl
-        label="Комментарий"
-        :errors="validatorUsdtTrcDataForm.errorsFormData?.comment?.errors">
+        :label="commentLabel"
+        :errors="commentErrors">
         <UiTextarea
           type="text"
-          placeholder="Ваш коментарий"
+          :placeholder="commentPlaceholder"
           @input="validatorUsdtTrcDataForm.doValidateField('comment', $event.target.value)"
           @blur="validatorUsdtTrcDataForm.doValidateField('comment', $event.target.value)"
           :value="formData.comment"
@@ -60,7 +60,7 @@
         class="mt-3 inline-flex items-center justify-center gap-2"
         :disabled="isLoadingSubmitBtn"
         @click="validateUsdtTrcDataForm(handleSubmit)">
-        <span>Создать депозит</span>
+        <span>{{ submitLabel }}</span>
         <UiIconSpinnerDefault v-if="isLoadingSubmitBtn" />
       </UiButtonDefault>
     </div>
@@ -69,8 +69,9 @@
 
 <script lang="ts" setup>
   import useAppCore from "~/composables/useAppCore";
+  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import { formData } from "~/pages/payments/create/composables/TabDepositFormUsdtTrc20";
-  import { inject, onMounted, ref } from "vue";
+  import { computed, inject, onMounted, ref } from "vue";
   import {
     resetFormData,
     resetValidationUsdtTrcDataForm,
@@ -87,8 +88,9 @@
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
   import { useToast } from "vue-toastification";
-  import { navigateTo } from "nuxt/app";
+  import { navigateTo, useLocalePath } from "~/.nuxt/imports";
   import useEventBus from "~/composables/useEventBus";
+  import { useI18n } from "vue-i18n";
 
   const props = defineProps({
     paymentSystem: { type: Object, required: true },
@@ -98,6 +100,8 @@
   const closeModal = () => modalControl?.closeModal?.();
 
   const toast = useToast();
+  const localePath = useLocalePath();
+  const { t } = useI18n({ useScope: "global" });
   const appCore = useAppCore();
 
   const accounts = ref<any[]>([]);
@@ -108,6 +112,51 @@
   const isLoadingAccounts = ref(false);
   const hasMoreAccounts = ref(true);
 
+  const resolveText = (key: string, fallback: string): string => {
+    const translated = t(key);
+    return translated === key ? fallback : translated;
+  };
+
+  const processingLabel = computed(() => resolveText("cabinet.billing.depositForm.processing", "Processing..."));
+  const paymentSystemTitle = computed(() => {
+    const paymentSystemName = String(props.paymentSystem?.name ?? "").trim();
+    return paymentSystemName !== "" ? paymentSystemName : resolveText("cabinet.billing.types.deposit", "Deposit");
+  });
+  const accountLabel = computed(() => resolveText("cabinet.billing.depositForm.account", "Trading account"));
+  const amountLabel = computed(() => resolveText("cabinet.billing.depositForm.amount", "Amount"));
+  const amountPlaceholder = computed(() =>
+    resolveText("cabinet.billing.depositForm.amountPlaceholder", "Amount in USD")
+  );
+  const commentLabel = computed(() => resolveText("cabinet.billing.depositForm.comment", "Comment"));
+  const commentPlaceholder = computed(() =>
+    resolveText("cabinet.billing.depositForm.commentPlaceholder", "Add a comment for the finance team")
+  );
+  const submitLabel = computed(() => resolveText("cabinet.billing.depositForm.submit", "Create deposit"));
+  const createdLabel = computed(() =>
+    resolveText("cabinet.billing.depositForm.created", "Deposit created successfully.")
+  );
+  const submitErrorLabel = computed(() =>
+    resolveText("cabinet.billing.depositForm.error", "Failed to create deposit.")
+  );
+  const loadAccountsErrorLabel = computed(() =>
+    resolveText("cabinet.billing.depositForm.loadAccountsError", "Failed to load trading accounts.")
+  );
+  const accountErrors = computed(() =>
+    (validatorUsdtTrcDataForm?.errorsFormData?.accountId?.errors ?? []).map(
+      (message: string) => resolveApiMessage(message, message) ?? message
+    )
+  );
+  const amountErrors = computed(() =>
+    (validatorUsdtTrcDataForm?.errorsFormData?.amount?.errors ?? []).map(
+      (message: string) => resolveApiMessage(message, message) ?? message
+    )
+  );
+  const commentErrors = computed(() =>
+    (validatorUsdtTrcDataForm?.errorsFormData?.comment?.errors ?? []).map(
+      (message: string) => resolveApiMessage(message, message) ?? message
+    )
+  );
+
   const handleSubmit = async () => {
     try {
       isLoadingSubmitBtn.value = true;
@@ -117,13 +166,16 @@
       const response: any = await appCore.deposit.post(formData);
       const redirectUrl = response.data.data.redirectUrl;
 
-      navigateTo("/payments");
+      toast.success(resolveApiMessage(response?.data?.message, createdLabel.value) ?? createdLabel.value);
       closeModal();
       useEventBus.emit("loadDataForPayments");
-      window.open(redirectUrl, "_blank", "noopener");
-    } catch (e) {
-      toast.error("Oops =( We have some problems.");
-      closeModal();
+      await navigateTo(localePath("/payments"));
+
+      if (redirectUrl) {
+        window.open(redirectUrl, "_blank", "noopener");
+      }
+    } catch (error: any) {
+      toast.error(extractApiErrorMessage(error, submitErrorLabel.value) ?? submitErrorLabel.value);
     } finally {
       isLoadingSubmitBtn.value = false;
     }
@@ -190,8 +242,9 @@
 
       appendUnique(normalizeAccounts(list));
       hasMoreAccounts.value = true;
-    } catch (e) {
+    } catch (error: any) {
       loadAccountsPage.value = Math.max(1, page - 1);
+      toast.error(extractApiErrorMessage(error, loadAccountsErrorLabel.value) ?? loadAccountsErrorLabel.value);
     } finally {
       isLoadingAccounts.value = false;
     }

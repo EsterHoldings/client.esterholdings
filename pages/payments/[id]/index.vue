@@ -46,7 +46,7 @@
         ]">
         <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div class="payment-field">
-            <UiTextSmall class="payment-field__label">ID</UiTextSmall>
+            <UiTextSmall class="payment-field__label">{{ idLabel }}</UiTextSmall>
             <div class="payment-field__value break-all">{{ payment.id }}</div>
           </div>
 
@@ -199,6 +199,7 @@
 
   const pageTitle = computed(() => `${resolveI18nValue("cabinet.billing.title", "Платежи")} #${paymentId.value}`);
   const backLabel = computed(() => resolveI18nValue("cabinet.billing.backToList", "К списку платежей"));
+  const idLabel = computed(() => resolveI18nValue("cabinet.common.id", "ID"));
   const syncPaymentLabel = computed(() => resolveI18nValue("cabinet.billing.syncPayment", "Синхронизировать"));
   const syncPaymentLoadingLabel = computed(() =>
     resolveI18nValue("cabinet.billing.syncPaymentLoading", "Синхронизация...")
@@ -217,7 +218,7 @@
   const paymentSystemLabel = computed(() =>
     resolveI18nValue("cabinet.billing.columns.paymentSystem", "Платежная система")
   );
-  const gatewayLabel = computed(() => resolveI18nValue("cabinet.billing.gateway", "Gateway"));
+  const gatewayLabel = computed(() => resolveI18nValue("cabinet.billing.gateway", "Payment gateway"));
   const createdAtLabel = computed(() => resolveI18nValue("cabinet.billing.columns.createdAt", "Создано"));
   const updatedAtLabel = computed(() => resolveI18nValue("cabinet.billing.updatedAt", "Обновлено"));
   const commentLabel = computed(() => resolveI18nValue("cabinet.billing.comment", "Комментарий"));

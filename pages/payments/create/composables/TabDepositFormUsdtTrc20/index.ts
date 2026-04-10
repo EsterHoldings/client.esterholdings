@@ -1,15 +1,15 @@
-import {reactive, Reactive} from "vue";
+import { reactive, Reactive } from "vue";
 
 export interface IFormDataDto {
-    accountId: String;
-    paymentSystemId: String;
-    amount: String;
-    comment: String;
+  accountId: string;
+  paymentSystemId: string;
+  amount: string;
+  comment: string;
 }
 
 export const formData: Reactive<IFormDataDto> = reactive({
-    accountId: "",
-    paymentSystemId: "",
-    amount: "",
-    comment: "",
+  accountId: "",
+  paymentSystemId: "",
+  amount: "",
+  comment: "",
 });

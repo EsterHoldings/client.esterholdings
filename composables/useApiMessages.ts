@@ -52,6 +52,10 @@ export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
     key: "cabinet.billing.syncPaymentSuccess",
     fallback: "Payment synchronized successfully.",
   },
+  "payment was successfully created": {
+    key: "cabinet.billing.depositForm.created",
+    fallback: "Deposit created successfully.",
+  },
   "account payments synchronized successfully": {
     key: "cabinet.accounts.syncPaymentsSuccess",
     fallback: "Account payments synchronized successfully.",
@@ -96,11 +100,43 @@ export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
     key: "apiMessages.paymentDetailRestored",
     fallback: "Payment detail restored successfully.",
   },
+  "payment not found": {
+    key: "cabinet.billing.paymentNotFound",
+    fallback: "Payment not found.",
+  },
+  "payment system not found": {
+    key: "apiMessages.paymentSystemNotFound",
+    fallback: "Payment system not found.",
+  },
+  "account not found": {
+    key: "apiMessages.accountNotFound",
+    fallback: "Account not found.",
+  },
+  "deposit account not found": {
+    key: "apiMessages.depositAccountNotFound",
+    fallback: "Deposit account not found.",
+  },
+  "withdrawal amount exceeds account balance": {
+    key: "cabinet.billing.withdrawalForm.errors.balance",
+    fallback: "Withdrawal amount exceeds the account balance.",
+  },
   "the name field is required": {
     key: "apiMessages.requiredField",
     fallback: "This field is required.",
   },
+  "the account id field is required": {
+    key: "apiMessages.requiredField",
+    fallback: "This field is required.",
+  },
+  "the payment detail id field is required": {
+    key: "apiMessages.requiredField",
+    fallback: "This field is required.",
+  },
   "the payment system id field is required": {
+    key: "apiMessages.requiredField",
+    fallback: "This field is required.",
+  },
+  "the amount field is required": {
     key: "apiMessages.requiredField",
     fallback: "This field is required.",
   },
@@ -211,6 +247,66 @@ const API_MESSAGE_PATTERN_TRANSLATIONS: ApiPatternTranslation[] = [
 
       return translatedFields ? `${translatedPrefix} ${translatedFields}` : translatedPrefix;
     },
+  },
+  {
+    pattern: /^field\s+.+?\s+is required!?$/i,
+    key: "apiMessages.requiredField",
+    fallback: "This field is required.",
+  },
+  {
+    pattern: /^field\s+.+?\s+is incorrect!?(?:\s+\(example:\s*.+\))?$/i,
+    key: "apiMessages.invalidField",
+    fallback: "Enter a valid value.",
+  },
+  {
+    pattern: /^field\s+.+?\s+length should be less than\s+(\d+)!?$/i,
+    key: "apiMessages.maxLengthField",
+    fallback: "Value is too long.",
+    format: (match, translate) =>
+      translate("apiMessages.maxLengthField", `Value is too long. Maximum: ${match[1]}.`).replace(
+        "{max}",
+        String(match[1] ?? "")
+      ),
+  },
+  {
+    pattern: /^field\s+.+?\s+length should be more than\s+(\d+)!?$/i,
+    key: "apiMessages.minLengthField",
+    fallback: "Value is too short.",
+    format: (match, translate) =>
+      translate("apiMessages.minLengthField", `Value is too short. Minimum: ${match[1]}.`).replace(
+        "{min}",
+        String(match[1] ?? "")
+      ),
+  },
+  {
+    pattern: /^the .+ field is required[.!?]*$/i,
+    key: "apiMessages.requiredField",
+    fallback: "This field is required.",
+  },
+  {
+    pattern: /^the .+ field must be a number[.!?]*$/i,
+    key: "apiMessages.numericField",
+    fallback: "Enter a numeric value.",
+  },
+  {
+    pattern: /^the .+ field must be greater than 0[.!?]*$/i,
+    key: "apiMessages.positiveNumberField",
+    fallback: "Enter an amount greater than 0.",
+  },
+  {
+    pattern: /^the selected .+ is invalid[.!?]*$/i,
+    key: "apiMessages.invalidSelection",
+    fallback: "Selected value is invalid.",
+  },
+  {
+    pattern: /^the .+ field may not be greater than (\d+) characters[.!?]*$/i,
+    key: "apiMessages.maxLengthField",
+    fallback: "Value is too long.",
+    format: (match, translate) =>
+      translate("apiMessages.maxLengthField", `Value is too long. Maximum: ${match[1]}.`).replace(
+        "{max}",
+        String(match[1] ?? "")
+      ),
   },
 ];
 

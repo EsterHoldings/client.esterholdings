@@ -1,11 +1,11 @@
-import {reactive, Reactive} from "vue";
+import { reactive, Reactive } from "vue";
 
 export interface IFormDataDto {
-    amount: String;
-    comment: String;
+  amount: string;
+  comment: string;
 }
 
 export const formData: Reactive<IFormDataDto> = reactive({
-    amount: "",
-    comment: "",
+  amount: "",
+  comment: "",
 });

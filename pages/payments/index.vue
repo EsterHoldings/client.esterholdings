@@ -271,7 +271,6 @@
                 <div
                   class="card-actions"
                   aria-hidden="true">
-                  123
                   <button
                     class="copy-btn"
                     :aria-label="copyIdLabel"
@@ -392,7 +391,13 @@
         </div>
       </template>
 
-      <template v-if="!isInitialLoading && payments.length === 0">
+      <template v-else-if="loadErrorMessage && payments.length === 0">
+        <div class="payments-error-state">
+          {{ loadErrorMessage }}
+        </div>
+      </template>
+
+      <template v-else-if="payments.length === 0">
         <div class="payments-empty-state">
           <div class="payments-empty-state__icon-wrap">
             <UiIconCardCheck class="payments-empty-state__icon" />
@@ -524,6 +529,7 @@
   const orderDirection = ref<string>(ORDER_DIRECTION_DESC);
   const isLoading = ref(false);
   const isInitialLoading = ref(true);
+  const loadErrorMessage = ref<string | null>(null);
   const viewMode = ref<"table" | "cards" | "full">("table");
   const isMobileViewport = ref(false);
   const sortByFilterData = computed(() => [
@@ -703,6 +709,9 @@
   );
   const deletePaymentErrorLabel = computed(() =>
     resolveI18nValue("cabinet.billing.deletePaymentError", "Не удалось удалить платеж.")
+  );
+  const loadPaymentsErrorLabel = computed(() =>
+    resolveI18nValue("cabinet.billing.listLoadError", "Не удалось загрузить список платежей.")
   );
   const internalTransferLabel = computed(() =>
     resolveI18nValue("cabinet.billing.internalTransfer", "Transfer between accounts")
@@ -1105,6 +1114,8 @@
     }
 
     try {
+      loadErrorMessage.value = null;
+
       const response = await appCore.payments.get({
         search: search.value,
         perPage: perPage.value,
@@ -1124,6 +1135,17 @@
 
       payments.splice(0, payments.length, ...paymentsData);
       applyRecentPaymentHighlights(paymentsData);
+    } catch (error: any) {
+      const localizedError =
+        extractApiErrorMessage(error, loadPaymentsErrorLabel.value) ?? loadPaymentsErrorLabel.value;
+
+      if (!silent || payments.length === 0) {
+        loadErrorMessage.value = localizedError;
+      }
+
+      if (!silent) {
+        toast.error(localizedError);
+      }
     } finally {
       if (shouldShowLoader) {
         isLoading.value = false;
@@ -1449,6 +1471,21 @@
     border-radius: 14px;
     border: 1px dashed var(--color-stroke-ui-light);
     background: color-mix(in srgb, var(--ui-background-card) 76%, transparent);
+  }
+
+  .payments-error-state {
+    min-height: calc(100vh - 370px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 680px;
+    padding: 24px 18px;
+    text-align: center;
+    color: var(--ui-sticker-danger);
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--ui-sticker-danger) 28%, transparent);
+    background: color-mix(in srgb, var(--ui-sticker-danger) 8%, var(--ui-background-panel));
   }
 
   .payments-empty-state__icon-wrap {

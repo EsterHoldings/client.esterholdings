@@ -894,11 +894,16 @@
       "deletePaymentError": "Не удалось удалить платеж.",
       "paymentNotFound": "Платеж не найден.",
       "paymentLoadError": "Не удалось загрузить платеж.",
+      "listLoadError": "Не удалось загрузить список платежей.",
       "updatedAt": "Обновлено",
       "gateway": "Шлюз",
       "comment": "Комментарий",
       "redirectLink": "Ссылка оплаты",
+      "transferFrom": "Со счёта",
+      "transferTo": "На счёт",
       "search": "Поиск",
+      "emptyTitle": "Платежей пока нет",
+      "emptySubtitle": "Создайте первый платёж, чтобы начать работу.",
       "view": {
         "list": "Список",
         "cards": "Карточки",
@@ -927,6 +932,23 @@
         "next": "Вперёд"
       },
       "panel-title": "Добавить нового администратора",
+      "createFlow": {
+        "selectMethod": "Выберите способ оплаты",
+        "loadPaymentSystemsError": "Не удалось загрузить способы оплаты."
+      },
+      "depositForm": {
+        "title": "Пополнение",
+        "account": "Торговый счёт",
+        "amount": "Сумма",
+        "amountPlaceholder": "Сумма в USD",
+        "comment": "Комментарий",
+        "commentPlaceholder": "Добавьте комментарий для финансового отдела",
+        "submit": "Создать депозит",
+        "processing": "Обработка...",
+        "created": "Депозит успешно создан.",
+        "error": "Не удалось создать депозит.",
+        "loadAccountsError": "Не удалось загрузить торговые счета."
+      },
       "withdrawalForm": {
         "title": "Заявка на вывод",
         "account": "Торговый счёт",
@@ -943,6 +965,8 @@
         "processing": "Обработка...",
         "created": "Заявка на вывод успешно создана.",
         "error": "Не удалось создать заявку на вывод.",
+        "loadAccountsError": "Не удалось загрузить торговые счета.",
+        "loadPaymentDetailsError": "Не удалось загрузить платёжные реквизиты.",
         "adminComment": "Комментарий администратора",
         "errors": {
           "account": "Выберите счёт.",
@@ -1918,12 +1942,21 @@
       "postalCode": "почтовый индекс"
     },
     "requiredField": "Поле обязательно для заполнения.",
+    "invalidField": "Введите корректное значение.",
+    "numericField": "Введите числовое значение.",
+    "positiveNumberField": "Введите сумму больше 0.",
+    "invalidSelection": "Выбранное значение недоступно.",
+    "maxLengthField": "Значение слишком длинное. Максимум: {max}.",
+    "minLengthField": "Значение слишком короткое. Минимум: {min}.",
     "paymentDetailCreated": "Платёжные реквизиты успешно созданы.",
     "paymentDetailUpdated": "Платёжные реквизиты успешно обновлены.",
     "paymentDetailDeleted": "Платёжные реквизиты удалены.",
     "paymentDetailRestored": "Платёжные реквизиты восстановлены.",
     "paymentDetailNotFound": "Платёжный реквизит не найден.",
     "accountCreated": "Счёт успешно создан.",
+    "paymentSystemNotFound": "Платёжная система не найдена.",
+    "accountNotFound": "Счёт не найден.",
+    "depositAccountNotFound": "Счёт для пополнения не найден.",
     "invalidCallbackSignature": "Некорректная подпись callback."
   },
   "cabinetExtra": {

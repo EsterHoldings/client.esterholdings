@@ -872,7 +872,7 @@
       }
     },
     "billing": {
-      "title": "Виставлення рахунків",
+      "title": "Платежі",
       "create": "Створити новий платіж",
       "backToMethodSelection": "Повернутися до вибору способу оплати",
       "backToList": "До списку платежів",
@@ -881,16 +881,24 @@
       "syncPaymentLoading": "Синхронізація...",
       "syncPaymentSuccess": "Платіж успішно синхронізовано.",
       "syncPaymentError": "Не вдалося синхронізувати платіж.",
+      "transferCreated": "Переказ між рахунками створено.",
+      "internalTransfer": "Переказ між рахунками",
       "deletePayment": "Видалити",
       "deletePaymentConfirm": "Видалити платіж?",
       "deletePaymentSuccess": "Платіж видалено.",
       "deletePaymentError": "Не вдалося видалити платіж.",
       "paymentNotFound": "Платіж не знайдено.",
       "paymentLoadError": "Не вдалося завантажити платіж.",
+      "listLoadError": "Не вдалося завантажити список платежів.",
       "updatedAt": "Оновлено",
+      "gateway": "Шлюз",
       "comment": "Коментар",
       "redirectLink": "Посилання оплати",
+      "transferFrom": "З рахунку",
+      "transferTo": "На рахунок",
       "search": "Пошук",
+      "emptyTitle": "Платежів поки немає",
+      "emptySubtitle": "Створіть перший платіж, щоб почати роботу.",
       "view": {
         "list": "Список",
         "cards": "Картки",
@@ -903,9 +911,15 @@
         "currency": "Валюта",
         "amount": "Сума",
         "createdAt": "Створено",
+        "accountNumberShort": "Рах.",
+        "paymentSystemShort": "ПС",
         "accountNumber": "Номер рахунку",
         "paymentSystem": "Платіжна система",
         "account": "Назва"
+      },
+      "types": {
+        "deposit": "Поповнення",
+        "withdrawal": "Виведення"
       },
       "nothingToShow": "Нічого показати =(",
       "pagination": {
@@ -913,6 +927,23 @@
         "next": "Наст"
       },
       "panel-title": "Додати нового Адміна",
+      "createFlow": {
+        "selectMethod": "Оберіть спосіб оплати",
+        "loadPaymentSystemsError": "Не вдалося завантажити способи оплати."
+      },
+      "depositForm": {
+        "title": "Поповнення",
+        "account": "Торговий рахунок",
+        "amount": "Сума",
+        "amountPlaceholder": "Сума в USD",
+        "comment": "Коментар",
+        "commentPlaceholder": "Додайте коментар для фінансового відділу",
+        "submit": "Створити депозит",
+        "processing": "Обробка...",
+        "created": "Депозит успішно створено.",
+        "error": "Не вдалося створити депозит.",
+        "loadAccountsError": "Не вдалося завантажити торгові рахунки."
+      },
       "withdrawalForm": {
         "title": "Заявка на виведення",
         "account": "Торговий рахунок",
@@ -929,6 +960,8 @@
         "processing": "Обробка...",
         "created": "Заявку на виведення успішно створено.",
         "error": "Не вдалося створити заявку на виведення.",
+        "loadAccountsError": "Не вдалося завантажити торгові рахунки.",
+        "loadPaymentDetailsError": "Не вдалося завантажити платіжні реквізити.",
         "adminComment": "Коментар адміністратора",
         "errors": {
           "account": "Оберіть рахунок.",
@@ -1909,12 +1942,21 @@
       "postalCode": "поштовий індекс"
     },
     "requiredField": "Поле обовʼязкове для заповнення.",
+    "invalidField": "Введіть коректне значення.",
+    "numericField": "Введіть числове значення.",
+    "positiveNumberField": "Введіть суму більше 0.",
+    "invalidSelection": "Обране значення недоступне.",
+    "maxLengthField": "Значення надто довге. Максимум: {max}.",
+    "minLengthField": "Значення надто коротке. Мінімум: {min}.",
     "paymentDetailCreated": "Платіжні реквізити успішно створено.",
     "paymentDetailUpdated": "Платіжні реквізити успішно оновлено.",
     "paymentDetailDeleted": "Платіжні реквізити видалено.",
     "paymentDetailRestored": "Платіжні реквізити відновлено.",
     "paymentDetailNotFound": "Платіжний реквізит не знайдено.",
     "accountCreated": "Рахунок успішно створено.",
+    "paymentSystemNotFound": "Платіжну систему не знайдено.",
+    "accountNotFound": "Рахунок не знайдено.",
+    "depositAccountNotFound": "Рахунок для поповнення не знайдено.",
     "invalidCallbackSignature": "Некоректний підпис callback."
   },
   "cabinetExtra": {

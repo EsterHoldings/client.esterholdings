@@ -873,7 +873,7 @@
       }
     },
     "billing": {
-      "title": "Billing",
+      "title": "Payments",
       "create": "Create new payment",
       "backToMethodSelection": "Back to payment method selection",
       "backToList": "Back to payments list",
@@ -890,11 +890,16 @@
       "deletePaymentError": "Failed to delete payment.",
       "paymentNotFound": "Payment not found.",
       "paymentLoadError": "Failed to load payment.",
+      "listLoadError": "Failed to load payments.",
       "updatedAt": "Updated At",
       "gateway": "Gateway",
       "comment": "Comment",
       "redirectLink": "Payment link",
+      "transferFrom": "From account",
+      "transferTo": "To account",
       "search": "Search",
+      "emptyTitle": "No payments yet",
+      "emptySubtitle": "Create your first payment to get started.",
       "view": {
         "list": "List",
         "cards": "Cards",
@@ -923,6 +928,23 @@
         "next": "Next"
       },
       "panel-title": "Add new Admin",
+      "createFlow": {
+        "selectMethod": "Choose a payment method",
+        "loadPaymentSystemsError": "Failed to load payment methods."
+      },
+      "depositForm": {
+        "title": "Deposit",
+        "account": "Trading account",
+        "amount": "Amount",
+        "amountPlaceholder": "Amount in USD",
+        "comment": "Comment",
+        "commentPlaceholder": "Add a comment for the finance team",
+        "submit": "Create deposit",
+        "processing": "Processing...",
+        "created": "Deposit created successfully.",
+        "error": "Failed to create deposit.",
+        "loadAccountsError": "Failed to load trading accounts."
+      },
       "withdrawalForm": {
         "title": "Withdrawal request",
         "account": "Trading account",
@@ -939,6 +961,8 @@
         "processing": "Processing...",
         "created": "Withdrawal request created successfully.",
         "error": "Failed to create withdrawal request.",
+        "loadAccountsError": "Failed to load trading accounts.",
+        "loadPaymentDetailsError": "Failed to load payment details.",
         "adminComment": "Admin comment",
         "errors": {
           "account": "Choose an account.",
@@ -1914,12 +1938,21 @@
       "postalCode": "postal code"
     },
     "requiredField": "This field is required.",
+    "invalidField": "Enter a valid value.",
+    "numericField": "Enter a numeric value.",
+    "positiveNumberField": "Enter an amount greater than 0.",
+    "invalidSelection": "Selected value is invalid.",
+    "maxLengthField": "Value is too long. Maximum: {max}.",
+    "minLengthField": "Value is too short. Minimum: {min}.",
     "paymentDetailCreated": "Payment detail created successfully.",
     "paymentDetailUpdated": "Payment detail updated successfully.",
     "paymentDetailDeleted": "Payment detail deleted successfully.",
     "paymentDetailRestored": "Payment detail restored successfully.",
     "paymentDetailNotFound": "Payment detail not found.",
     "accountCreated": "Account created successfully.",
+    "paymentSystemNotFound": "Payment system not found.",
+    "accountNotFound": "Account not found.",
+    "depositAccountNotFound": "Deposit account not found.",
     "invalidCallbackSignature": "Invalid callback signature."
   },
   "cabinetExtra": {

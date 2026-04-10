@@ -204,6 +204,12 @@
   const openPaymentDetailsLabel = computed(() =>
     resolveText("cabinet.billing.withdrawalForm.openPaymentDetails", "Open payment details")
   );
+  const loadAccountsErrorLabel = computed(() =>
+    resolveText("cabinet.billing.withdrawalForm.loadAccountsError", "Failed to load trading accounts.")
+  );
+  const loadPaymentDetailsErrorLabel = computed(() =>
+    resolveText("cabinet.billing.withdrawalForm.loadPaymentDetailsError", "Failed to load payment details.")
+  );
   const accountBalanceLabel = computed(() =>
     resolveText("cabinet.billing.withdrawalForm.accountBalance", "Available balance")
   );
@@ -330,6 +336,8 @@
       if (accounts.value.length > 0) {
         form.accountId = resolveInitialAccountId();
       }
+    } catch (error: any) {
+      toast.error(extractApiErrorMessage(error, loadAccountsErrorLabel.value) ?? loadAccountsErrorLabel.value);
     } finally {
       isLoadingAccounts.value = false;
     }
@@ -356,7 +364,11 @@
             row?.payment_system_name ?? row?.payment_system?.name ?? row?.paymentSystem?.name ?? ""
           ).trim();
           const detailName = String(row?.name ?? "").trim();
-          const textParts = [detailName || paymentSystemName || "Payment detail"];
+          const textParts = [
+            detailName ||
+              paymentSystemName ||
+              resolveText("cabinet.billing.withdrawalForm.paymentDetail", "Payment detail"),
+          ];
           if (paymentSystemName !== "" && paymentSystemName !== detailName) {
             textParts.push(paymentSystemName);
           }
@@ -375,6 +387,10 @@
       if (paymentDetails.value.length > 0) {
         form.paymentDetailId = paymentDetails.value[0]?.id ?? "";
       }
+    } catch (error: any) {
+      toast.error(
+        extractApiErrorMessage(error, loadPaymentDetailsErrorLabel.value) ?? loadPaymentDetailsErrorLabel.value
+      );
     } finally {
       isLoadingPaymentDetails.value = false;
     }

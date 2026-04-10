@@ -7,7 +7,7 @@
       <button
         type="button"
         class="payments-create-modal__close-btn"
-        aria-label="Закрити"
+        :aria-label="closeLabel"
         @click="closeModal">
         ×
       </button>
@@ -51,7 +51,7 @@
 
           <div class="grid grid-cols-1 gap-5 items-start">
             <div>
-              <UiTextH5 class="mb-5"># Вибір платіжного способу</UiTextH5>
+              <UiTextH5 class="mb-5">{{ selectMethodLabel }}</UiTextH5>
 
               <component
                 :is="componentIs.component"
@@ -88,9 +88,11 @@
 
 <script lang="ts" setup>
   import useAppCore from "~/composables/useAppCore";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
   import { definePageMeta } from "~/.nuxt/imports";
   import { reactive, ref, computed, onMounted, inject } from "vue";
   import { useI18n } from "vue-i18n";
+  import { useToast } from "vue-toastification";
 
   import TabDeposit from "~/pages/payments/create/components/TabDeposit.vue";
   import TabDepositFormUsdtErc20 from "~/pages/payments/create/components/TabDepositFormUsdtErc20.vue";
@@ -135,6 +137,7 @@
   const appCore = useAppCore();
   const { closeModal } = inject("modalControl") as { closeModal: () => void };
   const { t } = useI18n({ useScope: "global" });
+  const toast = useToast();
   const ALLOWED_DEPOSIT_PAYMENT_SYSTEM_KEYS = new Set([
     PAYMENT_SYSTEM_CONFIG_KEY_TRC20,
     PAYMENT_SYSTEM_CONFIG_KEY_ERC20,
@@ -142,10 +145,16 @@
     PAYMENT_SYSTEM_CONFIG_KEY_BTC,
   ]);
   const isWithdrawalMode = computed(() => props.initialTab === "withdrawal");
-  const backToMethodLabel = computed(() => {
-    const key = "cabinet.billing.backToMethodSelection";
+  const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
-    return translated === key ? "Повернутися до вибору способу оплати" : translated;
+    return translated === key ? fallback : translated;
+  };
+  const closeLabel = computed(() => resolveText("cabinet.common.close", "Close"));
+  const selectMethodLabel = computed(() =>
+    resolveText("cabinet.billing.createFlow.selectMethod", "Choose a payment method")
+  );
+  const backToMethodLabel = computed(() => {
+    return resolveText("cabinet.billing.backToMethodSelection", "Back to payment method selection");
   });
 
   const configMap = reactive<
@@ -223,8 +232,8 @@
   const paymentSystemsListIsLoading = ref(false);
 
   const tabsList = reactive([
-    { label: "Поповнення", component: TabDeposit },
-    { label: "Виплата", component: TabWithdrawal },
+    { label: resolveText("cabinet.billing.types.deposit", "Deposit"), component: TabDeposit },
+    { label: resolveText("cabinet.billing.types.withdrawal", "Withdrawal"), component: TabWithdrawal },
   ]);
 
   const componentIs = computed(() => tabsList[tabActiveIndex.value]);
@@ -312,20 +321,30 @@
     }
 
     paymentSystemsListIsLoading.value = true;
-    const { data } = await appCore.paymentSystems.get();
 
-    paymentSystems.splice(
-      0,
-      paymentSystems.length,
-      ...data
-        .filter((x: any) => x.isActive && ALLOWED_DEPOSIT_PAYMENT_SYSTEM_KEYS.has(String(x.config_key ?? "")))
-        .map((item: any) => {
-          const cfg = Object.values(configMap).find(c => c.cfgKey === item.config_key) || ({} as any);
-          return { ...item, ...cfg };
-        })
-    );
+    try {
+      const { data } = await appCore.paymentSystems.get();
 
-    paymentSystemsListIsLoading.value = false;
+      paymentSystems.splice(
+        0,
+        paymentSystems.length,
+        ...data
+          .filter((x: any) => x.isActive && ALLOWED_DEPOSIT_PAYMENT_SYSTEM_KEYS.has(String(x.config_key ?? "")))
+          .map((item: any) => {
+            const cfg = Object.values(configMap).find(c => c.cfgKey === item.config_key) || ({} as any);
+            return { ...item, ...cfg };
+          })
+      );
+    } catch (error: any) {
+      toast.error(
+        extractApiErrorMessage(
+          error,
+          resolveText("cabinet.billing.createFlow.loadPaymentSystemsError", "Failed to load payment methods.")
+        ) ?? resolveText("cabinet.billing.createFlow.loadPaymentSystemsError", "Failed to load payment methods.")
+      );
+    } finally {
+      paymentSystemsListIsLoading.value = false;
+    }
   });
 </script>
 
