@@ -17,7 +17,7 @@
           :to="profileAccountsCreateLink"
           class="w-full sm:w-auto">
           <UiButtonDefault
-            state="success--small"
+            state="success--outline--small"
             class="mt4-header-card__cta w-full sm:w-auto">
             {{ t("cabinet.dashboard.mt4.openNewAccount") }}
           </UiButtonDefault>
