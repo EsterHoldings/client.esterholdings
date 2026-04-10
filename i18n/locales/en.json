@@ -1,7 +1,8 @@
 {
   "ui": {
     "pagination": {
-      "perPage": "Per page"
+      "perPage": "Per page",
+      "range": "{from} to {to} / Total: {total}"
     }
   },
   "ui-components": {
@@ -399,10 +400,18 @@
       "faqs__dropzone_text": "Drag 'n' drop some files here, or click to select files",
       "faqs__dropzone_aria": "Upload file",
       "news_row__items": [
-        { "title": "Bitcoin crashes 12% after SEC announces ban on stablecoins" },
-        { "title": "Tesla announced a 1:10 stock split - quotes rose by 12%" },
-        { "title": "Dow Jones plummets 1,200 points after unexpected rise in US inflation" },
-        { "title": "NVIDIA shares soared 15% after the report" }
+        {
+          "title": "Bitcoin crashes 12% after SEC announces ban on stablecoins"
+        },
+        {
+          "title": "Tesla announced a 1:10 stock split - quotes rose by 12%"
+        },
+        {
+          "title": "Dow Jones plummets 1,200 points after unexpected rise in US inflation"
+        },
+        {
+          "title": "NVIDIA shares soared 15% after the report"
+        }
       ],
       "helpSection": "Need Help? Visit our",
       "helpLinkText": "Help Section",
@@ -761,6 +770,10 @@
           "successful": "Successful",
           "failed": "Failed",
           "cancelled": "Cancelled"
+        },
+        "depositStatusUpdated": {
+          "title": "Deposit updated",
+          "message": "{status} • {method} • {amount} {currency} • account {account}"
         }
       },
       "accountSettings": "Account Settings",
@@ -1218,27 +1231,68 @@
             "postal_code": "00000"
           },
           "button": "Save and send to verification",
-          "success": "User data successfully updated and sent for verification!"
+          "success": "User data successfully updated and sent for verification!",
+          "validationError": "Please check form fields.",
+          "serverError": "Unable to save profile data."
         },
         "tab-user-documents": {
           "buttons": {
             "choose": "Choose file",
-            "upload": "Upload"
+            "upload": "Upload",
+            "uploading": "Uploading...",
+            "uploadAndSend": "Upload and send to verification"
           },
           "messages": {
             "upload_success": "Profile photo successfully updated and sent for verification!",
             "upload_error": "Failed to upload photo",
-            "delete_error": "Failed to delete photo"
+            "delete_error": "Failed to delete photo",
+            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
+            "saveError": "Failed to save documents. Please try again later."
           },
           "errors": {
             "type": "Only images are allowed",
-            "size": "Max size is 2MB"
+            "size": "Max size is 2MB",
+            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
+            "noFiles": "Please select file(s).",
+            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+          },
+          "title": "Upload documents",
+          "allDocuments": "All documents",
+          "empty": "You have no uploaded documents yet.",
+          "documentLabel": "Document",
+          "refreshAria": "Refresh documents",
+          "commentLabel": "Comment",
+          "fields": {
+            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+          },
+          "validation": {
+            "maxLength": "The field may not contain more than 100 characters."
+          },
+          "progress": {
+            "label": "Uploading: {value}%"
+          },
+          "verificationStatus": {
+            "title": "Verification status"
+          },
+          "columns": {
+            "name": "Name",
+            "status": "Status",
+            "date": "Date"
+          },
+          "actions": {
+            "delete": "Delete document"
+          },
+          "statuses": {
+            "pending": "In progress",
+            "approved": "Approved",
+            "rejected": "Rejected"
           }
         },
         "tab-user-photo": {
           "buttons": {
             "choose": "Choose file",
-            "upload": "Upload"
+            "upload": "Upload",
+            "delete_aria": "Delete photo"
           },
           "messages": {
             "upload_success": "Profile photo successfully updated",
@@ -1248,7 +1302,59 @@
           },
           "errors": {
             "type": "Only images are allowed",
-            "size": "Max size is 2MB"
+            "size": "Max size is 5MB"
+          },
+          "hints": {
+            "formats": "Supported formats: PNG, JPG, JPEG",
+            "maxSize": "Photo must not exceed 5 MB."
+          },
+          "verification": {
+            "title": "Verification status",
+            "approved": "Verified successfully!"
+          }
+        },
+        "tab-user-verification": {
+          "sections": {
+            "client": "Client verification",
+            "payout": "Payout details"
+          },
+          "titles": {
+            "clientStatus": "Verification status",
+            "payoutStatus": "Payout details verification",
+            "history": "Verification history"
+          },
+          "refreshAria": "Refresh verification data",
+          "commentLabel": "Comment",
+          "emptyPayout": "No payout details yet.",
+          "unnamedPaymentDetail": "Untitled payment detail",
+          "paymentSystemFallback": "Payment system",
+          "documentsCount": "Documents: {count}",
+          "historyEmpty": "No verification history yet.",
+          "columns": {
+            "name": "Name",
+            "date": "Date",
+            "status": "Status"
+          },
+          "items": {
+            "email": {
+              "title": "Email",
+              "subtitle": "Confirm your email"
+            },
+            "documents": {
+              "title": "Documents"
+            },
+            "deposit": {
+              "title": "First deposit",
+              "subtitle": "Make a payment to verify the first deposit"
+            },
+            "profile": {
+              "title": "Profile"
+            }
+          },
+          "statuses": {
+            "approved": "Confirmed",
+            "pending": "In progress",
+            "rejected": "Rejected"
           }
         }
       },
@@ -1464,7 +1570,10 @@
         "sortInactive": "Inactive",
         "pagination": "{from}-{to} of {total}",
         "prev": "Prev",
-        "next": "Next"
+        "next": "Next",
+        "shareMailSubject": "Join our referral program",
+        "yourLevel": "Your level",
+        "pointsProgress": "Points: {current} / {total}"
       },
       "settings": {
         "title": "Referral settings",
@@ -1484,7 +1593,257 @@
         "rule1": "Rewards are credited after a referred user completes verification.",
         "rule2": "Fraud or duplicate accounts may be declined.",
         "rule3": "Percentages and levels are placeholders until backend delivers real values.",
-        "rule4": "Contact support if you think a referral was missed."
+        "rule4": "Contact support if you think a referral was missed.",
+        "gamification": {
+          "title": "IB gamification",
+          "text": "Gamification turns the partner program into a game: levels, XP, missions, badges, rankings, seasonal events and a 3-level network bring real bonuses and passive income."
+        },
+        "coreElementsTitle": "Core elements",
+        "coreElements": {
+          "career": "Career ladder",
+          "xp": "XP points",
+          "missions": "Missions and challenges",
+          "badges": "Achievements and badges",
+          "ratings": "Rankings and competitions",
+          "seasonal": "Seasonal events"
+        },
+        "careerTitle": "Career ladder",
+        "xpLabel": "XP",
+        "commissionLabel": "Commission",
+        "bonusLabel": "Bonus",
+        "levels": {
+          "rookie": {
+            "title": "Rookie",
+            "xp": "0",
+            "commission": "30%",
+            "bonus": "-",
+            "perks": "Access to the personal cabinet"
+          },
+          "advanced": {
+            "title": "Advanced",
+            "xp": "5,000",
+            "commission": "35%",
+            "bonus": "$100",
+            "perks": "Branded materials"
+          },
+          "expert": {
+            "title": "Expert",
+            "xp": "20,000",
+            "commission": "40%",
+            "bonus": "$500",
+            "perks": "Personal manager"
+          },
+          "master": {
+            "title": "Master",
+            "xp": "50,000",
+            "commission": "50%",
+            "bonus": "$2,000",
+            "perks": "VIP events"
+          },
+          "legendary": {
+            "title": "Legendary",
+            "xp": "150,000",
+            "commission": "60%",
+            "bonus": "$10,000",
+            "perks": "Custom conditions"
+          }
+        },
+        "network": {
+          "title": "3-level network",
+          "text": "You earn passive income: 10% from Level 2 and 5% from Level 3. The wider the network, the higher the passive income.",
+          "table": {
+            "level": "Level",
+            "partners": "IBs",
+            "percent": "%",
+            "income": "Your income"
+          },
+          "rows": {
+            "level1": {
+              "level": "Level 1 — you",
+              "count": "1",
+              "percent": "-",
+              "income": "$50,000+"
+            },
+            "level2": {
+              "level": "Level 2 — Sub-IB",
+              "count": "10",
+              "percent": "10%",
+              "income": "$10,000"
+            },
+            "level3": {
+              "level": "Level 3 — Sub-IB network",
+              "count": "100",
+              "percent": "5%",
+              "income": "$25,000"
+            }
+          },
+          "total": "Total: $85,000+ per month, including $35,000 passive."
+        },
+        "xpActionsTitle": "XP and actions",
+        "xpRules": {
+          "registration": {
+            "title": "Registration",
+            "reward": "100 XP"
+          },
+          "firstClient": {
+            "title": "First client",
+            "reward": "500 XP"
+          },
+          "tenLots": {
+            "title": "Every 10 lots",
+            "reward": "100 XP"
+          },
+          "subIb": {
+            "title": "Invite a Sub-IB",
+            "reward": "1,000 XP"
+          },
+          "activeClients": {
+            "title": "5 active clients per month",
+            "reward": "250 XP / 50 XP for every next 5"
+          }
+        },
+        "missionsTitle": "Missions and challenges",
+        "missions": {
+          "firstStep": {
+            "title": "“First step” — 1 client",
+            "reward": "+500 XP, $50"
+          },
+          "master": {
+            "title": "“Referral master” — 10 clients",
+            "reward": "+5,000 XP, $500"
+          },
+          "buildNetwork": {
+            "title": "“Build the network” — 3 Sub-IBs",
+            "reward": "+7,500 XP, +10% commission"
+          },
+          "millionLots": {
+            "title": "“Million-lot traders” — 1,000 lots",
+            "reward": "+10,000 XP, $2,000"
+          }
+        },
+        "badgesTitle": "Achievements and badges",
+        "badges": {
+          "bronze": {
+            "title": "Bronze Partner — 10 clients",
+            "bonus": "+5% commission"
+          },
+          "silver": {
+            "title": "Silver Partner — 50 clients",
+            "bonus": "+10% commission"
+          },
+          "gold": {
+            "title": "Gold Partner — 100 clients",
+            "bonus": "+15% commission"
+          },
+          "diamond": {
+            "title": "Diamond Partner — 500 clients",
+            "bonus": "VIP service"
+          },
+          "recruiter": {
+            "title": "Top Recruiter — 50 Sub-IBs",
+            "bonus": "+$5,000"
+          }
+        },
+        "ratingsTitle": "Rankings and competitions",
+        "ratings": {
+          "bestMonth": {
+            "title": "Best IB of the month",
+            "prize": "🥇 $5,000 + VIP status"
+          },
+          "topRefer": {
+            "title": "Top recruiter",
+            "prize": "🥈 $3,000"
+          },
+          "turnover": {
+            "title": "Turnover of the month",
+            "prize": "🥉 $2,000"
+          },
+          "fourth": {
+            "title": "4th place",
+            "prize": "$1,000"
+          },
+          "fifth": {
+            "title": "5th place",
+            "prize": "$500"
+          }
+        },
+        "seasonalTitle": "Seasonal events",
+        "seasonal": {
+          "springBattle": "Spring IB battle — who brings more clients in March",
+          "winterMarathon": "Winter marathon — competition by trading volume in December",
+          "weeklySurprise": "Surprise of the week — random bonuses for activity",
+          "exclusivePrizes": "Exclusive prizes: iPhone, MacBook, trips to Dubai and London"
+        },
+        "summary": {
+          "title": "Summary",
+          "text": "Career levels motivate long-term work, XP and missions reward activity, badges add status, rankings add dynamics, and seasonal events keep engagement high. Build your network and earn $100,000+ per month!"
+        }
+      },
+      "placeholder": {
+        "label": "Section temporarily unavailable",
+        "title": "Referral program is being updated",
+        "description": "We are improving this section to make it more convenient and functional. It will be available soon."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "comingSoonTitle": "Coming soon",
+      "comingSoonDescription": "Our team is completing the system upgrade. This section will be available soon, and we will notify you by email and in the notifications section."
+    },
+    "aml": {
+      "pageTitle": "AML Policy",
+      "sections": {
+        "intro": {
+          "title": "AML Policy",
+          "paragraphs": {
+            "0": "Money laundering includes any actions intended to hide the criminal origin of funds and make them appear legitimate. Ester Holdings Ltd. aims to detect, manage and mitigate such risks.",
+            "1": "The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing the customer and understanding their instructions allows more accurate risk assessment."
+          }
+        },
+        "customerDueDiligence": {
+          "title": "Customer Due Diligence",
+          "items": {
+            "0": "Identify and verify individual and corporate customers using valid documentation.",
+            "1": "Collect personal or company details during registration at my.esterholdings.website.",
+            "2": "Require proof of identity and address via valid documents, such as passport or utility bill.",
+            "3": "Verify credit and debit cards used for transactions while masking sensitive data.",
+            "4": "Request source of funds or source of wealth documents in higher-risk cases.",
+            "5": "Conduct ongoing monitoring to identify elevated risk or unusual behavior."
+          }
+        },
+        "payments": {
+          "title": "Payments Policy",
+          "paragraph": "Payments are regulated under the Regulations for Non-Trading Operations, available on the Company website in the Regulatory Documents and Agreements section."
+        },
+        "personnel": {
+          "title": "Personnel",
+          "officerTitle": "AML Compliance Officer",
+          "officerItems": {
+            "0": "Ensures AML compliance and maintains internal AML programs.",
+            "1": "Establishes audit functions and reports breaches to the Board.",
+            "2": "Trains staff and investigates suspicious activities.",
+            "3": "Maintains AML records and monitors international AML developments."
+          },
+          "employeesTitle": "Employees",
+          "employeeItems": {
+            "0": "Must know and comply with AML policy.",
+            "1": "Are vetted during hiring and monitored during employment.",
+            "2": "Must report AML violations confidentially."
+          }
+        },
+        "training": {
+          "title": "Employee Training",
+          "items": {
+            "0": "Training is provided internally or through external consultants.",
+            "1": "Each new employee follows a training plan with testing during the first 2 to 3 months.",
+            "2": "Training covers AML responsibilities, detection methods and FATF typologies.",
+            "3": "Special attention is paid to identifying and reporting suspicious transactions without tipping off the customer."
+          }
+        },
+        "suspiciousActivity": {
+          "title": "Reporting Suspicious Activity",
+          "paragraph": "All suspicious activity must be reported to the AML Compliance Officer. The Company may conduct internal investigations, freeze or close accounts and notify authorities, cooperating with law enforcement where required by law."
+        }
       }
     }
   },
@@ -1796,7 +2155,8 @@
       "messageLabel": "Ticket text",
       "messagePlaceholder": "Describe your issue, e.g.: I cannot top up account [account number]; trying via [payment method, e.g., USDT-TRC20]",
       "createButton": "Create new ticket",
-      "createdSuccess": "Ticket created successfully!"
+      "createdSuccess": "Ticket created successfully!",
+      "createFailed": "Failed to create ticket."
     },
     "page": {
       "title": "Support Page",
@@ -1805,7 +2165,20 @@
       "subject": "Subject of the appeal",
       "lastUpdate": "Last Update",
       "status": "Status",
-      "perPage": "Per page:"
+      "perPage": "Per page:",
+      "counterparty": "Counterparty",
+      "online": "Online",
+      "offline": "Offline",
+      "copyIdAria": "Copy ticket ID",
+      "openChatAria": "Open chat",
+      "moreAria": "More actions",
+      "lastCreated": "Last created",
+      "noMessagesYet": "No messages yet",
+      "attachment": "Attachment",
+      "attachments": "Attachments",
+      "systemEvent": "System event",
+      "newMessage": "New message",
+      "newTicketModalTitle": "Create new ticket"
     },
     "simple": {
       "title": "Contact support",
@@ -1848,7 +2221,18 @@
         "failedUploads": "Some files failed to upload. Remove or retry them first.",
         "maxFiles": "You can attach up to {max} files.",
         "fileTooLarge": "File is larger than 200 MB:"
-      }
+      },
+      "historyTitle": "Request history",
+      "historyRefreshAria": "Refresh request history",
+      "loadingHistory": "Loading request history...",
+      "emptyHistory": "You have no requests yet.",
+      "loadingMessages": "Loading messages...",
+      "emptyMessages": "No messages in this request yet.",
+      "noLastUpdate": "No updates yet",
+      "noSubject": "No subject",
+      "statusUnknown": "unknown",
+      "authorSupport": "Support",
+      "attachmentFallbackTitle": "Attachment"
     },
     "chat": {
       "title": "Support Chat",
@@ -1914,7 +2298,24 @@
       "searchAdminPlaceholder": "Search admin by nickname or email",
       "addAdminSuccess": "Admin added to chat",
       "addAdminAlready": "Admin is already in chat",
-      "addAdminFailed": "Failed to add admin to chat"
+      "addAdminFailed": "Failed to add admin to chat",
+      "expandDetailsAria": "Expand details",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "close": "Close",
+      "authorAvatarAlt": "Author avatar",
+      "myAvatarAlt": "My avatar"
+    },
+    "statuses": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "pending": "Pending",
+      "active": "Active",
+      "closed": "Closed",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "archived": "Archived"
     }
   },
   "apiMessages": {
@@ -1946,14 +2347,22 @@
     "minLengthField": "Value is too short. Minimum: {min}.",
     "paymentDetailCreated": "Payment detail created successfully.",
     "paymentDetailUpdated": "Payment detail updated successfully.",
-    "paymentDetailDeleted": "Payment detail deleted successfully.",
+    "paymentDetailDeleted": "Payment detail archived successfully.",
     "paymentDetailRestored": "Payment detail restored successfully.",
     "paymentDetailNotFound": "Payment detail not found.",
     "accountCreated": "Account created successfully.",
     "paymentSystemNotFound": "Payment system not found.",
     "accountNotFound": "Account not found.",
     "depositAccountNotFound": "Deposit account not found.",
-    "invalidCallbackSignature": "Invalid callback signature."
+    "invalidCallbackSignature": "Invalid callback signature.",
+    "supportReplyEmailRequired": "Reply email is required for email support channel.",
+    "supportFilesConflict": "Use either files or uploaded_attachments, not both.",
+    "supportMessageOrFilesRequired": "Message or files are required.",
+    "supportMessageBodyOrFilesRequired": "Message body or files are required.",
+    "emailAlreadyVerified": "Email already verified.",
+    "twoFaEnabled": "2FA enabled!",
+    "twoFaDisabled": "2FA disabled!",
+    "twoFaWrongCode": "Wrong code!"
   },
   "cabinetExtra": {
     "transactions": {

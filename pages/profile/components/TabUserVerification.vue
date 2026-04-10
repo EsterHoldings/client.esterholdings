@@ -6,22 +6,20 @@
         class="verification-switch__btn"
         :class="{ 'verification-switch__btn--active': activeSection === 'client' }"
         @click="activeSection = 'client'">
-        <span>Верификация клиента</span>
+        <span>{{ t("cabinet.profile.components.tab-user-verification.sections.client") }}</span>
         <span
           v-if="hasUnreadClientVerificationSignals"
-          class="verification-switch__indicator"
-        />
+          class="verification-switch__indicator" />
       </button>
       <button
         type="button"
         class="verification-switch__btn"
         :class="{ 'verification-switch__btn--active': activeSection === 'payout' }"
         @click="activeSection = 'payout'">
-        <span>Реквизиты для выплат</span>
+        <span>{{ t("cabinet.profile.components.tab-user-verification.sections.payout") }}</span>
         <span
           v-if="hasUnreadPayoutVerificationSignals"
-          class="verification-switch__indicator"
-        />
+          class="verification-switch__indicator" />
       </button>
     </div>
 
@@ -29,13 +27,13 @@
       v-if="activeSection === 'client'"
       class="w-full mb-10">
       <div class="mb-5 flex items-start justify-between">
-        <UiTextH5># Verification Status</UiTextH5>
+        <UiTextH5>{{ t("cabinet.profile.components.tab-user-verification.titles.clientStatus") }}</UiTextH5>
 
         <button
           type="button"
           @click="handleRefreshActiveSection"
           class="inline-flex items-center justify-center w-10 h-10 rounded-lg ring-1 ring-[var(--ui-primary-main)] text-[var(--ui-primary-main)] hover:bg-[var(--ui-primary-main)]/10 transition"
-          :aria-label="t('Refresh')">
+          :aria-label="t('cabinet.profile.components.tab-user-verification.refreshAria')">
           <UiIconUpdate :class="{ 'animate-spin': isLoading }" />
         </button>
       </div>
@@ -66,7 +64,9 @@
                 <div
                   v-if="item.comment?.value"
                   class="col-span-2 mt-2">
-                  <div class="text-xs font-semibold mb-1 opacity-80">Comment</div>
+                  <div class="text-xs font-semibold mb-1 opacity-80">
+                    {{ t("cabinet.profile.components.tab-user-verification.commentLabel") }}
+                  </div>
                   <UiTextSmall class="!text-[var(--ui-primary-accent)]">{{ item.comment.value }}</UiTextSmall>
                 </div>
               </div>
@@ -91,13 +91,13 @@
       v-else
       class="w-full mb-10">
       <div class="mb-5 flex items-start justify-between">
-        <UiTextH5># Payout details verification</UiTextH5>
+        <UiTextH5>{{ t("cabinet.profile.components.tab-user-verification.titles.payoutStatus") }}</UiTextH5>
 
         <button
           type="button"
           @click="handleRefreshActiveSection"
           class="inline-flex items-center justify-center w-10 h-10 rounded-lg ring-1 ring-[var(--ui-primary-main)] text-[var(--ui-primary-main)] hover:bg-[var(--ui-primary-main)]/10 transition"
-          :aria-label="t('Refresh')">
+          :aria-label="t('cabinet.profile.components.tab-user-verification.refreshAria')">
           <UiIconUpdate :class="{ 'animate-spin': isPaymentDetailsLoading }" />
         </button>
       </div>
@@ -112,7 +112,7 @@
         <div
           v-if="paymentDetailsRows.length === 0 && !isPaymentDetailsLoading"
           class="payout-empty">
-          Реквизитов для выплат пока нет.
+          {{ t("cabinet.profile.components.tab-user-verification.emptyPayout") }}
         </div>
 
         <ul
@@ -123,11 +123,21 @@
             :key="row.id"
             class="payout-list__item">
             <div class="payout-list__main">
-              <div class="payout-list__name">{{ row.name || "Реквизит без названия" }}</div>
-              <div class="payout-list__meta">
-                {{ row.paymentSystemName || "Payment system" }} · {{ row.updatedAt || "-" }}
+              <div class="payout-list__name">
+                {{ row.name || t("cabinet.profile.components.tab-user-verification.unnamedPaymentDetail") }}
               </div>
-              <div class="payout-list__meta">Документы: {{ row.documentsCount }}</div>
+              <div class="payout-list__meta">
+                {{
+                  row.paymentSystemName || t("cabinet.profile.components.tab-user-verification.paymentSystemFallback")
+                }}
+                ·
+                {{ row.updatedAt || "-" }}
+              </div>
+              <div class="payout-list__meta">
+                {{
+                  t("cabinet.profile.components.tab-user-verification.documentsCount", { count: row.documentsCount })
+                }}
+              </div>
               <div
                 v-if="row.adminComment"
                 class="payout-list__comment">
@@ -148,7 +158,7 @@
     </div>
 
     <div class="w-full">
-      <UiTextH5 class="mb-5"># Verification History</UiTextH5>
+      <UiTextH5 class="mb-5">{{ t("cabinet.profile.components.tab-user-verification.titles.history") }}</UiTextH5>
 
       <PanelDefault class="relative">
         <div
@@ -161,9 +171,15 @@
           <table class="w-full text-sm">
             <thead class="bg-[var(--ui-primary-main)]">
               <tr class="text-left">
-                <th class="px-4 py-3 font-semibold">Name</th>
-                <th class="px-4 py-3 font-semibold">Date</th>
-                <th class="px-4 py-3 font-semibold">Status</th>
+                <th class="px-4 py-3 font-semibold">
+                  {{ t("cabinet.profile.components.tab-user-verification.columns.name") }}
+                </th>
+                <th class="px-4 py-3 font-semibold">
+                  {{ t("cabinet.profile.components.tab-user-verification.columns.date") }}
+                </th>
+                <th class="px-4 py-3 font-semibold">
+                  {{ t("cabinet.profile.components.tab-user-verification.columns.status") }}
+                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-[var(--color-stroke-ui-light)]">
@@ -171,7 +187,7 @@
                 <td
                   class="px-4 py-6 text-center text-[var(--ui-text-secondary)]"
                   colspan="3">
-                  No verification history yet.
+                  {{ t("cabinet.profile.components.tab-user-verification.historyEmpty") }}
                 </td>
               </tr>
               <tr
@@ -260,16 +276,34 @@
   const infoComment = ref<string>("");
 
   const items = computed(() => [
-    { key: "email", title: "Email", subtitle: "Confirm your email", status: emailStatus, comment: emailComment },
-    { key: "documents", title: "Document", subtitle: "", status: documentsStatus, comment: documentsComment },
+    {
+      key: "email",
+      title: t("cabinet.profile.components.tab-user-verification.items.email.title"),
+      subtitle: t("cabinet.profile.components.tab-user-verification.items.email.subtitle"),
+      status: emailStatus,
+      comment: emailComment,
+    },
+    {
+      key: "documents",
+      title: t("cabinet.profile.components.tab-user-verification.items.documents.title"),
+      subtitle: "",
+      status: documentsStatus,
+      comment: documentsComment,
+    },
     {
       key: "deposit",
-      title: "1st Deposit",
-      subtitle: "Make a payment to verify the 1st deposit",
+      title: t("cabinet.profile.components.tab-user-verification.items.deposit.title"),
+      subtitle: t("cabinet.profile.components.tab-user-verification.items.deposit.subtitle"),
       status: depositStatus,
       comment: depositComment,
     },
-    { key: "profile", title: "Profile", subtitle: "", status: infoStatus, comment: infoComment },
+    {
+      key: "profile",
+      title: t("cabinet.profile.components.tab-user-verification.items.profile.title"),
+      subtitle: "",
+      status: infoStatus,
+      comment: infoComment,
+    },
   ]);
   const hasUnreadClientVerificationSignals = computed(() =>
     unreadVerificationNotifications.value.some(item => item.section === "client")
@@ -296,7 +330,11 @@
     s === "approved" ? UiIconSuccessFull : s === "pending" ? UiIconWarningFull : UiIconDangerFull;
 
   const textByStatus = (s: VerificationStatus) =>
-    s === "approved" ? "Confirmed" : s === "pending" ? "In progress" : "Canceled";
+    s === "approved"
+      ? t("cabinet.profile.components.tab-user-verification.statuses.approved")
+      : s === "pending"
+        ? t("cabinet.profile.components.tab-user-verification.statuses.pending")
+        : t("cabinet.profile.components.tab-user-verification.statuses.rejected");
 
   const pillClass = (s: VerificationStatus) => ({
     "border-[var(--color-success)]/30 text-[var(--color-success)] bg-[var(--color-success)]/10": s === "approved",
@@ -322,7 +360,9 @@
   };
 
   const parseVerificationSection = (value: unknown): VerificationSectionTab | null => {
-    const normalized = String(value ?? "").trim().toLowerCase();
+    const normalized = String(value ?? "")
+      .trim()
+      .toLowerCase();
 
     if (normalized === "client" || normalized === "payout") {
       return normalized;
@@ -332,7 +372,9 @@
   };
 
   const mapNotificationStepToSection = (value: unknown): VerificationSectionTab => {
-    const normalized = String(value ?? "").trim().toLowerCase();
+    const normalized = String(value ?? "")
+      .trim()
+      .toLowerCase();
     return normalized === "payout" ? "payout" : "client";
   };
 
@@ -382,7 +424,9 @@
       const rows = Array.isArray(response?.data?.data?.data) ? response.data.data.data : [];
       unreadVerificationNotifications.value = rows
         .map(normalizeUnreadVerificationNotification)
-        .filter((item: ClientVerificationUnreadNotification | null): item is ClientVerificationUnreadNotification => Boolean(item));
+        .filter((item: ClientVerificationUnreadNotification | null): item is ClientVerificationUnreadNotification =>
+          Boolean(item)
+        );
     } catch {
       unreadVerificationNotifications.value = [];
     }
@@ -509,9 +553,7 @@
   };
 
   const handleMarkedNotifications = (payload?: { ids?: string[] }) => {
-    const ids = Array.isArray(payload?.ids)
-      ? payload.ids.map(item => String(item ?? "").trim()).filter(Boolean)
-      : [];
+    const ids = Array.isArray(payload?.ids) ? payload.ids.map(item => String(item ?? "").trim()).filter(Boolean) : [];
 
     removeUnreadVerificationNotifications(ids);
   };

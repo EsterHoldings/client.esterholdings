@@ -35,7 +35,9 @@
           <div class="flex items-center gap-2 text-sm text-[var(--ui-text-secondary)]">
             <span
               class="inline-flex h-2.5 w-2.5 rounded-full"
-              :class="effectiveCounterpartyOnline ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'" />
+              :class="
+                effectiveCounterpartyOnline ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
+              " />
             <span>{{ effectiveCounterpartyOnline ? chatText.online : chatText.offline }}</span>
             <span
               v-if="isCounterpartyTyping"
@@ -92,7 +94,9 @@
             v-if="item.kind === 'sep'"
             class="flex items-center gap-3 text-[var(--ui-text-secondary)] select-none">
             <span class="h-px flex-1 bg-[var(--color-stroke-ui-light)]"></span>
-            <span class="text-xs uppercase tracking-wider text-[var(--ui-text-secondary)]"> — {{ item.label }} — </span>
+            <span class="text-xs uppercase tracking-wider text-[var(--ui-text-secondary)]">
+              — {{ getSeparatorLabel(item.label) }} —
+            </span>
             <span class="h-px flex-1 bg-[var(--color-stroke-ui-light)]"></span>
           </div>
 
@@ -117,7 +121,7 @@
                 <img
                   v-if="getMessageAvatarUrl(item.msg)"
                   :src="getMessageAvatarUrl(item.msg)"
-                  alt="Author avatar"
+                  :alt="chatText.authorAvatarAlt"
                   class="h-full w-full object-cover" />
                 <span v-else>{{ getMessageAvatarFallback(item.msg) }}</span>
               </div>
@@ -341,7 +345,7 @@
                 <img
                   v-if="myAvatarUrl"
                   :src="myAvatarUrl"
-                  alt="My avatar"
+                  :alt="chatText.myAvatarAlt"
                   class="h-full w-full object-cover" />
                 <span v-else>{{ myAvatarFallback }}</span>
               </div>
@@ -593,7 +597,7 @@
               <button
                 @click="emit('close')"
                 class="no-drag rounded-lg p-2 text-[var(--ui-text-secondary)] hover:bg-[var(--color-stroke-ui-dark)] hover:text-[var(--ui-text-main)]"
-                title="Close">
+                :title="chatText.close">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -628,9 +632,9 @@
                   v-if="item.kind === 'sep'"
                   class="flex items-center gap-3 text-[var(--ui-text-secondary)] select-none">
                   <span class="h-px flex-1 bg-[var(--color-stroke-ui-light)]"></span>
-                  <span class="text-xs uppercase tracking-wider text-[var(--ui-text-secondary)]"
-                    >— {{ item.label }} —</span
-                  >
+                  <span class="text-xs uppercase tracking-wider text-[var(--ui-text-secondary)]">
+                    — {{ getSeparatorLabel(item.label) }} —
+                  </span>
                   <span class="h-px flex-1 bg-[var(--color-stroke-ui-light)]"></span>
                 </div>
 
@@ -655,7 +659,7 @@
                       <img
                         v-if="getMessageAvatarUrl(item.msg)"
                         :src="getMessageAvatarUrl(item.msg)"
-                        alt="Author avatar"
+                        :alt="chatText.authorAvatarAlt"
                         class="h-full w-full object-cover" />
                       <span v-else>{{ getMessageAvatarFallback(item.msg) }}</span>
                     </div>
@@ -879,7 +883,7 @@
                       <img
                         v-if="myAvatarUrl"
                         :src="myAvatarUrl"
-                        alt="My avatar"
+                        :alt="chatText.myAvatarAlt"
                         class="h-full w-full object-cover" />
                       <span v-else>{{ myAvatarFallback }}</span>
                     </div>
@@ -1174,6 +1178,7 @@
   import { useI18n } from "vue-i18n";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
+  import { extractApiErrorMessageWithTranslator } from "~/composables/useApiMessages";
   import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import VueDraggableResizable from "vue-draggable-resizable";
@@ -1217,6 +1222,11 @@
     send: resolveText("support.chat.send", "Send"),
     mobileBackAria: resolveText("support.chat.mobileBackAria", "Back to tickets"),
     toggleDetailsAria: resolveText("support.chat.toggleDetailsAria", "Toggle details"),
+    today: resolveText("support.chat.today", "Today"),
+    yesterday: resolveText("support.chat.yesterday", "Yesterday"),
+    close: resolveText("support.chat.close", "Close"),
+    authorAvatarAlt: resolveText("support.chat.authorAvatarAlt", "Author avatar"),
+    myAvatarAlt: resolveText("support.chat.myAvatarAlt", "My avatar"),
     attachment: resolveText("support.chat.attachment", "Attachment"),
     photo: resolveText("support.chat.photo", "Photo"),
     video: resolveText("support.chat.video", "Video"),
@@ -2054,20 +2064,9 @@
       return chatText.value.uploadTimedOut;
     }
 
-    const responseData = errorRecord?.response?.data;
-    if (responseData && typeof responseData === "object") {
-      if (typeof responseData.message === "string" && responseData.message.trim() !== "") {
-        return responseData.message.trim();
-      }
-
-      if (responseData.errors && typeof responseData.errors === "object") {
-        const firstError = Object.values(responseData.errors)
-          .flat()
-          .find(value => typeof value === "string");
-        if (typeof firstError === "string" && firstError.trim() !== "") {
-          return firstError.trim();
-        }
-      }
+    const localizedMessage = extractApiErrorMessageWithTranslator(error, resolveText, "");
+    if (localizedMessage && localizedMessage.trim() !== "") {
+      return localizedMessage.trim();
     }
 
     if (typeof errorRecord.message === "string" && errorRecord.message.trim() !== "") {
@@ -2630,6 +2629,10 @@
     }
     return out;
   });
+
+  const getSeparatorLabel = (label: RenderSep["label"]): string => {
+    return label === "today" ? chatText.value.today : chatText.value.yesterday;
+  };
 
   function firstVisibleEl(el: HTMLElement): HTMLElement | null {
     const cr = el.getBoundingClientRect();
@@ -3220,7 +3223,9 @@
   };
 
   const normalizePresenceParticipantRoleKey = (participant: any): string => {
-    const normalizedRole = normalizeText(participant?.role_key ?? participant?.roleKey ?? participant?.role).toLowerCase();
+    const normalizedRole = normalizeText(
+      participant?.role_key ?? participant?.roleKey ?? participant?.role
+    ).toLowerCase();
     if (normalizedRole === "admin" || normalizedRole === "agent") return "agent";
     if (normalizedRole === "client" || normalizedRole === "customer") return "customer";
     return normalizedRole;

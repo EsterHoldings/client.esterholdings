@@ -210,6 +210,7 @@
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import useAppCore from "~/composables/useAppCore";
+  import { localizeApiErrorsWithTranslator } from "~/composables/useApiMessages";
   import { formData } from "~/pages/profile/composables";
   import { validatorUserDataForm } from "~/pages/profile/composables/validation";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
@@ -751,6 +752,7 @@
       const serverErrors = e?.response?.data?.errors;
 
       if (responseStatus === 422 && serverErrors && typeof serverErrors === "object") {
+        const localizedErrors = localizeApiErrorsWithTranslator(serverErrors, resolveText);
         const mapFieldName = (fieldName: string): string =>
           ({
             country_id: "country",
@@ -758,7 +760,7 @@
             city_id: "city",
           })[fieldName] || fieldName;
 
-        Object.entries(serverErrors as Record<string, string[]>).forEach(([field, errors]) => {
+        Object.entries(localizedErrors).forEach(([field, errors]) => {
           const targetField = mapFieldName(field);
           const target = validatorUserDataForm.errorsFormData[targetField];
           if (!target) {

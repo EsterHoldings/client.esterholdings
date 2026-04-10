@@ -48,9 +48,33 @@ export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
     key: "cabinet.dashboard.emailVerification.success",
     fallback: "Email verified.",
   },
+  "email already verified": {
+    key: "apiMessages.emailAlreadyVerified",
+    fallback: "Email already verified.",
+  },
   "payment synchronized successfully": {
     key: "cabinet.billing.syncPaymentSuccess",
     fallback: "Payment synchronized successfully.",
+  },
+  "2fa enabled": {
+    key: "apiMessages.twoFaEnabled",
+    fallback: "2FA enabled!",
+  },
+  "2fa disabled": {
+    key: "apiMessages.twoFaDisabled",
+    fallback: "2FA disabled!",
+  },
+  "2fa enabled!": {
+    key: "apiMessages.twoFaEnabled",
+    fallback: "2FA enabled!",
+  },
+  "2fa disabled!": {
+    key: "apiMessages.twoFaDisabled",
+    fallback: "2FA disabled!",
+  },
+  "wrong code": {
+    key: "apiMessages.twoFaWrongCode",
+    fallback: "Wrong code!",
   },
   "payment was successfully created": {
     key: "cabinet.billing.depositForm.created",
@@ -179,6 +203,22 @@ export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
   "invalid callback signature": {
     key: "apiMessages.invalidCallbackSignature",
     fallback: "Invalid callback signature.",
+  },
+  "reply email is required for email support channel": {
+    key: "apiMessages.supportReplyEmailRequired",
+    fallback: "Reply email is required for email support channel.",
+  },
+  "use either files or uploaded_attachments, not both": {
+    key: "apiMessages.supportFilesConflict",
+    fallback: "Use either files or uploaded attachments, not both.",
+  },
+  "message or files are required": {
+    key: "apiMessages.supportMessageOrFilesRequired",
+    fallback: "Message or files are required.",
+  },
+  "message body or files are required": {
+    key: "apiMessages.supportMessageBodyOrFilesRequired",
+    fallback: "Message body or files are required.",
   },
 };
 

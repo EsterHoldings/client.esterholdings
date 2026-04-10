@@ -111,7 +111,7 @@
                     </div>
                   </th>
                   <th class="px-4 font-semibold">
-                    <UiTextSmall class="whitespace-nowrap">Counterparty</UiTextSmall>
+                    <UiTextSmall class="whitespace-nowrap">{{ supportPageText.counterparty }}</UiTextSmall>
                   </th>
                   <th class="px-4 font-semibold">
                     <div class="flex items-center justify-start gap-2">
@@ -160,7 +160,7 @@
                         :class="
                           t.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
                         " />
-                      {{ t.counterparty_online ? "Online" : "Offline" }}
+                      {{ t.counterparty_online ? supportPageText.online : supportPageText.offline }}
                     </span>
                   </td>
 
@@ -169,8 +169,8 @@
                       class="inline-flex items-center gap-1.5 text-xs text-[var(--ui-text-secondary)] whitespace-nowrap">
                       <span
                         class="h-1.5 w-1.5 rounded-full"
-                        :class="getTicketStatusDotClass(t.status)" />
-                      {{ t.status }}
+                        :class="getSupportStatusDotClass(t.status)" />
+                      {{ getTicketStatusLabel(t.status) }}
                     </span>
                   </td>
 
@@ -188,7 +188,7 @@
                       </span>
                       <button
                         class="h-8 w-8 flex items-center justify-center rounded-md hover:bg-[var(--color-stroke-ui-light)] active:opacity-[.5]"
-                        aria-label="More"
+                        :aria-label="supportPageText.moreAria"
                         @click.stop>
                         <UiIconDotsVertical @click.stop />
                       </button>
@@ -245,7 +245,7 @@
                 <button
                   class="ticket-card__copy-col ticket-card__icon-btn"
                   @click.stop
-                  aria-label="Copy ID">
+                  :aria-label="supportPageText.copyIdAria">
                   <UiIconCopy :text="ticket.id" />
                 </button>
 
@@ -264,7 +264,7 @@
                       :class="
                         ticket.counterparty_online ? 'bg-[var(--ui-sticker-success)]' : 'bg-[var(--ui-text-secondary)]'
                       " />
-                    {{ ticket.counterparty_online ? "Online" : "Offline" }}
+                    {{ ticket.counterparty_online ? supportPageText.online : supportPageText.offline }}
                   </span>
                 </div>
 
@@ -283,8 +283,8 @@
                   <span class="ticket-card__status">
                     <span
                       class="ticket-card__status-dot"
-                      :class="getTicketStatusDotClass(ticket.status)" />
-                    {{ ticket.status }}
+                      :class="getSupportStatusDotClass(ticket.status)" />
+                    {{ getTicketStatusLabel(ticket.status) }}
                   </span>
                   <span class="ticket-card__updated ticket-card__updated--under-status">{{
                     ticket.last_message_at
@@ -294,7 +294,7 @@
                     <button
                       class="ticket-card__icon-btn ticket-card__chat-btn"
                       @click.stop="handleChatIconClick(ticket.id)"
-                      aria-label="Open chat">
+                      :aria-label="supportPageText.openChatAria">
                       <span
                         v-if="ticket.unread_messages_count > 0"
                         class="ticket-card__chat-badge">
@@ -304,7 +304,7 @@
                     </button>
                     <button
                       class="ticket-card__icon-btn"
-                      aria-label="More"
+                      :aria-label="supportPageText.moreAria"
                       @click.stop>
                       <UiIconDotsVertical />
                     </button>
@@ -338,7 +338,7 @@
                             ? 'bg-[var(--ui-sticker-success)]'
                             : 'bg-[var(--ui-text-secondary)]'
                         " />
-                      {{ ticket.counterparty_online ? "Online" : "Offline" }}
+                      {{ ticket.counterparty_online ? supportPageText.online : supportPageText.offline }}
                     </span>
                     <span class="ticket-card__updated">{{ ticket.last_message_at }}</span>
                   </div>
@@ -347,21 +347,21 @@
                     <span class="ticket-card__status">
                       <span
                         class="ticket-card__status-dot"
-                        :class="getTicketStatusDotClass(ticket.status)" />
-                      {{ ticket.status }}
+                        :class="getSupportStatusDotClass(ticket.status)" />
+                      {{ getTicketStatusLabel(ticket.status) }}
                     </span>
 
                     <div class="ticket-card__actions">
                       <button
                         class="ticket-card__icon-btn"
                         @click.stop
-                        aria-label="Copy ID">
+                        :aria-label="supportPageText.copyIdAria">
                         <UiIconCopy :text="ticket.id" />
                       </button>
                       <button
                         class="ticket-card__icon-btn ticket-card__chat-btn"
                         @click.stop="handleChatIconClick(ticket.id)"
-                        aria-label="Open chat">
+                        :aria-label="supportPageText.openChatAria">
                         <span
                           v-if="ticket.unread_messages_count > 0"
                           class="ticket-card__chat-badge">
@@ -371,7 +371,7 @@
                       </button>
                       <button
                         class="ticket-card__icon-btn"
-                        aria-label="More"
+                        :aria-label="supportPageText.moreAria"
                         @click.stop>
                         <UiIconDotsVertical />
                       </button>
@@ -476,6 +476,7 @@
 
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
+  import { getSupportStatusDotClass, translateSupportStatus } from "~/pages/support/composables/i18n";
   import { definePageMeta } from "~/.nuxt/imports";
   import { useNuxtApp } from "nuxt/app";
   import {
@@ -516,26 +517,44 @@
     photoUrl: null,
   });
 
-  const sortByFilterData = reactive([
+  const { t } = useI18n({ useScope: "global" });
+  const { openModal } = inject("modalControl") as { openModal: Function };
+  const resolveText = (key: string, fallback: string): string => {
+    const translated = t(key);
+    return translated === key ? fallback : String(translated);
+  };
+  const supportPageText = computed(() => ({
+    counterparty: resolveText("support.page.counterparty", "Counterparty"),
+    online: resolveText("support.page.online", "Online"),
+    offline: resolveText("support.page.offline", "Offline"),
+    copyIdAria: resolveText("support.page.copyIdAria", "Copy ID"),
+    openChatAria: resolveText("support.page.openChatAria", "Open chat"),
+    moreAria: resolveText("support.page.moreAria", "More actions"),
+    lastCreated: resolveText("support.page.lastCreated", "Last created"),
+    noMessagesYet: resolveText("support.page.noMessagesYet", "No messages yet"),
+    attachment: resolveText("support.page.attachment", "Attachment"),
+    attachments: resolveText("support.page.attachments", "attachments"),
+    systemEvent: resolveText("support.page.systemEvent", "System event"),
+    newMessage: resolveText("support.page.newMessage", "New message"),
+    newTicketModalTitle: resolveText("support.page.newTicketModalTitle", "Create a new ticket"),
+  }));
+  const sortByFilterData = computed(() => [
     {
       id: "created_at",
       value: "created_at",
-      text: "Last created",
+      text: supportPageText.value.lastCreated,
     },
     {
       id: "last_message_at",
       value: "last_message_at",
-      text: "Last updated",
+      text: resolveText("support.page.lastUpdate", "Last updated"),
     },
     {
       id: "status",
       value: "status",
-      text: "Status",
+      text: resolveText("support.page.status", "Status"),
     },
   ]);
-
-  const { t } = useI18n({ useScope: "global" });
-  const { openModal } = inject("modalControl") as { openModal: Function };
 
   const appCore = useAppCore();
 
@@ -556,7 +575,7 @@
   const viewOptions = [
     {
       value: "table" as const,
-      label: t("cabinet.billing.view.list") || "List",
+      label: resolveText("cabinet.billing.view.list", "List"),
       icon: {
         render() {
           return h(
@@ -583,7 +602,7 @@
     },
     {
       value: "cards" as const,
-      label: t("cabinet.billing.view.cards") || "Cards",
+      label: resolveText("cabinet.billing.view.cards", "Cards"),
       icon: {
         render() {
           return h(
@@ -608,7 +627,7 @@
     },
     {
       value: "full" as const,
-      label: t("cabinet.billing.view.full") || "Full width",
+      label: resolveText("cabinet.billing.view.full", "Full width"),
       icon: {
         render() {
           return h(
@@ -714,7 +733,7 @@
 
     const attachmentsCount = Number(ticket?.meta?.attachments_count ?? ticket?.attachments_count ?? 0);
     if (Number.isFinite(attachmentsCount) && attachmentsCount > 0) {
-      return "Attachment";
+      return supportPageText.value.attachment;
     }
 
     return "";
@@ -726,8 +745,10 @@
     if (direct) return direct;
     if (ticketId && ticketLastMessagePreviewById[ticketId]) return ticketLastMessagePreviewById[ticketId];
 
-    return extractTicketLastMessagePreview(ticket) || "No messages yet";
+    return extractTicketLastMessagePreview(ticket) || supportPageText.value.noMessagesYet;
   };
+
+  const getTicketStatusLabel = (status: unknown): string => translateSupportStatus(status, resolveText);
 
   const filtered = computed(() =>
     tickets.filter(t =>
@@ -736,22 +757,6 @@
         .includes(search.value.toLowerCase())
     )
   );
-
-  const getTicketStatusDotClass = (status: unknown) => {
-    const normalizedStatus = String(status ?? "")
-      .trim()
-      .toLowerCase();
-
-    if (["open", "in_progress", "in progress", "pending", "active"].includes(normalizedStatus)) {
-      return "bg-[var(--ui-sticker-success)]";
-    }
-
-    if (["closed", "resolved", "cancelled", "rejected", "archived"].includes(normalizedStatus)) {
-      return "bg-[var(--ui-sticker-danger)]";
-    }
-
-    return "bg-[var(--ui-text-secondary)]";
-  };
 
   const getTicketClientAvatarUrl = (ticket: any): string => {
     const rawUrl = ticket?.creator?.photo_url ?? ticket?.creator_photo_url ?? "";
@@ -1170,9 +1175,9 @@
     if (normalizedType === "attachment") {
       const attachmentsCount = Number(data?.meta?.attachments_count ?? 0);
       if (Number.isFinite(attachmentsCount) && attachmentsCount > 1) {
-        return `${attachmentsCount} attachments`;
+        return `${attachmentsCount} ${supportPageText.value.attachments}`;
       }
-      return "Attachment";
+      return supportPageText.value.attachment;
     }
 
     if (normalizedType === "system") {
@@ -1182,10 +1187,10 @@
       if (eventName) {
         return eventName;
       }
-      return "System event";
+      return supportPageText.value.systemEvent;
     }
 
-    return "New message";
+    return supportPageText.value.newMessage;
   };
 
   const handleSupportMessagePayload = (payload?: any): boolean => {
@@ -1334,9 +1339,8 @@
   };
 
   const handleClickCreateNewTicket = async () => {
-    console.log("handleClickCreateNewTicket");
     openModal(TicketsCreateNew, {
-      title: "Создать новую заявку",
+      title: supportPageText.value.newTicketModalTitle,
     });
   };
 
@@ -1347,7 +1351,6 @@
   };
 
   const handleClickUpdate = async () => {
-    console.log("handleClickUpdate");
     await loadData();
   };
 
@@ -1390,10 +1393,9 @@
         document.execCommand("copy");
         document.body.removeChild(ta);
       }
-      console.log("Скопійовано в буфер:", id);
       return true;
     } catch (err) {
-      console.error("Не вдалося скопіювати:", err);
+      console.error("Failed to copy ticket id:", err);
       return false;
     }
   };

@@ -1,7 +1,8 @@
 {
   "ui": {
     "pagination": {
-      "perPage": "प्रति पृष्ठ"
+      "perPage": "प्रति पृष्ठ",
+      "range": "{from} से {to} / कुल: {total}"
     }
   },
   "ui-components": {
@@ -399,10 +400,18 @@
       "faqs__dropzone_text": "फ़ाइलें यहाँ खींचें और छोड़ें, या फ़ाइलें चुनने के लिए क्लिक करें",
       "faqs__dropzone_aria": "फ़ाइल अपलोड करें",
       "news_row__items": [
-        { "title": "SEC के स्टेबलकॉइन प्रतिबंध की घोषणा के बाद Bitcoin 12% गिरा" },
-        { "title": "Tesla ने 1:10 स्टॉक स्प्लिट की घोषणा की – शेयर 12% बढ़े" },
-        { "title": "US मुद्रास्फीति में अप्रत्याशित वृद्धि के बाद Dow Jones 1,200 अंक गिरा" },
-        { "title": "तिमाही रिपोर्ट के बाद NVIDIA के शेयर 15% उछले" }
+        {
+          "title": "SEC के स्टेबलकॉइन प्रतिबंध की घोषणा के बाद Bitcoin 12% गिरा"
+        },
+        {
+          "title": "Tesla ने 1:10 स्टॉक स्प्लिट की घोषणा की – शेयर 12% बढ़े"
+        },
+        {
+          "title": "US मुद्रास्फीति में अप्रत्याशित वृद्धि के बाद Dow Jones 1,200 अंक गिरा"
+        },
+        {
+          "title": "तिमाही रिपोर्ट के बाद NVIDIA के शेयर 15% उछले"
+        }
       ],
       "helpSection": "मदद चाहिए? हमारे",
       "helpLinkText": "सहायता अनुभाग पर जाएं",
@@ -431,10 +440,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "स्थिर फिल और स्केलेबल ऑर्डर फ्लो के लिए डिज़ाइन किए गए गहरे एकत्रित लिक्विडिटी पूल।",
-            "benefits": [
-              "Tier-1 लिक्विडिटी एग्रीगेशन",
-              "वेन्यू के पार गहराई"
-            ]
+            "benefits": ["Tier-1 लिक्विडिटी एग्रीगेशन", "वेन्यू के पार गहराई"]
           },
           {
             "line1Prefix": "",
@@ -444,10 +450,7 @@
             "line2Accent": "ट्रेडिंग",
             "line2Suffix": " के लिए",
             "subtitle": "उच्च ऑर्डर प्रोसेसिंग गति, 0 लिमिट/स्टॉप स्तर — सक्रिय ट्रेडिंग फ्लो के लिए बनाया गया।",
-            "benefits": [
-              "तेज़ सर्वर प्रौद्योगिकियां",
-              "संस्थागत लिक्विडिटी सेटअप"
-            ]
+            "benefits": ["तेज़ सर्वर प्रौद्योगिकियां", "संस्थागत लिक्विडिटी सेटअप"]
           }
         ]
       }
@@ -723,15 +726,37 @@
       "settings": "सेटिंग्स"
     },
     "header": {
-      "notifications": "Notifications",
-      "markAllRead": "Mark all read",
-      "emptyNotifications": "You have no notifications yet",
-      "accountSettings": "Account Settings",
-      "switchToLight": "Switch to Light",
-      "switchToDark": "Switch to Dark",
-      "helpCenter": "Help Center",
-      "logout": "Log Out",
-      "profile": "Profile"
+      "notifications": "सूचनाएं",
+      "markAllRead": "सभी को पढ़ा हुआ चिह्नित करें",
+      "emptyNotifications": "अभी तक कोई सूचना नहीं है",
+      "accountSettings": "खाता सेटिंग्स",
+      "switchToLight": "लाइट थीम पर स्विच करें",
+      "switchToDark": "डार्क थीम पर स्विच करें",
+      "helpCenter": "सहायता केंद्र",
+      "logout": "लॉग आउट",
+      "profile": "प्रोफ़ाइल",
+      "notificationTemplates": {
+        "depositStatusUpdated": {
+          "title": "जमा अपडेट हुई",
+          "message": "{status} • {method} • {amount} {currency} • खाता {account}"
+        },
+        "supportMessage": {
+          "title": "नया सपोर्ट संदेश",
+          "message": "{preview}"
+        },
+        "supportTicketUpdated": {
+          "title": "सपोर्ट टिकट अपडेट हुआ",
+          "message": "{preview}"
+        },
+        "verificationStatusUpdated": {
+          "title": "सत्यापन स्थिति अपडेट हुई",
+          "message": "{step} • {status}{comment}"
+        },
+        "withdrawalStatusUpdated": {
+          "title": "निकासी अनुरोध अपडेट हुआ",
+          "message": "{status} • {amount} {currency} • खाता {account}"
+        }
+      }
     },
     "dashboard": {
       "title": "डैशबोर्ड",
@@ -757,7 +782,18 @@
         "profileRejected": "प्रोफ़ाइल अस्वीकृत की गई!",
         "profilePhotoVerified": "प्रोफ़ाइल फोटो सफलतापूर्वक सत्यापित!",
         "profilePhotoInProgress": "प्रोफ़ाइल फोटो सत्यापन प्रगति पर है!",
-        "profilePhotoRejected": "प्रोफ़ाइल फोटो अस्वीकृत की गई!"
+        "profilePhotoRejected": "प्रोफ़ाइल फोटो अस्वीकृत की गई!",
+        "complete": "खाता पूर्णतः सत्यापित है",
+        "notComplete": "खाता पूर्णतः सत्यापित नहीं है",
+        "goToVerification": "सत्यापन पर जाएं",
+        "tooltipLabel": "खाता सत्यापन के बारे में",
+        "verifiedCount": "सत्यापित {done}/{total}",
+        "steps": {
+          "profile": "प्रोफ़ाइल डेटा",
+          "email": "ईमेल",
+          "documents": "दस्तावेज़",
+          "deposit": "पहला जमा"
+        }
       },
       "actions": {
         "newDeposit": "नई जमा",
@@ -765,7 +801,7 @@
         "chartPlaceholder": "चार्ट यहां जाएगा"
       },
       "mt4": {
-        "title": "MT4 खाते",
+        "title": "पसंदीदा या नए MT4 खाते",
         "openNewAccount": "नया खाता खोलें",
         "table": {
           "account": "खाता",
@@ -774,10 +810,16 @@
           "status": "स्थिति",
           "active": "सक्रिय",
           "inactive": "निष्क्रिय"
-        }
+        },
+        "description": "पसंदीदा खातों तक त्वरित पहुंच और नया MT4 खाता खोलने की सुविधा।",
+        "emptySubtitle": "आरंभ करने के लिए अपना पहला ट्रेडिंग खाता खोलें।",
+        "emptyTitle": "अभी तक कोई खाता नहीं",
+        "tooltipLabel": "MT4 खातों के बारे में",
+        "verifySubtitle": "आपका प्रोफ़ाइल डेटा और दस्तावेज़ सत्यापित होने के बाद, आप एक नया ट्रेडिंग खाता खोल सकेंगे।",
+        "verifyTitle": "खाता खोलने के लिए सत्यापन पूरा करें"
       },
       "transactions": {
-        "title": "लेन-देन",
+        "title": "नवीनतम लेनदेन",
         "sort": {
           "createdAt": "Created",
           "amount": "Amount",
@@ -786,20 +828,31 @@
           "type": "Type",
           "accountNumber": "MT4 account"
         },
-        "accountNumber": "MT4 account",
-        "amount": "Amount",
-        "currency": "Currency",
-        "type": "Type",
-        "createdAt": "Created",
-        "searchPlaceholder": "Search payments…",
-        "errorLoad": "Failed to load payments",
-        "empty": "No records yet.",
-        "show": "Show",
+        "accountNumber": "MT4 खाता",
+        "amount": "मात्रा",
+        "currency": "मुद्रा",
+        "type": "प्रकार",
+        "createdAt": "बनाया था",
+        "searchPlaceholder": "भुगतानों में खोजें…",
+        "errorLoad": "भुगतान लोड करने में विफल",
+        "empty": "अभी तक कोई रिकॉर्ड नहीं.",
+        "show": "दिखाएँ",
         "shownRange": "Showing {from}–{to} of {total}",
         "firstPage": "First page",
         "prevPage": "Previous page",
         "nextPage": "Next page",
-        "lastPage": "Last page"
+        "lastPage": "Last page",
+        "tooltip": "यह ब्लॉक नवीनतम जमा और निकासी दिखाता है ताकि ग्राहक तुरंत अद्यतन भुगतान देख सके और आवश्यक लेनदेन खोल सके।",
+        "tooltipLabel": "नवीनतम लेनदेन के बारे में",
+        "description": "सभी खातों में हाल के जमा और निकासी ताकि बदलाव तुरंत दिखाई दें।"
+      },
+      "summary": {
+        "totalAmount": "कुल राशि",
+        "referralTotalAmount": "रेफरल राशि"
+      },
+      "emailVerification": {
+        "success": "ईमेल सत्यापित.",
+        "error": "ईमेल सत्यापित करने में विफल."
       }
     },
     "billing": {
@@ -807,15 +860,17 @@
       "create": "नया भुगतान बनाएं",
       "search": "खोजें",
       "columns": {
-        "id": "Id",
+        "id": "पहचान",
         "paysystem": "भुगतान प्रणाली",
         "status": "स्थिति",
         "currency": "मुद्रा",
         "amount": "राशि",
         "createdAt": "बनाया गया",
-        "accountNumber": "Account number",
-        "paymentSystem": "Payment system",
-        "account": "Account"
+        "accountNumber": "खाता संख्या",
+        "paymentSystem": "भुगतान प्रणाली",
+        "account": "Account",
+        "accountNumberShort": "Acc.",
+        "paymentSystemShort": "PS"
       },
       "nothingToShow": "दिखाने के लिए कुछ नहीं =(",
       "pagination": {
@@ -824,32 +879,80 @@
       },
       "panel-title": "नया व्यवस्थापक जोड़ें",
       "view": {
-        "list": "List",
-        "cards": "Cards",
-        "full": "Full width"
+        "list": "सूची",
+        "cards": "कार्ड",
+        "full": "पूरी चौड़ाई"
       },
       "withdrawalForm": {
-        "account": "Trading account",
-        "paymentDetail": "Payment details",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter withdrawal amount",
-        "comment": "Comment",
-        "commentPlaceholder": "Add a comment for the finance team",
-        "submit": "Create withdrawal request",
-        "noPaymentDetailsTitle": "No approved payment details",
+        "account": "ट्रेडिंग खाते",
+        "paymentDetail": "भुगतान विवरण",
+        "amount": "मात्रा",
+        "amountPlaceholder": "निकासी राशि दर्ज करें",
+        "comment": "टिप्पणी",
+        "commentPlaceholder": "वित्त टीम के लिए एक टिप्पणी जोड़ें",
+        "submit": "निकासी अनुरोध बनाएं",
+        "noPaymentDetailsTitle": "कोई स्वीकृत भुगतान विवरण नहीं",
         "noPaymentDetailsText": "Add and approve payment details for this payment method before creating a withdrawal request.",
-        "openPaymentDetails": "Open payment details",
-        "accountBalance": "Available balance",
-        "created": "Withdrawal request created successfully.",
-        "error": "Failed to create withdrawal request.",
-        "adminComment": "Admin comment",
+        "openPaymentDetails": "भुगतान विवरण खोलें",
+        "accountBalance": "उपलब्ध शेष राशि",
+        "created": "निकासी अनुरोध सफलतापूर्वक बनाया गया.",
+        "error": "निकासी अनुरोध बनाने में विफल.",
+        "adminComment": "व्यवस्थापक टिप्पणी",
         "errors": {
-          "account": "Choose an account.",
-          "paymentDetail": "Choose approved payment details.",
-          "amount": "Enter a valid amount.",
-          "balance": "Withdrawal amount exceeds the account balance."
-        }
-      }
+          "account": "एक खाता चुनें.",
+          "paymentDetail": "स्वीकृत भुगतान विवरण चुनें.",
+          "amount": "एक वैध राशि दर्ज करें.",
+          "balance": "निकासी राशि खाते की शेष राशि से अधिक है।"
+        },
+        "loadAccountsError": "ट्रेडिंग खाते लोड करने में विफल.",
+        "loadPaymentDetailsError": "भुगतान विवरण लोड करने में विफल.",
+        "processing": "प्रसंस्करण...",
+        "title": "निकासी अनुरोध"
+      },
+      "backToList": "भुगतान सूची पर वापस जाएँ",
+      "backToMethodSelection": "भुगतान विधि चयन पर वापस जाएँ",
+      "comment": "टिप्पणी",
+      "createFlow": {
+        "loadPaymentSystemsError": "भुगतान विधियां लोड करने में विफल.",
+        "selectMethod": "एक भुगतान विधि का चयन करें"
+      },
+      "deletePayment": "मिटाना",
+      "deletePaymentConfirm": "भुगतान हटाएं?",
+      "deletePaymentError": "भुगतान हटाने में विफल.",
+      "deletePaymentSuccess": "भुगतान हटा दिया गया.",
+      "depositForm": {
+        "account": "ट्रेडिंग खाते",
+        "amount": "मात्रा",
+        "amountPlaceholder": "राशि USD में",
+        "comment": "टिप्पणी",
+        "commentPlaceholder": "वित्त टीम के लिए एक टिप्पणी जोड़ें",
+        "created": "जमा सफलतापूर्वक बनाया गया.",
+        "error": "जमा राशि बनाने में विफल.",
+        "loadAccountsError": "ट्रेडिंग खाते लोड करने में विफल.",
+        "processing": "प्रसंस्करण...",
+        "submit": "जमा बनाएँ"
+      },
+      "emptySubtitle": "आरंभ करने के लिए अपना पहला भुगतान बनाएं।",
+      "emptyTitle": "अभी तक कोई भुगतान नहीं",
+      "gateway": "द्वार",
+      "internalTransfer": "खातों के बीच स्थानांतरण",
+      "listLoadError": "भुगतान लोड करने में विफल.",
+      "openPayment": "खुला",
+      "paymentLoadError": "भुगतान लोड करने में विफल.",
+      "paymentNotFound": "भुगतान नहीं मिला.",
+      "redirectLink": "भुगतान लिंक",
+      "syncPayment": "साथ-साथ करना",
+      "syncPaymentError": "भुगतान सिंक्रनाइज़ करने में विफल.",
+      "syncPaymentLoading": "सिंक हो रहा है...",
+      "syncPaymentSuccess": "भुगतान सफलतापूर्वक समन्वयित हुआ.",
+      "transferCreated": "बनाए गए खातों के बीच स्थानांतरण.",
+      "transferFrom": "खाते से",
+      "transferTo": "खाते में",
+      "types": {
+        "deposit": "जमा",
+        "withdrawal": "निकासी"
+      },
+      "updatedAt": "पर अद्यतन किया गया"
     },
     "payments": {
       "title": "भुगतान विवरण",
@@ -866,11 +969,163 @@
           "title": "नया भुगतान विवरण बनाएँ",
           "name": "भुगतान विवरण का नाम",
           "namePlaceholder": "भुगतान विवरण का नाम",
-          "recipientAddress": "कृपया एक भुगतान प्रणाली चुनें।"
+          "recipientAddress": "कृपया एक भुगतान प्रणाली चुनें।",
+          "createdSuccess": "भुगतान विवरण सफलतापूर्वक बनाया गया.",
+          "documents": {
+            "captionExisting": "यह दस्तावेज़ पहले से ही सहेजा गया है और जब तक आप इसे हटा नहीं देते तब तक संलग्न रहेगा।",
+            "captionFailed": "अपलोड पूरा नहीं हुआ. त्रुटि ठीक करें या फ़ाइल हटाएँ।",
+            "captionIdle": "फ़ाइल का चयन कर लिया गया है और आपके द्वारा फ़ॉर्म सहेजने के बाद अपलोड कर दिया जाएगा।",
+            "captionUploaded": "फ़ाइल अपलोड कर दी गई है और इस भुगतान विवरण के साथ सहेजी जाएगी।",
+            "captionUploading": "फ़ाइल अभी Amazon S3 पर अपलोड की जा रही है।",
+            "disabledHint": "दस्तावेज़ अपलोड को अनलॉक करने के लिए भुगतान विधि चुनें।",
+            "documentFallback": "दस्तावेज़",
+            "dropAction": "अपलोड करने के लिए क्लिक करें",
+            "dropHint": "पीएनजी, जेपीजी, वेबपी या पीडीएफ। अधिकतम फ़ाइल आकार 5 MB है.",
+            "dropSeparator": "या",
+            "dropTitle": "खींचें और छोड़ें",
+            "fileMissing": "अपलोड के लिए फ़ाइल तक पहुंचने में असमर्थ.",
+            "hint": "आप संलग्न दस्तावेज़ रख सकते हैं और नए जोड़ सकते हैं। जब आप फॉर्म सहेजेंगे तो नई फ़ाइलें S3 पर अपलोड हो जाएंगी।",
+            "initialHint": "आपके द्वारा भुगतान विधि चुनने के बाद दस्तावेज़ अपलोड उपलब्ध हो जाएगा।",
+            "invalidFormat": "फ़ाइल {name} का प्रारूप असमर्थित है.",
+            "label": "भुगतान खाते के स्क्रीनशॉट",
+            "originExisting": "जुड़ा हुआ",
+            "originNew": "नई फ़ाइल",
+            "presignFailed": "अपलोड लिंक प्राप्त करने में विफल.",
+            "removeExisting": "संलग्न फ़ाइल हटाएँ",
+            "removeNew": "नई फ़ाइल निकालें",
+            "required": "सत्यापन के लिए कम से कम एक भुगतान खाता स्क्रीनशॉट जोड़ें।",
+            "serverTooLarge": "फ़ाइल बहुत बड़ी है।",
+            "statusExisting": "सहेजा गया",
+            "statusFailed": "अपलोड करने में त्रुटि",
+            "statusIdle": "अपलोड करने के लिए तैयार",
+            "statusUploaded": "अपलोड किए गए",
+            "statusUploading": "अपलोड हो रहा है...",
+            "summaryExisting": "संलग्न: {count}",
+            "summaryNew": "नई फ़ाइलें: {count}",
+            "tooLarge": "फ़ाइल {name} 5 MB से अधिक है.",
+            "uploadBatchFailed": "{count} फ़ाइल अपलोड करने में विफल।",
+            "uploadFailed": "फ़ाइल को S3 पर अपलोड करने में विफल.",
+            "warningText": "अपने भुगतान खाते से स्क्रीनशॉट अपलोड करें जहां हम ईमेल पता, वॉलेट या खाता संख्या और क्यूआर कोड स्पष्ट रूप से देख सकते हैं।",
+            "warningTitle": "स्क्रीनशॉट में हमें क्या चाहिए"
+          },
+          "editTitle": "भुगतान विवरण संपादित करें",
+          "fieldFallback": "मैदान",
+          "fieldPlaceholder": "मान दर्ज करें",
+          "paymentMethod": "भुगतान विधि",
+          "recipientAddressLabel": "प्राप्तकर्ता का पता",
+          "recipientAddressPlaceholder": "भुगतान विवरण दर्ज करें",
+          "saveError": "भुगतान विवरण सहेजने में विफल.",
+          "selectMethodHint": "पहले भुगतान विधि चुनें, फिर भुगतान विवरण भरें।",
+          "submitCreate": "भुगतान विवरण सहेजें",
+          "submitUpdate": "परिवर्तनों को सुरक्षित करें",
+          "updatedSuccess": "भुगतान विवरण अद्यतन किया गया और सत्यापन के लिए फिर से भेजा गया।",
+          "validationRequired": "यह फ़ील्ड आवश्यक है."
         },
-        "view": "View",
+        "view": "देखना",
         "confirm": "Confirm",
-        "delete": "Delete"
+        "delete": "Delete",
+        "actions": {
+          "archive": "पुरालेख",
+          "archiveConfirm": "क्या आप इस भुगतान विवरण को संग्रहीत करना चाहते हैं?",
+          "archiveError": "भुगतान विवरण संग्रहीत करने में विफल.",
+          "archiveSuccess": "भुगतान विवरण संग्रह में ले जाया गया।",
+          "copyId": "कॉपी करें ID",
+          "edit": "संपादन करना",
+          "openMenu": "मेनू खोलें",
+          "restore": "पुनर्स्थापित करना",
+          "restoreError": "भुगतान विवरण पुनर्स्थापित करने में विफल.",
+          "restoreSuccess": "भुगतान विवरण पुनर्स्थापित किया गया."
+        },
+        "archivedBadge": "संग्रहीत",
+        "cardLabel": "भुगतान विवरण",
+        "columns": {
+          "id": "ID",
+          "name": "नाम",
+          "paymentSystem": "भुगतान प्रणाली",
+          "status": "स्थिति",
+          "updatedAt": "पर अद्यतन किया गया"
+        },
+        "detail": {
+          "back": "भुगतान विवरण पर वापस जाएँ",
+          "booleanNo": "नहीं",
+          "booleanYes": "हाँ",
+          "commentEmpty": "कोई टिप्पणी नहीं।",
+          "copyValue": "मान कॉपी करें",
+          "documentFallback": "दस्तावेज़",
+          "documentsEmpty": "दस्तावेज़ अपलोड नहीं किए गए.",
+          "fieldLabels": {
+            "active": "सक्रिय",
+            "comment": "टिप्पणी",
+            "config_name": "विन्यास",
+            "merchant": "व्यापारी",
+            "name": "नाम",
+            "old_requisite_id": "विरासत ID",
+            "paysystem": "भुगतान प्रणाली",
+            "shortname": "संक्षिप्त नाम",
+            "status": "स्थिति",
+            "type": "प्रकार"
+          },
+          "fieldsTitle": "भुगतान विवरण फ़ील्ड",
+          "groups": {
+            "fields": "मुख्य क्षेत्र",
+            "legacy": "विरासती डेटा"
+          },
+          "historyDocumentAlt": "इतिहास दस्तावेज़ #{count}",
+          "historyEmpty": "अभी तक कोई इतिहास नहीं.",
+          "historyLoading": "इतिहास लोड हो रहा है...",
+          "historyTitle": "भुगतान विवरण इतिहास",
+          "labels": {
+            "adminComment": "व्यवस्थापक टिप्पणी",
+            "createdAt": "पर बनाया गया",
+            "id": "ID",
+            "name": "नाम",
+            "paymentSystem": "भुगतान प्रणाली",
+            "updatedAt": "पर अद्यतन किया गया"
+          },
+          "loadError": "भुगतान विवरण लोड करने में विफल.",
+          "noData": "कोई डेटा नहीं।",
+          "notFound": "भुगतान विवरण नहीं मिला.",
+          "title": "भुगतान विवरण #{id}",
+          "total": "कुल: {count}",
+          "valueLabel": "कीमत"
+        },
+        "documents": {
+          "label": "भुगतान खाते के स्क्रीनशॉट",
+          "previewAlt": "पूर्वावलोकन #{count}"
+        },
+        "emptyArchivedSubtitle": "संग्रहीत भुगतान विवरण यहां दिखाई देंगे, और आप उन्हें पुनर्स्थापित करने में सक्षम होंगे।",
+        "emptyArchivedTitle": "अभी तक कोई संग्रहीत भुगतान विवरण नहीं",
+        "emptyFilteredSubtitle": "खोज क्वेरी या फ़िल्टर बदलने का प्रयास करें.",
+        "emptyFilteredTitle": "भुगतान विवरण नहीं मिला",
+        "emptySubtitle": "भुगतान प्राप्त करने के लिए अपना पहला भुगतान विवरण जोड़ें।",
+        "emptyTitle": "अभी तक कोई भुगतान विवरण नहीं",
+        "filters": {
+          "active": "सक्रिय",
+          "all": "सभी",
+          "archived": "संग्रहीत"
+        },
+        "relative": {
+          "daysAgo": "{count} दिन पहले",
+          "hoursAgo": "{count} घंटे पहले",
+          "justNow": "बस अब",
+          "minutesAgo": "{count} मिनट पहले"
+        },
+        "sort": {
+          "createdAt": "पर बनाया गया",
+          "name": "नाम",
+          "status": "स्थिति",
+          "updatedAt": "पर अद्यतन किया गया"
+        },
+        "statuses": {
+          "approved": "अनुमत",
+          "pending": "लंबित",
+          "rejected": "अस्वीकार कर दिया"
+        },
+        "views": {
+          "cards": "कार्ड",
+          "full": "पूरी चौड़ाई",
+          "table": "सूची"
+        }
       },
       "nothingToShow": "दिखाने के लिए कुछ नहीं =(",
       "pagination": {
@@ -907,14 +1162,14 @@
             "code_placeholder": "यहां कोड दर्ज करें",
             "confirm": "पुष्टि करें",
             "enable_success": "2FA सक्षम हो गया!",
-            "enable_error": "अमान्य कोड या कनेक्शन त्रुटि",
+            "enable_error": "Invalid code or connection error",
             "disable_success": "2FA अक्षम कर दिया गया",
-            "disable_error": "2FA अक्षम नहीं किया जा सका"
+            "disable_error": "Failed to disable 2FA"
           },
           "reset": {
             "pending": "दोबारा रीसेट ईमेल भेजने से पहले प्रतीक्षा करें।",
             "success": "पासवर्ड रीसेट ईमेल भेज दिया गया है।",
-            "error": "रीसेट ईमेल भेजने में विफल। बाद में कोशिश करें।"
+            "error": "Failed to send reset email. Try again later."
           }
         },
         "tab-general": {
@@ -945,27 +1200,68 @@
             "postal_code": "00000"
           },
           "button": "सहेजें और सत्यापन के लिए भेजें",
-          "success": "उपयोगकर्ता डेटा सफलतापूर्वक अपडेट किया गया और सत्यापन के लिए भेजा गया!"
+          "success": "उपयोगकर्ता डेटा सफलतापूर्वक अपडेट किया गया और सत्यापन के लिए भेजा गया!",
+          "validationError": "Please check form fields.",
+          "serverError": "Unable to save profile data."
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "फ़ाइल चुनें",
-            "upload": "अपलोड करें"
+            "choose": "Choose file",
+            "upload": "Upload",
+            "uploading": "Uploading...",
+            "uploadAndSend": "Upload and send to verification"
           },
           "messages": {
             "upload_success": "प्रोफ़ाइल फोटो सफलतापूर्वक अपडेट की गई और सत्यापन के लिए भेजी गई!",
             "upload_error": "फोटो अपलोड विफल",
-            "delete_error": "फोटो हटाना विफल"
+            "delete_error": "फोटो हटाना विफल",
+            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
+            "saveError": "Failed to save documents. Please try again later."
           },
           "errors": {
             "type": "केवल छवियों की अनुमति है",
-            "size": "अधिकतम आकार 2MB है"
+            "size": "अधिकतम आकार 2MB है",
+            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
+            "noFiles": "Please select file(s).",
+            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+          },
+          "title": "Upload documents",
+          "allDocuments": "All documents",
+          "empty": "You have no uploaded documents yet.",
+          "documentLabel": "Document",
+          "refreshAria": "Refresh documents",
+          "commentLabel": "Comment",
+          "fields": {
+            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+          },
+          "validation": {
+            "maxLength": "The field may not contain more than 100 characters."
+          },
+          "progress": {
+            "label": "Uploading: {value}%"
+          },
+          "verificationStatus": {
+            "title": "Verification status"
+          },
+          "columns": {
+            "name": "Name",
+            "status": "Status",
+            "date": "Date"
+          },
+          "actions": {
+            "delete": "Delete document"
+          },
+          "statuses": {
+            "pending": "In progress",
+            "approved": "Approved",
+            "rejected": "Rejected"
           }
         },
         "tab-user-photo": {
           "buttons": {
             "choose": "फ़ाइल चुनें",
-            "upload": "अपलोड करें"
+            "upload": "अपलोड करें",
+            "delete_aria": "फ़ोटो हटाएँ"
           },
           "messages": {
             "upload_success": "प्रोफ़ाइल फोटो सफलतापूर्वक अपडेट की गई",
@@ -974,8 +1270,60 @@
             "delete_error": "फोटो हटाना विफल"
           },
           "errors": {
-            "type": "केवल छवियों की अनुमति है",
-            "size": "अधिकतम आकार 2MB है"
+            "type": "Only images are allowed",
+            "size": "Max size is 5MB"
+          },
+          "hints": {
+            "formats": "Supported formats: PNG, JPG, JPEG",
+            "maxSize": "Photo must not exceed 5 MB."
+          },
+          "verification": {
+            "title": "Verification status",
+            "approved": "Verified successfully!"
+          }
+        },
+        "tab-user-verification": {
+          "sections": {
+            "client": "Client verification",
+            "payout": "Payout details"
+          },
+          "titles": {
+            "clientStatus": "Verification status",
+            "payoutStatus": "Payout details verification",
+            "history": "Verification history"
+          },
+          "refreshAria": "Refresh verification data",
+          "commentLabel": "Comment",
+          "emptyPayout": "No payout details yet.",
+          "unnamedPaymentDetail": "Untitled payment detail",
+          "paymentSystemFallback": "Payment system",
+          "documentsCount": "Documents: {count}",
+          "historyEmpty": "No verification history yet.",
+          "columns": {
+            "name": "Name",
+            "date": "Date",
+            "status": "Status"
+          },
+          "items": {
+            "email": {
+              "title": "Email",
+              "subtitle": "Confirm your email"
+            },
+            "documents": {
+              "title": "Documents"
+            },
+            "deposit": {
+              "title": "First deposit",
+              "subtitle": "Make a payment to verify the first deposit"
+            },
+            "profile": {
+              "title": "Profile"
+            }
+          },
+          "statuses": {
+            "approved": "Confirmed",
+            "pending": "In progress",
+            "rejected": "Rejected"
           }
         }
       },
@@ -988,11 +1336,16 @@
           "change_password": "पासवर्ड बदलें"
         },
         "title": "प्रोफ़ाइल"
+      },
+      "generalVerification": {
+        "notStarted": "Not started"
       }
     },
     "accounts": {
       "account": {
-        "title": "खाता"
+        "title": "खाता",
+        "loadError": "खाता विवरण लोड करने में विफल.",
+        "subtitle": "ट्रेडिंग खाते का विवरण और इतिहास"
       },
       "title": "खाते",
       "openNew": "नया खाता खोलें",
@@ -1025,18 +1378,22 @@
         },
         "actions": {
           "submit": "नया खाता खोलें"
-        }
+        },
+        "loadTypesError": "खाता प्रकार लोड करने में विफल.",
+        "submitError": "खाता बनाने में विफल."
       },
       "actions": {
-        "deposit": "Deposit",
-        "withdraw": "Withdraw",
-        "transfer": "Transfer",
+        "deposit": "जमा",
+        "withdraw": "निकालना",
+        "transfer": "स्थानांतरण",
         "history": "लेनदेन",
-        "changeType": "Change type",
-        "remove": "Remove"
+        "changeType": "प्रकार बदलें",
+        "remove": "निकालना"
       },
       "tabs": {
-        "history": "लेनदेन"
+        "history": "लेनदेन",
+        "card": "खाता कार्ड",
+        "tradeHistory": "व्यापार इतिहास"
       },
       "transactions": {
         "empty": "अभी तक कोई लेनदेन नहीं है",
@@ -1044,16 +1401,47 @@
         "transferToAccount": "खाते में ट्रांसफर"
       },
       "transfer": {
-        "fromAccount": "From account",
-        "toAccount": "To account",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter amount",
-        "submit": "Create transfer request",
-        "success": "Transfer request created successfully.",
-        "failed": "Failed to create transfer request.",
-        "sourceNotFound": "Source account not found.",
-        "noDestinations": "You do not have another account available for transfer.",
-        "exceedsBalance": "Amount exceeds available balance."
+        "fromAccount": "खाते से",
+        "toAccount": "खाते में",
+        "amount": "मात्रा",
+        "amountPlaceholder": "राशि डालें",
+        "submit": "स्थानांतरण अनुरोध बनाएँ",
+        "success": "स्थानांतरण अनुरोध सफलतापूर्वक बनाया गया.",
+        "failed": "स्थानांतरण अनुरोध बनाने में विफल.",
+        "sourceNotFound": "स्रोत खाता नहीं मिला.",
+        "noDestinations": "आपके पास स्थानांतरण के लिए कोई अन्य खाता उपलब्ध नहीं है.",
+        "exceedsBalance": "राशि उपलब्ध शेष से अधिक है.",
+        "title": "मेरे खातों के बीच स्थानांतरण"
+      },
+      "deleteConfirm": "इस खाते को संग्रहीत करें?",
+      "deleteError": "खाता संग्रहीत करने में विफल.",
+      "deleteSuccess": "खाता संग्रहीत!",
+      "emptySubtitle": "आरंभ करने के लिए अपना पहला ट्रेडिंग खाता खोलें।",
+      "emptyTitle": "अभी तक कोई खाता नहीं",
+      "favoriteAdd": "पसंदीदा में जोड़े",
+      "favoriteRemove": "पसंदीदा से हटाएँ",
+      "favoriteToggleError": "पसंदीदा अपडेट करने में विफल.",
+      "loadError": "खाते लोड करने में विफल.",
+      "openAccountLabel": "खाता खोलें {number}",
+      "openBlocked": "प्रोफ़ाइल और दस्तावेज़ सत्यापन के बाद खाता खोलने की सुविधा उपलब्ध होगी।",
+      "refreshBalance": "संतुलन ताज़ा करें",
+      "refreshBalanceError": "खाता शेष ताज़ा करने में विफल.",
+      "refreshBalancesError": "खाता शेष ताज़ा करने में विफल.",
+      "tradeHistory": {
+        "sync": "इतिहास सिंक करें",
+        "syncing": "सिंक हो रहा है...",
+        "empty": "अभी तक कोई व्यापार नहीं",
+        "total": "Records",
+        "added": "Added",
+        "updated": "Updated",
+        "searchPlaceholder": "सभी व्यापार क्षेत्रों द्वारा खोजें",
+        "filterAll": "All",
+        "filterPositive": "Profitable",
+        "filterNegative": "Losing",
+        "error": "व्यापार इतिहास लोड करने में विफल.",
+        "loadMore": "और लोड करें",
+        "loadingMore": "लोड हो रहा है...",
+        "syncError": "व्यापार इतिहास को सिंक्रनाइज़ करने में विफल."
       }
     },
     "referrals": {
@@ -1113,7 +1501,9 @@
           "active": "सक्रिय रेफ़रल",
           "conversion": "कन्वर्ज़न",
           "select": "MT खाता चुनें",
-          "transferHint": "किसी भी MT खाते में तुरंत ट्रांसफर करें"
+          "transferHint": "किसी भी MT खाते में तुरंत ट्रांसफर करें",
+          "available": "Available",
+          "pending": "In transit"
         },
         "transferLabel": "ट्रांसफर",
         "shareTelegram": "टेलीग्राम पर साझा करें",
@@ -1145,7 +1535,11 @@
         "sortInactive": "निष्क्रिय",
         "pagination": "{from}-{to} में से {total}",
         "prev": "पिछला",
-        "next": "अगला"
+        "next": "अगला",
+        "withdrawLabel": "Withdraw funds",
+        "shareMailSubject": "Join our referral program",
+        "yourLevel": "Your level",
+        "pointsProgress": "Points: {current} / {total}"
       },
       "settings": {
         "title": "Referral settings",
@@ -1165,7 +1559,265 @@
         "rule1": "Rewards are credited after a referred user completes verification.",
         "rule2": "Fraud or duplicate accounts may be declined.",
         "rule3": "Percentages and levels are placeholders until backend delivers real values.",
-        "rule4": "Contact support if you think a referral was missed."
+        "rule4": "Contact support if you think a referral was missed.",
+        "gamification": {
+          "title": "IB gamification",
+          "text": "Gamification turns the partner program into a game: levels, XP, missions, badges, rankings, seasonal events and a 3-level network bring real bonuses and passive income."
+        },
+        "coreElementsTitle": "Core elements",
+        "coreElements": {
+          "career": "Career ladder",
+          "xp": "XP points",
+          "missions": "Missions and challenges",
+          "badges": "Achievements and badges",
+          "ratings": "Rankings and competitions",
+          "seasonal": "Seasonal events"
+        },
+        "careerTitle": "Career ladder",
+        "xpLabel": "XP",
+        "commissionLabel": "Commission",
+        "bonusLabel": "Bonus",
+        "levels": {
+          "rookie": {
+            "title": "Rookie",
+            "xp": "0",
+            "commission": "30%",
+            "bonus": "-",
+            "perks": "Access to the personal cabinet"
+          },
+          "advanced": {
+            "title": "Advanced",
+            "xp": "5,000",
+            "commission": "35%",
+            "bonus": "$100",
+            "perks": "Branded materials"
+          },
+          "expert": {
+            "title": "Expert",
+            "xp": "20,000",
+            "commission": "40%",
+            "bonus": "$500",
+            "perks": "Personal manager"
+          },
+          "master": {
+            "title": "Master",
+            "xp": "50,000",
+            "commission": "50%",
+            "bonus": "$2,000",
+            "perks": "VIP events"
+          },
+          "legendary": {
+            "title": "Legendary",
+            "xp": "150,000",
+            "commission": "60%",
+            "bonus": "$10,000",
+            "perks": "Custom conditions"
+          }
+        },
+        "network": {
+          "title": "3-level network",
+          "text": "You earn passive income: 10% from Level 2 and 5% from Level 3. The wider the network, the higher the passive income.",
+          "table": {
+            "level": "Level",
+            "partners": "IBs",
+            "percent": "%",
+            "income": "Your income"
+          },
+          "rows": {
+            "level1": {
+              "level": "Level 1 — you",
+              "count": "1",
+              "percent": "-",
+              "income": "$50,000+"
+            },
+            "level2": {
+              "level": "Level 2 — Sub-IB",
+              "count": "10",
+              "percent": "10%",
+              "income": "$10,000"
+            },
+            "level3": {
+              "level": "Level 3 — Sub-IB network",
+              "count": "100",
+              "percent": "5%",
+              "income": "$25,000"
+            }
+          },
+          "total": "Total: $85,000+ per month, including $35,000 passive."
+        },
+        "xpActionsTitle": "XP and actions",
+        "xpRules": {
+          "registration": {
+            "title": "Registration",
+            "reward": "100 XP"
+          },
+          "firstClient": {
+            "title": "First client",
+            "reward": "500 XP"
+          },
+          "tenLots": {
+            "title": "Every 10 lots",
+            "reward": "100 XP"
+          },
+          "subIb": {
+            "title": "Invite a Sub-IB",
+            "reward": "1,000 XP"
+          },
+          "activeClients": {
+            "title": "5 active clients per month",
+            "reward": "250 XP / 50 XP for every next 5"
+          }
+        },
+        "missionsTitle": "Missions and challenges",
+        "missions": {
+          "firstStep": {
+            "title": "“First step” — 1 client",
+            "reward": "+500 XP, $50"
+          },
+          "master": {
+            "title": "“Referral master” — 10 clients",
+            "reward": "+5,000 XP, $500"
+          },
+          "buildNetwork": {
+            "title": "“Build the network” — 3 Sub-IBs",
+            "reward": "+7,500 XP, +10% commission"
+          },
+          "millionLots": {
+            "title": "“Million-lot traders” — 1,000 lots",
+            "reward": "+10,000 XP, $2,000"
+          }
+        },
+        "badgesTitle": "Achievements and badges",
+        "badges": {
+          "bronze": {
+            "title": "Bronze Partner — 10 clients",
+            "bonus": "+5% commission"
+          },
+          "silver": {
+            "title": "Silver Partner — 50 clients",
+            "bonus": "+10% commission"
+          },
+          "gold": {
+            "title": "Gold Partner — 100 clients",
+            "bonus": "+15% commission"
+          },
+          "diamond": {
+            "title": "Diamond Partner — 500 clients",
+            "bonus": "VIP service"
+          },
+          "recruiter": {
+            "title": "Top Recruiter — 50 Sub-IBs",
+            "bonus": "+$5,000"
+          }
+        },
+        "ratingsTitle": "Rankings and competitions",
+        "ratings": {
+          "bestMonth": {
+            "title": "Best IB of the month",
+            "prize": "🥇 $5,000 + VIP status"
+          },
+          "topRefer": {
+            "title": "Top recruiter",
+            "prize": "🥈 $3,000"
+          },
+          "turnover": {
+            "title": "Turnover of the month",
+            "prize": "🥉 $2,000"
+          },
+          "fourth": {
+            "title": "4th place",
+            "prize": "$1,000"
+          },
+          "fifth": {
+            "title": "5th place",
+            "prize": "$500"
+          }
+        },
+        "seasonalTitle": "Seasonal events",
+        "seasonal": {
+          "springBattle": "Spring IB battle — who brings more clients in March",
+          "winterMarathon": "Winter marathon — competition by trading volume in December",
+          "weeklySurprise": "Surprise of the week — random bonuses for activity",
+          "exclusivePrizes": "Exclusive prizes: iPhone, MacBook, trips to Dubai and London"
+        },
+        "summary": {
+          "title": "Summary",
+          "text": "Career levels motivate long-term work, XP and missions reward activity, badges add status, rankings add dynamics, and seasonal events keep engagement high. Build your network and earn $100,000+ per month!"
+        }
+      },
+      "placeholder": {
+        "label": "Section temporarily unavailable",
+        "title": "Referral program is being updated",
+        "description": "We are improving this section to make it more convenient and functional. It will be available soon."
+      }
+    },
+    "common": {
+      "id": "ID",
+      "openMenu": "मेनू खोलें",
+      "close": "बंद करना",
+      "cancel": "रद्द करना",
+      "copyId": "कॉपी करें ID",
+      "copyNumber": "नंबर कॉपी करें"
+    },
+    "settings": {
+      "title": "Settings",
+      "comingSoonTitle": "Coming soon",
+      "comingSoonDescription": "Our team is completing the system upgrade. This section will be available soon, and we will notify you by email and in the notifications section."
+    },
+    "aml": {
+      "pageTitle": "AML Policy",
+      "sections": {
+        "intro": {
+          "title": "AML Policy",
+          "paragraphs": {
+            "0": "Money laundering includes any actions intended to hide the criminal origin of funds and make them appear legitimate. Ester Holdings Ltd. aims to detect, manage and mitigate such risks.",
+            "1": "The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing the customer and understanding their instructions allows more accurate risk assessment."
+          }
+        },
+        "customerDueDiligence": {
+          "title": "Customer Due Diligence",
+          "items": {
+            "0": "Identify and verify individual and corporate customers using valid documentation.",
+            "1": "Collect personal or company details during registration at my.esterholdings.website.",
+            "2": "Require proof of identity and address via valid documents, such as passport or utility bill.",
+            "3": "Verify credit and debit cards used for transactions while masking sensitive data.",
+            "4": "Request source of funds or source of wealth documents in higher-risk cases.",
+            "5": "Conduct ongoing monitoring to identify elevated risk or unusual behavior."
+          }
+        },
+        "payments": {
+          "title": "Payments Policy",
+          "paragraph": "Payments are regulated under the Regulations for Non-Trading Operations, available on the Company website in the Regulatory Documents and Agreements section."
+        },
+        "personnel": {
+          "title": "Personnel",
+          "officerTitle": "AML Compliance Officer",
+          "officerItems": {
+            "0": "Ensures AML compliance and maintains internal AML programs.",
+            "1": "Establishes audit functions and reports breaches to the Board.",
+            "2": "Trains staff and investigates suspicious activities.",
+            "3": "Maintains AML records and monitors international AML developments."
+          },
+          "employeesTitle": "Employees",
+          "employeeItems": {
+            "0": "Must know and comply with AML policy.",
+            "1": "Are vetted during hiring and monitored during employment.",
+            "2": "Must report AML violations confidentially."
+          }
+        },
+        "training": {
+          "title": "Employee Training",
+          "items": {
+            "0": "Training is provided internally or through external consultants.",
+            "1": "Each new employee follows a training plan with testing during the first 2 to 3 months.",
+            "2": "Training covers AML responsibilities, detection methods and FATF typologies.",
+            "3": "Special attention is paid to identifying and reporting suspicious transactions without tipping off the customer."
+          }
+        },
+        "suspiciousActivity": {
+          "title": "Reporting Suspicious Activity",
+          "paragraph": "All suspicious activity must be reported to the AML Compliance Officer. The Company may conduct internal investigations, freeze or close accounts and notify authorities, cooperating with law enforcement where required by law."
+        }
       }
     }
   },
@@ -1477,7 +2129,8 @@
       "messageLabel": "Ticket text",
       "messagePlaceholder": "Describe your issue, e.g.: I cannot top up account [account number]; trying via [payment method, e.g., USDT-TRC20]",
       "createButton": "Create new ticket",
-      "createdSuccess": "Ticket created successfully!"
+      "createdSuccess": "Ticket created successfully!",
+      "createFailed": "Failed to create ticket."
     },
     "page": {
       "title": "Support Page",
@@ -1486,7 +2139,157 @@
       "subject": "Subject of the appeal",
       "lastUpdate": "Last Update",
       "status": "Status",
-      "perPage": "Per page:"
+      "perPage": "Per page:",
+      "counterparty": "Counterparty",
+      "online": "Online",
+      "offline": "Offline",
+      "copyIdAria": "Copy ticket ID",
+      "openChatAria": "Open chat",
+      "moreAria": "More actions",
+      "lastCreated": "Last created",
+      "noMessagesYet": "No messages yet",
+      "attachment": "Attachment",
+      "attachments": "Attachments",
+      "systemEvent": "System event",
+      "newMessage": "New message",
+      "newTicketModalTitle": "Create new ticket"
+    },
+    "simple": {
+      "title": "Contact support",
+      "subtitle": "Send a request by email and our team will reply to the address you provide.",
+      "replyEmailLabel": "Reply email",
+      "replyEmailPlaceholder": "name{'@'}example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Briefly describe your request",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Describe your request in detail...",
+      "attachmentsLabel": "Attachments",
+      "addFiles": "Attach files",
+      "maxSizeHint": "Up to 10 files, 200 MB each.",
+      "removeFileAria": "Remove file",
+      "submit": "Send request",
+      "createdSuccess": "Your request has been sent successfully.",
+      "submitFailed": "Failed to send request. Please try again.",
+      "presignFailed": "Failed to prepare file upload.",
+      "uploadQueued": "Queued",
+      "uploading": "Uploading",
+      "uploaded": "Uploaded",
+      "uploadFailed": "Upload failed",
+      "retryUpload": "Retry upload",
+      "linkPrompt": "Insert link URL",
+      "tools": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "list": "Bullet list",
+        "link": "Insert link",
+        "clear": "Clear formatting"
+      },
+      "validation": {
+        "replyEmailRequired": "Reply email is required.",
+        "replyEmailInvalid": "Enter a valid email address.",
+        "subjectRequired": "Subject is required.",
+        "subjectMax": "Subject must be 200 characters or less.",
+        "messageRequired": "Message or files are required.",
+        "waitUploads": "Please wait until all files finish uploading.",
+        "failedUploads": "Some files failed to upload. Remove or retry them first.",
+        "maxFiles": "You can attach up to {max} files.",
+        "fileTooLarge": "File is larger than 200 MB:"
+      },
+      "historyTitle": "Request history",
+      "historyRefreshAria": "Refresh request history",
+      "loadingHistory": "Loading request history...",
+      "emptyHistory": "You have no requests yet.",
+      "loadingMessages": "Loading messages...",
+      "emptyMessages": "No messages in this request yet.",
+      "noLastUpdate": "No updates yet",
+      "noSubject": "No subject",
+      "statusUnknown": "unknown",
+      "authorSupport": "Support",
+      "attachmentFallbackTitle": "Attachment"
+    },
+    "chat": {
+      "title": "Support Chat",
+      "online": "Online",
+      "offline": "Offline",
+      "typing": "typing...",
+      "systemEvent": "System event",
+      "noMessages": "No messages yet",
+      "filesSelected": "files selected",
+      "sendAs": "Send as",
+      "media": "Media",
+      "file": "File",
+      "documents": "Documents",
+      "links": "Links",
+      "library": "Library",
+      "loading": "Loading",
+      "writeMessage": "Write your message",
+      "addAttachment": "Add attachment",
+      "send": "Send",
+      "attachment": "Attachment",
+      "photo": "Photo",
+      "video": "Video",
+      "mediaUnavailable": "Media preview is unavailable.",
+      "openOriginal": "Open original",
+      "mobileBackAria": "Back to tickets",
+      "toggleDetailsAria": "Toggle details",
+      "closeDetailsAria": "Close details",
+      "closeMediaViewerAria": "Close media viewer",
+      "previousMediaAria": "Previous media",
+      "nextMediaAria": "Next media",
+      "uploading": "Uploading...",
+      "uploadFailedHint": "Upload failed. Remove failed files or retry.",
+      "allFilesUploaded": "All files uploaded",
+      "uploadedSuffix": "uploaded",
+      "failedSuffix": "failed",
+      "sendFailed": "Failed to send message.",
+      "uploadTooLarge413": "Upload is too large for the server limit (413).",
+      "uploadTimedOut": "Upload timed out. Try sending fewer or smaller files.",
+      "uploadNetworkError": "Network error while uploading files. Please try again.",
+      "waitUploads": "Wait for all files to finish uploading before sending.",
+      "presignFailed": "Failed to generate upload URL.",
+      "fileTooLarge": "File is larger than 200 MB:",
+      "filesLimitReached": "Only {max} files can be attached per message.",
+      "ticket": "Ticket",
+      "subject": "Subject",
+      "status": "Status",
+      "participants": "Participants",
+      "participantsDetails": "Participants in chat",
+      "onlineCountSuffix": "online",
+      "inChatSuffix": "in chat",
+      "you": "You",
+      "sharedFiles": "Shared Files",
+      "emptyMedia": "No media yet",
+      "emptyDocuments": "No documents yet",
+      "emptyLinks": "No links yet",
+      "roleAdmin": "Admin",
+      "roleClient": "Client",
+      "addAdmin": "Add admin",
+      "add": "Add",
+      "added": "Added",
+      "adding": "Adding...",
+      "noAdminsFound": "No admins found",
+      "searchAdminPlaceholder": "Search admin by nickname or email",
+      "addAdminSuccess": "Admin added to chat",
+      "addAdminAlready": "Admin is already in chat",
+      "addAdminFailed": "Failed to add admin to chat",
+      "expandDetailsAria": "Expand details",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "close": "Close",
+      "authorAvatarAlt": "Author avatar",
+      "myAvatarAlt": "My avatar"
+    },
+    "statuses": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "pending": "Pending",
+      "active": "Active",
+      "closed": "Closed",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "archived": "Archived"
     }
   },
   "cabinetExtra": {
@@ -1515,5 +2318,51 @@
       "nextPage": "Next page",
       "lastPage": "Last page"
     }
+  },
+  "apiMessages": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "clientAccountBlocked": "Client account is blocked.",
+    "validationError": "Validation error.",
+    "methodNotAllowed": "Method not allowed.",
+    "notFound": "Not found.",
+    "mt4RequestFailed": "MT4 request failed.",
+    "mt4ProfileFieldsRequired": "Fill in the required profile fields before opening an MT4 account:",
+    "profileFields": {
+      "firstname": "first name",
+      "secondname": "last name",
+      "email": "email",
+      "country": "country",
+      "state": "state",
+      "city": "city",
+      "address": "address",
+      "phone": "phone",
+      "postalCode": "postal code"
+    },
+    "requiredField": "This field is required.",
+    "invalidField": "एक मान्य मान दर्ज करें.",
+    "numericField": "एक संख्यात्मक मान दर्ज करें.",
+    "positiveNumberField": "0 से अधिक राशि दर्ज करें.",
+    "invalidSelection": "चयनित मान अमान्य है.",
+    "maxLengthField": "मान बहुत लंबा है. अधिकतम: {max}.",
+    "minLengthField": "मान बहुत छोटा है. न्यूनतम: {min}.",
+    "paymentDetailCreated": "भुगतान विवरण सफलतापूर्वक बनाया गया.",
+    "paymentDetailUpdated": "भुगतान विवरण सफलतापूर्वक अपडेट किया गया.",
+    "paymentDetailDeleted": "भुगतान विवरण सफलतापूर्वक संग्रहीत किया गया.",
+    "paymentDetailRestored": "भुगतान विवरण सफलतापूर्वक बहाल किया गया.",
+    "paymentDetailNotFound": "भुगतान विवरण नहीं मिला.",
+    "accountCreated": "Account created successfully.",
+    "paymentSystemNotFound": "भुगतान प्रणाली नहीं मिली.",
+    "accountNotFound": "खाता नहीं मिला।",
+    "depositAccountNotFound": "जमा खाता नहीं मिला.",
+    "invalidCallbackSignature": "Invalid callback signature.",
+    "supportReplyEmailRequired": "Reply email is required for email support channel.",
+    "supportFilesConflict": "Use either files or uploaded_attachments, not both.",
+    "supportMessageOrFilesRequired": "Message or files are required.",
+    "supportMessageBodyOrFilesRequired": "Message body or files are required.",
+    "emailAlreadyVerified": "Email already verified.",
+    "twoFaEnabled": "2FA enabled!",
+    "twoFaDisabled": "2FA disabled!",
+    "twoFaWrongCode": "Wrong code!"
   }
 }

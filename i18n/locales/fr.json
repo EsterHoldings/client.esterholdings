@@ -1,7 +1,8 @@
 {
   "ui": {
     "pagination": {
-      "perPage": "Par page"
+      "perPage": "Par page",
+      "range": "{from} à {to} / Total : {total}"
     }
   },
   "ui-components": {
@@ -403,10 +404,18 @@
       "faqs__dropzone_text": "Glissez des fichiers ici ou cliquez pour sélectionner des fichiers",
       "faqs__dropzone_aria": "Téléverser un fichier",
       "news_row__items": [
-        { "title": "Le Bitcoin chute de 12% après l'annonce par la SEC de l'interdiction des stablecoins" },
-        { "title": "Tesla annonce une division d'actions 1:10 – les cours ont augmenté de 12%" },
-        { "title": "Le Dow Jones chute de 1 200 points après une hausse inattendue de l'inflation américaine" },
-        { "title": "Les actions NVIDIA ont bondi de 15% après le rapport" }
+        {
+          "title": "Le Bitcoin chute de 12% après l'annonce par la SEC de l'interdiction des stablecoins"
+        },
+        {
+          "title": "Tesla annonce une division d'actions 1:10 – les cours ont augmenté de 12%"
+        },
+        {
+          "title": "Le Dow Jones chute de 1 200 points après une hausse inattendue de l'inflation américaine"
+        },
+        {
+          "title": "Les actions NVIDIA ont bondi de 15% après le rapport"
+        }
       ],
       "helpSection": "Besoin d'aide? Visitez notre",
       "helpLinkText": "Section d'aide",
@@ -435,10 +444,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Pools de liquidité agrégés profonds conçus pour des exécutions stables et un flux d'ordres évolutif.",
-            "benefits": [
-              "Agrégation de liquidité Tier-1",
-              "Profondeur sur plusieurs venues"
-            ]
+            "benefits": ["Agrégation de liquidité Tier-1", "Profondeur sur plusieurs venues"]
           },
           {
             "line1Prefix": "",
@@ -448,10 +454,7 @@
             "line2Accent": "actif",
             "line2Suffix": "",
             "subtitle": "Haute vitesse de traitement des ordres, 0 niveaux limite/stop — conçu pour le flux de trading actif.",
-            "benefits": [
-              "Technologies de serveur rapides",
-              "Configuration de liquidité institutionnelle"
-            ]
+            "benefits": ["Technologies de serveur rapides", "Configuration de liquidité institutionnelle"]
           }
         ]
       }
@@ -722,20 +725,42 @@
       "payment_details": "Détails de paiement",
       "accounts": "Comptes",
       "referral_system": "Système de parrainage",
-      "billing": "Transactions",
+      "billing": "Opérations",
       "support": "Support",
       "settings": "Paramètres"
     },
     "header": {
       "notifications": "Notifications",
-      "markAllRead": "Mark all read",
-      "emptyNotifications": "You have no notifications yet",
-      "accountSettings": "Account Settings",
-      "switchToLight": "Switch to Light",
-      "switchToDark": "Switch to Dark",
-      "helpCenter": "Help Center",
-      "logout": "Log Out",
-      "profile": "Profile"
+      "markAllRead": "Tout marquer comme lu",
+      "emptyNotifications": "Vous n'avez pas encore de notifications",
+      "accountSettings": "Paramètres du compte",
+      "switchToLight": "Passer au thème clair",
+      "switchToDark": "Passer au thème sombre",
+      "helpCenter": "Centre d'aide",
+      "logout": "Se déconnecter",
+      "profile": "Profil",
+      "notificationTemplates": {
+        "depositStatusUpdated": {
+          "title": "Dépôt mis à jour",
+          "message": "{status} • {method} • {amount} {currency} • compte {account}"
+        },
+        "supportMessage": {
+          "title": "Nouveau message du support",
+          "message": "{preview}"
+        },
+        "supportTicketUpdated": {
+          "title": "Ticket de support mis à jour",
+          "message": "{preview}"
+        },
+        "verificationStatusUpdated": {
+          "title": "Statut de vérification mis à jour",
+          "message": "{step} • {status}{comment}"
+        },
+        "withdrawalStatusUpdated": {
+          "title": "Demande de retrait mise à jour",
+          "message": "{status} • {amount} {currency} • compte {account}"
+        }
+      }
     },
     "dashboard": {
       "title": "Tableau de bord",
@@ -761,7 +786,18 @@
         "profileRejected": "Le profil a été refusé",
         "profilePhotoVerified": "Photo de profil vérifiée avec succès",
         "profilePhotoInProgress": "Vérification de la photo de profil en cours",
-        "profilePhotoRejected": "La photo de profil a été refusée"
+        "profilePhotoRejected": "La photo de profil a été refusée",
+        "complete": "Le compte est entièrement vérifié",
+        "notComplete": "Le compte n'est pas entièrement vérifié",
+        "goToVerification": "Aller à la vérification",
+        "tooltipLabel": "À propos de la vérification du compte",
+        "verifiedCount": "Vérifié {done}/{total}",
+        "steps": {
+          "profile": "Données de profil",
+          "email": "E-mail",
+          "documents": "Documents",
+          "deposit": "Premier dépôt"
+        }
       },
       "actions": {
         "newDeposit": "Nouveau dépôt",
@@ -769,19 +805,25 @@
         "chartPlaceholder": "Le graphique ira ici"
       },
       "mt4": {
-        "title": "Comptes MT4",
+        "title": "Comptes MT4 favoris ou nouveaux",
         "openNewAccount": "Ouvrir un nouveau compte",
         "table": {
           "account": "Compte",
-          "type": "Type",
+          "type": "Taper",
           "balance": "Solde",
           "status": "Statut",
           "active": "Actif",
           "inactive": "Inactif"
-        }
+        },
+        "description": "Accès rapide aux comptes favoris et ouverture d'un nouveau compte MT4.",
+        "emptySubtitle": "Ouvrez votre premier compte de trading pour commencer.",
+        "emptyTitle": "Aucun compte pour l'instant",
+        "tooltipLabel": "À propos des comptes MT4",
+        "verifySubtitle": "Une fois vos données de profil et vos documents vérifiés, vous pourrez ouvrir un nouveau compte de trading.",
+        "verifyTitle": "Vérification complète pour ouvrir un compte"
       },
       "transactions": {
-        "title": "Transactions",
+        "title": "Dernières transactions",
         "sort": {
           "createdAt": "Created",
           "amount": "Amount",
@@ -790,20 +832,31 @@
           "type": "Type",
           "accountNumber": "MT4 account"
         },
-        "accountNumber": "MT4 account",
-        "amount": "Amount",
-        "currency": "Currency",
-        "type": "Type",
-        "createdAt": "Created",
-        "searchPlaceholder": "Search payments…",
-        "errorLoad": "Failed to load payments",
-        "empty": "No records yet.",
-        "show": "Show",
+        "accountNumber": "Compte MT4",
+        "amount": "Montant",
+        "currency": "Devise",
+        "type": "Taper",
+        "createdAt": "Créé",
+        "searchPlaceholder": "Rechercher des paiements…",
+        "errorLoad": "Échec du chargement des paiements",
+        "empty": "Aucun enregistrement pour l'instant.",
+        "show": "Afficher",
         "shownRange": "Showing {from}–{to} of {total}",
         "firstPage": "First page",
         "prevPage": "Previous page",
         "nextPage": "Next page",
-        "lastPage": "Last page"
+        "lastPage": "Last page",
+        "tooltip": "Ce bloc affiche les derniers dépôts et retraits afin que le client puisse immédiatement remarquer les paiements mis à jour et ouvrir la transaction nécessaire.",
+        "tooltipLabel": "À propos des dernières transactions",
+        "description": "Dépôts et retraits récents sur tous les comptes pour que les changements soient visibles immédiatement."
+      },
+      "summary": {
+        "totalAmount": "Montant total",
+        "referralTotalAmount": "Montant des parrainages"
+      },
+      "emailVerification": {
+        "success": "E-mail vérifié.",
+        "error": "Échec de la vérification de l'e-mail."
       }
     },
     "billing": {
@@ -811,15 +864,17 @@
       "create": "Créer un nouveau paiement",
       "search": "Rechercher",
       "columns": {
-        "id": "Id",
+        "id": "Identifiant",
         "paysystem": "Système de paiement",
         "status": "Statut",
         "currency": "Devise",
         "amount": "Montant",
         "createdAt": "Créé le",
-        "accountNumber": "Account number",
-        "paymentSystem": "Payment system",
-        "account": "Account"
+        "accountNumber": "Numéro de compte",
+        "paymentSystem": "Système de paiement",
+        "account": "Account",
+        "accountNumberShort": "Acc.",
+        "paymentSystemShort": "PS"
       },
       "nothingToShow": "Rien à afficher =(",
       "pagination": {
@@ -828,32 +883,80 @@
       },
       "panel-title": "Ajouter un nouvel Admin",
       "view": {
-        "list": "List",
-        "cards": "Cards",
-        "full": "Full width"
+        "list": "Liste",
+        "cards": "Cartes",
+        "full": "Pleine largeur"
       },
       "withdrawalForm": {
-        "account": "Trading account",
-        "paymentDetail": "Payment details",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter withdrawal amount",
-        "comment": "Comment",
-        "commentPlaceholder": "Add a comment for the finance team",
-        "submit": "Create withdrawal request",
-        "noPaymentDetailsTitle": "No approved payment details",
+        "account": "Compte de trading",
+        "paymentDetail": "Détails du paiement",
+        "amount": "Montant",
+        "amountPlaceholder": "Entrez le montant du retrait",
+        "comment": "Commentaire",
+        "commentPlaceholder": "Ajouter un commentaire pour l'équipe financière",
+        "submit": "Créer une demande de retrait",
+        "noPaymentDetailsTitle": "Aucun détail de paiement approuvé",
         "noPaymentDetailsText": "Add and approve payment details for this payment method before creating a withdrawal request.",
-        "openPaymentDetails": "Open payment details",
-        "accountBalance": "Available balance",
-        "created": "Withdrawal request created successfully.",
-        "error": "Failed to create withdrawal request.",
-        "adminComment": "Admin comment",
+        "openPaymentDetails": "Ouvrir les détails du paiement",
+        "accountBalance": "Solde disponible",
+        "created": "Demande de retrait créée avec succès.",
+        "error": "Échec de la création de la demande de retrait.",
+        "adminComment": "Commentaire de l'administrateur",
         "errors": {
-          "account": "Choose an account.",
-          "paymentDetail": "Choose approved payment details.",
-          "amount": "Enter a valid amount.",
-          "balance": "Withdrawal amount exceeds the account balance."
-        }
-      }
+          "account": "Choisissez un compte.",
+          "paymentDetail": "Choisissez les détails de paiement approuvés.",
+          "amount": "Entrez un montant valide.",
+          "balance": "Le montant du retrait dépasse le solde du compte."
+        },
+        "loadAccountsError": "Échec du chargement des comptes de trading.",
+        "loadPaymentDetailsError": "Échec du chargement des détails du paiement.",
+        "processing": "Traitement...",
+        "title": "Demande de retrait"
+      },
+      "backToList": "Retour à la liste des paiements",
+      "backToMethodSelection": "Retour à la sélection du mode de paiement",
+      "comment": "Commentaire",
+      "createFlow": {
+        "loadPaymentSystemsError": "Échec du chargement des méthodes de paiement.",
+        "selectMethod": "Choisissez un mode de paiement"
+      },
+      "deletePayment": "Supprimer",
+      "deletePaymentConfirm": "Supprimer le paiement ?",
+      "deletePaymentError": "Échec de la suppression du paiement.",
+      "deletePaymentSuccess": "Paiement supprimé.",
+      "depositForm": {
+        "account": "Compte de trading",
+        "amount": "Montant",
+        "amountPlaceholder": "Montant en USD",
+        "comment": "Commentaire",
+        "commentPlaceholder": "Ajouter un commentaire pour l'équipe financière",
+        "created": "Dépôt créé avec succès.",
+        "error": "Échec de la création du dépôt.",
+        "loadAccountsError": "Échec du chargement des comptes de trading.",
+        "processing": "Traitement...",
+        "submit": "Créer un dépôt"
+      },
+      "emptySubtitle": "Créez votre premier paiement pour commencer.",
+      "emptyTitle": "Aucun paiement pour l'instant",
+      "gateway": "Porte",
+      "internalTransfer": "Virement entre comptes",
+      "listLoadError": "Échec du chargement des paiements.",
+      "openPayment": "Ouvrir",
+      "paymentLoadError": "Échec du chargement du paiement.",
+      "paymentNotFound": "Paiement introuvable.",
+      "redirectLink": "Lien de paiement",
+      "syncPayment": "Synchroniser",
+      "syncPaymentError": "Échec de la synchronisation du paiement.",
+      "syncPaymentLoading": "Synchronisation...",
+      "syncPaymentSuccess": "Paiement synchronisé avec succès.",
+      "transferCreated": "Transfert entre comptes créés.",
+      "transferFrom": "Depuis le compte",
+      "transferTo": "Pour rendre compte",
+      "types": {
+        "deposit": "Dépôt",
+        "withdrawal": "Retrait"
+      },
+      "updatedAt": "Mis à jour à"
     },
     "payments": {
       "title": "Détails de paiement",
@@ -870,11 +973,163 @@
           "title": "Créer un nouveau détail de paiement",
           "name": "Nom du détail de paiement",
           "namePlaceholder": "Nom du détail de paiement",
-          "recipientAddress": "Veuillez sélectionner un système de paiement."
+          "recipientAddress": "Veuillez sélectionner un système de paiement.",
+          "createdSuccess": "Détails du paiement créés avec succès.",
+          "documents": {
+            "captionExisting": "Ce document est déjà enregistré et restera joint jusqu'à ce que vous le supprimiez.",
+            "captionFailed": "Le téléchargement n'a pas été terminé. Corrigez l'erreur ou supprimez le fichier.",
+            "captionIdle": "Le fichier a été sélectionné et sera téléchargé après avoir enregistré le formulaire.",
+            "captionUploaded": "Le fichier a été téléchargé et sera enregistré avec ces détails de paiement.",
+            "captionUploading": "Le fichier est actuellement téléchargé sur Amazon S3.",
+            "disabledHint": "Choisissez un mode de paiement pour débloquer le téléchargement de documents.",
+            "documentFallback": "Document",
+            "dropAction": "cliquez pour télécharger",
+            "dropHint": "PNG, JPG, WEBP ou PDF. La taille maximale du fichier est 5 MB.",
+            "dropSeparator": "ou",
+            "dropTitle": "Glisser et déposer",
+            "fileMissing": "Impossible d'accéder au fichier pour le téléchargement.",
+            "hint": "Vous pouvez conserver les documents joints et en ajouter de nouveaux. Les nouveaux fichiers seront téléchargés sur S3 lorsque vous enregistrerez le formulaire.",
+            "initialHint": "Le téléchargement de documents sera disponible une fois que vous aurez choisi un mode de paiement.",
+            "invalidFormat": "Le format du fichier {name} n'est pas pris en charge.",
+            "label": "Captures d'écran du compte de paiement",
+            "originExisting": "Ci-joint",
+            "originNew": "Nouveau fichier",
+            "presignFailed": "Impossible d'obtenir un lien de téléchargement.",
+            "removeExisting": "Supprimer le fichier joint",
+            "removeNew": "Supprimer le nouveau fichier",
+            "required": "Ajoutez au moins une capture d'écran du compte de paiement pour vérification.",
+            "serverTooLarge": "Le fichier est trop volumineux.",
+            "statusExisting": "Enregistré",
+            "statusFailed": "Erreur de téléchargement",
+            "statusIdle": "Prêt à télécharger",
+            "statusUploaded": "Téléchargé",
+            "statusUploading": "Téléchargement...",
+            "summaryExisting": "Ci-joint : {count}",
+            "summaryNew": "Nouveaux fichiers : {count}",
+            "tooLarge": "Le fichier {name} dépasse 5 MB.",
+            "uploadBatchFailed": "Échec du téléchargement de {count} fichier(s).",
+            "uploadFailed": "Échec du téléchargement du fichier vers S3.",
+            "warningText": "Téléchargez des captures d'écran de votre compte de paiement où nous pouvons clairement voir l'adresse e-mail, le portefeuille ou le numéro de compte et le code QR.",
+            "warningTitle": "Ce dont nous avons besoin dans les captures d'écran"
+          },
+          "editTitle": "Modifier les détails du paiement",
+          "fieldFallback": "Champ",
+          "fieldPlaceholder": "Entrez la valeur",
+          "paymentMethod": "Mode de paiement",
+          "recipientAddressLabel": "Adresse du destinataire",
+          "recipientAddressPlaceholder": "Entrez les détails du paiement",
+          "saveError": "Échec de l'enregistrement des détails du paiement.",
+          "selectMethodHint": "Choisissez d'abord un mode de paiement, puis remplissez les détails du paiement.",
+          "submitCreate": "Enregistrer les détails du paiement",
+          "submitUpdate": "Enregistrer les modifications",
+          "updatedSuccess": "Les détails du paiement ont été mis à jour et envoyés à nouveau pour vérification.",
+          "validationRequired": "Ce champ est obligatoire."
         },
-        "view": "View",
+        "view": "Voir",
         "confirm": "Confirm",
-        "delete": "Delete"
+        "delete": "Delete",
+        "actions": {
+          "archive": "Archive",
+          "archiveConfirm": "Archiver ces détails de paiement ?",
+          "archiveError": "Échec de l'archivage des détails du paiement.",
+          "archiveSuccess": "Les détails du paiement ont été déplacés vers les archives.",
+          "copyId": "Copier ID",
+          "edit": "Modifier",
+          "openMenu": "Ouvrir le menu",
+          "restore": "Restaurer",
+          "restoreError": "Échec de la restauration des détails du paiement.",
+          "restoreSuccess": "Détails du paiement restaurés."
+        },
+        "archivedBadge": "Archivé",
+        "cardLabel": "Détail du paiement",
+        "columns": {
+          "id": "ID",
+          "name": "Nom",
+          "paymentSystem": "Système de paiement",
+          "status": "Statut",
+          "updatedAt": "Mis à jour à"
+        },
+        "detail": {
+          "back": "Retour aux détails du paiement",
+          "booleanNo": "Non",
+          "booleanYes": "Oui",
+          "commentEmpty": "Aucun commentaire.",
+          "copyValue": "Copier la valeur",
+          "documentFallback": "Document",
+          "documentsEmpty": "Les documents n'ont pas été téléchargés.",
+          "fieldLabels": {
+            "active": "Actif",
+            "comment": "Commentaire",
+            "config_name": "Configuration",
+            "merchant": "Marchand",
+            "name": "Nom",
+            "old_requisite_id": "Héritage ID",
+            "paysystem": "Système de paiement",
+            "shortname": "Nom court",
+            "status": "Statut",
+            "type": "Taper"
+          },
+          "fieldsTitle": "Champs de détails du paiement",
+          "groups": {
+            "fields": "Domaines principaux",
+            "legacy": "Données héritées"
+          },
+          "historyDocumentAlt": "Document historique n°{count}",
+          "historyEmpty": "Pas d'historique pour l'instant.",
+          "historyLoading": "Chargement de l'historique...",
+          "historyTitle": "Historique des détails des paiements",
+          "labels": {
+            "adminComment": "Commentaire de l'administrateur",
+            "createdAt": "Créé à",
+            "id": "ID",
+            "name": "Nom",
+            "paymentSystem": "Système de paiement",
+            "updatedAt": "Mis à jour à"
+          },
+          "loadError": "Échec du chargement des détails du paiement.",
+          "noData": "Aucune donnée.",
+          "notFound": "Les détails du paiement n'ont pas été trouvés.",
+          "title": "Détails du paiement #{id}",
+          "total": "Total : {count}",
+          "valueLabel": "Valeur"
+        },
+        "documents": {
+          "label": "Captures d'écran du compte de paiement",
+          "previewAlt": "Aperçu #{count}"
+        },
+        "emptyArchivedSubtitle": "Les détails de paiement archivés apparaîtront ici et vous pourrez les restaurer.",
+        "emptyArchivedTitle": "Aucun détail de paiement archivé pour l'instant",
+        "emptyFilteredSubtitle": "Essayez de modifier la requête de recherche ou les filtres.",
+        "emptyFilteredTitle": "Les détails du paiement n'ont pas été trouvés",
+        "emptySubtitle": "Ajoutez vos premiers détails de paiement pour recevoir des paiements.",
+        "emptyTitle": "Pas encore de détails de paiement",
+        "filters": {
+          "active": "Actif",
+          "all": "Tous",
+          "archived": "Archivé"
+        },
+        "relative": {
+          "daysAgo": "il y a {count} j",
+          "hoursAgo": "il y a {count} h",
+          "justNow": "tout à l' heure",
+          "minutesAgo": "il y a {count} minutes"
+        },
+        "sort": {
+          "createdAt": "Créé à",
+          "name": "Nom",
+          "status": "Statut",
+          "updatedAt": "Mis à jour à"
+        },
+        "statuses": {
+          "approved": "Approuvé",
+          "pending": "En attente",
+          "rejected": "Rejeté"
+        },
+        "views": {
+          "cards": "Cartes",
+          "full": "Pleine largeur",
+          "table": "Liste"
+        }
       },
       "nothingToShow": "Rien à afficher =(",
       "pagination": {
@@ -911,14 +1166,14 @@
             "code_placeholder": "Saisissez le code ici",
             "confirm": "Confirmer",
             "enable_success": "2FA a été activée !",
-            "enable_error": "Code invalide ou erreur de connexion",
+            "enable_error": "Invalid code or connection error",
             "disable_success": "2FA a été désactivée",
-            "disable_error": "Impossible de désactiver 2FA"
+            "disable_error": "Failed to disable 2FA"
           },
           "reset": {
             "pending": "Veuillez patienter avant d'envoyer un autre e-mail de réinitialisation.",
             "success": "L'e-mail de réinitialisation a été envoyé.",
-            "error": "Impossible d'envoyer l'e-mail de réinitialisation. Réessayez plus tard."
+            "error": "Failed to send reset email. Try again later."
           }
         },
         "tab-general": {
@@ -949,27 +1204,68 @@
             "postal_code": "00000"
           },
           "button": "Enregistrer et envoyer pour vérification",
-          "success": "Données utilisateur mises à jour avec succès et envoyées pour vérification!"
+          "success": "Données utilisateur mises à jour avec succès et envoyées pour vérification!",
+          "validationError": "Please check form fields.",
+          "serverError": "Unable to save profile data."
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choisir un fichier",
-            "upload": "Télécharger"
+            "choose": "Choose file",
+            "upload": "Upload",
+            "uploading": "Uploading...",
+            "uploadAndSend": "Upload and send to verification"
           },
           "messages": {
             "upload_success": "Photo de profil mise à jour avec succès et envoyée pour vérification!",
             "upload_error": "Échec du téléchargement de la photo",
-            "delete_error": "Échec de la suppression de la photo"
+            "delete_error": "Échec de la suppression de la photo",
+            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
+            "saveError": "Failed to save documents. Please try again later."
           },
           "errors": {
             "type": "Seules les images sont autorisées",
-            "size": "La taille maximale est de 2 Mo"
+            "size": "La taille maximale est de 2 Mo",
+            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
+            "noFiles": "Please select file(s).",
+            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+          },
+          "title": "Upload documents",
+          "allDocuments": "All documents",
+          "empty": "You have no uploaded documents yet.",
+          "documentLabel": "Document",
+          "refreshAria": "Refresh documents",
+          "commentLabel": "Comment",
+          "fields": {
+            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+          },
+          "validation": {
+            "maxLength": "The field may not contain more than 100 characters."
+          },
+          "progress": {
+            "label": "Uploading: {value}%"
+          },
+          "verificationStatus": {
+            "title": "Verification status"
+          },
+          "columns": {
+            "name": "Name",
+            "status": "Status",
+            "date": "Date"
+          },
+          "actions": {
+            "delete": "Delete document"
+          },
+          "statuses": {
+            "pending": "In progress",
+            "approved": "Approved",
+            "rejected": "Rejected"
           }
         },
         "tab-user-photo": {
           "buttons": {
             "choose": "Choisir un fichier",
-            "upload": "Télécharger"
+            "upload": "Télécharger",
+            "delete_aria": "Supprimer la photo"
           },
           "messages": {
             "upload_success": "Photo de profil mise à jour avec succès",
@@ -978,8 +1274,60 @@
             "delete_error": "Échec de la suppression de la photo"
           },
           "errors": {
-            "type": "Seules les images sont autorisées",
-            "size": "La taille maximale est de 2 Mo"
+            "type": "Only images are allowed",
+            "size": "Max size is 5MB"
+          },
+          "hints": {
+            "formats": "Supported formats: PNG, JPG, JPEG",
+            "maxSize": "Photo must not exceed 5 MB."
+          },
+          "verification": {
+            "title": "Verification status",
+            "approved": "Verified successfully!"
+          }
+        },
+        "tab-user-verification": {
+          "sections": {
+            "client": "Client verification",
+            "payout": "Payout details"
+          },
+          "titles": {
+            "clientStatus": "Verification status",
+            "payoutStatus": "Payout details verification",
+            "history": "Verification history"
+          },
+          "refreshAria": "Refresh verification data",
+          "commentLabel": "Comment",
+          "emptyPayout": "No payout details yet.",
+          "unnamedPaymentDetail": "Untitled payment detail",
+          "paymentSystemFallback": "Payment system",
+          "documentsCount": "Documents: {count}",
+          "historyEmpty": "No verification history yet.",
+          "columns": {
+            "name": "Name",
+            "date": "Date",
+            "status": "Status"
+          },
+          "items": {
+            "email": {
+              "title": "Email",
+              "subtitle": "Confirm your email"
+            },
+            "documents": {
+              "title": "Documents"
+            },
+            "deposit": {
+              "title": "First deposit",
+              "subtitle": "Make a payment to verify the first deposit"
+            },
+            "profile": {
+              "title": "Profile"
+            }
+          },
+          "statuses": {
+            "approved": "Confirmed",
+            "pending": "In progress",
+            "rejected": "Rejected"
           }
         }
       },
@@ -992,11 +1340,16 @@
           "change_password": "Changer le mot de passe"
         },
         "title": "Profil"
+      },
+      "generalVerification": {
+        "notStarted": "Not started"
       }
     },
     "accounts": {
       "account": {
-        "title": "Compte"
+        "title": "Compte",
+        "loadError": "Échec du chargement des détails du compte.",
+        "subtitle": "Détails et historique du compte de trading"
       },
       "title": "Comptes",
       "openNew": "Ouvrir un nouveau compte",
@@ -1029,18 +1382,22 @@
         },
         "actions": {
           "submit": "Ouvrir un nouveau compte"
-        }
+        },
+        "loadTypesError": "Échec du chargement des types de comptes.",
+        "submitError": "Échec de la création du compte."
       },
       "actions": {
-        "deposit": "Deposit",
-        "withdraw": "Withdraw",
-        "transfer": "Transfer",
+        "deposit": "Dépôt",
+        "withdraw": "Retirer",
+        "transfer": "Transfert",
         "history": "Transactions",
-        "changeType": "Change type",
-        "remove": "Remove"
+        "changeType": "Changer de type",
+        "remove": "Retirer"
       },
       "tabs": {
-        "history": "Transactions"
+        "history": "Transactions",
+        "card": "Fiche de compte",
+        "tradeHistory": "Histoire commerciale"
       },
       "transactions": {
         "empty": "Aucune transaction pour le moment",
@@ -1048,16 +1405,47 @@
         "transferToAccount": "Transfert vers le compte"
       },
       "transfer": {
-        "fromAccount": "From account",
-        "toAccount": "To account",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter amount",
-        "submit": "Create transfer request",
-        "success": "Transfer request created successfully.",
-        "failed": "Failed to create transfer request.",
-        "sourceNotFound": "Source account not found.",
-        "noDestinations": "You do not have another account available for transfer.",
-        "exceedsBalance": "Amount exceeds available balance."
+        "fromAccount": "Depuis le compte",
+        "toAccount": "Pour rendre compte",
+        "amount": "Montant",
+        "amountPlaceholder": "Entrez le montant",
+        "submit": "Créer une demande de transfert",
+        "success": "Demande de transfert créée avec succès.",
+        "failed": "Échec de la création de la demande de transfert.",
+        "sourceNotFound": "Compte source introuvable.",
+        "noDestinations": "Vous n'avez pas d'autre compte disponible pour le transfert.",
+        "exceedsBalance": "Le montant dépasse le solde disponible.",
+        "title": "Virement entre mes comptes"
+      },
+      "deleteConfirm": "Archiver ce compte ?",
+      "deleteError": "Échec de l'archivage du compte.",
+      "deleteSuccess": "Compte archivé !",
+      "emptySubtitle": "Ouvrez votre premier compte de trading pour commencer.",
+      "emptyTitle": "Aucun compte pour l'instant",
+      "favoriteAdd": "Ajouter aux favoris",
+      "favoriteRemove": "Supprimer des favoris",
+      "favoriteToggleError": "Échec de la mise à jour des favoris.",
+      "loadError": "Échec du chargement des comptes.",
+      "openAccountLabel": "Ouvrir un compte {number}",
+      "openBlocked": "L’ouverture du compte sera disponible après vérification du profil et des documents.",
+      "refreshBalance": "Actualiser le solde",
+      "refreshBalanceError": "Échec de l'actualisation du solde du compte.",
+      "refreshBalancesError": "Échec de l'actualisation des soldes des comptes.",
+      "tradeHistory": {
+        "sync": "Historique de synchronisation",
+        "syncing": "Synchronisation...",
+        "empty": "Pas encore d'échanges",
+        "total": "Records",
+        "added": "Added",
+        "updated": "Updated",
+        "searchPlaceholder": "Rechercher par tous les domaines commerciaux",
+        "filterAll": "All",
+        "filterPositive": "Profitable",
+        "filterNegative": "Losing",
+        "error": "Échec du chargement de l'historique des échanges.",
+        "loadMore": "Charger plus",
+        "loadingMore": "Chargement...",
+        "syncError": "Échec de la synchronisation de l'historique des échanges."
       }
     },
     "referrals": {
@@ -1117,7 +1505,9 @@
           "active": "Référés actifs",
           "conversion": "Conversion",
           "select": "Choisir un compte MT",
-          "transferHint": "Transfère instantanément vers n’importe quel compte MT"
+          "transferHint": "Transfère instantanément vers n’importe quel compte MT",
+          "available": "Available",
+          "pending": "In transit"
         },
         "transferLabel": "Transférer",
         "shareTelegram": "Partager sur Telegram",
@@ -1149,7 +1539,11 @@
         "sortInactive": "Inactifs",
         "pagination": "{from}-{to} sur {total}",
         "prev": "Préc.",
-        "next": "Suiv."
+        "next": "Suiv.",
+        "withdrawLabel": "Withdraw funds",
+        "shareMailSubject": "Join our referral program",
+        "yourLevel": "Your level",
+        "pointsProgress": "Points: {current} / {total}"
       },
       "settings": {
         "title": "Referral settings",
@@ -1169,7 +1563,265 @@
         "rule1": "Rewards are credited after a referred user completes verification.",
         "rule2": "Fraud or duplicate accounts may be declined.",
         "rule3": "Percentages and levels are placeholders until backend delivers real values.",
-        "rule4": "Contact support if you think a referral was missed."
+        "rule4": "Contact support if you think a referral was missed.",
+        "gamification": {
+          "title": "IB gamification",
+          "text": "Gamification turns the partner program into a game: levels, XP, missions, badges, rankings, seasonal events and a 3-level network bring real bonuses and passive income."
+        },
+        "coreElementsTitle": "Core elements",
+        "coreElements": {
+          "career": "Career ladder",
+          "xp": "XP points",
+          "missions": "Missions and challenges",
+          "badges": "Achievements and badges",
+          "ratings": "Rankings and competitions",
+          "seasonal": "Seasonal events"
+        },
+        "careerTitle": "Career ladder",
+        "xpLabel": "XP",
+        "commissionLabel": "Commission",
+        "bonusLabel": "Bonus",
+        "levels": {
+          "rookie": {
+            "title": "Rookie",
+            "xp": "0",
+            "commission": "30%",
+            "bonus": "-",
+            "perks": "Access to the personal cabinet"
+          },
+          "advanced": {
+            "title": "Advanced",
+            "xp": "5,000",
+            "commission": "35%",
+            "bonus": "$100",
+            "perks": "Branded materials"
+          },
+          "expert": {
+            "title": "Expert",
+            "xp": "20,000",
+            "commission": "40%",
+            "bonus": "$500",
+            "perks": "Personal manager"
+          },
+          "master": {
+            "title": "Master",
+            "xp": "50,000",
+            "commission": "50%",
+            "bonus": "$2,000",
+            "perks": "VIP events"
+          },
+          "legendary": {
+            "title": "Legendary",
+            "xp": "150,000",
+            "commission": "60%",
+            "bonus": "$10,000",
+            "perks": "Custom conditions"
+          }
+        },
+        "network": {
+          "title": "3-level network",
+          "text": "You earn passive income: 10% from Level 2 and 5% from Level 3. The wider the network, the higher the passive income.",
+          "table": {
+            "level": "Level",
+            "partners": "IBs",
+            "percent": "%",
+            "income": "Your income"
+          },
+          "rows": {
+            "level1": {
+              "level": "Level 1 — you",
+              "count": "1",
+              "percent": "-",
+              "income": "$50,000+"
+            },
+            "level2": {
+              "level": "Level 2 — Sub-IB",
+              "count": "10",
+              "percent": "10%",
+              "income": "$10,000"
+            },
+            "level3": {
+              "level": "Level 3 — Sub-IB network",
+              "count": "100",
+              "percent": "5%",
+              "income": "$25,000"
+            }
+          },
+          "total": "Total: $85,000+ per month, including $35,000 passive."
+        },
+        "xpActionsTitle": "XP and actions",
+        "xpRules": {
+          "registration": {
+            "title": "Registration",
+            "reward": "100 XP"
+          },
+          "firstClient": {
+            "title": "First client",
+            "reward": "500 XP"
+          },
+          "tenLots": {
+            "title": "Every 10 lots",
+            "reward": "100 XP"
+          },
+          "subIb": {
+            "title": "Invite a Sub-IB",
+            "reward": "1,000 XP"
+          },
+          "activeClients": {
+            "title": "5 active clients per month",
+            "reward": "250 XP / 50 XP for every next 5"
+          }
+        },
+        "missionsTitle": "Missions and challenges",
+        "missions": {
+          "firstStep": {
+            "title": "“First step” — 1 client",
+            "reward": "+500 XP, $50"
+          },
+          "master": {
+            "title": "“Referral master” — 10 clients",
+            "reward": "+5,000 XP, $500"
+          },
+          "buildNetwork": {
+            "title": "“Build the network” — 3 Sub-IBs",
+            "reward": "+7,500 XP, +10% commission"
+          },
+          "millionLots": {
+            "title": "“Million-lot traders” — 1,000 lots",
+            "reward": "+10,000 XP, $2,000"
+          }
+        },
+        "badgesTitle": "Achievements and badges",
+        "badges": {
+          "bronze": {
+            "title": "Bronze Partner — 10 clients",
+            "bonus": "+5% commission"
+          },
+          "silver": {
+            "title": "Silver Partner — 50 clients",
+            "bonus": "+10% commission"
+          },
+          "gold": {
+            "title": "Gold Partner — 100 clients",
+            "bonus": "+15% commission"
+          },
+          "diamond": {
+            "title": "Diamond Partner — 500 clients",
+            "bonus": "VIP service"
+          },
+          "recruiter": {
+            "title": "Top Recruiter — 50 Sub-IBs",
+            "bonus": "+$5,000"
+          }
+        },
+        "ratingsTitle": "Rankings and competitions",
+        "ratings": {
+          "bestMonth": {
+            "title": "Best IB of the month",
+            "prize": "🥇 $5,000 + VIP status"
+          },
+          "topRefer": {
+            "title": "Top recruiter",
+            "prize": "🥈 $3,000"
+          },
+          "turnover": {
+            "title": "Turnover of the month",
+            "prize": "🥉 $2,000"
+          },
+          "fourth": {
+            "title": "4th place",
+            "prize": "$1,000"
+          },
+          "fifth": {
+            "title": "5th place",
+            "prize": "$500"
+          }
+        },
+        "seasonalTitle": "Seasonal events",
+        "seasonal": {
+          "springBattle": "Spring IB battle — who brings more clients in March",
+          "winterMarathon": "Winter marathon — competition by trading volume in December",
+          "weeklySurprise": "Surprise of the week — random bonuses for activity",
+          "exclusivePrizes": "Exclusive prizes: iPhone, MacBook, trips to Dubai and London"
+        },
+        "summary": {
+          "title": "Summary",
+          "text": "Career levels motivate long-term work, XP and missions reward activity, badges add status, rankings add dynamics, and seasonal events keep engagement high. Build your network and earn $100,000+ per month!"
+        }
+      },
+      "placeholder": {
+        "label": "Section temporarily unavailable",
+        "title": "Referral program is being updated",
+        "description": "We are improving this section to make it more convenient and functional. It will be available soon."
+      }
+    },
+    "common": {
+      "id": "ID",
+      "openMenu": "Ouvrir le menu",
+      "close": "Fermer",
+      "cancel": "Annuler",
+      "copyId": "Copier ID",
+      "copyNumber": "Numéro de copie"
+    },
+    "settings": {
+      "title": "Settings",
+      "comingSoonTitle": "Coming soon",
+      "comingSoonDescription": "Our team is completing the system upgrade. This section will be available soon, and we will notify you by email and in the notifications section."
+    },
+    "aml": {
+      "pageTitle": "AML Policy",
+      "sections": {
+        "intro": {
+          "title": "AML Policy",
+          "paragraphs": {
+            "0": "Money laundering includes any actions intended to hide the criminal origin of funds and make them appear legitimate. Ester Holdings Ltd. aims to detect, manage and mitigate such risks.",
+            "1": "The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing the customer and understanding their instructions allows more accurate risk assessment."
+          }
+        },
+        "customerDueDiligence": {
+          "title": "Customer Due Diligence",
+          "items": {
+            "0": "Identify and verify individual and corporate customers using valid documentation.",
+            "1": "Collect personal or company details during registration at my.esterholdings.website.",
+            "2": "Require proof of identity and address via valid documents, such as passport or utility bill.",
+            "3": "Verify credit and debit cards used for transactions while masking sensitive data.",
+            "4": "Request source of funds or source of wealth documents in higher-risk cases.",
+            "5": "Conduct ongoing monitoring to identify elevated risk or unusual behavior."
+          }
+        },
+        "payments": {
+          "title": "Payments Policy",
+          "paragraph": "Payments are regulated under the Regulations for Non-Trading Operations, available on the Company website in the Regulatory Documents and Agreements section."
+        },
+        "personnel": {
+          "title": "Personnel",
+          "officerTitle": "AML Compliance Officer",
+          "officerItems": {
+            "0": "Ensures AML compliance and maintains internal AML programs.",
+            "1": "Establishes audit functions and reports breaches to the Board.",
+            "2": "Trains staff and investigates suspicious activities.",
+            "3": "Maintains AML records and monitors international AML developments."
+          },
+          "employeesTitle": "Employees",
+          "employeeItems": {
+            "0": "Must know and comply with AML policy.",
+            "1": "Are vetted during hiring and monitored during employment.",
+            "2": "Must report AML violations confidentially."
+          }
+        },
+        "training": {
+          "title": "Employee Training",
+          "items": {
+            "0": "Training is provided internally or through external consultants.",
+            "1": "Each new employee follows a training plan with testing during the first 2 to 3 months.",
+            "2": "Training covers AML responsibilities, detection methods and FATF typologies.",
+            "3": "Special attention is paid to identifying and reporting suspicious transactions without tipping off the customer."
+          }
+        },
+        "suspiciousActivity": {
+          "title": "Reporting Suspicious Activity",
+          "paragraph": "All suspicious activity must be reported to the AML Compliance Officer. The Company may conduct internal investigations, freeze or close accounts and notify authorities, cooperating with law enforcement where required by law."
+        }
       }
     }
   },
@@ -1481,7 +2133,8 @@
       "messageLabel": "Ticket text",
       "messagePlaceholder": "Describe your issue, e.g.: I cannot top up account [account number]; trying via [payment method, e.g., USDT-TRC20]",
       "createButton": "Create new ticket",
-      "createdSuccess": "Ticket created successfully!"
+      "createdSuccess": "Ticket created successfully!",
+      "createFailed": "Failed to create ticket."
     },
     "page": {
       "title": "Support Page",
@@ -1490,7 +2143,157 @@
       "subject": "Subject of the appeal",
       "lastUpdate": "Last Update",
       "status": "Status",
-      "perPage": "Per page:"
+      "perPage": "Per page:",
+      "counterparty": "Counterparty",
+      "online": "Online",
+      "offline": "Offline",
+      "copyIdAria": "Copy ticket ID",
+      "openChatAria": "Open chat",
+      "moreAria": "More actions",
+      "lastCreated": "Last created",
+      "noMessagesYet": "No messages yet",
+      "attachment": "Attachment",
+      "attachments": "Attachments",
+      "systemEvent": "System event",
+      "newMessage": "New message",
+      "newTicketModalTitle": "Create new ticket"
+    },
+    "simple": {
+      "title": "Contact support",
+      "subtitle": "Send a request by email and our team will reply to the address you provide.",
+      "replyEmailLabel": "Reply email",
+      "replyEmailPlaceholder": "name{'@'}example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Briefly describe your request",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Describe your request in detail...",
+      "attachmentsLabel": "Attachments",
+      "addFiles": "Attach files",
+      "maxSizeHint": "Up to 10 files, 200 MB each.",
+      "removeFileAria": "Remove file",
+      "submit": "Send request",
+      "createdSuccess": "Your request has been sent successfully.",
+      "submitFailed": "Failed to send request. Please try again.",
+      "presignFailed": "Failed to prepare file upload.",
+      "uploadQueued": "Queued",
+      "uploading": "Uploading",
+      "uploaded": "Uploaded",
+      "uploadFailed": "Upload failed",
+      "retryUpload": "Retry upload",
+      "linkPrompt": "Insert link URL",
+      "tools": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "list": "Bullet list",
+        "link": "Insert link",
+        "clear": "Clear formatting"
+      },
+      "validation": {
+        "replyEmailRequired": "Reply email is required.",
+        "replyEmailInvalid": "Enter a valid email address.",
+        "subjectRequired": "Subject is required.",
+        "subjectMax": "Subject must be 200 characters or less.",
+        "messageRequired": "Message or files are required.",
+        "waitUploads": "Please wait until all files finish uploading.",
+        "failedUploads": "Some files failed to upload. Remove or retry them first.",
+        "maxFiles": "You can attach up to {max} files.",
+        "fileTooLarge": "File is larger than 200 MB:"
+      },
+      "historyTitle": "Request history",
+      "historyRefreshAria": "Refresh request history",
+      "loadingHistory": "Loading request history...",
+      "emptyHistory": "You have no requests yet.",
+      "loadingMessages": "Loading messages...",
+      "emptyMessages": "No messages in this request yet.",
+      "noLastUpdate": "No updates yet",
+      "noSubject": "No subject",
+      "statusUnknown": "unknown",
+      "authorSupport": "Support",
+      "attachmentFallbackTitle": "Attachment"
+    },
+    "chat": {
+      "title": "Support Chat",
+      "online": "Online",
+      "offline": "Offline",
+      "typing": "typing...",
+      "systemEvent": "System event",
+      "noMessages": "No messages yet",
+      "filesSelected": "files selected",
+      "sendAs": "Send as",
+      "media": "Media",
+      "file": "File",
+      "documents": "Documents",
+      "links": "Links",
+      "library": "Library",
+      "loading": "Loading",
+      "writeMessage": "Write your message",
+      "addAttachment": "Add attachment",
+      "send": "Send",
+      "attachment": "Attachment",
+      "photo": "Photo",
+      "video": "Video",
+      "mediaUnavailable": "Media preview is unavailable.",
+      "openOriginal": "Open original",
+      "mobileBackAria": "Back to tickets",
+      "toggleDetailsAria": "Toggle details",
+      "closeDetailsAria": "Close details",
+      "closeMediaViewerAria": "Close media viewer",
+      "previousMediaAria": "Previous media",
+      "nextMediaAria": "Next media",
+      "uploading": "Uploading...",
+      "uploadFailedHint": "Upload failed. Remove failed files or retry.",
+      "allFilesUploaded": "All files uploaded",
+      "uploadedSuffix": "uploaded",
+      "failedSuffix": "failed",
+      "sendFailed": "Failed to send message.",
+      "uploadTooLarge413": "Upload is too large for the server limit (413).",
+      "uploadTimedOut": "Upload timed out. Try sending fewer or smaller files.",
+      "uploadNetworkError": "Network error while uploading files. Please try again.",
+      "waitUploads": "Wait for all files to finish uploading before sending.",
+      "presignFailed": "Failed to generate upload URL.",
+      "fileTooLarge": "File is larger than 200 MB:",
+      "filesLimitReached": "Only {max} files can be attached per message.",
+      "ticket": "Ticket",
+      "subject": "Subject",
+      "status": "Status",
+      "participants": "Participants",
+      "participantsDetails": "Participants in chat",
+      "onlineCountSuffix": "online",
+      "inChatSuffix": "in chat",
+      "you": "You",
+      "sharedFiles": "Shared Files",
+      "emptyMedia": "No media yet",
+      "emptyDocuments": "No documents yet",
+      "emptyLinks": "No links yet",
+      "roleAdmin": "Admin",
+      "roleClient": "Client",
+      "addAdmin": "Add admin",
+      "add": "Add",
+      "added": "Added",
+      "adding": "Adding...",
+      "noAdminsFound": "No admins found",
+      "searchAdminPlaceholder": "Search admin by nickname or email",
+      "addAdminSuccess": "Admin added to chat",
+      "addAdminAlready": "Admin is already in chat",
+      "addAdminFailed": "Failed to add admin to chat",
+      "expandDetailsAria": "Expand details",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "close": "Close",
+      "authorAvatarAlt": "Author avatar",
+      "myAvatarAlt": "My avatar"
+    },
+    "statuses": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "pending": "Pending",
+      "active": "Active",
+      "closed": "Closed",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "archived": "Archived"
     }
   },
   "cabinetExtra": {
@@ -1519,5 +2322,51 @@
       "nextPage": "Next page",
       "lastPage": "Last page"
     }
+  },
+  "apiMessages": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "clientAccountBlocked": "Client account is blocked.",
+    "validationError": "Validation error.",
+    "methodNotAllowed": "Method not allowed.",
+    "notFound": "Not found.",
+    "mt4RequestFailed": "MT4 request failed.",
+    "mt4ProfileFieldsRequired": "Fill in the required profile fields before opening an MT4 account:",
+    "profileFields": {
+      "firstname": "first name",
+      "secondname": "last name",
+      "email": "email",
+      "country": "country",
+      "state": "state",
+      "city": "city",
+      "address": "address",
+      "phone": "phone",
+      "postalCode": "postal code"
+    },
+    "requiredField": "This field is required.",
+    "invalidField": "Entrez une valeur valide.",
+    "numericField": "Entrez une valeur numérique.",
+    "positiveNumberField": "Saisissez un montant supérieur à 0.",
+    "invalidSelection": "La valeur sélectionnée n'est pas valide.",
+    "maxLengthField": "La valeur est trop longue. Maximum : {max}.",
+    "minLengthField": "La valeur est trop courte. Minimum : {min}.",
+    "paymentDetailCreated": "Détails du paiement créés avec succès.",
+    "paymentDetailUpdated": "Les détails du paiement ont été mis à jour avec succès.",
+    "paymentDetailDeleted": "Détails du paiement archivés avec succès.",
+    "paymentDetailRestored": "Les détails du paiement ont été restaurés avec succès.",
+    "paymentDetailNotFound": "Détails du paiement introuvables.",
+    "accountCreated": "Account created successfully.",
+    "paymentSystemNotFound": "Système de paiement introuvable.",
+    "accountNotFound": "Compte introuvable.",
+    "depositAccountNotFound": "Compte de dépôt introuvable.",
+    "invalidCallbackSignature": "Invalid callback signature.",
+    "supportReplyEmailRequired": "Reply email is required for email support channel.",
+    "supportFilesConflict": "Use either files or uploaded_attachments, not both.",
+    "supportMessageOrFilesRequired": "Message or files are required.",
+    "supportMessageBodyOrFilesRequired": "Message body or files are required.",
+    "emailAlreadyVerified": "Email already verified.",
+    "twoFaEnabled": "2FA enabled!",
+    "twoFaDisabled": "2FA disabled!",
+    "twoFaWrongCode": "Wrong code!"
   }
 }

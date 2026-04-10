@@ -118,6 +118,9 @@
   };
 
   const isThemeLight = computed(() => themeStore.currentTheme !== "dark");
+  const toggleThemeText = computed(() =>
+    themeStore.currentTheme === "dark" ? t("cabinet.header.switchToLight") : t("cabinet.header.switchToDark")
+  );
   const handleToggleTheme = () => {
     themeStore.toggleTheme();
   };
@@ -1220,7 +1223,7 @@
             </NuxtLink>
 
             <div
-              aria-label="Toggle theme"
+              :aria-label="toggleThemeText"
               @click.stop="handleToggleTheme"
               class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md cursor-pointer">
               <transition
@@ -1236,11 +1239,7 @@
                   class="menu-icon" />
               </transition>
               <UiTextSmall class="w-full whitespace-nowrap">
-                {{
-                  themeStore.currentTheme === "dark"
-                    ? t("cabinet.header.switchToLight")
-                    : t("cabinet.header.switchToDark")
-                }}
+                {{ toggleThemeText }}
               </UiTextSmall>
               <div
                 class="shrink-0"

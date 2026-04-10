@@ -9,10 +9,19 @@ import {
 } from "~/composables/useApiMessages";
 
 const ROOT_DIR = process.cwd();
+const LOCALES_DIR = path.join(ROOT_DIR, "i18n", "locales");
 const RU_LOCALE = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, "i18n", "locales", "ru.json"), "utf8")) as Record<
   string,
   unknown
 >;
+const localeCodes = fs
+  .readdirSync(LOCALES_DIR)
+  .filter(fileName => fileName.endsWith(".json"))
+  .map(fileName => path.basename(fileName, ".json"))
+  .sort();
+const localeDictionaries = Object.fromEntries(
+  localeCodes.map(code => [code, JSON.parse(fs.readFileSync(path.join(LOCALES_DIR, `${code}.json`), "utf8"))])
+) as Record<string, Record<string, unknown>>;
 
 const getByPath = (object: Record<string, unknown>, key: string): unknown =>
   key.split(".").reduce<unknown>((value, segment) => {
@@ -29,6 +38,39 @@ const translateFromRu = (key: string, fallback: string): string => {
 };
 
 describe("useApiMessages translator helpers", () => {
+  it("contains required api message translations in all locales", () => {
+    const requiredKeys = [
+      "apiMessages.invalidField",
+      "apiMessages.numericField",
+      "apiMessages.positiveNumberField",
+      "apiMessages.invalidSelection",
+      "apiMessages.maxLengthField",
+      "apiMessages.minLengthField",
+      "apiMessages.paymentSystemNotFound",
+      "apiMessages.accountNotFound",
+      "apiMessages.depositAccountNotFound",
+      "apiMessages.paymentDetailCreated",
+      "apiMessages.paymentDetailUpdated",
+      "apiMessages.paymentDetailDeleted",
+      "apiMessages.paymentDetailRestored",
+      "apiMessages.paymentDetailNotFound",
+      "apiMessages.supportReplyEmailRequired",
+      "apiMessages.supportFilesConflict",
+      "apiMessages.supportMessageOrFilesRequired",
+      "apiMessages.supportMessageBodyOrFilesRequired",
+      "apiMessages.emailAlreadyVerified",
+      "apiMessages.twoFaEnabled",
+      "apiMessages.twoFaDisabled",
+      "apiMessages.twoFaWrongCode",
+    ];
+
+    for (const localeCode of localeCodes) {
+      for (const key of requiredKeys) {
+        expect(getByPath(localeDictionaries[localeCode], key)).toBeTypeOf("string");
+      }
+    }
+  });
+
   it("maps normalized backend messages to localized text", () => {
     expect(resolveApiMessageWithTranslator("Unauthorized", translateFromRu)).toBe("Требуется авторизация.");
     expect(resolveApiMessageWithTranslator("Payment was successfully created.", translateFromRu)).toBe(
@@ -55,6 +97,37 @@ describe("useApiMessages translator helpers", () => {
     expect(resolveApiMessageWithTranslator("Account not found.", translateFromRu)).toBe("Счёт не найден.");
     expect(resolveApiMessageWithTranslator("Deposit account not found.", translateFromRu)).toBe(
       "Счёт для пополнения не найден."
+    );
+    expect(resolveApiMessageWithTranslator("Payment detail created successfully.", translateFromRu)).toBe(
+      "Платёжные реквизиты успешно созданы."
+    );
+    expect(resolveApiMessageWithTranslator("Payment detail updated successfully.", translateFromRu)).toBe(
+      "Платёжные реквизиты успешно обновлены."
+    );
+    expect(resolveApiMessageWithTranslator("Payment detail deleted successfully.", translateFromRu)).toBe(
+      "Платёжные реквизиты успешно архивированы."
+    );
+    expect(resolveApiMessageWithTranslator("Payment detail restored successfully.", translateFromRu)).toBe(
+      "Платёжные реквизиты успешно восстановлены."
+    );
+    expect(resolveApiMessageWithTranslator("Payment detail not found.", translateFromRu)).toBe(
+      "Платёжный реквизит не найден."
+    );
+    expect(resolveApiMessageWithTranslator("Reply email is required for email support channel.", translateFromRu)).toBe(
+      "Email для ответа обязателен для email-канала поддержки."
+    );
+    expect(resolveApiMessageWithTranslator("Email already verified.", translateFromRu)).toBe("Email уже подтвержден.");
+    expect(resolveApiMessageWithTranslator("2FA enabled!", translateFromRu)).toBe("2FA включена!");
+    expect(resolveApiMessageWithTranslator("2FA disabled!", translateFromRu)).toBe("2FA отключена!");
+    expect(resolveApiMessageWithTranslator("Wrong code!", translateFromRu)).toBe("Неверный код!");
+    expect(
+      resolveApiMessageWithTranslator("Use either files or uploaded_attachments, not both.", translateFromRu)
+    ).toBe("Используйте либо файлы, либо uploaded_attachments, но не оба варианта одновременно.");
+    expect(resolveApiMessageWithTranslator("Message or files are required.", translateFromRu)).toBe(
+      "Нужно добавить сообщение или файлы."
+    );
+    expect(resolveApiMessageWithTranslator("Message body or files are required.", translateFromRu)).toBe(
+      "Нужно добавить текст сообщения или файлы."
     );
   });
 

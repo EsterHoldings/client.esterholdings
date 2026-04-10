@@ -103,7 +103,7 @@
                     </div>
                     <div class="support-side__status-pill">
                       <span class="support-side__status-dot"></span>
-                      <span class="text-sm font-semibold">{{ status }}</span>
+                      <span class="text-sm font-semibold">{{ localizedStatus }}</span>
                     </div>
                   </div>
                 </div>
@@ -485,6 +485,7 @@
   import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
   import UiIconUpdate from "~/components/ui/UiIconUpdate.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+  import { translateSupportStatus } from "~/pages/support/composables/i18n";
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
@@ -586,7 +587,8 @@
   const authStore = useAuthStore();
 
   const lastMessageAt = ref("");
-  const status = ref("");
+  const rawStatus = ref("");
+  const localizedStatus = computed(() => translateSupportStatus(rawStatus.value, resolveText) || rawStatus.value);
   const subject = ref("");
   type SupportTab = "media" | "documents" | "links";
   type SupportLinkItem = {
@@ -1198,9 +1200,9 @@
     try {
       const parsed = new URL(fallbackUrl);
       const fileName = decodeURIComponent(parsed.pathname.split("/").pop() ?? "");
-      return fileName || "Attachment";
+      return fileName || resolveText("support.chat.attachment", "Attachment");
     } catch {
-      return "Attachment";
+      return resolveText("support.chat.attachment", "Attachment");
     }
   };
 
@@ -1686,7 +1688,7 @@
     const creator = ticket?.creator ?? null;
 
     lastMessageAt.value = ticket?.last_message_at;
-    status.value = ticket?.status;
+    rawStatus.value = String(ticket?.status ?? "");
     subject.value = ticket?.subject;
 
     const creatorFirstName = creator?.first_name ?? null;

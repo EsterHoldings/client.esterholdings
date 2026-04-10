@@ -18,7 +18,7 @@
         <button
           class="modal-close-btn"
           type="button"
-          aria-label="Закрити"
+          :aria-label="t('cabinet.common.close')"
           @click="closeModal">
           ×
         </button>
@@ -33,6 +33,9 @@
 
 <script lang="ts" setup>
   import { onBeforeUnmount, ref, watch } from "vue";
+  import { useI18n } from "vue-i18n";
+
+  const { t } = useI18n({ useScope: "global" });
 
   const isOpen = ref(false);
   const LOCK_CLASS = "modal-right-side-open";

@@ -64,6 +64,7 @@
   import UiTextarea from "~/components/ui/UiTextarea.vue";
 
   import useAppCore from "~/composables/useAppCore";
+  import { extractApiErrorMessageWithTranslator } from "~/composables/useApiMessages";
   import useEventBus from "~/composables/useEventBus";
   import { formData } from "~/pages/support/composables";
   import { validateTicketForm, validatorTicketForm } from "~/pages/support/composables/validation";
@@ -80,6 +81,10 @@
   const toast = useToast();
   const app = useAppCore();
   const { closeModal } = inject("modalControl") as { closeModal: Function };
+  const resolveText = (key: string, fallback: string): string => {
+    const translated = t(key);
+    return translated === key ? fallback : String(translated);
+  };
 
   const handleSubmitForm = async () => {
     validateTicketForm(async () => {
@@ -90,7 +95,10 @@
         useEventBus.emit("loadDataForSupport");
         toast.success(t("support.tickets.createdSuccess"));
       } catch (errorResponse) {
-        console.log("handleSubmitForm -> errorResponse", errorResponse);
+        toast.error(
+          extractApiErrorMessageWithTranslator(errorResponse, resolveText, t("support.tickets.createFailed")) ??
+            t("support.tickets.createFailed")
+        );
       } finally {
         isLoading.value = false;
       }

@@ -1,7 +1,7 @@
 <template>
   <PageStructureDefault>
     <template #header>
-      <UiTextH4 class="text-[var(--ui-text-main)]">AML Policy</UiTextH4>
+      <UiTextH4 class="text-[var(--ui-text-main)]">{{ t("cabinet.aml.pageTitle") }}</UiTextH4>
     </template>
 
     <template #content>
@@ -10,68 +10,57 @@
         v-if="!isInitialLoading">
         <template #content>
           <div class="about-company">
-            <UiTextH3 class="about-company_title">AML Policy</UiTextH3>
+            <UiTextH3 class="about-company_title">{{ t("cabinet.aml.sections.intro.title") }}</UiTextH3>
 
             <div class="about-company_img"></div>
 
             <div class="about-company_text">
-              <UiTextParagraph>
-                <span>Money Laundering</span> — all procedures to conceal the origins of criminal proceeds to make them
-                appear legitimate. Ester Holdings Ltd. aims to detect, manage and mitigate such risks.
-              </UiTextParagraph>
-
-              <UiTextParagraph>
-                The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing
-                the customer and understanding their instructions enables better risk assessment.
-              </UiTextParagraph>
+              <UiTextParagraph>{{ t("cabinet.aml.sections.intro.paragraphs.0") }}</UiTextParagraph>
+              <UiTextParagraph>{{ t("cabinet.aml.sections.intro.paragraphs.1") }}</UiTextParagraph>
             </div>
 
-            <UiTextH3 class="about-company_title">Customer Due Diligence</UiTextH3>
+            <UiTextH3 class="about-company_title">{{ t("cabinet.aml.sections.customerDueDiligence.title") }}</UiTextH3>
             <ul class="about-company_list">
-              <li>Identify and verify individual and corporate customers using valid documentation.</li>
-              <li>Collect personal or company details during registration at my.esterholdings.website.</li>
-              <li>Require proof of identity and address via valid documents (passport, utility bill, etc.).</li>
-              <li>Verify credit/debit card for transactions while masking sensitive data.</li>
-              <li>Request source of funds/wealth in high-risk cases.</li>
-              <li>Conduct ongoing monitoring for risk or unusual behavior.</li>
+              <li
+                v-for="(item, index) in customerDueDiligenceItems"
+                :key="`customer-due-diligence-${index}`">
+                {{ item }}
+              </li>
             </ul>
 
-            <UiTextH3 class="about-company_title">Payments Policy</UiTextH3>
-            <UiTextParagraph>
-              Payments are regulated under the "Regulations for Non-Trading Operations," available on the Company
-              Website under “Regulatory Documents and Agreements.”
-            </UiTextParagraph>
+            <UiTextH3 class="about-company_title">{{ t("cabinet.aml.sections.payments.title") }}</UiTextH3>
+            <UiTextParagraph>{{ t("cabinet.aml.sections.payments.paragraph") }}</UiTextParagraph>
 
-            <UiTextH3 class="about-company_title">Personnel</UiTextH3>
-            <h2 class="about-company_subtitle">AML Compliance Officer</h2>
+            <UiTextH3 class="about-company_title">{{ t("cabinet.aml.sections.personnel.title") }}</UiTextH3>
+            <h2 class="about-company_subtitle">{{ t("cabinet.aml.sections.personnel.officerTitle") }}</h2>
             <ul class="about-company_list">
-              <li>Ensures AML compliance and maintains internal AML programs.</li>
-              <li>Establishes audit functions and reports breaches to the Board.</li>
-              <li>Trains staff and investigates suspicious activities.</li>
-              <li>Keeps proper AML records and monitors international AML developments.</li>
+              <li
+                v-for="(item, index) in officerItems"
+                :key="`officer-item-${index}`">
+                {{ item }}
+              </li>
             </ul>
 
-            <h2 class="about-company_subtitle">Employees</h2>
+            <h2 class="about-company_subtitle">{{ t("cabinet.aml.sections.personnel.employeesTitle") }}</h2>
             <ul class="about-company_list">
-              <li>Must know and comply with AML policy.</li>
-              <li>Vetted at hiring with criminal checks and monitored during employment.</li>
-              <li>Must report AML violations confidentially.</li>
+              <li
+                v-for="(item, index) in employeeItems"
+                :key="`employee-item-${index}`">
+                {{ item }}
+              </li>
             </ul>
 
-            <UiTextH3 class="about-company_title">Employee Training</UiTextH3>
+            <UiTextH3 class="about-company_title">{{ t("cabinet.aml.sections.training.title") }}</UiTextH3>
             <ul class="about-company_list">
-              <li>Training provided internally or via external consultants.</li>
-              <li>Each new employee follows a training plan with tests over 2–3 months.</li>
-              <li>Content covers AML responsibilities, detection methods, and FATF typologies.</li>
-              <li>Focus on identifying and reporting suspicious transactions without tipping off subjects.</li>
+              <li
+                v-for="(item, index) in trainingItems"
+                :key="`training-item-${index}`">
+                {{ item }}
+              </li>
             </ul>
 
-            <UiTextH3 class="about-company_title">Reporting Suspicious Activity</UiTextH3>
-            <UiTextParagraph>
-              All suspicious activities must be reported to the AML Compliance Officer. The company may conduct internal
-              investigations, freeze or close accounts, and inform authorities, cooperating fully with law enforcement
-              where required by law.
-            </UiTextParagraph>
+            <UiTextH3 class="about-company_title">{{ t("cabinet.aml.sections.suspiciousActivity.title") }}</UiTextH3>
+            <UiTextParagraph>{{ t("cabinet.aml.sections.suspiciousActivity.paragraph") }}</UiTextParagraph>
           </div>
         </template>
       </PageStructureContent>
@@ -88,7 +77,8 @@
 
 <script lang="ts" setup>
   import { definePageMeta } from "~/.nuxt/imports";
-  import { nextTick, ref } from "vue";
+  import { computed, nextTick, ref } from "vue";
+  import { useI18n } from "vue-i18n";
 
   import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
   import PageStructureContent from "~/components/block/pages/PageStructureContent.vue";
@@ -100,7 +90,20 @@
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
+  const { t } = useI18n({ useScope: "global" });
   const isInitialLoading = ref(true);
+  const customerDueDiligenceItems = computed(() =>
+    Array.from({ length: 6 }, (_, index) => t(`cabinet.aml.sections.customerDueDiligence.items.${index}`))
+  );
+  const officerItems = computed(() =>
+    Array.from({ length: 4 }, (_, index) => t(`cabinet.aml.sections.personnel.officerItems.${index}`))
+  );
+  const employeeItems = computed(() =>
+    Array.from({ length: 3 }, (_, index) => t(`cabinet.aml.sections.personnel.employeeItems.${index}`))
+  );
+  const trainingItems = computed(() =>
+    Array.from({ length: 4 }, (_, index) => t(`cabinet.aml.sections.training.items.${index}`))
+  );
   nextTick(() => {
     isInitialLoading.value = false;
   });

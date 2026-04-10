@@ -1,7 +1,8 @@
 {
   "ui": {
     "pagination": {
-      "perPage": "1ページあたり"
+      "perPage": "1ページあたり",
+      "range": "{from} から {to} / 合計: {total}"
     }
   },
   "ui-components": {
@@ -399,10 +400,18 @@
       "faqs__dropzone_text": "ファイルをここにドラッグ＆ドロップするか、クリックして選択",
       "faqs__dropzone_aria": "ファイルをアップロード",
       "news_row__items": [
-        { "title": "SECがステーブルコイン禁止を発表後、ビットコインが12%下落" },
-        { "title": "テスラが1:10の株式分割を発表 — 株価が12%上昇" },
-        { "title": "米インフレの予想外の上昇を受けてダウ平均が1,200ポイント急落" },
-        { "title": "決算報告後にNVIDIA株が15%急騰" }
+        {
+          "title": "SECがステーブルコイン禁止を発表後、ビットコインが12%下落"
+        },
+        {
+          "title": "テスラが1:10の株式分割を発表 — 株価が12%上昇"
+        },
+        {
+          "title": "米インフレの予想外の上昇を受けてダウ平均が1,200ポイント急落"
+        },
+        {
+          "title": "決算報告後にNVIDIA株が15%急騰"
+        }
       ],
       "helpSection": "ヘルプが必要ですか？",
       "helpLinkText": "ヘルプセクション",
@@ -431,10 +440,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "安定したフィルとスケーラブルな注文フローのために設計された深い集約流動性プール。",
-            "benefits": [
-              "Tier-1流動性アグリゲーション",
-              "取引所全体の深さ"
-            ]
+            "benefits": ["Tier-1流動性アグリゲーション", "取引所全体の深さ"]
           },
           {
             "line1Prefix": "",
@@ -444,10 +450,7 @@
             "line2Accent": "取引",
             "line2Suffix": "のために",
             "subtitle": "高速注文処理速度、0のリミット/ストップレベル — アクティブトレードフローのために構築。",
-            "benefits": [
-              "高速サーバー技術",
-              "機関レベルの流動性セットアップ"
-            ]
+            "benefits": ["高速サーバー技術", "機関レベルの流動性セットアップ"]
           }
         ]
       }
@@ -715,23 +718,45 @@
   "cabinet": {
     "menu": {
       "dashboard": "ダッシュボード",
-      "payment_details": "支払詳細",
-      "accounts": "アカウント",
+      "payment_details": "支払い情報",
+      "accounts": "口座",
       "referral_system": "紹介システム",
       "billing": "取引",
       "support": "サポート",
       "settings": "設定"
     },
     "header": {
-      "notifications": "Notifications",
-      "markAllRead": "Mark all read",
-      "emptyNotifications": "You have no notifications yet",
-      "accountSettings": "Account Settings",
-      "switchToLight": "Switch to Light",
-      "switchToDark": "Switch to Dark",
-      "helpCenter": "Help Center",
-      "logout": "Log Out",
-      "profile": "Profile"
+      "notifications": "通知",
+      "markAllRead": "すべて既読にする",
+      "emptyNotifications": "まだ通知はありません",
+      "accountSettings": "アカウント設定",
+      "switchToLight": "ライトテーマに切り替える",
+      "switchToDark": "ダークテーマに切り替える",
+      "helpCenter": "ヘルプセンター",
+      "logout": "ログアウト",
+      "profile": "プロフィール",
+      "notificationTemplates": {
+        "depositStatusUpdated": {
+          "title": "入金が更新されました",
+          "message": "{status} • {method} • {amount} {currency} • 口座 {account}"
+        },
+        "supportMessage": {
+          "title": "新しいサポートメッセージ",
+          "message": "{preview}"
+        },
+        "supportTicketUpdated": {
+          "title": "サポートチケットが更新されました",
+          "message": "{preview}"
+        },
+        "verificationStatusUpdated": {
+          "title": "認証ステータスが更新されました",
+          "message": "{step} • {status}{comment}"
+        },
+        "withdrawalStatusUpdated": {
+          "title": "出金リクエストが更新されました",
+          "message": "{status} • {amount} {currency} • 口座 {account}"
+        }
+      }
     },
     "dashboard": {
       "title": "ダッシュボード",
@@ -757,6 +782,17 @@
           "required": "必須",
           "inProgress": "進行中",
           "done": "完了"
+        },
+        "complete": "アカウントは完全に認証されています",
+        "notComplete": "アカウントが完全に認証されていません",
+        "goToVerification": "検証に進む",
+        "tooltipLabel": "アカウント認証について",
+        "verifiedCount": "{done}/{total} 確認済み",
+        "steps": {
+          "profile": "プロフィールデータ",
+          "email": "電子メール",
+          "documents": "書類",
+          "deposit": "初回入金"
         }
       },
       "actions": {
@@ -765,7 +801,7 @@
         "chartPlaceholder": "チャートがここに表示されます"
       },
       "mt4": {
-        "title": "MT4アカウント",
+        "title": "お気に入りまたは新規のMT4口座",
         "openNewAccount": "新しい口座を開設",
         "table": {
           "account": "アカウント",
@@ -774,10 +810,16 @@
           "status": "ステータス",
           "active": "アクティブ",
           "inactive": "非アクティブ"
-        }
+        },
+        "description": "お気に入り口座への素早いアクセスと、新しいMT4口座の開設ができます。",
+        "emptySubtitle": "最初の取引口座を開設して始めましょう。",
+        "emptyTitle": "まだアカウントがありません",
+        "tooltipLabel": "MT4口座について",
+        "verifySubtitle": "プロフィールデータと書類が確認された後、新しい取引口座を開設できるようになります。",
+        "verifyTitle": "口座開設のための認証を完了する"
       },
       "transactions": {
-        "title": "取引",
+        "title": "最新の取引",
         "sort": {
           "createdAt": "Created",
           "amount": "Amount",
@@ -786,20 +828,31 @@
           "type": "Type",
           "accountNumber": "MT4 account"
         },
-        "accountNumber": "MT4 account",
-        "amount": "Amount",
-        "currency": "Currency",
-        "type": "Type",
-        "createdAt": "Created",
-        "searchPlaceholder": "Search payments…",
-        "errorLoad": "Failed to load payments",
-        "empty": "No records yet.",
-        "show": "Show",
+        "accountNumber": "MT4 アカウント",
+        "amount": "額",
+        "currency": "通貨",
+        "type": "タイプ",
+        "createdAt": "作成されました",
+        "searchPlaceholder": "支払いを検索…",
+        "errorLoad": "支払いを読み込めませんでした",
+        "empty": "まだ記録がありません。",
+        "show": "表示",
         "shownRange": "Showing {from}–{to} of {total}",
         "firstPage": "First page",
         "prevPage": "Previous page",
         "nextPage": "Next page",
-        "lastPage": "Last page"
+        "lastPage": "Last page",
+        "tooltip": "このブロックには最新の入出金が表示されるため、クライアントは更新された支払いにすぐに気づき、必要な取引を開始できます。",
+        "tooltipLabel": "最新の取引について",
+        "description": "変更がすぐ分かるよう、すべての口座の最新の入出金を表示します。"
+      },
+      "summary": {
+        "totalAmount": "合計金額",
+        "referralTotalAmount": "紹介報酬額"
+      },
+      "emailVerification": {
+        "success": "メールアドレスが確認されました。",
+        "error": "メールの認証に失敗しました。"
       }
     },
     "billing": {
@@ -807,15 +860,17 @@
       "create": "新規支払いを作成",
       "search": "検索",
       "columns": {
-        "id": "Id",
+        "id": "ID",
         "paysystem": "支払いシステム",
         "status": "ステータス",
         "currency": "通貨",
         "amount": "金額",
         "createdAt": "作成日時",
-        "accountNumber": "Account number",
-        "paymentSystem": "Payment system",
-        "account": "Account"
+        "accountNumber": "口座番号",
+        "paymentSystem": "決済システム",
+        "account": "Account",
+        "accountNumberShort": "Acc.",
+        "paymentSystemShort": "PS"
       },
       "nothingToShow": "表示するものがありません =(",
       "pagination": {
@@ -824,32 +879,80 @@
       },
       "panel-title": "新しい管理者を追加",
       "view": {
-        "list": "List",
-        "cards": "Cards",
-        "full": "Full width"
+        "list": "リスト",
+        "cards": "カード",
+        "full": "全幅"
       },
       "withdrawalForm": {
-        "account": "Trading account",
-        "paymentDetail": "Payment details",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter withdrawal amount",
-        "comment": "Comment",
-        "commentPlaceholder": "Add a comment for the finance team",
-        "submit": "Create withdrawal request",
-        "noPaymentDetailsTitle": "No approved payment details",
+        "account": "取引口座",
+        "paymentDetail": "お支払い詳細",
+        "amount": "額",
+        "amountPlaceholder": "出金額を入力してください",
+        "comment": "コメント",
+        "commentPlaceholder": "財務チームへのコメントを追加する",
+        "submit": "出金リクエストを作成する",
+        "noPaymentDetailsTitle": "承認された支払い詳細がありません",
         "noPaymentDetailsText": "Add and approve payment details for this payment method before creating a withdrawal request.",
-        "openPaymentDetails": "Open payment details",
-        "accountBalance": "Available balance",
-        "created": "Withdrawal request created successfully.",
-        "error": "Failed to create withdrawal request.",
-        "adminComment": "Admin comment",
+        "openPaymentDetails": "支払いの詳細を開く",
+        "accountBalance": "利用可能残高",
+        "created": "出金リクエストが正常に作成されました。",
+        "error": "出金リクエストの作成に失敗しました。",
+        "adminComment": "管理者のコメント",
         "errors": {
-          "account": "Choose an account.",
-          "paymentDetail": "Choose approved payment details.",
-          "amount": "Enter a valid amount.",
-          "balance": "Withdrawal amount exceeds the account balance."
-        }
-      }
+          "account": "アカウントを選択してください。",
+          "paymentDetail": "承認された支払いの詳細を選択します。",
+          "amount": "有効な金額を入力してください。",
+          "balance": "引き出し金額が口座残高を超えています。"
+        },
+        "loadAccountsError": "取引口座をロードできませんでした。",
+        "loadPaymentDetailsError": "支払い詳細の読み込みに失敗しました。",
+        "processing": "処理...",
+        "title": "出金リクエスト"
+      },
+      "backToList": "支払いリストに戻る",
+      "backToMethodSelection": "お支払い方法の選択に戻る",
+      "comment": "コメント",
+      "createFlow": {
+        "loadPaymentSystemsError": "支払い方法の読み込みに失敗しました。",
+        "selectMethod": "支払い方法を選択してください"
+      },
+      "deletePayment": "消去",
+      "deletePaymentConfirm": "支払いを削除しますか?",
+      "deletePaymentError": "支払いの削除に失敗しました。",
+      "deletePaymentSuccess": "支払いが削除されました。",
+      "depositForm": {
+        "account": "取引口座",
+        "amount": "額",
+        "amountPlaceholder": "USDの金額",
+        "comment": "コメント",
+        "commentPlaceholder": "財務チームへのコメントを追加する",
+        "created": "デポジットが正常に作成されました。",
+        "error": "デポジットの作成に失敗しました。",
+        "loadAccountsError": "取引口座をロードできませんでした。",
+        "processing": "処理...",
+        "submit": "デポジットの作成"
+      },
+      "emptySubtitle": "開始するには、最初の支払いを作成してください。",
+      "emptyTitle": "まだ支払いはありません",
+      "gateway": "ゲートウェイ",
+      "internalTransfer": "アカウント間の送金",
+      "listLoadError": "支払いを読み込めませんでした。",
+      "openPayment": "開ける",
+      "paymentLoadError": "支払いの読み込みに失敗しました。",
+      "paymentNotFound": "支払いが見つかりません。",
+      "redirectLink": "支払いリンク",
+      "syncPayment": "同期",
+      "syncPaymentError": "支払いを同期できませんでした。",
+      "syncPaymentLoading": "同期中...",
+      "syncPaymentSuccess": "支払いは正常に同期されました。",
+      "transferCreated": "作成したアカウント間の転送。",
+      "transferFrom": "アカウントから",
+      "transferTo": "アカウントへ",
+      "types": {
+        "deposit": "デポジット",
+        "withdrawal": "出金"
+      },
+      "updatedAt": "更新日"
     },
     "payments": {
       "title": "支払詳細",
@@ -866,11 +969,163 @@
           "title": "新しい支払い詳細を作成",
           "name": "支払い詳細名",
           "namePlaceholder": "支払い詳細名",
-          "recipientAddress": "決済システムを選択してください。"
+          "recipientAddress": "決済システムを選択してください。",
+          "createdSuccess": "支払い詳細が正常に作成されました。",
+          "documents": {
+            "captionExisting": "このドキュメントはすでに保存されており、削除するまで添付されたままになります。",
+            "captionFailed": "アップロードが完了しませんでした。エラーを修正するか、ファイルを削除してください。",
+            "captionIdle": "ファイルが選択されており、フォームを保存した後にアップロードされます。",
+            "captionUploaded": "ファイルはアップロードされており、この支払い詳細と一緒に保存されます。",
+            "captionUploading": "ファイルは現在 Amazon S3 にアップロードされています。",
+            "disabledHint": "支払い方法を選択してドキュメントのアップロードのロックを解除します。",
+            "documentFallback": "書類",
+            "dropAction": "クリックしてアップロード",
+            "dropHint": "PNG、JPG、WEBP、または PDF。最大ファイル サイズは 5 MB です。",
+            "dropSeparator": "または",
+            "dropTitle": "ドラッグアンドドロップ",
+            "fileMissing": "アップロードするファイルにアクセスできません。",
+            "hint": "添付ドキュメントを保持したり、新しいドキュメントを追加したりできます。フォームを保存すると、新しいファイルが S3 にアップロードされます。",
+            "initialHint": "支払い方法を選択すると、ドキュメントのアップロードが可能になります。",
+            "invalidFormat": "ファイル {name} の形式はサポートされていません。",
+            "label": "支払いアカウントのスクリーンショット",
+            "originExisting": "添付",
+            "originNew": "新しいファイル",
+            "presignFailed": "アップロードリンクの取得に失敗しました。",
+            "removeExisting": "添付ファイルを削除する",
+            "removeNew": "新しいファイルを削除する",
+            "required": "確認のために少なくとも 1 つの支払いアカウントのスクリーンショットを追加します。",
+            "serverTooLarge": "ファイルが大きすぎます。",
+            "statusExisting": "保存されました",
+            "statusFailed": "アップロードエラー",
+            "statusIdle": "アップロードの準備ができました",
+            "statusUploaded": "アップロードされました",
+            "statusUploading": "アップロード中...",
+            "summaryExisting": "添付: {count}",
+            "summaryNew": "新しいファイル: {count}",
+            "tooLarge": "ファイル {name} が 5 MB を超えています。",
+            "uploadBatchFailed": "{count} ファイルのアップロードに失敗しました。",
+            "uploadFailed": "ファイルを S3 にアップロードできませんでした。",
+            "warningText": "電子メール アドレス、ウォレットまたはアカウント番号、QR コードが明確に確認できる支払いアカウントのスクリーンショットをアップロードします。",
+            "warningTitle": "スクリーンショットに必要なもの"
+          },
+          "editTitle": "支払いの詳細を編集する",
+          "fieldFallback": "分野",
+          "fieldPlaceholder": "値を入力してください",
+          "paymentMethod": "支払方法",
+          "recipientAddressLabel": "受信者のアドレス",
+          "recipientAddressPlaceholder": "支払いの詳細を入力します",
+          "saveError": "支払い詳細を保存できませんでした。",
+          "selectMethodHint": "最初に支払い方法を選択し、支払いの詳細を入力します。",
+          "submitCreate": "支払い詳細を保存する",
+          "submitUpdate": "変更を保存する",
+          "updatedSuccess": "支払いの詳細が更新され、確認のために再度送信されました。",
+          "validationRequired": "この項目は必須です。"
         },
-        "view": "View",
+        "view": "ビュー",
         "confirm": "Confirm",
-        "delete": "Delete"
+        "delete": "Delete",
+        "actions": {
+          "archive": "アーカイブ",
+          "archiveConfirm": "この支払い詳細をアーカイブしますか?",
+          "archiveError": "支払い詳細をアーカイブできませんでした。",
+          "archiveSuccess": "支払いの詳細はアーカイブに移動されました。",
+          "copyId": "IDをコピー",
+          "edit": "編集",
+          "openMenu": "メニューを開く",
+          "restore": "復元する",
+          "restoreError": "支払い詳細を復元できませんでした。",
+          "restoreSuccess": "支払い詳細が復元されました。"
+        },
+        "archivedBadge": "アーカイブ済み",
+        "cardLabel": "お支払い詳細",
+        "columns": {
+          "id": "ID",
+          "name": "名前",
+          "paymentSystem": "決済システム",
+          "status": "状態",
+          "updatedAt": "更新日時"
+        },
+        "detail": {
+          "back": "お支払いの詳細に戻る",
+          "booleanNo": "いいえ",
+          "booleanYes": "はい",
+          "commentEmpty": "ノーコメント。",
+          "copyValue": "値をコピーする",
+          "documentFallback": "書類",
+          "documentsEmpty": "書類がアップロードされていませんでした。",
+          "fieldLabels": {
+            "active": "アクティブ",
+            "comment": "コメント",
+            "config_name": "構成",
+            "merchant": "商人",
+            "name": "名前",
+            "old_requisite_id": "レガシー ID",
+            "paysystem": "決済システム",
+            "shortname": "略称",
+            "status": "状態",
+            "type": "タイプ"
+          },
+          "fieldsTitle": "支払い詳細フィールド",
+          "groups": {
+            "fields": "主な分野",
+            "legacy": "レガシーデータ"
+          },
+          "historyDocumentAlt": "歴史文書 #{count}",
+          "historyEmpty": "まだ履歴がありません。",
+          "historyLoading": "履歴を読み込んでいます...",
+          "historyTitle": "支払い明細履歴",
+          "labels": {
+            "adminComment": "管理者のコメント",
+            "createdAt": "で作成されました",
+            "id": "ID",
+            "name": "名前",
+            "paymentSystem": "決済システム",
+            "updatedAt": "更新日時"
+          },
+          "loadError": "支払い詳細の読み込みに失敗しました。",
+          "noData": "データがありません。",
+          "notFound": "支払いの詳細が見つかりませんでした。",
+          "title": "支払いの詳細 #{id}",
+          "total": "合計: {count}",
+          "valueLabel": "価値"
+        },
+        "documents": {
+          "label": "支払いアカウントのスクリーンショット",
+          "previewAlt": "プレビュー #{count}"
+        },
+        "emptyArchivedSubtitle": "アーカイブされた支払いの詳細がここに表示され、復元することができます。",
+        "emptyArchivedTitle": "アーカイブされた支払い詳細はまだありません",
+        "emptyFilteredSubtitle": "検索クエリまたはフィルターを変更してみてください。",
+        "emptyFilteredTitle": "支払いの詳細が見つかりませんでした",
+        "emptySubtitle": "支払いを受け取るには、最初の支払い詳細を追加します。",
+        "emptyTitle": "支払いの詳細はまだありません",
+        "filters": {
+          "active": "アクティブ",
+          "all": "全て",
+          "archived": "アーカイブ済み"
+        },
+        "relative": {
+          "daysAgo": "{count}日前",
+          "hoursAgo": "{count} 時間前",
+          "justNow": "ちょうど今",
+          "minutesAgo": "{count}分前"
+        },
+        "sort": {
+          "createdAt": "で作成されました",
+          "name": "名前",
+          "status": "状態",
+          "updatedAt": "更新日時"
+        },
+        "statuses": {
+          "approved": "承認された",
+          "pending": "保留中",
+          "rejected": "拒否されました"
+        },
+        "views": {
+          "cards": "カード",
+          "full": "全幅",
+          "table": "リスト"
+        }
       },
       "nothingToShow": "表示するものがありません =(",
       "pagination": {
@@ -907,14 +1162,14 @@
             "code_placeholder": "ここにコードを入力",
             "confirm": "確認",
             "enable_success": "2FAが有効になりました！",
-            "enable_error": "無効なコードまたは接続エラー",
+            "enable_error": "Invalid code or connection error",
             "disable_success": "2FAが無効になりました",
-            "disable_error": "2FAを無効にできませんでした"
+            "disable_error": "Failed to disable 2FA"
           },
           "reset": {
             "pending": "再送信する前にしばらくお待ちください。",
             "success": "パスワード再設定メールを送信しました。",
-            "error": "再設定メールを送信できませんでした。後でもう一度お試しください。"
+            "error": "Failed to send reset email. Try again later."
           }
         },
         "tab-general": {
@@ -945,27 +1200,68 @@
             "postal_code": "00000"
           },
           "button": "保存して確認に送信",
-          "success": "ユーザーデータが正常に更新され、確認に送信されました！"
+          "success": "ユーザーデータが正常に更新され、確認に送信されました！",
+          "validationError": "Please check form fields.",
+          "serverError": "Unable to save profile data."
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "ファイルを選択",
-            "upload": "アップロード"
+            "choose": "Choose file",
+            "upload": "Upload",
+            "uploading": "Uploading...",
+            "uploadAndSend": "Upload and send to verification"
           },
           "messages": {
             "upload_success": "プロフィール写真が正常に更新され、確認に送信されました！",
             "upload_error": "写真のアップロードに失敗しました",
-            "delete_error": "写真の削除に失敗しました"
+            "delete_error": "写真の削除に失敗しました",
+            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
+            "saveError": "Failed to save documents. Please try again later."
           },
           "errors": {
             "type": "画像のみが許可されています",
-            "size": "最大サイズは2MBです"
+            "size": "最大サイズは2MBです",
+            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
+            "noFiles": "Please select file(s).",
+            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+          },
+          "title": "Upload documents",
+          "allDocuments": "All documents",
+          "empty": "You have no uploaded documents yet.",
+          "documentLabel": "Document",
+          "refreshAria": "Refresh documents",
+          "commentLabel": "Comment",
+          "fields": {
+            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+          },
+          "validation": {
+            "maxLength": "The field may not contain more than 100 characters."
+          },
+          "progress": {
+            "label": "Uploading: {value}%"
+          },
+          "verificationStatus": {
+            "title": "Verification status"
+          },
+          "columns": {
+            "name": "Name",
+            "status": "Status",
+            "date": "Date"
+          },
+          "actions": {
+            "delete": "Delete document"
+          },
+          "statuses": {
+            "pending": "In progress",
+            "approved": "Approved",
+            "rejected": "Rejected"
           }
         },
         "tab-user-photo": {
           "buttons": {
             "choose": "ファイルを選択",
-            "upload": "アップロード"
+            "upload": "アップロード",
+            "delete_aria": "写真を削除"
           },
           "messages": {
             "upload_success": "プロフィール写真が正常に更新されました",
@@ -974,8 +1270,60 @@
             "delete_error": "写真の削除に失敗しました"
           },
           "errors": {
-            "type": "画像のみが許可されています",
-            "size": "最大サイズは2MBです"
+            "type": "Only images are allowed",
+            "size": "Max size is 5MB"
+          },
+          "hints": {
+            "formats": "Supported formats: PNG, JPG, JPEG",
+            "maxSize": "Photo must not exceed 5 MB."
+          },
+          "verification": {
+            "title": "Verification status",
+            "approved": "Verified successfully!"
+          }
+        },
+        "tab-user-verification": {
+          "sections": {
+            "client": "Client verification",
+            "payout": "Payout details"
+          },
+          "titles": {
+            "clientStatus": "Verification status",
+            "payoutStatus": "Payout details verification",
+            "history": "Verification history"
+          },
+          "refreshAria": "Refresh verification data",
+          "commentLabel": "Comment",
+          "emptyPayout": "No payout details yet.",
+          "unnamedPaymentDetail": "Untitled payment detail",
+          "paymentSystemFallback": "Payment system",
+          "documentsCount": "Documents: {count}",
+          "historyEmpty": "No verification history yet.",
+          "columns": {
+            "name": "Name",
+            "date": "Date",
+            "status": "Status"
+          },
+          "items": {
+            "email": {
+              "title": "Email",
+              "subtitle": "Confirm your email"
+            },
+            "documents": {
+              "title": "Documents"
+            },
+            "deposit": {
+              "title": "First deposit",
+              "subtitle": "Make a payment to verify the first deposit"
+            },
+            "profile": {
+              "title": "Profile"
+            }
+          },
+          "statuses": {
+            "approved": "Confirmed",
+            "pending": "In progress",
+            "rejected": "Rejected"
           }
         }
       },
@@ -988,11 +1336,16 @@
           "change_password": "パスワード変更"
         },
         "title": "プロフィール"
+      },
+      "generalVerification": {
+        "notStarted": "Not started"
       }
     },
     "accounts": {
       "account": {
-        "title": "アカウント"
+        "title": "アカウント",
+        "loadError": "アカウントの詳細をロードできませんでした。",
+        "subtitle": "取引口座の詳細と履歴"
       },
       "title": "アカウント",
       "openNew": "新しい口座を開設",
@@ -1025,18 +1378,22 @@
         },
         "actions": {
           "submit": "新しい口座を開設"
-        }
+        },
+        "loadTypesError": "アカウントタイプの読み込みに失敗しました。",
+        "submitError": "アカウントの作成に失敗しました。"
       },
       "actions": {
-        "deposit": "Deposit",
-        "withdraw": "Withdraw",
-        "transfer": "Transfer",
+        "deposit": "デポジット",
+        "withdraw": "撤回する",
+        "transfer": "移行",
         "history": "トランザクション",
-        "changeType": "Change type",
-        "remove": "Remove"
+        "changeType": "種類の変更",
+        "remove": "取り除く"
       },
       "tabs": {
-        "history": "トランザクション"
+        "history": "トランザクション",
+        "card": "アカウントカード",
+        "tradeHistory": "取引履歴"
       },
       "transactions": {
         "empty": "まだトランザクションがありません",
@@ -1044,16 +1401,47 @@
         "transferToAccount": "口座への振替"
       },
       "transfer": {
-        "fromAccount": "From account",
-        "toAccount": "To account",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter amount",
-        "submit": "Create transfer request",
-        "success": "Transfer request created successfully.",
-        "failed": "Failed to create transfer request.",
-        "sourceNotFound": "Source account not found.",
-        "noDestinations": "You do not have another account available for transfer.",
-        "exceedsBalance": "Amount exceeds available balance."
+        "fromAccount": "アカウントから",
+        "toAccount": "アカウントへ",
+        "amount": "額",
+        "amountPlaceholder": "金額を入力してください",
+        "submit": "転送リクエストの作成",
+        "success": "転送リクエストが正常に作成されました。",
+        "failed": "転送リクエストの作成に失敗しました。",
+        "sourceNotFound": "ソースアカウントが見つかりません。",
+        "noDestinations": "転送できる別のアカウントがありません。",
+        "exceedsBalance": "金額が利用可能残高を超えています。",
+        "title": "私のアカウント間の送金"
+      },
+      "deleteConfirm": "このアカウントをアーカイブしますか?",
+      "deleteError": "アカウントをアーカイブできませんでした。",
+      "deleteSuccess": "アカウントがアーカイブされました！",
+      "emptySubtitle": "最初の取引口座を開設して始めましょう。",
+      "emptyTitle": "まだアカウントがありません",
+      "favoriteAdd": "お気に入りに追加",
+      "favoriteRemove": "お気に入りから削除",
+      "favoriteToggleError": "お気に入りの更新に失敗しました。",
+      "loadError": "アカウントのロードに失敗しました。",
+      "openAccountLabel": "アカウントを開く {number}",
+      "openBlocked": "プロフィールと書類の確認後に口座開設が可能となります。",
+      "refreshBalance": "リフレッシュバランス",
+      "refreshBalanceError": "アカウント残高を更新できませんでした。",
+      "refreshBalancesError": "アカウント残高を更新できませんでした。",
+      "tradeHistory": {
+        "sync": "同期履歴",
+        "syncing": "同期中...",
+        "empty": "まだ取引はありません",
+        "total": "Records",
+        "added": "Added",
+        "updated": "Updated",
+        "searchPlaceholder": "全取引分野から探す",
+        "filterAll": "All",
+        "filterPositive": "Profitable",
+        "filterNegative": "Losing",
+        "error": "取引履歴の読み込みに失敗しました。",
+        "loadMore": "さらにロードする",
+        "loadingMore": "読み込み中...",
+        "syncError": "取引履歴の同期に失敗しました。"
       }
     },
     "referrals": {
@@ -1113,7 +1501,9 @@
           "active": "アクティブ紹介数",
           "conversion": "コンバージョン",
           "select": "MT口座を選択",
-          "transferHint": "任意のMT口座に即時振替"
+          "transferHint": "任意のMT口座に即時振替",
+          "available": "Available",
+          "pending": "In transit"
         },
         "transferLabel": "振替",
         "shareTelegram": "Telegramで共有",
@@ -1145,7 +1535,11 @@
         "sortInactive": "非アクティブ",
         "pagination": "{from}-{to} / {total}",
         "prev": "前へ",
-        "next": "次へ"
+        "next": "次へ",
+        "withdrawLabel": "Withdraw funds",
+        "shareMailSubject": "Join our referral program",
+        "yourLevel": "Your level",
+        "pointsProgress": "Points: {current} / {total}"
       },
       "settings": {
         "title": "Referral settings",
@@ -1165,7 +1559,265 @@
         "rule1": "Rewards are credited after a referred user completes verification.",
         "rule2": "Fraud or duplicate accounts may be declined.",
         "rule3": "Percentages and levels are placeholders until backend delivers real values.",
-        "rule4": "Contact support if you think a referral was missed."
+        "rule4": "Contact support if you think a referral was missed.",
+        "gamification": {
+          "title": "IB gamification",
+          "text": "Gamification turns the partner program into a game: levels, XP, missions, badges, rankings, seasonal events and a 3-level network bring real bonuses and passive income."
+        },
+        "coreElementsTitle": "Core elements",
+        "coreElements": {
+          "career": "Career ladder",
+          "xp": "XP points",
+          "missions": "Missions and challenges",
+          "badges": "Achievements and badges",
+          "ratings": "Rankings and competitions",
+          "seasonal": "Seasonal events"
+        },
+        "careerTitle": "Career ladder",
+        "xpLabel": "XP",
+        "commissionLabel": "Commission",
+        "bonusLabel": "Bonus",
+        "levels": {
+          "rookie": {
+            "title": "Rookie",
+            "xp": "0",
+            "commission": "30%",
+            "bonus": "-",
+            "perks": "Access to the personal cabinet"
+          },
+          "advanced": {
+            "title": "Advanced",
+            "xp": "5,000",
+            "commission": "35%",
+            "bonus": "$100",
+            "perks": "Branded materials"
+          },
+          "expert": {
+            "title": "Expert",
+            "xp": "20,000",
+            "commission": "40%",
+            "bonus": "$500",
+            "perks": "Personal manager"
+          },
+          "master": {
+            "title": "Master",
+            "xp": "50,000",
+            "commission": "50%",
+            "bonus": "$2,000",
+            "perks": "VIP events"
+          },
+          "legendary": {
+            "title": "Legendary",
+            "xp": "150,000",
+            "commission": "60%",
+            "bonus": "$10,000",
+            "perks": "Custom conditions"
+          }
+        },
+        "network": {
+          "title": "3-level network",
+          "text": "You earn passive income: 10% from Level 2 and 5% from Level 3. The wider the network, the higher the passive income.",
+          "table": {
+            "level": "Level",
+            "partners": "IBs",
+            "percent": "%",
+            "income": "Your income"
+          },
+          "rows": {
+            "level1": {
+              "level": "Level 1 — you",
+              "count": "1",
+              "percent": "-",
+              "income": "$50,000+"
+            },
+            "level2": {
+              "level": "Level 2 — Sub-IB",
+              "count": "10",
+              "percent": "10%",
+              "income": "$10,000"
+            },
+            "level3": {
+              "level": "Level 3 — Sub-IB network",
+              "count": "100",
+              "percent": "5%",
+              "income": "$25,000"
+            }
+          },
+          "total": "Total: $85,000+ per month, including $35,000 passive."
+        },
+        "xpActionsTitle": "XP and actions",
+        "xpRules": {
+          "registration": {
+            "title": "Registration",
+            "reward": "100 XP"
+          },
+          "firstClient": {
+            "title": "First client",
+            "reward": "500 XP"
+          },
+          "tenLots": {
+            "title": "Every 10 lots",
+            "reward": "100 XP"
+          },
+          "subIb": {
+            "title": "Invite a Sub-IB",
+            "reward": "1,000 XP"
+          },
+          "activeClients": {
+            "title": "5 active clients per month",
+            "reward": "250 XP / 50 XP for every next 5"
+          }
+        },
+        "missionsTitle": "Missions and challenges",
+        "missions": {
+          "firstStep": {
+            "title": "“First step” — 1 client",
+            "reward": "+500 XP, $50"
+          },
+          "master": {
+            "title": "“Referral master” — 10 clients",
+            "reward": "+5,000 XP, $500"
+          },
+          "buildNetwork": {
+            "title": "“Build the network” — 3 Sub-IBs",
+            "reward": "+7,500 XP, +10% commission"
+          },
+          "millionLots": {
+            "title": "“Million-lot traders” — 1,000 lots",
+            "reward": "+10,000 XP, $2,000"
+          }
+        },
+        "badgesTitle": "Achievements and badges",
+        "badges": {
+          "bronze": {
+            "title": "Bronze Partner — 10 clients",
+            "bonus": "+5% commission"
+          },
+          "silver": {
+            "title": "Silver Partner — 50 clients",
+            "bonus": "+10% commission"
+          },
+          "gold": {
+            "title": "Gold Partner — 100 clients",
+            "bonus": "+15% commission"
+          },
+          "diamond": {
+            "title": "Diamond Partner — 500 clients",
+            "bonus": "VIP service"
+          },
+          "recruiter": {
+            "title": "Top Recruiter — 50 Sub-IBs",
+            "bonus": "+$5,000"
+          }
+        },
+        "ratingsTitle": "Rankings and competitions",
+        "ratings": {
+          "bestMonth": {
+            "title": "Best IB of the month",
+            "prize": "🥇 $5,000 + VIP status"
+          },
+          "topRefer": {
+            "title": "Top recruiter",
+            "prize": "🥈 $3,000"
+          },
+          "turnover": {
+            "title": "Turnover of the month",
+            "prize": "🥉 $2,000"
+          },
+          "fourth": {
+            "title": "4th place",
+            "prize": "$1,000"
+          },
+          "fifth": {
+            "title": "5th place",
+            "prize": "$500"
+          }
+        },
+        "seasonalTitle": "Seasonal events",
+        "seasonal": {
+          "springBattle": "Spring IB battle — who brings more clients in March",
+          "winterMarathon": "Winter marathon — competition by trading volume in December",
+          "weeklySurprise": "Surprise of the week — random bonuses for activity",
+          "exclusivePrizes": "Exclusive prizes: iPhone, MacBook, trips to Dubai and London"
+        },
+        "summary": {
+          "title": "Summary",
+          "text": "Career levels motivate long-term work, XP and missions reward activity, badges add status, rankings add dynamics, and seasonal events keep engagement high. Build your network and earn $100,000+ per month!"
+        }
+      },
+      "placeholder": {
+        "label": "Section temporarily unavailable",
+        "title": "Referral program is being updated",
+        "description": "We are improving this section to make it more convenient and functional. It will be available soon."
+      }
+    },
+    "common": {
+      "id": "ID",
+      "openMenu": "メニューを開く",
+      "close": "近い",
+      "cancel": "キャンセル",
+      "copyId": "IDをコピー",
+      "copyNumber": "コピー番号"
+    },
+    "settings": {
+      "title": "Settings",
+      "comingSoonTitle": "Coming soon",
+      "comingSoonDescription": "Our team is completing the system upgrade. This section will be available soon, and we will notify you by email and in the notifications section."
+    },
+    "aml": {
+      "pageTitle": "AML Policy",
+      "sections": {
+        "intro": {
+          "title": "AML Policy",
+          "paragraphs": {
+            "0": "Money laundering includes any actions intended to hide the criminal origin of funds and make them appear legitimate. Ester Holdings Ltd. aims to detect, manage and mitigate such risks.",
+            "1": "The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing the customer and understanding their instructions allows more accurate risk assessment."
+          }
+        },
+        "customerDueDiligence": {
+          "title": "Customer Due Diligence",
+          "items": {
+            "0": "Identify and verify individual and corporate customers using valid documentation.",
+            "1": "Collect personal or company details during registration at my.esterholdings.website.",
+            "2": "Require proof of identity and address via valid documents, such as passport or utility bill.",
+            "3": "Verify credit and debit cards used for transactions while masking sensitive data.",
+            "4": "Request source of funds or source of wealth documents in higher-risk cases.",
+            "5": "Conduct ongoing monitoring to identify elevated risk or unusual behavior."
+          }
+        },
+        "payments": {
+          "title": "Payments Policy",
+          "paragraph": "Payments are regulated under the Regulations for Non-Trading Operations, available on the Company website in the Regulatory Documents and Agreements section."
+        },
+        "personnel": {
+          "title": "Personnel",
+          "officerTitle": "AML Compliance Officer",
+          "officerItems": {
+            "0": "Ensures AML compliance and maintains internal AML programs.",
+            "1": "Establishes audit functions and reports breaches to the Board.",
+            "2": "Trains staff and investigates suspicious activities.",
+            "3": "Maintains AML records and monitors international AML developments."
+          },
+          "employeesTitle": "Employees",
+          "employeeItems": {
+            "0": "Must know and comply with AML policy.",
+            "1": "Are vetted during hiring and monitored during employment.",
+            "2": "Must report AML violations confidentially."
+          }
+        },
+        "training": {
+          "title": "Employee Training",
+          "items": {
+            "0": "Training is provided internally or through external consultants.",
+            "1": "Each new employee follows a training plan with testing during the first 2 to 3 months.",
+            "2": "Training covers AML responsibilities, detection methods and FATF typologies.",
+            "3": "Special attention is paid to identifying and reporting suspicious transactions without tipping off the customer."
+          }
+        },
+        "suspiciousActivity": {
+          "title": "Reporting Suspicious Activity",
+          "paragraph": "All suspicious activity must be reported to the AML Compliance Officer. The Company may conduct internal investigations, freeze or close accounts and notify authorities, cooperating with law enforcement where required by law."
+        }
       }
     }
   },
@@ -1477,7 +2129,8 @@
       "messageLabel": "Ticket text",
       "messagePlaceholder": "Describe your issue, e.g.: I cannot top up account [account number]; trying via [payment method, e.g., USDT-TRC20]",
       "createButton": "Create new ticket",
-      "createdSuccess": "Ticket created successfully!"
+      "createdSuccess": "Ticket created successfully!",
+      "createFailed": "Failed to create ticket."
     },
     "page": {
       "title": "Support Page",
@@ -1486,7 +2139,157 @@
       "subject": "Subject of the appeal",
       "lastUpdate": "Last Update",
       "status": "Status",
-      "perPage": "Per page:"
+      "perPage": "Per page:",
+      "counterparty": "Counterparty",
+      "online": "Online",
+      "offline": "Offline",
+      "copyIdAria": "Copy ticket ID",
+      "openChatAria": "Open chat",
+      "moreAria": "More actions",
+      "lastCreated": "Last created",
+      "noMessagesYet": "No messages yet",
+      "attachment": "Attachment",
+      "attachments": "Attachments",
+      "systemEvent": "System event",
+      "newMessage": "New message",
+      "newTicketModalTitle": "Create new ticket"
+    },
+    "simple": {
+      "title": "Contact support",
+      "subtitle": "Send a request by email and our team will reply to the address you provide.",
+      "replyEmailLabel": "Reply email",
+      "replyEmailPlaceholder": "name{'@'}example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Briefly describe your request",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Describe your request in detail...",
+      "attachmentsLabel": "Attachments",
+      "addFiles": "Attach files",
+      "maxSizeHint": "Up to 10 files, 200 MB each.",
+      "removeFileAria": "Remove file",
+      "submit": "Send request",
+      "createdSuccess": "Your request has been sent successfully.",
+      "submitFailed": "Failed to send request. Please try again.",
+      "presignFailed": "Failed to prepare file upload.",
+      "uploadQueued": "Queued",
+      "uploading": "Uploading",
+      "uploaded": "Uploaded",
+      "uploadFailed": "Upload failed",
+      "retryUpload": "Retry upload",
+      "linkPrompt": "Insert link URL",
+      "tools": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "list": "Bullet list",
+        "link": "Insert link",
+        "clear": "Clear formatting"
+      },
+      "validation": {
+        "replyEmailRequired": "Reply email is required.",
+        "replyEmailInvalid": "Enter a valid email address.",
+        "subjectRequired": "Subject is required.",
+        "subjectMax": "Subject must be 200 characters or less.",
+        "messageRequired": "Message or files are required.",
+        "waitUploads": "Please wait until all files finish uploading.",
+        "failedUploads": "Some files failed to upload. Remove or retry them first.",
+        "maxFiles": "You can attach up to {max} files.",
+        "fileTooLarge": "File is larger than 200 MB:"
+      },
+      "historyTitle": "Request history",
+      "historyRefreshAria": "Refresh request history",
+      "loadingHistory": "Loading request history...",
+      "emptyHistory": "You have no requests yet.",
+      "loadingMessages": "Loading messages...",
+      "emptyMessages": "No messages in this request yet.",
+      "noLastUpdate": "No updates yet",
+      "noSubject": "No subject",
+      "statusUnknown": "unknown",
+      "authorSupport": "Support",
+      "attachmentFallbackTitle": "Attachment"
+    },
+    "chat": {
+      "title": "Support Chat",
+      "online": "Online",
+      "offline": "Offline",
+      "typing": "typing...",
+      "systemEvent": "System event",
+      "noMessages": "No messages yet",
+      "filesSelected": "files selected",
+      "sendAs": "Send as",
+      "media": "Media",
+      "file": "File",
+      "documents": "Documents",
+      "links": "Links",
+      "library": "Library",
+      "loading": "Loading",
+      "writeMessage": "Write your message",
+      "addAttachment": "Add attachment",
+      "send": "Send",
+      "attachment": "Attachment",
+      "photo": "Photo",
+      "video": "Video",
+      "mediaUnavailable": "Media preview is unavailable.",
+      "openOriginal": "Open original",
+      "mobileBackAria": "Back to tickets",
+      "toggleDetailsAria": "Toggle details",
+      "closeDetailsAria": "Close details",
+      "closeMediaViewerAria": "Close media viewer",
+      "previousMediaAria": "Previous media",
+      "nextMediaAria": "Next media",
+      "uploading": "Uploading...",
+      "uploadFailedHint": "Upload failed. Remove failed files or retry.",
+      "allFilesUploaded": "All files uploaded",
+      "uploadedSuffix": "uploaded",
+      "failedSuffix": "failed",
+      "sendFailed": "Failed to send message.",
+      "uploadTooLarge413": "Upload is too large for the server limit (413).",
+      "uploadTimedOut": "Upload timed out. Try sending fewer or smaller files.",
+      "uploadNetworkError": "Network error while uploading files. Please try again.",
+      "waitUploads": "Wait for all files to finish uploading before sending.",
+      "presignFailed": "Failed to generate upload URL.",
+      "fileTooLarge": "File is larger than 200 MB:",
+      "filesLimitReached": "Only {max} files can be attached per message.",
+      "ticket": "Ticket",
+      "subject": "Subject",
+      "status": "Status",
+      "participants": "Participants",
+      "participantsDetails": "Participants in chat",
+      "onlineCountSuffix": "online",
+      "inChatSuffix": "in chat",
+      "you": "You",
+      "sharedFiles": "Shared Files",
+      "emptyMedia": "No media yet",
+      "emptyDocuments": "No documents yet",
+      "emptyLinks": "No links yet",
+      "roleAdmin": "Admin",
+      "roleClient": "Client",
+      "addAdmin": "Add admin",
+      "add": "Add",
+      "added": "Added",
+      "adding": "Adding...",
+      "noAdminsFound": "No admins found",
+      "searchAdminPlaceholder": "Search admin by nickname or email",
+      "addAdminSuccess": "Admin added to chat",
+      "addAdminAlready": "Admin is already in chat",
+      "addAdminFailed": "Failed to add admin to chat",
+      "expandDetailsAria": "Expand details",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "close": "Close",
+      "authorAvatarAlt": "Author avatar",
+      "myAvatarAlt": "My avatar"
+    },
+    "statuses": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "pending": "Pending",
+      "active": "Active",
+      "closed": "Closed",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "archived": "Archived"
     }
   },
   "cabinetExtra": {
@@ -1515,5 +2318,51 @@
       "nextPage": "Next page",
       "lastPage": "Last page"
     }
+  },
+  "apiMessages": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "clientAccountBlocked": "Client account is blocked.",
+    "validationError": "Validation error.",
+    "methodNotAllowed": "Method not allowed.",
+    "notFound": "Not found.",
+    "mt4RequestFailed": "MT4 request failed.",
+    "mt4ProfileFieldsRequired": "Fill in the required profile fields before opening an MT4 account:",
+    "profileFields": {
+      "firstname": "first name",
+      "secondname": "last name",
+      "email": "email",
+      "country": "country",
+      "state": "state",
+      "city": "city",
+      "address": "address",
+      "phone": "phone",
+      "postalCode": "postal code"
+    },
+    "requiredField": "This field is required.",
+    "invalidField": "有効な値を入力してください。",
+    "numericField": "数値を入力します。",
+    "positiveNumberField": "0 より大きい金額を入力してください。",
+    "invalidSelection": "選択された値は無効です。",
+    "maxLengthField": "値が長すぎます。最大値: {max}。",
+    "minLengthField": "値が短すぎます。最小値: {min}。",
+    "paymentDetailCreated": "支払い詳細が正常に作成されました。",
+    "paymentDetailUpdated": "支払いの詳細が正常に更新されました。",
+    "paymentDetailDeleted": "支払い詳細が正常にアーカイブされました。",
+    "paymentDetailRestored": "支払い詳細が正常に復元されました。",
+    "paymentDetailNotFound": "支払いの詳細が見つかりません。",
+    "accountCreated": "Account created successfully.",
+    "paymentSystemNotFound": "支払いシステムが見つかりません。",
+    "accountNotFound": "アカウントが見つかりません。",
+    "depositAccountNotFound": "預金口座が見つかりません。",
+    "invalidCallbackSignature": "Invalid callback signature.",
+    "supportReplyEmailRequired": "Reply email is required for email support channel.",
+    "supportFilesConflict": "Use either files or uploaded_attachments, not both.",
+    "supportMessageOrFilesRequired": "Message or files are required.",
+    "supportMessageBodyOrFilesRequired": "Message body or files are required.",
+    "emailAlreadyVerified": "Email already verified.",
+    "twoFaEnabled": "2FA enabled!",
+    "twoFaDisabled": "2FA disabled!",
+    "twoFaWrongCode": "Wrong code!"
   }
 }

@@ -304,6 +304,8 @@
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
   import useAppCore from "~/composables/useAppCore";
+  import { extractApiErrorMessageWithTranslator } from "~/composables/useApiMessages";
+  import { translateSupportStatus } from "~/pages/support/composables/i18n";
 
   type SupportAttachmentKind = "image" | "video" | "file";
   type SupportAttachmentDisplay = "media" | "file";
@@ -405,6 +407,7 @@
     }
     return fallback;
   };
+  const translateApi = (key: string, fallback: string): string => resolveText(key, fallback);
 
   const historyText = computed(() => ({
     historyTitle: resolveText("support.simple.historyTitle", "Request history"),
@@ -536,8 +539,7 @@
       return t("support.simple.validation.fileTooLarge");
     }
 
-    const message = String(anyError?.response?.data?.message ?? anyError?.message ?? "").trim();
-    return message || fallback;
+    return extractApiErrorMessageWithTranslator(anyError, translateApi, fallback) ?? fallback;
   };
 
   const requestSupportAttachmentPresign = async (file: SupportAttachment): Promise<{ url: string; key: string }> => {
@@ -716,7 +718,10 @@
       emit("submitted");
     } catch (errorResponse) {
       console.error("support simple submit failed", errorResponse);
-      toast.error(t("support.simple.submitFailed"));
+      toast.error(
+        extractApiErrorMessageWithTranslator(errorResponse, translateApi, t("support.simple.submitFailed")) ??
+          t("support.simple.submitFailed")
+      );
     } finally {
       isSubmitting.value = false;
     }
@@ -970,7 +975,8 @@
         nextTickets.push({
           id: ticketId,
           subject: normalizeText(rawTicket.subject) || historyText.value.noSubject,
-          status: normalizeText(rawTicket.status) || historyText.value.statusUnknown,
+          status:
+            translateSupportStatus(normalizeText(rawTicket.status), resolveText) || historyText.value.statusUnknown,
           lastMessageAtLabel: normalizeText(rawTicket.last_message_at) || historyText.value.noLastUpdate,
           expanded: previous?.expanded ?? false,
           loadingThread: false,

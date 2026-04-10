@@ -2,9 +2,9 @@
   <UiContainer class="referrals-page">
     <div class="referrals-placeholder">
       <PanelDefault class="referrals-placeholder__card">
-        <p class="referrals-placeholder__label">{{ placeholderContent.label }}</p>
-        <h1 class="referrals-placeholder__title">{{ placeholderContent.title }}</h1>
-        <p class="referrals-placeholder__description">{{ placeholderContent.description }}</p>
+        <p class="referrals-placeholder__label">{{ t("cabinet.referrals.placeholder.label") }}</p>
+        <h1 class="referrals-placeholder__title">{{ t("cabinet.referrals.placeholder.title") }}</h1>
+        <p class="referrals-placeholder__description">{{ t("cabinet.referrals.placeholder.description") }}</p>
       </PanelDefault>
     </div>
   </UiContainer>
@@ -12,7 +12,6 @@
 
 <script lang="ts" setup>
   import { useI18n } from "vue-i18n";
-  import { computed } from "vue";
   import { definePageMeta } from "~/.nuxt/imports";
 
   import UiContainer from "~/components/ui/UiContainer.vue";
@@ -23,33 +22,7 @@
     middleware: ["auth-client", "client-check-auth"],
   });
 
-  const { locale } = useI18n();
-
-  const placeholderDictionary = {
-    ru: {
-      label: "Раздел временно недоступен",
-      title: "Реферальная программа обновляется",
-      description:
-        "Мы дорабатываем этот раздел, чтобы сделать его удобнее и функциональнее. Он станет доступен в ближайшее время.",
-    },
-    uk: {
-      label: "Розділ тимчасово недоступний",
-      title: "Реферальну програму оновлюємо",
-      description:
-        "Ми вдосконалюємо цей розділ, щоб зробити його зручнішим і функціональнішим. Він буде доступний найближчим часом.",
-    },
-    en: {
-      label: "Section temporarily unavailable",
-      title: "Referral program is being updated",
-      description:
-        "We are improving this section to make it more convenient and functional. It will be available soon.",
-    },
-  } as const;
-
-  const placeholderContent = computed(() => {
-    const localeCode = locale.value.split("-")[0] as keyof typeof placeholderDictionary;
-    return placeholderDictionary[localeCode] ?? placeholderDictionary.en;
-  });
+  const { t } = useI18n({ useScope: "global" });
 </script>
 
 <style scoped>

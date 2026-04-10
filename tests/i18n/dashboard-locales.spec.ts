@@ -16,7 +16,11 @@ const DASHBOARD_SOURCE_FILES = [
 
 const SOURCE_KEY_PATTERN = /["'`](cabinet\.(?:dashboard|accounts|common)\.[^"'`]+)["'`]/g;
 
-const localeCodes = ["ru", "uk", "en"] as const;
+const localeCodes = fs
+  .readdirSync(LOCALES_DIR)
+  .filter(fileName => fileName.endsWith(".json"))
+  .map(fileName => path.basename(fileName, ".json"))
+  .sort();
 
 const localeDictionaries = Object.fromEntries(
   localeCodes.map(code => {
@@ -24,7 +28,7 @@ const localeDictionaries = Object.fromEntries(
     const parsed = JSON.parse(fs.readFileSync(filePath, "utf8"));
     return [code, parsed];
   })
-) as Record<(typeof localeCodes)[number], Record<string, unknown>>;
+) as Record<string, Record<string, unknown>>;
 
 const dashboardTranslationKeys = Array.from(
   new Set(

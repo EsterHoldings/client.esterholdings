@@ -1,7 +1,8 @@
 {
   "ui": {
     "pagination": {
-      "perPage": "페이지당"
+      "perPage": "페이지당",
+      "range": "{from}~{to} / 전체: {total}"
     }
   },
   "ui-components": {
@@ -399,10 +400,18 @@
       "faqs__dropzone_text": "파일을 여기에 드래그하거나 클릭하여 선택하세요",
       "faqs__dropzone_aria": "파일 업로드",
       "news_row__items": [
-        { "title": "SEC의 스테이블코인 금지 발표 후 비트코인 12% 폭락" },
-        { "title": "테슬라 1:10 주식 분할 발표 – 주가 12% 상승" },
-        { "title": "미국 인플레이션 예상치 못한 상승으로 다우존스 1,200포인트 급락" },
-        { "title": "실적 발표 후 NVIDIA 주가 15% 급등" }
+        {
+          "title": "SEC의 스테이블코인 금지 발표 후 비트코인 12% 폭락"
+        },
+        {
+          "title": "테슬라 1:10 주식 분할 발표 – 주가 12% 상승"
+        },
+        {
+          "title": "미국 인플레이션 예상치 못한 상승으로 다우존스 1,200포인트 급락"
+        },
+        {
+          "title": "실적 발표 후 NVIDIA 주가 15% 급등"
+        }
       ],
       "helpSection": "도움이 필요하신가요?",
       "helpLinkText": "도움말 섹션",
@@ -431,10 +440,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "안정적 체결과 확장 가능한 주문 흐름을 위한 깊은 집계 유동성 풀.",
-            "benefits": [
-              "Tier-1 유동성 집계",
-              "거래소 간 깊이"
-            ]
+            "benefits": ["Tier-1 유동성 집계", "거래소 간 깊이"]
           },
           {
             "line1Prefix": "",
@@ -444,10 +450,7 @@
             "line2Accent": "거래",
             "line2Suffix": "를 위한",
             "subtitle": "높은 주문 처리 속도, 0 제한/스탑 레벨 — 활성 거래 흐름을 위해 구축.",
-            "benefits": [
-              "빠른 서버 기술",
-              "기관급 유동성 설정"
-            ]
+            "benefits": ["빠른 서버 기술", "기관급 유동성 설정"]
           }
         ]
       }
@@ -715,7 +718,7 @@
   "cabinet": {
     "menu": {
       "dashboard": "대시보드",
-      "payment_details": "결제 세부정보",
+      "payment_details": "결제 정보",
       "accounts": "계좌",
       "referral_system": "추천 시스템",
       "billing": "거래",
@@ -723,15 +726,37 @@
       "settings": "설정"
     },
     "header": {
-      "notifications": "Notifications",
-      "markAllRead": "Mark all read",
-      "emptyNotifications": "You have no notifications yet",
-      "accountSettings": "Account Settings",
-      "switchToLight": "Switch to Light",
-      "switchToDark": "Switch to Dark",
-      "helpCenter": "Help Center",
-      "logout": "Log Out",
-      "profile": "Profile"
+      "notifications": "알림",
+      "markAllRead": "모두 읽음으로 표시",
+      "emptyNotifications": "아직 알림이 없습니다",
+      "accountSettings": "계정 설정",
+      "switchToLight": "라이트 테마로 전환",
+      "switchToDark": "다크 테마로 전환",
+      "helpCenter": "도움말 센터",
+      "logout": "로그아웃",
+      "profile": "프로필",
+      "notificationTemplates": {
+        "depositStatusUpdated": {
+          "title": "입금이 업데이트되었습니다",
+          "message": "{status} • {method} • {amount} {currency} • 계좌 {account}"
+        },
+        "supportMessage": {
+          "title": "새 지원 메시지",
+          "message": "{preview}"
+        },
+        "supportTicketUpdated": {
+          "title": "지원 티켓이 업데이트되었습니다",
+          "message": "{preview}"
+        },
+        "verificationStatusUpdated": {
+          "title": "인증 상태가 업데이트되었습니다",
+          "message": "{step} • {status}{comment}"
+        },
+        "withdrawalStatusUpdated": {
+          "title": "출금 요청이 업데이트되었습니다",
+          "message": "{status} • {amount} {currency} • 계좌 {account}"
+        }
+      }
     },
     "dashboard": {
       "title": "대시보드",
@@ -757,6 +782,17 @@
           "required": "필수",
           "inProgress": "진행 중",
           "done": "완료"
+        },
+        "complete": "계정이 완전히 확인되었습니다.",
+        "notComplete": "계정이 완전히 확인되지 않았습니다.",
+        "goToVerification": "인증으로 이동",
+        "tooltipLabel": "계정 확인 정보",
+        "verifiedCount": "{done}/{total} 확인됨",
+        "steps": {
+          "profile": "프로필 데이터",
+          "email": "이메일",
+          "documents": "서류",
+          "deposit": "첫 입금"
         }
       },
       "actions": {
@@ -765,8 +801,8 @@
         "chartPlaceholder": "차트가 여기에 표시됩니다"
       },
       "mt4": {
-        "title": "MT4 계좌",
-        "openNewAccount": "새 계좌 개설",
+        "title": "즐겨찾기 또는 새 MT4 계좌",
+        "openNewAccount": "새 계좌 열기",
         "table": {
           "account": "계좌",
           "type": "유형",
@@ -774,10 +810,16 @@
           "status": "상태",
           "active": "활성",
           "inactive": "비활성"
-        }
+        },
+        "description": "즐겨찾는 계좌에 빠르게 접근하고 새 MT4 계좌를 개설할 수 있습니다.",
+        "emptySubtitle": "시작하려면 첫 번째 거래 계좌를 개설하세요.",
+        "emptyTitle": "아직 계정이 없습니다",
+        "tooltipLabel": "MT4 계좌 정보",
+        "verifySubtitle": "프로필 데이터와 문서가 확인되면 새 거래 계좌를 개설할 수 있습니다.",
+        "verifyTitle": "계좌를 개설하려면 인증을 완료하세요"
       },
       "transactions": {
-        "title": "거래",
+        "title": "최근 거래",
         "sort": {
           "createdAt": "Created",
           "amount": "Amount",
@@ -786,20 +828,31 @@
           "type": "Type",
           "accountNumber": "MT4 account"
         },
-        "accountNumber": "MT4 account",
-        "amount": "Amount",
-        "currency": "Currency",
-        "type": "Type",
-        "createdAt": "Created",
-        "searchPlaceholder": "Search payments…",
-        "errorLoad": "Failed to load payments",
-        "empty": "No records yet.",
-        "show": "Show",
+        "accountNumber": "MT4 계정",
+        "amount": "양",
+        "currency": "통화",
+        "type": "유형",
+        "createdAt": "생성됨",
+        "searchPlaceholder": "결제 검색…",
+        "errorLoad": "결제를 로드하지 못했습니다.",
+        "empty": "아직 기록이 없습니다.",
+        "show": "표시",
         "shownRange": "Showing {from}–{to} of {total}",
         "firstPage": "First page",
         "prevPage": "Previous page",
         "nextPage": "Next page",
-        "lastPage": "Last page"
+        "lastPage": "Last page",
+        "tooltip": "이 블록에는 최신 입출금 내역이 표시되므로 고객은 즉시 업데이트된 결제 금액을 확인하고 필요한 거래를 열 수 있습니다.",
+        "tooltipLabel": "최근 거래 정보",
+        "description": "모든 계좌의 최근 입출금을 표시해 변경 사항을 즉시 확인할 수 있습니다."
+      },
+      "summary": {
+        "totalAmount": "총액",
+        "referralTotalAmount": "추천 금액"
+      },
+      "emailVerification": {
+        "success": "이메일이 확인되었습니다.",
+        "error": "이메일을 확인하지 못했습니다."
       }
     },
     "billing": {
@@ -807,15 +860,17 @@
       "create": "신규 결제 생성",
       "search": "검색",
       "columns": {
-        "id": "Id",
+        "id": "ID",
         "paysystem": "결제 시스템",
         "status": "상태",
         "currency": "통화",
         "amount": "금액",
         "createdAt": "생성일",
-        "accountNumber": "Account number",
-        "paymentSystem": "Payment system",
-        "account": "Account"
+        "accountNumber": "계좌번호",
+        "paymentSystem": "결제 시스템",
+        "account": "Account",
+        "accountNumberShort": "Acc.",
+        "paymentSystemShort": "PS"
       },
       "nothingToShow": "표시할 내용이 없습니다 =(",
       "pagination": {
@@ -824,32 +879,80 @@
       },
       "panel-title": "새 관리자 추가",
       "view": {
-        "list": "List",
-        "cards": "Cards",
-        "full": "Full width"
+        "list": "목록",
+        "cards": "카드",
+        "full": "전폭"
       },
       "withdrawalForm": {
-        "account": "Trading account",
-        "paymentDetail": "Payment details",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter withdrawal amount",
-        "comment": "Comment",
-        "commentPlaceholder": "Add a comment for the finance team",
-        "submit": "Create withdrawal request",
-        "noPaymentDetailsTitle": "No approved payment details",
+        "account": "거래계좌",
+        "paymentDetail": "결제 세부정보",
+        "amount": "양",
+        "amountPlaceholder": "출금금액을 입력하세요",
+        "comment": "논평",
+        "commentPlaceholder": "재무팀에 대한 의견 추가",
+        "submit": "출금요청 생성",
+        "noPaymentDetailsTitle": "승인된 결제 세부정보가 없습니다.",
         "noPaymentDetailsText": "Add and approve payment details for this payment method before creating a withdrawal request.",
-        "openPaymentDetails": "Open payment details",
-        "accountBalance": "Available balance",
-        "created": "Withdrawal request created successfully.",
-        "error": "Failed to create withdrawal request.",
-        "adminComment": "Admin comment",
+        "openPaymentDetails": "결제 세부정보 열기",
+        "accountBalance": "사용 가능한 잔액",
+        "created": "출금 요청이 성공적으로 생성되었습니다.",
+        "error": "출금 요청을 생성하지 못했습니다.",
+        "adminComment": "관리자 댓글",
         "errors": {
-          "account": "Choose an account.",
-          "paymentDetail": "Choose approved payment details.",
-          "amount": "Enter a valid amount.",
-          "balance": "Withdrawal amount exceeds the account balance."
-        }
-      }
+          "account": "계정을 선택하세요.",
+          "paymentDetail": "승인된 결제 세부정보를 선택하세요.",
+          "amount": "유효한 금액을 입력하세요.",
+          "balance": "인출 금액이 계좌 잔액을 초과합니다."
+        },
+        "loadAccountsError": "거래 계좌를 로드하지 못했습니다.",
+        "loadPaymentDetailsError": "결제 세부정보를 로드하지 못했습니다.",
+        "processing": "처리 중...",
+        "title": "출금요청"
+      },
+      "backToList": "결제 목록으로 돌아가기",
+      "backToMethodSelection": "결제 수단 선택으로 돌아가기",
+      "comment": "논평",
+      "createFlow": {
+        "loadPaymentSystemsError": "결제 수단을 로드하지 못했습니다.",
+        "selectMethod": "결제 방법을 선택하세요"
+      },
+      "deletePayment": "삭제",
+      "deletePaymentConfirm": "결제를 삭제하시겠습니까?",
+      "deletePaymentError": "결제를 삭제하지 못했습니다.",
+      "deletePaymentSuccess": "결제가 삭제되었습니다.",
+      "depositForm": {
+        "account": "거래계좌",
+        "amount": "양",
+        "amountPlaceholder": "USD 단위 금액",
+        "comment": "논평",
+        "commentPlaceholder": "재무팀에 대한 의견 추가",
+        "created": "예금이 성공적으로 생성되었습니다.",
+        "error": "보증금을 생성하지 못했습니다.",
+        "loadAccountsError": "거래 계좌를 로드하지 못했습니다.",
+        "processing": "처리 중...",
+        "submit": "보증금 생성"
+      },
+      "emptySubtitle": "시작하려면 첫 번째 결제 수단을 만드세요.",
+      "emptyTitle": "아직 결제되지 않았습니다.",
+      "gateway": "게이트웨이",
+      "internalTransfer": "계좌간 이체",
+      "listLoadError": "결제를 로드하지 못했습니다.",
+      "openPayment": "열려 있는",
+      "paymentLoadError": "결제를 로드하지 못했습니다.",
+      "paymentNotFound": "결제를 찾을 수 없습니다.",
+      "redirectLink": "결제 링크",
+      "syncPayment": "동조",
+      "syncPaymentError": "결제 동기화에 실패했습니다.",
+      "syncPaymentLoading": "동기화 중...",
+      "syncPaymentSuccess": "결제가 성공적으로 동기화되었습니다.",
+      "transferCreated": "생성된 계정 간 이체",
+      "transferFrom": "계정에서",
+      "transferTo": "계정으로",
+      "types": {
+        "deposit": "보증금",
+        "withdrawal": "철수"
+      },
+      "updatedAt": "업데이트 날짜"
     },
     "payments": {
       "title": "결제 세부정보",
@@ -866,11 +969,163 @@
           "title": "새 결제 상세 생성",
           "name": "결제 상세 이름",
           "namePlaceholder": "결제 상세 이름",
-          "recipientAddress": "결제 시스템을 선택해 주세요."
+          "recipientAddress": "결제 시스템을 선택해 주세요.",
+          "createdSuccess": "결제 세부정보가 성공적으로 생성되었습니다.",
+          "documents": {
+            "captionExisting": "이 문서는 이미 저장되어 있으며 제거할 때까지 첨부된 상태로 유지됩니다.",
+            "captionFailed": "업로드가 완료되지 않았습니다. 오류를 수정하거나 파일을 제거하십시오.",
+            "captionIdle": "파일이 선택되었으며 양식을 저장한 후 업로드됩니다.",
+            "captionUploaded": "파일이 업로드되었으며 이 결제 세부정보와 함께 저장됩니다.",
+            "captionUploading": "파일이 지금 Amazon S3에 업로드되고 있습니다.",
+            "disabledHint": "문서 업로드 잠금을 해제하려면 결제 방법을 선택하세요.",
+            "documentFallback": "문서",
+            "dropAction": "업로드하려면 클릭하세요",
+            "dropHint": "PNG, JPG, WEBP 또는 PDF. 최대 파일 크기는 5 MB입니다.",
+            "dropSeparator": "또는",
+            "dropTitle": "드래그 앤 드롭",
+            "fileMissing": "업로드할 파일에 액세스할 수 없습니다.",
+            "hint": "첨부된 문서를 보관하고 새 문서를 추가할 수 있습니다. 양식을 저장하면 새 파일이 S3에 업로드됩니다.",
+            "initialHint": "결제 수단을 선택한 후에 문서 업로드가 가능해집니다.",
+            "invalidFormat": "{name} 파일에 지원되지 않는 형식이 있습니다.",
+            "label": "결제 계정 스크린샷",
+            "originExisting": "첨부된",
+            "originNew": "새 파일",
+            "presignFailed": "업로드 링크를 가져오지 못했습니다.",
+            "removeExisting": "첨부파일 삭제",
+            "removeNew": "새 파일 제거",
+            "required": "확인을 위해 결제 계정 스크린샷을 하나 이상 추가하세요.",
+            "serverTooLarge": "파일이 너무 큽니다.",
+            "statusExisting": "저장됨",
+            "statusFailed": "업로드 오류",
+            "statusIdle": "업로드 준비 완료",
+            "statusUploaded": "업로드됨",
+            "statusUploading": "업로드 중...",
+            "summaryExisting": "첨부: {count}",
+            "summaryNew": "새 파일: {count}",
+            "tooLarge": "파일 {name}이(가) 5 MB을(를) 초과합니다.",
+            "uploadBatchFailed": "{count} 파일을 업로드하지 못했습니다.",
+            "uploadFailed": "S3에 파일을 업로드하지 못했습니다.",
+            "warningText": "이메일 주소, 지갑 또는 계좌 번호, QR 코드를 명확하게 볼 수 있는 결제 계정의 스크린샷을 업로드하세요.",
+            "warningTitle": "스크린샷에 필요한 것"
+          },
+          "editTitle": "결제 세부정보 수정",
+          "fieldFallback": "필드",
+          "fieldPlaceholder": "값을 입력하세요",
+          "paymentMethod": "결제수단",
+          "recipientAddressLabel": "수취인 주소",
+          "recipientAddressPlaceholder": "지급 세부정보를 입력하세요.",
+          "saveError": "결제 세부정보를 저장하지 못했습니다.",
+          "selectMethodHint": "먼저 결제수단을 선택한 후 지급 세부정보를 입력하세요.",
+          "submitCreate": "결제 세부정보 저장",
+          "submitUpdate": "변경사항 저장",
+          "updatedSuccess": "결제 세부정보가 업데이트되었으며 확인을 위해 다시 전송되었습니다.",
+          "validationRequired": "이 필드는 필수입니다."
         },
-        "view": "View",
+        "view": "보다",
         "confirm": "Confirm",
-        "delete": "Delete"
+        "delete": "Delete",
+        "actions": {
+          "archive": "보관소",
+          "archiveConfirm": "이 결제 세부정보를 보관하시겠습니까?",
+          "archiveError": "결제 세부정보를 보관하지 못했습니다.",
+          "archiveSuccess": "결제 세부정보가 아카이브로 이동되었습니다.",
+          "copyId": "ID 복사",
+          "edit": "편집하다",
+          "openMenu": "메뉴 열기",
+          "restore": "복원하다",
+          "restoreError": "결제 세부정보를 복원하지 못했습니다.",
+          "restoreSuccess": "결제 세부정보가 복원되었습니다."
+        },
+        "archivedBadge": "보관됨",
+        "cardLabel": "결제 세부정보",
+        "columns": {
+          "id": "ID",
+          "name": "이름",
+          "paymentSystem": "결제 시스템",
+          "status": "상태",
+          "updatedAt": "업데이트 날짜"
+        },
+        "detail": {
+          "back": "결제 세부정보로 돌아가기",
+          "booleanNo": "아니요",
+          "booleanYes": "예",
+          "commentEmpty": "코멘트가 없습니다.",
+          "copyValue": "값 복사",
+          "documentFallback": "문서",
+          "documentsEmpty": "문서가 업로드되지 않았습니다.",
+          "fieldLabels": {
+            "active": "활동적인",
+            "comment": "논평",
+            "config_name": "구성",
+            "merchant": "상인",
+            "name": "이름",
+            "old_requisite_id": "레거시 ID",
+            "paysystem": "결제 시스템",
+            "shortname": "짧은 이름",
+            "status": "상태",
+            "type": "유형"
+          },
+          "fieldsTitle": "결제 세부정보 필드",
+          "groups": {
+            "fields": "주요분야",
+            "legacy": "레거시 데이터"
+          },
+          "historyDocumentAlt": "역사 문서 #{count}",
+          "historyEmpty": "아직 기록이 없습니다.",
+          "historyLoading": "기록 로드 중...",
+          "historyTitle": "결제내역",
+          "labels": {
+            "adminComment": "관리자 댓글",
+            "createdAt": "생성 날짜",
+            "id": "ID",
+            "name": "이름",
+            "paymentSystem": "결제 시스템",
+            "updatedAt": "업데이트 날짜"
+          },
+          "loadError": "결제 세부정보를 로드하지 못했습니다.",
+          "noData": "데이터가 없습니다.",
+          "notFound": "결제 세부정보를 찾을 수 없습니다.",
+          "title": "결제 세부정보 #{id}",
+          "total": "총계: {count}",
+          "valueLabel": "값"
+        },
+        "documents": {
+          "label": "결제 계정 스크린샷",
+          "previewAlt": "미리보기 #{count}"
+        },
+        "emptyArchivedSubtitle": "보관된 결제 세부정보가 여기에 표시되며 해당 세부정보를 복원할 수 있습니다.",
+        "emptyArchivedTitle": "아직 보관된 결제 세부정보가 없습니다.",
+        "emptyFilteredSubtitle": "검색어나 필터를 변경해 보세요.",
+        "emptyFilteredTitle": "결제 세부정보를 찾을 수 없습니다.",
+        "emptySubtitle": "판매 대금을 받으려면 첫 번째 결제 세부정보를 추가하세요.",
+        "emptyTitle": "아직 결제 세부정보가 없습니다.",
+        "filters": {
+          "active": "활동적인",
+          "all": "모두",
+          "archived": "보관됨"
+        },
+        "relative": {
+          "daysAgo": "{count}일 전",
+          "hoursAgo": "{count}시간 전",
+          "justNow": "방금",
+          "minutesAgo": "{count}분 전"
+        },
+        "sort": {
+          "createdAt": "생성 날짜",
+          "name": "이름",
+          "status": "상태",
+          "updatedAt": "업데이트 날짜"
+        },
+        "statuses": {
+          "approved": "승인됨",
+          "pending": "보류 중",
+          "rejected": "거부됨"
+        },
+        "views": {
+          "cards": "카드",
+          "full": "전폭",
+          "table": "목록"
+        }
       },
       "nothingToShow": "표시할 내용이 없습니다 =(",
       "pagination": {
@@ -907,14 +1162,14 @@
             "code_placeholder": "여기에 코드를 입력",
             "confirm": "확인",
             "enable_success": "2FA가 활성화되었습니다!",
-            "enable_error": "잘못된 코드 또는 연결 오류",
+            "enable_error": "Invalid code or connection error",
             "disable_success": "2FA가 비활성화되었습니다",
-            "disable_error": "2FA를 비활성화할 수 없습니다"
+            "disable_error": "Failed to disable 2FA"
           },
           "reset": {
             "pending": "다시 보내기 전에 잠시 기다려주세요.",
             "success": "비밀번호 재설정 이메일이 전송되었습니다.",
-            "error": "재설정 이메일을 보낼 수 없습니다. 나중에 다시 시도하세요."
+            "error": "Failed to send reset email. Try again later."
           }
         },
         "tab-general": {
@@ -945,27 +1200,68 @@
             "postal_code": "00000"
           },
           "button": "저장 및 인증에 전송",
-          "success": "사용자 데이터가 성공적으로 업데이트되어 인증에 전송되었습니다!"
+          "success": "사용자 데이터가 성공적으로 업데이트되어 인증에 전송되었습니다!",
+          "validationError": "Please check form fields.",
+          "serverError": "Unable to save profile data."
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "파일 선택",
-            "upload": "업로드"
+            "choose": "Choose file",
+            "upload": "Upload",
+            "uploading": "Uploading...",
+            "uploadAndSend": "Upload and send to verification"
           },
           "messages": {
             "upload_success": "프로필 사진이 성공적으로 업데이트되어 인증에 전송되었습니다!",
             "upload_error": "사진 업로드 실패",
-            "delete_error": "사진 삭제 실패"
+            "delete_error": "사진 삭제 실패",
+            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
+            "saveError": "Failed to save documents. Please try again later."
           },
           "errors": {
             "type": "이미지만 허용됩니다",
-            "size": "최대 크기는 2MB입니다"
+            "size": "최대 크기는 2MB입니다",
+            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
+            "noFiles": "Please select file(s).",
+            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+          },
+          "title": "Upload documents",
+          "allDocuments": "All documents",
+          "empty": "You have no uploaded documents yet.",
+          "documentLabel": "Document",
+          "refreshAria": "Refresh documents",
+          "commentLabel": "Comment",
+          "fields": {
+            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+          },
+          "validation": {
+            "maxLength": "The field may not contain more than 100 characters."
+          },
+          "progress": {
+            "label": "Uploading: {value}%"
+          },
+          "verificationStatus": {
+            "title": "Verification status"
+          },
+          "columns": {
+            "name": "Name",
+            "status": "Status",
+            "date": "Date"
+          },
+          "actions": {
+            "delete": "Delete document"
+          },
+          "statuses": {
+            "pending": "In progress",
+            "approved": "Approved",
+            "rejected": "Rejected"
           }
         },
         "tab-user-photo": {
           "buttons": {
             "choose": "파일 선택",
-            "upload": "업로드"
+            "upload": "업로드",
+            "delete_aria": "사진 삭제"
           },
           "messages": {
             "upload_success": "프로필 사진이 성공적으로 업데이트되었습니다",
@@ -974,8 +1270,60 @@
             "delete_error": "사진 삭제 실패"
           },
           "errors": {
-            "type": "이미지만 허용됩니다",
-            "size": "최대 크기는 2MB입니다"
+            "type": "Only images are allowed",
+            "size": "Max size is 5MB"
+          },
+          "hints": {
+            "formats": "Supported formats: PNG, JPG, JPEG",
+            "maxSize": "Photo must not exceed 5 MB."
+          },
+          "verification": {
+            "title": "Verification status",
+            "approved": "Verified successfully!"
+          }
+        },
+        "tab-user-verification": {
+          "sections": {
+            "client": "Client verification",
+            "payout": "Payout details"
+          },
+          "titles": {
+            "clientStatus": "Verification status",
+            "payoutStatus": "Payout details verification",
+            "history": "Verification history"
+          },
+          "refreshAria": "Refresh verification data",
+          "commentLabel": "Comment",
+          "emptyPayout": "No payout details yet.",
+          "unnamedPaymentDetail": "Untitled payment detail",
+          "paymentSystemFallback": "Payment system",
+          "documentsCount": "Documents: {count}",
+          "historyEmpty": "No verification history yet.",
+          "columns": {
+            "name": "Name",
+            "date": "Date",
+            "status": "Status"
+          },
+          "items": {
+            "email": {
+              "title": "Email",
+              "subtitle": "Confirm your email"
+            },
+            "documents": {
+              "title": "Documents"
+            },
+            "deposit": {
+              "title": "First deposit",
+              "subtitle": "Make a payment to verify the first deposit"
+            },
+            "profile": {
+              "title": "Profile"
+            }
+          },
+          "statuses": {
+            "approved": "Confirmed",
+            "pending": "In progress",
+            "rejected": "Rejected"
           }
         }
       },
@@ -988,11 +1336,16 @@
           "change_password": "비밀번호 변경"
         },
         "title": "프로필"
+      },
+      "generalVerification": {
+        "notStarted": "Not started"
       }
     },
     "accounts": {
       "account": {
-        "title": "계좌"
+        "title": "계좌",
+        "loadError": "계정 세부정보를 로드하지 못했습니다.",
+        "subtitle": "거래계좌 세부정보 및 내역"
       },
       "title": "계좌",
       "openNew": "새 계좌 개설",
@@ -1025,18 +1378,22 @@
         },
         "actions": {
           "submit": "새 계좌 개설"
-        }
+        },
+        "loadTypesError": "계정 유형을 로드하지 못했습니다.",
+        "submitError": "계정을 생성하지 못했습니다."
       },
       "actions": {
-        "deposit": "Deposit",
-        "withdraw": "Withdraw",
-        "transfer": "Transfer",
+        "deposit": "보증금",
+        "withdraw": "철회하다",
+        "transfer": "옮기다",
         "history": "트랜잭션",
-        "changeType": "Change type",
-        "remove": "Remove"
+        "changeType": "유형 변경",
+        "remove": "제거하다"
       },
       "tabs": {
-        "history": "트랜잭션"
+        "history": "트랜잭션",
+        "card": "계좌 카드",
+        "tradeHistory": "무역 내역"
       },
       "transactions": {
         "empty": "아직 트랜잭션이 없습니다",
@@ -1044,16 +1401,47 @@
         "transferToAccount": "계좌로 이체"
       },
       "transfer": {
-        "fromAccount": "From account",
-        "toAccount": "To account",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter amount",
-        "submit": "Create transfer request",
-        "success": "Transfer request created successfully.",
-        "failed": "Failed to create transfer request.",
-        "sourceNotFound": "Source account not found.",
-        "noDestinations": "You do not have another account available for transfer.",
-        "exceedsBalance": "Amount exceeds available balance."
+        "fromAccount": "계정에서",
+        "toAccount": "계정으로",
+        "amount": "양",
+        "amountPlaceholder": "금액 입력",
+        "submit": "이전 요청 생성",
+        "success": "이전 요청이 성공적으로 생성되었습니다.",
+        "failed": "전송 요청을 생성하지 못했습니다.",
+        "sourceNotFound": "원본 계정을 찾을 수 없습니다.",
+        "noDestinations": "이전할 수 있는 다른 계정이 없습니다.",
+        "exceedsBalance": "금액이 사용 가능한 잔액을 초과합니다.",
+        "title": "내 계좌 간 이체"
+      },
+      "deleteConfirm": "이 계정을 보관하시겠습니까?",
+      "deleteError": "계정을 보관하지 못했습니다.",
+      "deleteSuccess": "계정이 보관되었습니다!",
+      "emptySubtitle": "시작하려면 첫 번째 거래 계좌를 개설하세요.",
+      "emptyTitle": "아직 계정이 없습니다",
+      "favoriteAdd": "즐겨찾기에 추가",
+      "favoriteRemove": "즐겨찾기에서 제거",
+      "favoriteToggleError": "즐겨찾기를 업데이트하지 못했습니다.",
+      "loadError": "계정을 로드하지 못했습니다.",
+      "openAccountLabel": "{number} 계좌 개설",
+      "openBlocked": "계좌개설은 프로필 및 서류 확인 후 가능합니다.",
+      "refreshBalance": "잔액 새로고침",
+      "refreshBalanceError": "계정 잔액을 새로 고치지 못했습니다.",
+      "refreshBalancesError": "계정 잔액을 새로 고치지 못했습니다.",
+      "tradeHistory": {
+        "sync": "동기화 기록",
+        "syncing": "동기화 중...",
+        "empty": "아직 거래가 없습니다",
+        "total": "Records",
+        "added": "Added",
+        "updated": "Updated",
+        "searchPlaceholder": "모든 무역 분야로 검색",
+        "filterAll": "All",
+        "filterPositive": "Profitable",
+        "filterNegative": "Losing",
+        "error": "거래 내역을 로드하지 못했습니다.",
+        "loadMore": "더 로드하기",
+        "loadingMore": "로드 중...",
+        "syncError": "거래 내역을 동기화하지 못했습니다."
       }
     },
     "referrals": {
@@ -1113,7 +1501,9 @@
           "active": "활성 추천인",
           "conversion": "전환율",
           "select": "MT 계좌 선택",
-          "transferHint": "어떤 MT 계좌로도 즉시 이체"
+          "transferHint": "어떤 MT 계좌로도 즉시 이체",
+          "available": "Available",
+          "pending": "In transit"
         },
         "transferLabel": "이체",
         "shareTelegram": "텔레그램에서 공유",
@@ -1145,7 +1535,11 @@
         "sortInactive": "비활성",
         "pagination": "{from}-{to} / {total}",
         "prev": "이전",
-        "next": "다음"
+        "next": "다음",
+        "withdrawLabel": "Withdraw funds",
+        "shareMailSubject": "Join our referral program",
+        "yourLevel": "Your level",
+        "pointsProgress": "Points: {current} / {total}"
       },
       "settings": {
         "title": "Referral settings",
@@ -1165,7 +1559,265 @@
         "rule1": "Rewards are credited after a referred user completes verification.",
         "rule2": "Fraud or duplicate accounts may be declined.",
         "rule3": "Percentages and levels are placeholders until backend delivers real values.",
-        "rule4": "Contact support if you think a referral was missed."
+        "rule4": "Contact support if you think a referral was missed.",
+        "gamification": {
+          "title": "IB gamification",
+          "text": "Gamification turns the partner program into a game: levels, XP, missions, badges, rankings, seasonal events and a 3-level network bring real bonuses and passive income."
+        },
+        "coreElementsTitle": "Core elements",
+        "coreElements": {
+          "career": "Career ladder",
+          "xp": "XP points",
+          "missions": "Missions and challenges",
+          "badges": "Achievements and badges",
+          "ratings": "Rankings and competitions",
+          "seasonal": "Seasonal events"
+        },
+        "careerTitle": "Career ladder",
+        "xpLabel": "XP",
+        "commissionLabel": "Commission",
+        "bonusLabel": "Bonus",
+        "levels": {
+          "rookie": {
+            "title": "Rookie",
+            "xp": "0",
+            "commission": "30%",
+            "bonus": "-",
+            "perks": "Access to the personal cabinet"
+          },
+          "advanced": {
+            "title": "Advanced",
+            "xp": "5,000",
+            "commission": "35%",
+            "bonus": "$100",
+            "perks": "Branded materials"
+          },
+          "expert": {
+            "title": "Expert",
+            "xp": "20,000",
+            "commission": "40%",
+            "bonus": "$500",
+            "perks": "Personal manager"
+          },
+          "master": {
+            "title": "Master",
+            "xp": "50,000",
+            "commission": "50%",
+            "bonus": "$2,000",
+            "perks": "VIP events"
+          },
+          "legendary": {
+            "title": "Legendary",
+            "xp": "150,000",
+            "commission": "60%",
+            "bonus": "$10,000",
+            "perks": "Custom conditions"
+          }
+        },
+        "network": {
+          "title": "3-level network",
+          "text": "You earn passive income: 10% from Level 2 and 5% from Level 3. The wider the network, the higher the passive income.",
+          "table": {
+            "level": "Level",
+            "partners": "IBs",
+            "percent": "%",
+            "income": "Your income"
+          },
+          "rows": {
+            "level1": {
+              "level": "Level 1 — you",
+              "count": "1",
+              "percent": "-",
+              "income": "$50,000+"
+            },
+            "level2": {
+              "level": "Level 2 — Sub-IB",
+              "count": "10",
+              "percent": "10%",
+              "income": "$10,000"
+            },
+            "level3": {
+              "level": "Level 3 — Sub-IB network",
+              "count": "100",
+              "percent": "5%",
+              "income": "$25,000"
+            }
+          },
+          "total": "Total: $85,000+ per month, including $35,000 passive."
+        },
+        "xpActionsTitle": "XP and actions",
+        "xpRules": {
+          "registration": {
+            "title": "Registration",
+            "reward": "100 XP"
+          },
+          "firstClient": {
+            "title": "First client",
+            "reward": "500 XP"
+          },
+          "tenLots": {
+            "title": "Every 10 lots",
+            "reward": "100 XP"
+          },
+          "subIb": {
+            "title": "Invite a Sub-IB",
+            "reward": "1,000 XP"
+          },
+          "activeClients": {
+            "title": "5 active clients per month",
+            "reward": "250 XP / 50 XP for every next 5"
+          }
+        },
+        "missionsTitle": "Missions and challenges",
+        "missions": {
+          "firstStep": {
+            "title": "“First step” — 1 client",
+            "reward": "+500 XP, $50"
+          },
+          "master": {
+            "title": "“Referral master” — 10 clients",
+            "reward": "+5,000 XP, $500"
+          },
+          "buildNetwork": {
+            "title": "“Build the network” — 3 Sub-IBs",
+            "reward": "+7,500 XP, +10% commission"
+          },
+          "millionLots": {
+            "title": "“Million-lot traders” — 1,000 lots",
+            "reward": "+10,000 XP, $2,000"
+          }
+        },
+        "badgesTitle": "Achievements and badges",
+        "badges": {
+          "bronze": {
+            "title": "Bronze Partner — 10 clients",
+            "bonus": "+5% commission"
+          },
+          "silver": {
+            "title": "Silver Partner — 50 clients",
+            "bonus": "+10% commission"
+          },
+          "gold": {
+            "title": "Gold Partner — 100 clients",
+            "bonus": "+15% commission"
+          },
+          "diamond": {
+            "title": "Diamond Partner — 500 clients",
+            "bonus": "VIP service"
+          },
+          "recruiter": {
+            "title": "Top Recruiter — 50 Sub-IBs",
+            "bonus": "+$5,000"
+          }
+        },
+        "ratingsTitle": "Rankings and competitions",
+        "ratings": {
+          "bestMonth": {
+            "title": "Best IB of the month",
+            "prize": "🥇 $5,000 + VIP status"
+          },
+          "topRefer": {
+            "title": "Top recruiter",
+            "prize": "🥈 $3,000"
+          },
+          "turnover": {
+            "title": "Turnover of the month",
+            "prize": "🥉 $2,000"
+          },
+          "fourth": {
+            "title": "4th place",
+            "prize": "$1,000"
+          },
+          "fifth": {
+            "title": "5th place",
+            "prize": "$500"
+          }
+        },
+        "seasonalTitle": "Seasonal events",
+        "seasonal": {
+          "springBattle": "Spring IB battle — who brings more clients in March",
+          "winterMarathon": "Winter marathon — competition by trading volume in December",
+          "weeklySurprise": "Surprise of the week — random bonuses for activity",
+          "exclusivePrizes": "Exclusive prizes: iPhone, MacBook, trips to Dubai and London"
+        },
+        "summary": {
+          "title": "Summary",
+          "text": "Career levels motivate long-term work, XP and missions reward activity, badges add status, rankings add dynamics, and seasonal events keep engagement high. Build your network and earn $100,000+ per month!"
+        }
+      },
+      "placeholder": {
+        "label": "Section temporarily unavailable",
+        "title": "Referral program is being updated",
+        "description": "We are improving this section to make it more convenient and functional. It will be available soon."
+      }
+    },
+    "common": {
+      "id": "ID",
+      "openMenu": "메뉴 열기",
+      "close": "닫다",
+      "cancel": "취소",
+      "copyId": "ID 복사",
+      "copyNumber": "번호 복사"
+    },
+    "settings": {
+      "title": "Settings",
+      "comingSoonTitle": "Coming soon",
+      "comingSoonDescription": "Our team is completing the system upgrade. This section will be available soon, and we will notify you by email and in the notifications section."
+    },
+    "aml": {
+      "pageTitle": "AML Policy",
+      "sections": {
+        "intro": {
+          "title": "AML Policy",
+          "paragraphs": {
+            "0": "Money laundering includes any actions intended to hide the criminal origin of funds and make them appear legitimate. Ester Holdings Ltd. aims to detect, manage and mitigate such risks.",
+            "1": "The Company continuously monitors exposure to money laundering and terrorism financing risks. Knowing the customer and understanding their instructions allows more accurate risk assessment."
+          }
+        },
+        "customerDueDiligence": {
+          "title": "Customer Due Diligence",
+          "items": {
+            "0": "Identify and verify individual and corporate customers using valid documentation.",
+            "1": "Collect personal or company details during registration at my.esterholdings.website.",
+            "2": "Require proof of identity and address via valid documents, such as passport or utility bill.",
+            "3": "Verify credit and debit cards used for transactions while masking sensitive data.",
+            "4": "Request source of funds or source of wealth documents in higher-risk cases.",
+            "5": "Conduct ongoing monitoring to identify elevated risk or unusual behavior."
+          }
+        },
+        "payments": {
+          "title": "Payments Policy",
+          "paragraph": "Payments are regulated under the Regulations for Non-Trading Operations, available on the Company website in the Regulatory Documents and Agreements section."
+        },
+        "personnel": {
+          "title": "Personnel",
+          "officerTitle": "AML Compliance Officer",
+          "officerItems": {
+            "0": "Ensures AML compliance and maintains internal AML programs.",
+            "1": "Establishes audit functions and reports breaches to the Board.",
+            "2": "Trains staff and investigates suspicious activities.",
+            "3": "Maintains AML records and monitors international AML developments."
+          },
+          "employeesTitle": "Employees",
+          "employeeItems": {
+            "0": "Must know and comply with AML policy.",
+            "1": "Are vetted during hiring and monitored during employment.",
+            "2": "Must report AML violations confidentially."
+          }
+        },
+        "training": {
+          "title": "Employee Training",
+          "items": {
+            "0": "Training is provided internally or through external consultants.",
+            "1": "Each new employee follows a training plan with testing during the first 2 to 3 months.",
+            "2": "Training covers AML responsibilities, detection methods and FATF typologies.",
+            "3": "Special attention is paid to identifying and reporting suspicious transactions without tipping off the customer."
+          }
+        },
+        "suspiciousActivity": {
+          "title": "Reporting Suspicious Activity",
+          "paragraph": "All suspicious activity must be reported to the AML Compliance Officer. The Company may conduct internal investigations, freeze or close accounts and notify authorities, cooperating with law enforcement where required by law."
+        }
       }
     }
   },
@@ -1477,7 +2129,8 @@
       "messageLabel": "Ticket text",
       "messagePlaceholder": "Describe your issue, e.g.: I cannot top up account [account number]; trying via [payment method, e.g., USDT-TRC20]",
       "createButton": "Create new ticket",
-      "createdSuccess": "Ticket created successfully!"
+      "createdSuccess": "Ticket created successfully!",
+      "createFailed": "Failed to create ticket."
     },
     "page": {
       "title": "Support Page",
@@ -1486,7 +2139,157 @@
       "subject": "Subject of the appeal",
       "lastUpdate": "Last Update",
       "status": "Status",
-      "perPage": "Per page:"
+      "perPage": "Per page:",
+      "counterparty": "Counterparty",
+      "online": "Online",
+      "offline": "Offline",
+      "copyIdAria": "Copy ticket ID",
+      "openChatAria": "Open chat",
+      "moreAria": "More actions",
+      "lastCreated": "Last created",
+      "noMessagesYet": "No messages yet",
+      "attachment": "Attachment",
+      "attachments": "Attachments",
+      "systemEvent": "System event",
+      "newMessage": "New message",
+      "newTicketModalTitle": "Create new ticket"
+    },
+    "simple": {
+      "title": "Contact support",
+      "subtitle": "Send a request by email and our team will reply to the address you provide.",
+      "replyEmailLabel": "Reply email",
+      "replyEmailPlaceholder": "name{'@'}example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "Briefly describe your request",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Describe your request in detail...",
+      "attachmentsLabel": "Attachments",
+      "addFiles": "Attach files",
+      "maxSizeHint": "Up to 10 files, 200 MB each.",
+      "removeFileAria": "Remove file",
+      "submit": "Send request",
+      "createdSuccess": "Your request has been sent successfully.",
+      "submitFailed": "Failed to send request. Please try again.",
+      "presignFailed": "Failed to prepare file upload.",
+      "uploadQueued": "Queued",
+      "uploading": "Uploading",
+      "uploaded": "Uploaded",
+      "uploadFailed": "Upload failed",
+      "retryUpload": "Retry upload",
+      "linkPrompt": "Insert link URL",
+      "tools": {
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "Underline",
+        "list": "Bullet list",
+        "link": "Insert link",
+        "clear": "Clear formatting"
+      },
+      "validation": {
+        "replyEmailRequired": "Reply email is required.",
+        "replyEmailInvalid": "Enter a valid email address.",
+        "subjectRequired": "Subject is required.",
+        "subjectMax": "Subject must be 200 characters or less.",
+        "messageRequired": "Message or files are required.",
+        "waitUploads": "Please wait until all files finish uploading.",
+        "failedUploads": "Some files failed to upload. Remove or retry them first.",
+        "maxFiles": "You can attach up to {max} files.",
+        "fileTooLarge": "File is larger than 200 MB:"
+      },
+      "historyTitle": "Request history",
+      "historyRefreshAria": "Refresh request history",
+      "loadingHistory": "Loading request history...",
+      "emptyHistory": "You have no requests yet.",
+      "loadingMessages": "Loading messages...",
+      "emptyMessages": "No messages in this request yet.",
+      "noLastUpdate": "No updates yet",
+      "noSubject": "No subject",
+      "statusUnknown": "unknown",
+      "authorSupport": "Support",
+      "attachmentFallbackTitle": "Attachment"
+    },
+    "chat": {
+      "title": "Support Chat",
+      "online": "Online",
+      "offline": "Offline",
+      "typing": "typing...",
+      "systemEvent": "System event",
+      "noMessages": "No messages yet",
+      "filesSelected": "files selected",
+      "sendAs": "Send as",
+      "media": "Media",
+      "file": "File",
+      "documents": "Documents",
+      "links": "Links",
+      "library": "Library",
+      "loading": "Loading",
+      "writeMessage": "Write your message",
+      "addAttachment": "Add attachment",
+      "send": "Send",
+      "attachment": "Attachment",
+      "photo": "Photo",
+      "video": "Video",
+      "mediaUnavailable": "Media preview is unavailable.",
+      "openOriginal": "Open original",
+      "mobileBackAria": "Back to tickets",
+      "toggleDetailsAria": "Toggle details",
+      "closeDetailsAria": "Close details",
+      "closeMediaViewerAria": "Close media viewer",
+      "previousMediaAria": "Previous media",
+      "nextMediaAria": "Next media",
+      "uploading": "Uploading...",
+      "uploadFailedHint": "Upload failed. Remove failed files or retry.",
+      "allFilesUploaded": "All files uploaded",
+      "uploadedSuffix": "uploaded",
+      "failedSuffix": "failed",
+      "sendFailed": "Failed to send message.",
+      "uploadTooLarge413": "Upload is too large for the server limit (413).",
+      "uploadTimedOut": "Upload timed out. Try sending fewer or smaller files.",
+      "uploadNetworkError": "Network error while uploading files. Please try again.",
+      "waitUploads": "Wait for all files to finish uploading before sending.",
+      "presignFailed": "Failed to generate upload URL.",
+      "fileTooLarge": "File is larger than 200 MB:",
+      "filesLimitReached": "Only {max} files can be attached per message.",
+      "ticket": "Ticket",
+      "subject": "Subject",
+      "status": "Status",
+      "participants": "Participants",
+      "participantsDetails": "Participants in chat",
+      "onlineCountSuffix": "online",
+      "inChatSuffix": "in chat",
+      "you": "You",
+      "sharedFiles": "Shared Files",
+      "emptyMedia": "No media yet",
+      "emptyDocuments": "No documents yet",
+      "emptyLinks": "No links yet",
+      "roleAdmin": "Admin",
+      "roleClient": "Client",
+      "addAdmin": "Add admin",
+      "add": "Add",
+      "added": "Added",
+      "adding": "Adding...",
+      "noAdminsFound": "No admins found",
+      "searchAdminPlaceholder": "Search admin by nickname or email",
+      "addAdminSuccess": "Admin added to chat",
+      "addAdminAlready": "Admin is already in chat",
+      "addAdminFailed": "Failed to add admin to chat",
+      "expandDetailsAria": "Expand details",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "close": "Close",
+      "authorAvatarAlt": "Author avatar",
+      "myAvatarAlt": "My avatar"
+    },
+    "statuses": {
+      "open": "Open",
+      "inProgress": "In progress",
+      "pending": "Pending",
+      "active": "Active",
+      "closed": "Closed",
+      "resolved": "Resolved",
+      "cancelled": "Cancelled",
+      "rejected": "Rejected",
+      "archived": "Archived"
     }
   },
   "cabinetExtra": {
@@ -1515,5 +2318,51 @@
       "nextPage": "Next page",
       "lastPage": "Last page"
     }
+  },
+  "apiMessages": {
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "clientAccountBlocked": "Client account is blocked.",
+    "validationError": "Validation error.",
+    "methodNotAllowed": "Method not allowed.",
+    "notFound": "Not found.",
+    "mt4RequestFailed": "MT4 request failed.",
+    "mt4ProfileFieldsRequired": "Fill in the required profile fields before opening an MT4 account:",
+    "profileFields": {
+      "firstname": "first name",
+      "secondname": "last name",
+      "email": "email",
+      "country": "country",
+      "state": "state",
+      "city": "city",
+      "address": "address",
+      "phone": "phone",
+      "postalCode": "postal code"
+    },
+    "requiredField": "This field is required.",
+    "invalidField": "유효한 값을 입력하세요.",
+    "numericField": "숫자 값을 입력하세요.",
+    "positiveNumberField": "0보다 큰 금액을 입력하세요.",
+    "invalidSelection": "선택한 값이 잘못되었습니다.",
+    "maxLengthField": "값이 너무 깁니다. 최대: {max}.",
+    "minLengthField": "값이 너무 짧습니다. 최소: {min}.",
+    "paymentDetailCreated": "결제 세부정보가 성공적으로 생성되었습니다.",
+    "paymentDetailUpdated": "결제 세부정보가 성공적으로 업데이트되었습니다.",
+    "paymentDetailDeleted": "결제 세부정보가 성공적으로 보관되었습니다.",
+    "paymentDetailRestored": "결제 세부정보가 성공적으로 복원되었습니다.",
+    "paymentDetailNotFound": "결제 세부정보를 찾을 수 없습니다.",
+    "accountCreated": "Account created successfully.",
+    "paymentSystemNotFound": "결제 시스템을 찾을 수 없습니다.",
+    "accountNotFound": "계정을 찾을 수 없습니다.",
+    "depositAccountNotFound": "입금계좌를 찾을 수 없습니다.",
+    "invalidCallbackSignature": "Invalid callback signature.",
+    "supportReplyEmailRequired": "Reply email is required for email support channel.",
+    "supportFilesConflict": "Use either files or uploaded_attachments, not both.",
+    "supportMessageOrFilesRequired": "Message or files are required.",
+    "supportMessageBodyOrFilesRequired": "Message body or files are required.",
+    "emailAlreadyVerified": "Email already verified.",
+    "twoFaEnabled": "2FA enabled!",
+    "twoFaDisabled": "2FA disabled!",
+    "twoFaWrongCode": "Wrong code!"
   }
 }

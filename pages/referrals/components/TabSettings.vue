@@ -20,7 +20,10 @@
                 {{ t("cabinet.referrals.settings.autoWithdrawHint") }}
               </UiTextSmall>
             </div>
-            <UiBadge outline state="warning" class="!px-3">
+            <UiBadge
+              outline
+              state="warning"
+              class="!px-3">
               {{ t("cabinet.referrals.settings.soon") }}
             </UiBadge>
           </div>
@@ -36,7 +39,10 @@
                 {{ t("cabinet.referrals.settings.notifyHint") }}
               </UiTextSmall>
             </div>
-            <UiBadge outline state="info" class="!px-3">
+            <UiBadge
+              outline
+              state="info"
+              class="!px-3">
               {{ t("cabinet.referrals.settings.enabledDemo") }}
             </UiBadge>
           </div>
@@ -52,7 +58,10 @@
                 {{ t("cabinet.referrals.settings.payoutThresholdHint") }}
               </UiTextSmall>
             </div>
-            <UiBadge outline state="warning" class="!px-3">
+            <UiBadge
+              outline
+              state="warning"
+              class="!px-3">
               {{ t("cabinet.referrals.settings.soon") }}
             </UiBadge>
           </div>
@@ -63,19 +72,19 @@
 </template>
 
 <script setup lang="ts">
-import PanelDefault from "~/components/block/panels/PanelDefault.vue";
-import UiBadge from "~/components/ui/UiBadge.vue";
-import UiTextH4 from "~/components/ui/UiTextH4.vue";
-import UiTextSmall from "~/components/ui/UiTextSmall.vue";
-import { useI18n } from "vue-i18n";
+  import PanelDefault from "~/components/block/panels/PanelDefault.vue";
+  import UiBadge from "~/components/ui/UiBadge.vue";
+  import UiTextH4 from "~/components/ui/UiTextH4.vue";
+  import UiTextSmall from "~/components/ui/UiTextSmall.vue";
+  import { useI18n } from "vue-i18n";
 
-const { t } = useI18n({ useScope: "global" });
+  const { t } = useI18n({ useScope: "global" });
 </script>
 
 <style scoped>
-.setting-card {
-  border-radius: 12px;
-  padding: 14px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05));
-}
+  .setting-card {
+    border-radius: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.05));
+  }
 </style>
