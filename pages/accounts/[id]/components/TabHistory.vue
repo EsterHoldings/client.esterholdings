@@ -4,6 +4,7 @@
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
   import useAppCore from "~/composables/useAppCore";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
   import useEventBus from "~/composables/useEventBus";
 
   const props = defineProps<{
@@ -30,6 +31,7 @@
   const isTransactionsLoading = ref(false);
   const hasLoadedOnce = ref(false);
   const loadError = ref(false);
+  const loadErrorText = ref("");
 
   const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
@@ -119,9 +121,11 @@
           isPositive,
         };
       });
-    } catch {
+      loadErrorText.value = "";
+    } catch (error: any) {
       rows.value = [];
       loadError.value = true;
+      loadErrorText.value = extractApiErrorMessage(error, errorStateLabel.value) ?? errorStateLabel.value;
     } finally {
       hasLoadedOnce.value = true;
       isTransactionsLoading.value = false;
@@ -212,7 +216,7 @@
     <div
       v-else
       class="account-history__empty">
-      {{ loadError ? errorStateLabel : emptyStateLabel }}
+      {{ loadError ? loadErrorText || errorStateLabel : emptyStateLabel }}
     </div>
   </div>
 </template>

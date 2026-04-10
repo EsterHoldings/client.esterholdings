@@ -2,21 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "./*"
-      ],
-      "@/*": [
-        "./*"
-      ]
+      "~/*": ["./*"],
+      "@/*": ["./*"]
     },
-    "types": [
-      "axios",
-      "@pinia/nuxt",
-      "grecaptcha",
-      "vite/client",
-      "nuxt/types",
-      "./types/runtime-config"
-    ],
+    "types": ["axios", "@pinia/nuxt", "grecaptcha", "vite/client", "nuxt/types", "./types/runtime-config"]
     // ???
     // "typeRoots": [
     //   "./types",
@@ -27,6 +16,7 @@
   },
   "include": [
     "types/**/*.d.ts",
+    "tests/**/*.ts",
     "nuxt.config.ts",
     "pages/**/*.vue",
     "components/**/*.vue",
@@ -36,9 +26,5 @@
     ".nuxt/types/imports.d.ts",
     "404.vue"
   ],
-  "exclude": [
-    "node_modules",
-    ".output",
-    ".nuxt"
-  ]
+  "exclude": ["node_modules", ".output", ".nuxt"]
 }

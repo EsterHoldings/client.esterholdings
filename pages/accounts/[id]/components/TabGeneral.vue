@@ -18,6 +18,10 @@
   }>();
 
   const { t } = useI18n({ useScope: "global" });
+  const commonIdLabel = computed(() => {
+    const translated = t("cabinet.common.id");
+    return translated === "cabinet.common.id" ? "ID" : translated;
+  });
   const refreshBalanceTitle = computed(() => {
     const translated = t("cabinet.accounts.refreshBalance");
     return translated === "cabinet.accounts.refreshBalance" ? "Refresh balance" : translated;
@@ -38,7 +42,7 @@
   const accountOverviewRows = computed(() => [
     {
       key: "id",
-      label: "ID",
+      label: commonIdLabel.value,
       value: props.id,
     },
     {

@@ -772,6 +772,14 @@
     },
     "dashboard": {
       "title": "Панель керування",
+      "emailVerification": {
+        "success": "Email підтверджено.",
+        "error": "Не вдалося підтвердити email."
+      },
+      "summary": {
+        "totalAmount": "Загальна сума",
+        "referralTotalAmount": "Сума за рефералами"
+      },
       "accountVerification": {
         "title": "Верифікація акаунта",
         "subtitle": "Перевірка в процесі",
@@ -799,6 +807,7 @@
         "complete": "Рахунок повністю верифіковано",
         "progressTitle": "Прогрес верифікації",
         "tooltipLabel": "Про верифікацію акаунта",
+        "goToVerification": "Перейти до верифікації",
         "verifiedCount": "Перевірено {done}/{total}",
         "stepsRemaining": "Залишилось кроків: {count}",
         "stepsProgress": "Перевірено {done}/{total}. Залишилось: {left}",
@@ -820,6 +829,10 @@
         "description": "Швидкий доступ до обраних рахунків і відкриття нового MT4 рахунку.",
         "tooltipLabel": "Про рахунки MT4",
         "openNewAccount": "Відкрити новий рахунок",
+        "emptyTitle": "Рахунків поки немає",
+        "emptySubtitle": "Відкрийте перший торговий рахунок, щоб почати роботу.",
+        "verifyTitle": "Завершіть верифікацію для відкриття рахунку",
+        "verifySubtitle": "Після підтвердження даних профілю та документів ви зможете відкрити новий торговий рахунок.",
         "table": {
           "account": "Рахунок",
           "type": "Тип",
@@ -1218,11 +1231,27 @@
     },
     "accounts": {
       "account": {
-        "title": "Рахунок"
+        "title": "Рахунок",
+        "subtitle": "Деталі та історія торгового рахунку",
+        "loadError": "Не вдалося завантажити дані рахунку."
       },
       "title": "Рахунки",
       "openNew": "Відкрити новий рахунок",
+      "openBlocked": "Відкриття рахунку буде доступне після верифікації даних профілю та документів.",
+      "openAccountLabel": "Відкрити рахунок {number}",
+      "favoriteAdd": "Додати в обране",
+      "favoriteRemove": "Прибрати з обраного",
+      "favoriteToggleError": "Не вдалося оновити список обраних рахунків.",
+      "refreshBalance": "Оновити баланс",
+      "refreshBalanceError": "Не вдалося оновити баланс рахунку.",
+      "refreshBalancesError": "Не вдалося оновити баланси рахунків.",
+      "loadError": "Не вдалося завантажити список рахунків.",
+      "deleteConfirm": "Архівувати цей рахунок?",
+      "deleteSuccess": "Рахунок архівовано.",
+      "deleteError": "Не вдалося архівувати рахунок.",
       "search": "Пошук",
+      "emptyTitle": "Рахунків ще немає",
+      "emptySubtitle": "Відкрийте перший торговий рахунок, щоб почати роботу.",
       "columns": {
         "type": "Тип рахунку",
         "currency": "Валюта",
@@ -1249,8 +1278,10 @@
         "filterAll": "Усі",
         "filterPositive": "Прибуткові",
         "filterNegative": "Збиткові",
+        "error": "Не вдалося завантажити історію торгів.",
         "loadMore": "Завантажити ще",
-        "loadingMore": "Завантаження..."
+        "loadingMore": "Завантаження...",
+        "syncError": "Не вдалося синхронізувати історію торгів."
       },
       "nothingToShow": "Немає активних рахунків для показу!",
       "openAccount": "Відкрити новий рахунок!",
@@ -1266,6 +1297,8 @@
       },
       "accounts-form": {
         "title": "Відкрити новий рахунок",
+        "loadTypesError": "Не вдалося завантажити типи рахунків.",
+        "submitError": "Не вдалося відкрити новий рахунок.",
         "fields": {
           "accountType": "Тип рахунку",
           "phonePassword": "Телефонний пароль",
@@ -1276,12 +1309,12 @@
         }
       },
       "actions": {
-        "deposit": "Deposit",
-        "withdraw": "Withdraw",
-        "transfer": "Transfer",
+        "deposit": "Поповнити",
+        "withdraw": "Вивести",
+        "transfer": "Переказ",
         "history": "Транзакції",
-        "changeType": "Change type",
-        "remove": "Remove"
+        "changeType": "Змінити тип",
+        "remove": "Видалити"
       },
       "transactions": {
         "empty": "Транзакцій поки немає",
@@ -1289,17 +1322,26 @@
         "transferToAccount": "Переказ на рахунок"
       },
       "transfer": {
-        "fromAccount": "From account",
-        "toAccount": "To account",
-        "amount": "Amount",
-        "amountPlaceholder": "Enter amount",
-        "submit": "Create transfer request",
-        "success": "Transfer request created successfully.",
-        "failed": "Failed to create transfer request.",
-        "sourceNotFound": "Source account not found.",
-        "noDestinations": "You do not have another account available for transfer.",
-        "exceedsBalance": "Amount exceeds available balance."
+        "title": "Переказ між моїми рахунками",
+        "fromAccount": "З рахунку",
+        "toAccount": "На рахунок",
+        "amount": "Сума",
+        "amountPlaceholder": "Введіть суму",
+        "submit": "Створити заявку на переказ",
+        "success": "Заявку на переказ успішно створено.",
+        "failed": "Не вдалося створити заявку на переказ.",
+        "sourceNotFound": "Рахунок-джерело не знайдено.",
+        "noDestinations": "У вас немає іншого рахунку, доступного для переказу.",
+        "exceedsBalance": "Сума перевищує доступний баланс."
       }
+    },
+    "common": {
+      "id": "ID",
+      "openMenu": "Відкрити меню",
+      "close": "Закрити",
+      "cancel": "Скасувати",
+      "copyId": "Скопіювати ID",
+      "copyNumber": "Скопіювати номер"
     },
     "referrals": {
       "components": {},
@@ -1849,10 +1891,23 @@
   "apiMessages": {
     "unauthorized": "Потрібна авторизація.",
     "forbidden": "Доступ заборонено.",
+    "clientAccountBlocked": "Клієнтський акаунт заблоковано.",
     "validationError": "Помилка валідації.",
     "methodNotAllowed": "Метод не підтримується.",
     "notFound": "Нічого не знайдено.",
     "mt4RequestFailed": "Помилка запиту до MT4.",
+    "mt4ProfileFieldsRequired": "Заповніть обовʼязкові поля профілю перед відкриттям MT4 рахунку:",
+    "profileFields": {
+      "firstname": "імʼя",
+      "secondname": "прізвище",
+      "email": "email",
+      "country": "країна",
+      "state": "регіон",
+      "city": "місто",
+      "address": "адреса",
+      "phone": "телефон",
+      "postalCode": "поштовий індекс"
+    },
     "requiredField": "Поле обовʼязкове для заповнення.",
     "paymentDetailCreated": "Платіжні реквізити успішно створено.",
     "paymentDetailUpdated": "Платіжні реквізити успішно оновлено.",

@@ -10,6 +10,7 @@
 
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
 
   const { t } = useI18n({ useScope: "global" });
@@ -190,7 +191,9 @@
       payments.splice(0, payments.length, ...rows);
       applyRecentPaymentHighlights();
     } catch (error: any) {
-      errorMsg.value = error?.message ?? t("cabinet.dashboard.transactions.errorLoad");
+      errorMsg.value =
+        extractApiErrorMessage(error, t("cabinet.dashboard.transactions.errorLoad")) ??
+        t("cabinet.dashboard.transactions.errorLoad");
     } finally {
       isLoading.value = false;
     }

@@ -107,7 +107,7 @@
     return translated === key ? fallback : translated;
   };
 
-  const createAccountLabel = computed(() => resolveText("cabinet.accounts.openAccount", "Open account"));
+  const createAccountLabel = computed(() => resolveText("cabinet.accounts.openNew", "Open new account"));
   const verifyActionLabel = computed(() =>
     resolveText("cabinet.dashboard.accountVerification.goToVerification", "Перейти к верификации")
   );

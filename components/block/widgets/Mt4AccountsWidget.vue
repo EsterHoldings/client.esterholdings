@@ -262,6 +262,7 @@
   import UiIconTrash from "~/components/ui/UiIconTrash.vue";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
 
   type Mt4Status = "active" | "inactive" | string;
   type Mt4Account = {
@@ -469,9 +470,14 @@
       if (!options.suppressErrorToast) {
         toast.error(resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance."));
       }
-    } catch {
+    } catch (error: any) {
       if (!options.suppressErrorToast) {
-        toast.error(resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance."));
+        toast.error(
+          extractApiErrorMessage(
+            error,
+            resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance.")
+          ) ?? resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance.")
+        );
       }
     } finally {
       refreshingBalanceIds[key] = false;

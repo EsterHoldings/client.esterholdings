@@ -717,6 +717,7 @@
       "settings": "Settings"
     },
     "common": {
+      "id": "ID",
       "openMenu": "Open menu",
       "close": "Close",
       "cancel": "Cancel",
@@ -775,6 +776,10 @@
         "success": "Email verified.",
         "error": "Failed to verify email."
       },
+      "summary": {
+        "totalAmount": "Total amount",
+        "referralTotalAmount": "Referral total amount"
+      },
       "accountVerification": {
         "title": "Account verification",
         "subtitle": "Verification in progress",
@@ -802,6 +807,7 @@
         "complete": "Account is fully verified",
         "progressTitle": "Verification progress",
         "tooltipLabel": "About account verification",
+        "goToVerification": "Go to verification",
         "verifiedCount": "Verified {done}/{total}",
         "stepsRemaining": "Remaining steps: {count}",
         "stepsProgress": "Verified {done}/{total}. Remaining: {left}",
@@ -823,6 +829,10 @@
         "description": "Quick access to favorite accounts and opening a new MT4 account.",
         "tooltipLabel": "About MT4 accounts",
         "openNewAccount": "Open new account",
+        "emptyTitle": "No accounts yet",
+        "emptySubtitle": "Open your first trading account to get started.",
+        "verifyTitle": "Complete verification to open an account",
+        "verifySubtitle": "After your profile data and documents are verified, you will be able to open a new trading account.",
         "empty": "No accounts yet.",
         "table": {
           "account": "Account",
@@ -1234,7 +1244,9 @@
     },
     "accounts": {
       "account": {
-        "title": "Account"
+        "title": "Account",
+        "subtitle": "Trading account details and history",
+        "loadError": "Failed to load account details."
       },
       "title": "Accounts",
       "openNew": "Open new account",
@@ -1242,9 +1254,11 @@
       "openAccountLabel": "Open account {number}",
       "favoriteAdd": "Add to favorites",
       "favoriteRemove": "Remove from favorites",
+      "favoriteToggleError": "Failed to update favorites.",
       "refreshBalance": "Refresh balance",
       "refreshBalanceError": "Failed to refresh account balance.",
       "refreshBalancesError": "Failed to refresh account balances.",
+      "loadError": "Failed to load accounts.",
       "syncPayments": "Synchronize",
       "syncPaymentsSuccess": "Account payments synchronized successfully.",
       "syncPaymentsError": "Failed to synchronize account payments.",
@@ -1252,6 +1266,8 @@
       "deleteSuccess": "Account archived!",
       "deleteError": "Failed to archive account.",
       "search": "Search",
+      "emptyTitle": "No accounts yet",
+      "emptySubtitle": "Open your first trading account to get started.",
       "columns": {
         "type": "Account type",
         "currency": "Currency",
@@ -1275,8 +1291,10 @@
         "filterAll": "All",
         "filterPositive": "Profitable",
         "filterNegative": "Losing",
+        "error": "Failed to load trade history.",
         "loadMore": "Load more",
-        "loadingMore": "Loading..."
+        "loadingMore": "Loading...",
+        "syncError": "Failed to synchronize trade history."
       },
       "nothingToShow": "No active accounts to show!",
       "openAccount": "Open new account!",
@@ -1292,6 +1310,8 @@
       },
       "accounts-form": {
         "title": "Open new account",
+        "loadTypesError": "Failed to load account types.",
+        "submitError": "Failed to create account.",
         "fields": {
           "accountType": "Account type",
           "phonePassword": "Phone password",
@@ -1876,10 +1896,23 @@
   "apiMessages": {
     "unauthorized": "Unauthorized",
     "forbidden": "Forbidden",
+    "clientAccountBlocked": "Client account is blocked.",
     "validationError": "Validation error.",
     "methodNotAllowed": "Method not allowed.",
     "notFound": "Not found.",
     "mt4RequestFailed": "MT4 request failed.",
+    "mt4ProfileFieldsRequired": "Fill in the required profile fields before opening an MT4 account:",
+    "profileFields": {
+      "firstname": "first name",
+      "secondname": "last name",
+      "email": "email",
+      "country": "country",
+      "state": "state",
+      "city": "city",
+      "address": "address",
+      "phone": "phone",
+      "postalCode": "postal code"
+    },
     "requiredField": "This field is required.",
     "paymentDetailCreated": "Payment detail created successfully.",
     "paymentDetailUpdated": "Payment detail updated successfully.",

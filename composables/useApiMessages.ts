@@ -1,13 +1,21 @@
 import { useNuxtApp } from "nuxt/app";
 
 type LocalizedApiErrors = Record<string, string[]>;
+type ApiTranslator = (key: string, fallback: string) => string;
 
 type ApiMessageTranslation = {
   key: string;
   fallback: string;
 };
 
-const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
+type ApiPatternTranslation = {
+  pattern: RegExp;
+  key: string;
+  fallback: string;
+  format?: (match: RegExpMatchArray, translate: ApiTranslator) => string;
+};
+
+export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
   unauthorized: {
     key: "apiMessages.unauthorized",
     fallback: "Unauthorized",
@@ -120,15 +128,91 @@ const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
     key: "apiMessages.accountCreated",
     fallback: "Account created successfully.",
   },
+  "account creation is unavailable until profile data and documents are verified": {
+    key: "cabinet.accounts.openBlocked",
+    fallback: "Account opening will be available after profile and document verification.",
+  },
   "profile data and documents verification is required to open a new account": {
     key: "cabinet.accounts.openBlocked",
     fallback: "Account opening will be available after profile and document verification.",
+  },
+  "client account is blocked": {
+    key: "apiMessages.clientAccountBlocked",
+    fallback: "Client account is blocked.",
   },
   "invalid callback signature": {
     key: "apiMessages.invalidCallbackSignature",
     fallback: "Invalid callback signature.",
   },
 };
+
+const PROFILE_FIELD_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
+  firstname: {
+    key: "apiMessages.profileFields.firstname",
+    fallback: "first name",
+  },
+  secondname: {
+    key: "apiMessages.profileFields.secondname",
+    fallback: "last name",
+  },
+  email: {
+    key: "apiMessages.profileFields.email",
+    fallback: "email",
+  },
+  country: {
+    key: "apiMessages.profileFields.country",
+    fallback: "country",
+  },
+  state: {
+    key: "apiMessages.profileFields.state",
+    fallback: "state",
+  },
+  city: {
+    key: "apiMessages.profileFields.city",
+    fallback: "city",
+  },
+  address: {
+    key: "apiMessages.profileFields.address",
+    fallback: "address",
+  },
+  phone: {
+    key: "apiMessages.profileFields.phone",
+    fallback: "phone",
+  },
+  postal_code: {
+    key: "apiMessages.profileFields.postalCode",
+    fallback: "postal code",
+  },
+};
+
+const translateProfileFieldList = (rawFields: string, translate: ApiTranslator): string => {
+  return rawFields
+    .split(",")
+    .map(item => item.trim())
+    .filter(Boolean)
+    .map(field => {
+      const translation = PROFILE_FIELD_TRANSLATIONS[normalizeApiMessage(field)];
+      return translation ? translate(translation.key, translation.fallback) : field;
+    })
+    .join(", ");
+};
+
+const API_MESSAGE_PATTERN_TRANSLATIONS: ApiPatternTranslation[] = [
+  {
+    pattern: /^cannot create mt4 account\. fill required profile fields:\s*(.+?)[.!?]*$/i,
+    key: "apiMessages.mt4ProfileFieldsRequired",
+    fallback: "Fill in the required profile fields before opening an MT4 account:",
+    format: (match, translate) => {
+      const translatedPrefix = translate(
+        "apiMessages.mt4ProfileFieldsRequired",
+        "Fill in the required profile fields before opening an MT4 account:"
+      );
+      const translatedFields = translateProfileFieldList(match[1] ?? "", translate);
+
+      return translatedFields ? `${translatedPrefix} ${translatedFields}` : translatedPrefix;
+    },
+  },
+];
 
 const toDisplayString = (value: unknown): string => String(value ?? "").trim();
 
@@ -138,7 +222,7 @@ const normalizeApiMessage = (value: unknown): string =>
     .replace(/[.!?]+$/, "")
     .toLowerCase();
 
-const translateKey = (key: string, fallback: string): string => {
+export const translateApiMessageKey = (key: string, fallback: string): string => {
   const nuxtApp = useNuxtApp();
   const i18n = (nuxtApp?.$i18n ?? null) as { t?: (key: string) => unknown } | null;
   const translated = i18n?.t?.(key);
@@ -146,38 +230,57 @@ const translateKey = (key: string, fallback: string): string => {
   return typeof translated === "string" && translated !== key ? translated : fallback;
 };
 
-export const resolveApiMessage = (message: unknown, fallbackText?: string | null): string | null => {
+export const resolveApiMessageWithTranslator = (
+  message: unknown,
+  translate: ApiTranslator,
+  fallbackText?: string | null
+): string | null => {
   const rawMessage = toDisplayString(message);
   if (rawMessage === "") {
     return fallbackText ?? null;
   }
 
-  const mappedMessage = API_MESSAGE_TRANSLATIONS[normalizeApiMessage(rawMessage)];
+  const normalizedMessage = normalizeApiMessage(rawMessage);
+  const mappedMessage = API_MESSAGE_TRANSLATIONS[normalizedMessage];
   if (!mappedMessage) {
+    for (const translation of API_MESSAGE_PATTERN_TRANSLATIONS) {
+      const match = rawMessage.match(translation.pattern);
+      if (!match) continue;
+
+      if (translation.format) {
+        return translation.format(match, translate);
+      }
+
+      return translate(translation.key, fallbackText ?? translation.fallback);
+    }
+
     return rawMessage;
   }
 
-  return translateKey(mappedMessage.key, fallbackText ?? mappedMessage.fallback);
+  return translate(mappedMessage.key, fallbackText ?? mappedMessage.fallback);
 };
 
-const toLocalizedErrorMessages = (value: unknown): string[] => {
+export const resolveApiMessage = (message: unknown, fallbackText?: string | null): string | null =>
+  resolveApiMessageWithTranslator(message, translateApiMessageKey, fallbackText);
+
+const toLocalizedErrorMessages = (value: unknown, translate: ApiTranslator): string[] => {
   if (Array.isArray(value)) {
     return value
-      .map(item => resolveApiMessage(item, toDisplayString(item)))
+      .map(item => resolveApiMessageWithTranslator(item, translate, toDisplayString(item)))
       .filter((item): item is string => typeof item === "string" && item.trim() !== "");
   }
 
-  const localizedValue = resolveApiMessage(value, toDisplayString(value));
+  const localizedValue = resolveApiMessageWithTranslator(value, translate, toDisplayString(value));
   return localizedValue ? [localizedValue] : [];
 };
 
-export const localizeApiErrors = (errors: unknown): LocalizedApiErrors => {
+export const localizeApiErrorsWithTranslator = (errors: unknown, translate: ApiTranslator): LocalizedApiErrors => {
   if (!errors || typeof errors !== "object") {
     return {};
   }
 
   return Object.entries(errors as Record<string, unknown>).reduce<LocalizedApiErrors>((result, [field, value]) => {
-    const messages = toLocalizedErrorMessages(value);
+    const messages = toLocalizedErrorMessages(value, translate);
     if (messages.length > 0) {
       result[field] = messages;
     }
@@ -186,9 +289,16 @@ export const localizeApiErrors = (errors: unknown): LocalizedApiErrors => {
   }, {});
 };
 
-export const extractApiErrorMessage = (error: any, fallbackText?: string | null): string | null => {
+export const localizeApiErrors = (errors: unknown): LocalizedApiErrors =>
+  localizeApiErrorsWithTranslator(errors, translateApiMessageKey);
+
+export const extractApiErrorMessageWithTranslator = (
+  error: any,
+  translate: ApiTranslator,
+  fallbackText?: string | null
+): string | null => {
   const errors = error?.response?.data?.errors ?? {};
-  const localizedErrors = localizeApiErrors(errors);
+  const localizedErrors = localizeApiErrorsWithTranslator(errors, translate);
 
   const mt4Error = localizedErrors.mt4?.[0];
   if (mt4Error) {
@@ -202,5 +312,8 @@ export const extractApiErrorMessage = (error: any, fallbackText?: string | null)
     return firstValidationError[0];
   }
 
-  return resolveApiMessage(error?.response?.data?.message, fallbackText);
+  return resolveApiMessageWithTranslator(error?.response?.data?.message, translate, fallbackText);
 };
+
+export const extractApiErrorMessage = (error: any, fallbackText?: string | null): string | null =>
+  extractApiErrorMessageWithTranslator(error, translateApiMessageKey, fallbackText);

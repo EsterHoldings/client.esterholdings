@@ -70,6 +70,8 @@
   import UiIconUser from "~/components/ui/UiIconUser.vue";
   import UiIconHistory from "~/components/ui/UiIconHistory.vue";
   import UiIconTime from "~/components/ui/UiIconTime.vue";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
+  import { useToast } from "vue-toastification";
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
@@ -77,6 +79,7 @@
 
   const route = useRoute();
   const appCore = useAppCore();
+  const toast = useToast();
 
   const activeTabIndex = ref(0);
   const isLoading = ref(false);
@@ -93,7 +96,7 @@
   };
 
   const updatePanelMinHeight = () => {
-    if (!import.meta.client) return;
+    if (typeof window === "undefined") return;
 
     const panelEl = getPanelElement();
     if (!panelEl) return;
@@ -166,7 +169,7 @@
   const getTabSlugByIndex = (tabIndex: number): string => tabSlugByIndex[tabIndex] ?? tabSlugByIndex[0];
 
   const syncUrlTabSlug = (tabIndex: number) => {
-    if (!import.meta.client) return;
+    if (typeof window === "undefined") return;
 
     const nextSlug = getTabSlugByIndex(tabIndex);
     const params = new URLSearchParams(window.location.search);
@@ -224,6 +227,12 @@
 
     return resolveText("cabinet.accounts.account.subtitle", "Trading account details and history");
   });
+  const accountLoadErrorLabel = computed(() =>
+    resolveText("cabinet.accounts.account.loadError", "Failed to load account details.")
+  );
+  const refreshBalanceErrorLabel = computed(() =>
+    resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance.")
+  );
   const refreshAccountBalance = async () => {
     if (isLoading.value || isBalanceRefreshing.value) return;
 
@@ -235,16 +244,18 @@
       if (balance !== undefined && balance !== null) {
         accountData.balance = Number(balance);
       } else {
-        await loadData();
+        await loadData({ suppressErrorToast: true });
+        toast.error(refreshBalanceErrorLabel.value);
       }
-    } catch {
-      await loadData();
+    } catch (error: any) {
+      await loadData({ suppressErrorToast: true });
+      toast.error(extractApiErrorMessage(error, refreshBalanceErrorLabel.value) ?? refreshBalanceErrorLabel.value);
     } finally {
       isBalanceRefreshing.value = false;
     }
   };
 
-  const loadData = async () => {
+  const loadData = async (options: { suppressErrorToast?: boolean } = {}) => {
     isLoading.value = true;
 
     try {
@@ -255,6 +266,10 @@
       accountData.type = String(account?.account_type?.name ?? "");
       accountData.balance = Number(account?.balance ?? 0);
       accountData.number = String(account?.number ?? "");
+    } catch (error: any) {
+      if (!options.suppressErrorToast) {
+        toast.error(extractApiErrorMessage(error, accountLoadErrorLabel.value) ?? accountLoadErrorLabel.value);
+      }
     } finally {
       isLoading.value = false;
     }
@@ -274,7 +289,7 @@
   });
 
   onBeforeUnmount(() => {
-    if (!import.meta.client) return;
+    if (typeof window === "undefined") return;
     window.removeEventListener("resize", updatePanelMinHeight);
     window.removeEventListener("orientationchange", updatePanelMinHeight);
   });

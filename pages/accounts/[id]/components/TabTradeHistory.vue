@@ -6,6 +6,8 @@
   import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import useAppCore from "~/composables/useAppCore";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
+  import { useToast } from "vue-toastification";
 
   const props = defineProps<{
     id: string;
@@ -37,6 +39,7 @@
 
   const appCore = useAppCore();
   const { t, locale } = useI18n({ useScope: "global" });
+  const toast = useToast();
 
   const rows = ref<TradeHistoryRow[]>([]);
   const page = ref(1);
@@ -49,6 +52,7 @@
   const isSyncingHistory = ref(false);
   const hasLoadedOnce = ref(false);
   const syncedAfterEmpty = ref(false);
+  const loadErrorText = ref("");
   let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   const PER_PAGE = 20;
@@ -59,6 +63,9 @@
   };
 
   const emptyStateLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.empty", "No trades yet"));
+  const errorStateLabel = computed(() =>
+    resolveText("cabinet.accounts.tradeHistory.error", "Failed to load trade history.")
+  );
   const loadMoreLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.loadMore", "Load more"));
   const loadingMoreLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.loadingMore", "Loading..."));
   const searchPlaceholder = computed(() =>
@@ -66,6 +73,9 @@
   );
   const syncLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.sync", "Sync history"));
   const syncingLabel = computed(() => resolveText("cabinet.accounts.tradeHistory.syncing", "Syncing..."));
+  const syncErrorLabel = computed(() =>
+    resolveText("cabinet.accounts.tradeHistory.syncError", "Failed to synchronize trade history.")
+  );
 
   const isBusy = computed(() => {
     if (isListLoading.value) return true;
@@ -116,11 +126,13 @@
     };
   };
 
-  const syncHistory = async () => {
+  const syncHistory = async (options: { suppressError?: boolean } = {}) => {
     try {
       await appCore.accounts.syncTradeHistory(props.id, {});
-    } catch {
-      // keep UI stable when sync is unavailable
+    } catch (error) {
+      if (!options.suppressError) {
+        throw error;
+      }
     }
   };
 
@@ -138,18 +150,20 @@
       page.value = payload.currentPage;
       lastPage.value = payload.lastPage;
       hasLoadedOnce.value = true;
+      loadErrorText.value = "";
 
       if (syncIfEmpty && targetPage === 1 && payload.total === 0 && !syncedAfterEmpty.value) {
         syncedAfterEmpty.value = true;
-        await syncHistory();
+        await syncHistory({ suppressError: true });
         await loadHistory(1, "replace", false);
       }
-    } catch {
+    } catch (error: any) {
       if (mode === "replace") {
         rows.value = [];
         page.value = 1;
         lastPage.value = 1;
         hasLoadedOnce.value = true;
+        loadErrorText.value = extractApiErrorMessage(error, errorStateLabel.value) ?? errorStateLabel.value;
       }
     } finally {
       if (mode === "append") {
@@ -176,10 +190,13 @@
     isSyncingHistory.value = true;
     try {
       await syncHistory();
+    } catch (error: any) {
+      toast.error(extractApiErrorMessage(error, syncErrorLabel.value) ?? syncErrorLabel.value);
     } finally {
       isSyncingHistory.value = false;
-      await loadHistory(1, "replace", false);
     }
+
+    await loadHistory(1, "replace", false);
   };
 
   const formatAmount = (value: number): string => {
@@ -302,7 +319,7 @@
     <div
       v-else-if="rows.length === 0"
       class="account-history__empty">
-      {{ emptyStateLabel }}
+      {{ loadErrorText || emptyStateLabel }}
     </div>
 
     <div

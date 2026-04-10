@@ -46,6 +46,7 @@
   import { formData } from "~/pages/accounts/composables";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
+  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiSelect from "~/components/ui/UiSelect.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
@@ -68,6 +69,18 @@
 
   const { closeModal } = inject("modalControl") as { closeModal: Function };
 
+  const resolveText = (key: string, fallback: string): string => {
+    const translated = t(key);
+    return translated === key ? fallback : translated;
+  };
+
+  const loadTypesErrorLabel = () =>
+    resolveText("cabinet.accounts.accounts-form.loadTypesError", "Failed to load account types.");
+
+  const submitErrorLabel = () => resolveText("cabinet.accounts.accounts-form.submitError", "Failed to create account.");
+
+  const createSuccessLabel = () => resolveText("apiMessages.accountCreated", "Account created successfully.");
+
   const handleChangeSelectAccountType = val => {
     validatorAccountForm.doValidateField("accountType", val);
     formData.accountType = val;
@@ -84,26 +97,30 @@
   };
 
   const getAccountTypes = async () => {
-    const response = await app.accountTypes.get({ perPage: 20 });
-    const rows = Array.isArray(response?.data?.data?.data) ? response.data.data.data : [];
-    const standardRows = rows.filter(
-      ({ name }) =>
-        String(name ?? "")
-          .trim()
-          .toLowerCase() === CLIENT_ALLOWED_ACCOUNT_TYPE
-    );
+    try {
+      const response = await app.accountTypes.get({ perPage: 20 });
+      const rows = Array.isArray(response?.data?.data?.data) ? response.data.data.data : [];
+      const standardRows = rows.filter(
+        ({ name }) =>
+          String(name ?? "")
+            .trim()
+            .toLowerCase() === CLIENT_ALLOWED_ACCOUNT_TYPE
+      );
 
-    accountTypes.splice(
-      0,
-      accountTypes.length,
-      ...standardRows.map(({ id, name }) => ({
-        id: String(id),
-        value: String(id),
-        text: String(name),
-      }))
-    );
+      accountTypes.splice(
+        0,
+        accountTypes.length,
+        ...standardRows.map(({ id, name }) => ({
+          id: String(id),
+          value: String(id),
+          text: String(name),
+        }))
+      );
 
-    syncDefaultAccountType();
+      syncDefaultAccountType();
+    } catch (error: any) {
+      toast.error(extractApiErrorMessage(error, loadTypesErrorLabel()) ?? loadTypesErrorLabel());
+    }
   };
 
   const handleSubmitForm = async () => {
@@ -115,9 +132,9 @@
         const response = await app.accounts.post(formData);
         closeModal();
         useEventBus.emit("loadDataForAccounts");
-        toast.success(response.data.message);
-      } catch (errorResponse) {
-        console.log("handleSubmitForm -> errorResponse", errorResponse);
+        toast.success(resolveApiMessage(response?.data?.message, createSuccessLabel()) ?? createSuccessLabel());
+      } catch (error: any) {
+        toast.error(extractApiErrorMessage(error, submitErrorLabel()) ?? submitErrorLabel());
       } finally {
         isLoading.value = false;
       }

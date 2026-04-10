@@ -721,6 +721,7 @@
       "settings": "Настройки"
     },
     "common": {
+      "id": "ID",
       "openMenu": "Открыть меню",
       "close": "Закрыть",
       "cancel": "Отмена",
@@ -779,6 +780,10 @@
         "success": "Email подтверждён.",
         "error": "Не удалось подтвердить email."
       },
+      "summary": {
+        "totalAmount": "Общая сумма",
+        "referralTotalAmount": "Сумма по рефералам"
+      },
       "accountVerification": {
         "title": "Верификация аккаунта",
         "subtitle": "Проверка в процессе",
@@ -806,6 +811,7 @@
         "complete": "Аккаунт полностью верифицирован",
         "progressTitle": "Прогресс верификации",
         "tooltipLabel": "О верификации аккаунта",
+        "goToVerification": "Перейти к верификации",
         "verifiedCount": "Проверено {done}/{total}",
         "stepsRemaining": "Осталось шагов: {count}",
         "stepsProgress": "Проверено {done}/{total}. Осталось: {left}",
@@ -827,6 +833,10 @@
         "description": "Быстрый доступ к избранным счетам и открытию нового MT4 счета.",
         "tooltipLabel": "О счетах MT4",
         "openNewAccount": "Открыть новый счёт",
+        "emptyTitle": "Счетов пока нет",
+        "emptySubtitle": "Откройте первый торговый счёт, чтобы начать работу.",
+        "verifyTitle": "Завершите верификацию для открытия счёта",
+        "verifySubtitle": "После подтверждения данных профиля и документов вы сможете открыть новый торговый счёт.",
         "empty": "Счетов пока нет.",
         "table": {
           "account": "Счёт",
@@ -1238,7 +1248,9 @@
     },
     "accounts": {
       "account": {
-        "title": "Счет"
+        "title": "Счёт",
+        "subtitle": "Детали и история торгового счёта",
+        "loadError": "Не удалось загрузить данные счёта."
       },
       "title": "Счета",
       "openNew": "Открыть новый счёт",
@@ -1246,9 +1258,11 @@
       "openAccountLabel": "Открыть счёт {number}",
       "favoriteAdd": "Добавить в избранное",
       "favoriteRemove": "Убрать из избранного",
+      "favoriteToggleError": "Не удалось обновить список избранных счетов.",
       "refreshBalance": "Обновить баланс",
       "refreshBalanceError": "Не удалось обновить баланс счёта.",
       "refreshBalancesError": "Не удалось обновить балансы счетов.",
+      "loadError": "Не удалось загрузить список счетов.",
       "syncPayments": "Синхронизировать",
       "syncPaymentsSuccess": "Платежи по счёту успешно синхронизированы.",
       "syncPaymentsError": "Не удалось синхронизировать платежи по счёту.",
@@ -1256,6 +1270,8 @@
       "deleteSuccess": "Счёт архивирован.",
       "deleteError": "Не удалось архивировать счёт.",
       "search": "Поиск",
+      "emptyTitle": "Счетов пока нет",
+      "emptySubtitle": "Откройте первый торговый счёт, чтобы начать работу.",
       "columns": {
         "type": "Тип счёта",
         "currency": "Валюта",
@@ -1279,8 +1295,10 @@
         "filterAll": "Все",
         "filterPositive": "Прибыльные",
         "filterNegative": "Убыточные",
+        "error": "Не удалось загрузить историю торгов.",
         "loadMore": "Загрузить еще",
-        "loadingMore": "Загрузка..."
+        "loadingMore": "Загрузка...",
+        "syncError": "Не удалось синхронизировать историю торгов."
       },
       "nothingToShow": "У вас еще нет открытых счетов!",
       "openAccount": "Открыть новый счет!",
@@ -1296,6 +1314,8 @@
       },
       "accounts-form": {
         "title": "Открыть новый счёт",
+        "loadTypesError": "Не удалось загрузить типы счетов.",
+        "submitError": "Не удалось открыть новый счёт.",
         "fields": {
           "accountType": "Тип счёта",
           "phonePassword": "Телефонный пароль",
@@ -1880,10 +1900,23 @@
   "apiMessages": {
     "unauthorized": "Требуется авторизация.",
     "forbidden": "Доступ запрещён.",
+    "clientAccountBlocked": "Клиентский аккаунт заблокирован.",
     "validationError": "Ошибка валидации.",
     "methodNotAllowed": "Метод не поддерживается.",
     "notFound": "Ничего не найдено.",
     "mt4RequestFailed": "Ошибка запроса к MT4.",
+    "mt4ProfileFieldsRequired": "Заполните обязательные поля профиля перед открытием MT4 счёта:",
+    "profileFields": {
+      "firstname": "имя",
+      "secondname": "фамилия",
+      "email": "email",
+      "country": "страна",
+      "state": "регион",
+      "city": "город",
+      "address": "адрес",
+      "phone": "телефон",
+      "postalCode": "почтовый индекс"
+    },
     "requiredField": "Поле обязательно для заполнения.",
     "paymentDetailCreated": "Платёжные реквизиты успешно созданы.",
     "paymentDetailUpdated": "Платёжные реквизиты успешно обновлены.",

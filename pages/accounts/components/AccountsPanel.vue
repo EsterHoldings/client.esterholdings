@@ -411,7 +411,7 @@
                 <div
                   v-if="viewMode === 'full'"
                   class="cabinet-card__field">
-                  <UiTextSmall class="cabinet-card__label">ID</UiTextSmall>
+                  <UiTextSmall class="cabinet-card__label">{{ commonIdLabel }}</UiTextSmall>
                   <div
                     class="cabinet-card__value truncate"
                     :title="account.id">
@@ -448,7 +448,7 @@
           class="accounts-empty-state__button"
           :disabled="!props.canCreateAccount"
           @click="handleClickCreateNewAccount">
-          {{ openAccountLabel }}
+          {{ openNewAccountLabel }}
           &nbsp;
           <UiIconSuccess />
         </UiButtonDefault>
@@ -762,8 +762,13 @@
   const emptySubtitle = computed(() =>
     resolveText("cabinet.accounts.emptySubtitle", "Откройте первый торговый счет, чтобы начать работу.")
   );
+  const loadErrorLabel = computed(() => resolveText("cabinet.accounts.loadError", "Failed to load accounts."));
+  const favoriteToggleErrorLabel = computed(() =>
+    resolveText("cabinet.accounts.favoriteToggleError", "Failed to update favorites.")
+  );
   const favoriteAddLabel = computed(() => resolveText("cabinet.accounts.favoriteAdd", "Add to favorites"));
   const favoriteRemoveLabel = computed(() => resolveText("cabinet.accounts.favoriteRemove", "Remove from favorites"));
+  const commonIdLabel = computed(() => resolveText("cabinet.common.id", "ID"));
   const copyNumberLabel = computed(() => resolveText("cabinet.common.copyNumber", "Copy number"));
   const openMenuLabel = computed(() => resolveText("cabinet.common.openMenu", "Open menu"));
   const refreshBalanceLabel = computed(() => resolveText("cabinet.accounts.refreshBalance", "Refresh balance"));
@@ -785,7 +790,7 @@
       "Подтвердите данные профиля и документы, после этого сможете открыть MT4 счёт."
     )
   );
-  const openAccountLabel = computed(() => resolveText("cabinet.accounts.openAccount", "Открыть счет"));
+  const openNewAccountLabel = computed(() => resolveText("cabinet.accounts.openNew", "Открыть новый счёт"));
   const verifyActionLabel = computed(() =>
     resolveText("cabinet.dashboard.accountVerification.goToVerification", "Перейти к верификации")
   );
@@ -830,12 +835,14 @@
         return;
       }
 
+      await loadData({ suppressErrorToast: true });
       if (!options.suppressErrorToast) {
         toast.error(refreshBalanceErrorLabel.value);
       }
-    } catch {
+    } catch (error: any) {
+      await loadData({ suppressErrorToast: true });
       if (!options.suppressErrorToast) {
-        toast.error(refreshBalanceErrorLabel.value);
+        toast.error(extractApiErrorMessage(error, refreshBalanceErrorLabel.value) ?? refreshBalanceErrorLabel.value);
       }
     } finally {
       refreshingBalanceIds[key] = false;
@@ -896,34 +903,40 @@
     await loadData();
   };
 
-  const loadData = async () => {
+  const loadData = async (options: { suppressErrorToast?: boolean } = {}) => {
     isLoading.value = true;
     closeOptions();
     closeCardMenu();
 
-    const response = await appCore.accounts.get({
-      search: search.value,
-      perPage: perPage.value,
-      page: currentPage.value,
-      orderBy: orderBy.value,
-      orderDirection: orderDirection.value,
-      order_by: orderBy.value,
-      order_direction: orderDirection.value,
-    });
+    try {
+      const response = await appCore.accounts.get({
+        search: search.value,
+        perPage: perPage.value,
+        page: currentPage.value,
+        orderBy: orderBy.value,
+        orderDirection: orderDirection.value,
+        order_by: orderBy.value,
+        order_direction: orderDirection.value,
+      });
 
-    perPage.value = response.data.data.per_page;
-    currentPage.value = response.data.data.current_page;
-    total.value = response.data.data.total;
+      perPage.value = response.data.data.per_page;
+      currentPage.value = response.data.data.current_page;
+      total.value = response.data.data.total;
 
-    const accountsData = response.data.data.data.map((x: any) => {
-      x.is_favorite = !!x.is_favorite;
-      return x;
-    });
+      const accountsData = response.data.data.data.map((x: any) => {
+        x.is_favorite = !!x.is_favorite;
+        return x;
+      });
 
-    accounts.splice(0, accounts.length, ...accountsData);
-
-    isLoading.value = false;
-    isInitialLoading.value = false;
+      accounts.splice(0, accounts.length, ...accountsData);
+    } catch (error: any) {
+      if (!options.suppressErrorToast) {
+        toast.error(extractApiErrorMessage(error, loadErrorLabel.value) ?? loadErrorLabel.value);
+      }
+    } finally {
+      isLoading.value = false;
+      isInitialLoading.value = false;
+    }
   };
 
   const refreshAllBalancesAndReload = async (options: { suppressErrorToast?: boolean } = {}) => {
@@ -933,19 +946,19 @@
 
     try {
       await appCore.accounts.refreshAllBalances();
-    } catch {
+    } catch (error: any) {
       if (!options.suppressErrorToast) {
-        toast.error(refreshBalancesErrorLabel.value);
+        toast.error(extractApiErrorMessage(error, refreshBalancesErrorLabel.value) ?? refreshBalancesErrorLabel.value);
       }
     }
 
-    await loadData();
+    await loadData({ suppressErrorToast: options.suppressErrorToast });
   };
 
   const normalizeRefreshPayloadIds = (payload: any): string[] => {
     const rawIds = Array.isArray(payload) ? payload : Array.isArray(payload?.accountIds) ? payload.accountIds : [];
     const normalized = rawIds.map((id: unknown) => String(id ?? "").trim()).filter((id: string) => id !== "");
-    return [...new Set(normalized)];
+    return Array.from(new Set(normalized));
   };
 
   const clearPendingBalanceRefreshIds = () => {
@@ -1246,8 +1259,9 @@
     try {
       await appCore.accounts.toggleFavorite(account.id);
       await loadData();
-    } catch {
-      await loadData();
+    } catch (error: any) {
+      await loadData({ suppressErrorToast: true });
+      toast.error(extractApiErrorMessage(error, favoriteToggleErrorLabel.value) ?? favoriteToggleErrorLabel.value);
     }
   };
 

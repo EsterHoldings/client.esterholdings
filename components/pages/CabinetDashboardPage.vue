@@ -426,9 +426,14 @@
   const refreshAllAccountBalances = async (options: { suppressErrorToast?: boolean } = {}) => {
     try {
       await appCore.accounts.refreshAllBalances();
-    } catch {
+    } catch (error: any) {
       if (!options.suppressErrorToast) {
-        toast.error(resolveText("cabinet.accounts.refreshBalancesError", "Failed to refresh account balances."));
+        toast.error(
+          extractApiErrorMessage(
+            error,
+            resolveText("cabinet.accounts.refreshBalancesError", "Failed to refresh account balances.")
+          ) ?? resolveText("cabinet.accounts.refreshBalancesError", "Failed to refresh account balances.")
+        );
       }
     }
   };
