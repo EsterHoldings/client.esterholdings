@@ -116,7 +116,13 @@
 
           <div class="payment-field md:col-span-2">
             <UiTextSmall class="payment-field__label">{{ redirectLinkLabel }}</UiTextSmall>
-            <div class="payment-field__value break-all">{{ valueOrDash(payment.redirect_link) }}</div>
+            <div>
+              <UiIconCopy text="valueOrDash(payment.redirect_link)" />
+              <a
+                  class="payment-field__value break-all"
+                  :href="valueOrDash(payment.redirect_link)"
+              >{{ valueOrDash(payment.redirect_link) }}</a>
+            </div>
           </div>
 
           <template v-if="isInternalTransfer(payment)">
@@ -153,6 +159,7 @@
   import useEventBus from "~/composables/useEventBus";
   import { useAuthStore } from "~/stores/authStore";
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
+  import UiIconCopy from "~/components/ui/UiIconCopy.vue";
 
   definePageMeta({
     layout: "cabinet",
