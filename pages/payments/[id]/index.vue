@@ -116,7 +116,7 @@
 
           <div class="payment-field md:col-span-2">
             <UiTextSmall class="payment-field__label">{{ redirectLinkLabel }}</UiTextSmall>
-            <div class="flex justify-between items-center gap-2">
+            <div class="flex justify-start items-center gap-2">
               <UiIconCopy text="valueOrDash(payment.redirect_link)" />
               <a
                   class="payment-field__value break-all"
