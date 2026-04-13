@@ -301,13 +301,15 @@
 
                 <div
                     class="cabinet-card__grid"
-                    :class="viewMode === 'full' ? 'cabinet-card__grid--full' : ''">
+                    :class="viewMode === 'full' ? 'cabinet-card__grid--full' : ''"
+                >
                   <div class="cabinet-card__field">
                     <UiTextSmall class="cabinet-card__label">
                       {{ t("cabinet.billing.columns.amount") }}
                     </UiTextSmall>
                     <div class="cabinet-card__value cabinet-card__value--positive">${{ payment.amount }}</div>
                   </div>
+
                   <div class="cabinet-card__field">
                     <UiTextSmall class="cabinet-card__label">
                       {{ t("cabinet.billing.columns.createdAt") }}
@@ -317,7 +319,7 @@
                     </div>
                   </div>
 
-                  <div class="cabinet-card__head-side">
+                  <div class="cabinet-card__field">
                     <div class="status-inline">
                       <span
                           class="h-2 w-2 rounded-full"

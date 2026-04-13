@@ -475,19 +475,6 @@
                       -
                     </div>
                   </div>
-                  <div
-                      v-if="viewMode === 'full'"
-                      class="cabinet-card__field">
-                    <UiTextSmall class="cabinet-card__label">{{
-                        resolveText("cabinet.payments.details.columns.id", "ID")
-                      }}
-                    </UiTextSmall>
-                    <div
-                        class="cabinet-card__value"
-                        :title="String(paymentDetail.id)">
-                      {{ String(paymentDetail.id) }}
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
