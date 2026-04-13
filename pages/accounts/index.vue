@@ -10,15 +10,16 @@
         <div class="accounts-header__actions">
           <UiButtonDefault
             v-if="canCreateAccount"
-            state="info--small"
+            state="success--outline"
             class="new-account-btn"
             @click="handleClickCreateNewAccount">
             <UiIconPlus class="mr-2 fill-[var(--ui-text-main)]" />
             <span class="whitespace-nowrap">{{ createAccountLabel }}</span>
           </UiButtonDefault>
+
           <UiButtonDefault
             v-else
-            state="success--outline--small"
+            state="success--outline"
             class="new-account-btn"
             @click="handleClickGoToVerification">
             <span class="whitespace-nowrap">{{ verifyActionLabel }}</span>

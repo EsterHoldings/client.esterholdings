@@ -7,6 +7,11 @@
         </UiTextH4>
 
         <div class="payments-header__actions">
+          <div
+              v-if="isVerificationRequired"
+              class="payments-header__notice">
+            {{ paymentCreationBlockedReason }}
+          </div>
           <template v-if="canCreatePayment">
             <UiButtonDefault
               state="success--outline"
@@ -23,11 +28,6 @@
             {{ verifyActionLabel }}
           </UiButtonDefault>
         </div>
-      </div>
-      <div
-        v-if="isVerificationRequired"
-        class="payments-header__notice">
-        {{ paymentCreationBlockedReason }}
       </div>
     </template>
 
