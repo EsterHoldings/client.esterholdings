@@ -237,43 +237,44 @@
                   <td
                       class="px-5 py-3 align-middle"
                       @click.stop>
-                    <span
+                    <button
+                        type="button"
                         @click="toggleRowOptions(index)"
-                        class="relative flex h-[32px] w-[32px] items-center justify-center rounded-md border border-transparent transition-colors cursor-pointer"
+                        class="card-menu-trigger relative flex h-[32px] w-[32px] items-center justify-center rounded-md border border-transparent transition-colors cursor-pointer hover:border-[var(--color-stroke-ui-light)]"
+                        :aria-label="resolveText('cabinet.payments.details.actions.openMenu', 'Open menu')"
                         :ref="el => (triggerRefs[index] = el as HTMLElement | null)">
                       <UiIconDotsVertical/>
-                    </span>
+                    </button>
 
                     <Teleport to="body">
                       <div
                           v-if="currentRowActiveOptions === index"
-                          :ref="el => (menuRefs[index] = el as HTMLElement | null)"
-                          class="fixed z-[9999] max-h-[70vh] overflow-auto text-[var(--ui-text-main)]"
-                          :class="[
-                          'flex min-w-[140px] max-w-[60vw] flex-col gap-1 rounded-md border border-[var(--color-stroke-ui-light)] bg-[var(--color-stroke-ui-dark)] p-3 shadow-lg transition-opacity duration-100',
-                          menuReady[index] ? 'opacity-100' : 'opacity-0 pointer-events-none',
-                        ]"
-                          :style="getMenuStyle(index)">
-                        <div
-                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
+                          ref="tableMenuRef"
+                          class="card-menu"
+                          :style="tableMenuStyle">
+                        <button
+                            class="card-menu__item"
+                            type="button"
                             @click="handleClickViewPaymentDetail(paymentDetail.id)">
-                          <UiIconEye class="!h-[14px] !w-[14px]"/>
+                          <UiIconEye class="!h-4 !w-4 text-[var(--ui-text-main)]"/>
                           <UiTextSmall class="whitespace-nowrap">{{ t("cabinet.payments.details.view") }}</UiTextSmall>
-                        </div>
+                        </button>
 
-                        <div
+                        <button
                             v-if="!paymentDetail.is_archived"
-                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
+                            class="card-menu__item"
+                            type="button"
                             @click="handleEditPaymentDetail(paymentDetail)">
-                          <UiIconUpdate class="!h-[14px] !w-[14px]"/>
+                          <UiIconUpdate class="!h-4 !w-4 text-[var(--ui-text-main)]"/>
                           <UiTextSmall class="whitespace-nowrap">{{
                               resolveText("cabinet.payments.details.actions.edit", "Edit")
                             }}
                           </UiTextSmall>
-                        </div>
+                        </button>
 
-                        <div
-                            class="flex h-8 cursor-pointer items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
+                        <button
+                            class="card-menu__item"
+                            type="button"
                             @click="
                             paymentDetail.is_archived
                               ? handleRestorePaymentDetail(paymentDetail.id)
@@ -281,17 +282,17 @@
                           ">
                           <UiIconTrash
                               v-if="!paymentDetail.is_archived"
-                              class="!h-[14px] !w-[14px] stroke-[var(--ui-sticker-danger)]"/>
+                              class="!h-4 !w-4 text-[var(--ui-text-main)] stroke-[var(--ui-sticker-danger)]"/>
                           <UiIconUpdate
                               v-else
-                              class="!h-[14px] !w-[14px]"/>
+                              class="!h-4 !w-4 text-[var(--ui-text-main)]"/>
                           <UiTextSmall class="whitespace-nowrap">{{
                               paymentDetail.is_archived
                                   ? resolveText("cabinet.payments.details.actions.restore", "Restore")
                                   : resolveText("cabinet.payments.details.actions.archive", "Archive")
                             }}
                           </UiTextSmall>
-                        </div>
+                        </button>
                       </div>
                     </Teleport>
                   </td>
@@ -331,19 +332,25 @@
                   </button>
                   <button
                       type="button"
-                      class="action-btn"
+                      class="action-btn card-menu-trigger"
                       @click.stop="toggleCardMenu(paymentDetail.id)"
+                      :ref="el => (cardMenuTriggerRefs[paymentDetail.id] = el as HTMLElement | null)"
                       :aria-label="resolveText('cabinet.payments.details.actions.openMenu', 'Open menu')">
                     <UiIconDotsVertical class="h-4 w-4"/>
+                  </button>
+
+                  <Teleport to="body">
                     <div
                         v-if="cardMenuOpenId === paymentDetail.id"
-                        class="card-menu">
+                        :ref="setCardMenuRef"
+                        class="card-menu"
+                        :style="cardMenuStyle">
                       <button
-                          class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]"
+                          class="card-menu__item"
                           type="button"
                           :title="resolveText('cabinet.payments.details.view', 'View')"
                           @click="handleClickViewPaymentDetail(paymentDetail.id)">
-                        <UiIconEye class="!h-4 !w-4 shrink-0"/>
+                        <UiIconEye class="!h-4 !w-4 shrink-0 text-[var(--ui-text-main)]"/>
                         <UiTextSmall class="whitespace-nowrap">{{
                             resolveText("cabinet.payments.details.view", "View")
                           }}
@@ -351,18 +358,18 @@
                       </button>
                       <button
                           v-if="!paymentDetail.is_archived"
-                          class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]"
+                          class="card-menu__item"
                           type="button"
                           :title="resolveText('cabinet.payments.details.actions.edit', 'Edit')"
                           @click="handleEditPaymentDetail(paymentDetail)">
-                        <UiIconUpdate class="!h-4 !w-4 shrink-0"/>
+                        <UiIconUpdate class="!h-4 !w-4 shrink-0 text-[var(--ui-text-main)]"/>
                         <UiTextSmall class="whitespace-nowrap">{{
                             resolveText("cabinet.payments.details.actions.edit", "Edit")
                           }}
                         </UiTextSmall>
                       </button>
                       <button
-                          class="flex w-full items-center justify-start gap-2 rounded px-2 py-1 hover:bg-[var(--color-stroke-ui-light)]"
+                          class="card-menu__item"
                           type="button"
                           :title="
                           paymentDetail.is_archived
@@ -373,13 +380,13 @@
                           paymentDetail.is_archived
                             ? handleRestorePaymentDetail(paymentDetail.id)
                             : handleDeletePaymentDetail(paymentDetail.id)
-                        ">
+                      ">
                         <UiIconTrash
                             v-if="!paymentDetail.is_archived"
-                            class="!h-4 !w-4 shrink-0 stroke-[var(--ui-sticker-danger)]"/>
+                            class="!h-4 !w-4 shrink-0 text-[var(--ui-text-main)] stroke-[var(--ui-sticker-danger)]"/>
                         <UiIconUpdate
                             v-else
-                            class="!h-4 !w-4 shrink-0"/>
+                            class="!h-4 !w-4 shrink-0 text-[var(--ui-text-main)]"/>
                         <UiTextSmall class="whitespace-nowrap">{{
                             paymentDetail.is_archived
                                 ? resolveText("cabinet.payments.details.actions.restore", "Restore")
@@ -388,7 +395,7 @@
                         </UiTextSmall>
                       </button>
                     </div>
-                  </button>
+                  </Teleport>
                 </div>
 
                 <div class="cabinet-card__header">
@@ -673,71 +680,84 @@ const tableRef = ref<any>(null);
 
 const currentRowActiveOptions = ref<number | null>(null);
 const triggerRefs = ref<(HTMLElement | null)[]>([]);
-const menuRefs = ref<(HTMLElement | null)[]>([]);
-const menuReady = reactive<Record<number, boolean>>({});
-const dropUp = reactive<Record<number, boolean>>({});
-const menuPosition = reactive<Record<number, { top: number; left: number }>>({});
+const tableMenuRef = ref<HTMLElement | null>(null);
+const tableMenuStyle = ref<Record<string, string>>({});
+const cardMenuRef = ref<HTMLElement | null>(null);
+const cardMenuStyle = ref<Record<string, string>>({});
+const cardMenuTriggerRefs = reactive<Record<string | number, HTMLElement | null>>({});
+const MENU_WIDTH = 180;
+const MENU_GAP = 8;
+const VIEWPORT_OFFSET = 8;
+const FALLBACK_MENU_HEIGHT = 140;
 
-const getMenuStyle = (index: number) => {
-  const pos = menuPosition[index];
-  if (!pos) return {top: "0px", left: "0px"};
-  return {top: `${pos.top}px`, left: `${pos.left}px`};
+const closeOptions = () => {
+  currentRowActiveOptions.value = null;
+  tableMenuStyle.value = {};
 };
 
-const updateMenuPosition = (index: number) => {
+const closeCardMenu = () => {
+  cardMenuOpenId.value = null;
+  cardMenuStyle.value = {};
+};
+
+const buildFloatingMenuStyle = (trigger: HTMLElement, menuElement?: HTMLElement | null): Record<string, string> => {
+  const rect = trigger.getBoundingClientRect();
+  const menuHeight = menuElement?.offsetHeight ?? FALLBACK_MENU_HEIGHT;
+
+  const maxLeft = Math.max(VIEWPORT_OFFSET, window.innerWidth - MENU_WIDTH - VIEWPORT_OFFSET);
+  const left = Math.min(Math.max(rect.right - MENU_WIDTH, VIEWPORT_OFFSET), maxLeft);
+
+  const fitsBottom = rect.bottom + MENU_GAP + menuHeight <= window.innerHeight - VIEWPORT_OFFSET;
+  const top = fitsBottom ? rect.bottom + MENU_GAP : Math.max(VIEWPORT_OFFSET, rect.top - menuHeight - MENU_GAP);
+
+  return {
+    top: `${Math.round(top)}px`,
+    left: `${Math.round(left)}px`,
+    width: `${MENU_WIDTH}px`,
+  };
+};
+
+const updateTableMenuPosition = (index: number) => {
   const trigger = triggerRefs.value[index];
-  const menu = menuRefs.value[index];
-  if (!trigger || !menu) return;
+  if (!trigger) return;
 
-  const offset = 8;
-  const triggerRect = trigger.getBoundingClientRect();
-
-  const menuHeight = menu.offsetHeight;
-  const menuWidth = menu.offsetWidth;
-
-  const availableDown = window.innerHeight - triggerRect.bottom;
-  const availableUp = triggerRect.top;
-
-  let openUp = false;
-  if (availableDown >= menuHeight + offset) openUp = false;
-  else if (availableUp >= menuHeight + offset) openUp = true;
-  else openUp = availableUp > availableDown;
-
-  dropUp[index] = openUp;
-
-  let top = openUp ? triggerRect.top - offset - menuHeight : triggerRect.bottom + offset;
-  let left = triggerRect.right - menuWidth - 12;
-
-  const minX = 8;
-  const maxX = Math.max(8, window.innerWidth - menuWidth - 8);
-  left = Math.min(Math.max(left, minX), maxX);
-
-  const minY = 8;
-  const maxY = Math.max(8, window.innerHeight - menuHeight - 8);
-  top = Math.min(Math.max(top, minY), maxY);
-
-  menuPosition[index] = {top, left};
+  tableMenuStyle.value = buildFloatingMenuStyle(trigger, tableMenuRef.value);
 };
 
 const toggleRowOptions = async (index: number) => {
-  const next = currentRowActiveOptions.value === index ? null : index;
-  currentRowActiveOptions.value = next;
+  const willOpen = currentRowActiveOptions.value !== index;
+  if (!willOpen) {
+    closeOptions();
+    return;
+  }
 
-  if (next === null) return;
-
-  menuReady[index] = false;
+  closeCardMenu();
+  currentRowActiveOptions.value = index;
+  tableMenuStyle.value = {};
 
   await nextTick();
-  updateMenuPosition(index);
+  updateTableMenuPosition(index);
+  await nextTick();
+  updateTableMenuPosition(index);
+};
 
-  requestAnimationFrame(() => {
-    menuReady[index] = true;
-  });
+const updateCardMenuPosition = (id: string | number) => {
+  const trigger = cardMenuTriggerRefs[id];
+  if (!trigger) return;
+
+  cardMenuStyle.value = buildFloatingMenuStyle(trigger, cardMenuRef.value);
+};
+
+const setCardMenuRef = (element: Element | null) => {
+  cardMenuRef.value = element as HTMLElement | null;
 };
 
 const recalcActiveMenu = () => {
   if (currentRowActiveOptions.value !== null) {
-    updateMenuPosition(currentRowActiveOptions.value);
+    updateTableMenuPosition(currentRowActiveOptions.value);
+  }
+  if (cardMenuOpenId.value !== null) {
+    updateCardMenuPosition(cardMenuOpenId.value);
   }
 };
 
@@ -746,16 +766,16 @@ const onClickOutside = (e: MouseEvent) => {
   if (i === null) return;
 
   const tEl = triggerRefs.value[i];
-  const mEl = menuRefs.value[i];
   const target = e.target as Node | null;
   if (!target) return;
 
-  const inside = (!!tEl && tEl.contains(target)) || (!!mEl && mEl.contains(target));
-  if (!inside) currentRowActiveOptions.value = null;
+  const inside = (!!tEl && tEl.contains(target)) || (!!tableMenuRef.value && tableMenuRef.value.contains(target));
+  if (!inside) closeOptions();
 };
 
 const onKeydown = (e: KeyboardEvent) => {
-  if (e.key === "Escape") currentRowActiveOptions.value = null;
+  if (e.key !== "Escape") return;
+  closeAllMenus();
 };
 
 const sortByFilterData = computed(() => [
@@ -1029,8 +1049,8 @@ const formatRelativeDate = (value: unknown): string => {
 };
 
 const closeAllMenus = () => {
-  cardMenuOpenId.value = null;
-  currentRowActiveOptions.value = null;
+  closeCardMenu();
+  closeOptions();
 };
 
 const handleClickViewPaymentDetail = async (id: string | number) => {
@@ -1094,17 +1114,29 @@ const handleEditPaymentDetail = async (paymentDetail: any) => {
   });
 };
 
-const toggleCardMenu = (id: string | number) => {
-  cardMenuOpenId.value = cardMenuOpenId.value === id ? null : id;
+const toggleCardMenu = async (id: string | number) => {
+  const willOpen = cardMenuOpenId.value !== id;
+  if (!willOpen) {
+    closeCardMenu();
+    return;
+  }
+
+  closeOptions();
+  cardMenuOpenId.value = id;
+  cardMenuStyle.value = {};
+
+  await nextTick();
+  updateCardMenuPosition(id);
+  await nextTick();
+  updateCardMenuPosition(id);
 };
 
 const handleOutsideCardMenu = (event: MouseEvent) => {
   if (!cardMenuOpenId.value) return;
-  const target = event.target as HTMLElement | null;
-  if (!target) return;
-  if (!target.closest(".card-actions")) {
-    cardMenuOpenId.value = null;
-  }
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  if (target.closest(".card-menu") || target.closest(".card-menu-trigger")) return;
+  closeCardMenu();
 };
 
 const handleChangeFilterSortBy = async (value: string) => {
@@ -1611,20 +1643,36 @@ onBeforeUnmount(() => {
 }
 
 .card-menu {
-  position: absolute;
-  right: 0;
-  top: 32px;
-  z-index: 20;
+  position: fixed;
+  z-index: 9999;
   min-width: 160px;
+  width: 180px;
   border-radius: 10px;
   border: 1px solid var(--color-stroke-ui-light);
-  background: var(--color-stroke-ui-dark);
+  background: var(--ui-background-panel);
+  opacity: 1;
+  pointer-events: auto;
   padding: 8px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
 }
 
-.card-menu button {
+.card-menu-trigger {
+  position: static;
+}
+
+.card-menu__item {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   height: 34px;
+  padding: 0 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.card-menu__item:hover {
+  background: var(--color-stroke-ui-light);
 }
 
 .status-inline {
