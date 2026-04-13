@@ -18,7 +18,7 @@
           </UiButtonDefault>
           <UiButtonDefault
             v-else
-            state="info--outline"
+            state="success--outline--small"
             class="new-account-btn"
             @click="handleClickGoToVerification">
             <span class="whitespace-nowrap">{{ verifyActionLabel }}</span>
