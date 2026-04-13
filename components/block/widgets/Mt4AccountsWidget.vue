@@ -18,7 +18,7 @@
           class="w-full sm:w-auto">
           <UiButtonDefault
             state="success--outline--small"
-            class="mt4-header-card__cta w-full sm:w-auto">
+            class="mt4-header-card__cta w-full sm:w-auto text-[var(--ui-text-main)]">
             {{ t("cabinet.dashboard.mt4.openNewAccount") }}
           </UiButtonDefault>
         </NuxtLink>
@@ -822,7 +822,6 @@
     border-radius: 999px !important;
     padding-inline: 18px;
     font-weight: 700;
-    color: white !important;
   }
 
   :deep(.mt4-header-card__cta--outline) {
