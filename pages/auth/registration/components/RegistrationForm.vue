@@ -103,10 +103,12 @@
 </template>
 
 <script lang="ts" setup>
-import {navigateTo, useNuxtApp} from "nuxt/app";
-import {ref, onUnmounted, computed} from "vue";
+import { navigateTo, useNuxtApp } from "nuxt/app";
+import { useLocalePath } from "#imports";
+import { ref, onUnmounted, computed } from "vue";
 import {useAppCore} from "~/composables/useAppCore";
 import {useToast} from "vue-toastification";
+import { useAuthStore } from "~/stores/authStore";
 import {
   validateRegistrationForm,
   validatorRegistrationForm,
@@ -132,13 +134,19 @@ let isAgreeTerms = ref(false);
 const isAgreePrivacy = ref(false);
 const appCore = useAppCore();
 const toast = useToast();
+const localePath = useLocalePath();
 
 const isDisabledSubmit = computed(() => {
   return !isAgreeTerms.value || !isAgreePrivacy.value;
 })
 
+const resolveAccessToken = (response: any): string =>
+  String(response?.data?.access_token ?? response?.data?.data?.access_token ?? "").trim();
+
 const doSendForm = async (): Promise<void> => {
   isLoading.value = true;
+  let shouldResetFormData = false;
+  let registrationCompleted = false;
 
   try {
     await appCore.auth.doRegistration({
@@ -146,24 +154,48 @@ const doSendForm = async (): Promise<void> => {
       password: props.formData.password,
       password_confirmation: props.formData.confirmPassword,
     });
+
+    registrationCompleted = true;
+
+    const authStore = useAuthStore();
+    const response = await appCore.auth.doLogin({
+      email: props.formData.email,
+      password: props.formData.password,
+    });
+    const accessToken = resolveAccessToken(response);
+
+    if (!accessToken) {
+      throw new Error("Missing access token.");
+    }
+
+    authStore.setAccessToken(accessToken);
+    await authStore.initAuth(true);
+    shouldResetFormData = true;
     toast.success("Successfully registration!");
-    navigateTo("/auth/login")
+    await navigateTo(localePath("/"));
   } catch (e: any) {
     if (e.status === 422) {
+      const validationErrors = e.response?.data?.errors ?? {};
 
-      for (const [field, messages] of Object.entries(e.response.data.errors)) {
-        console.log('Поле:', field, 'Повідомлення:', messages);
+      for (const [field, messages] of Object.entries(validationErrors)) {
         const fieldErr = validatorRegistrationForm?.errorsFormData[field];
-        fieldErr.errors = messages;
-        // validatorRegistrationForm?.errorsFormData[field].errors = [messages]
+        if (fieldErr) {
+          fieldErr.errors = messages;
+        }
       }
 
       toast.error("Invalid credentials");
+    } else if (registrationCompleted) {
+      toast.success("Successfully registration!");
+      await navigateTo(localePath("/auth/login"));
     } else {
       toast.error("Oops! Something went wrong =(");
     }
   } finally {
-    resetValidationRegistrationForm();
+    if (shouldResetFormData) {
+      resetValidationRegistrationForm();
+    }
+
     isLoading.value = false;
   }
 };

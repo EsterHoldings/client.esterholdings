@@ -41,7 +41,6 @@
             </UiSelect>
 
             <ViewModeToggle
-              v-if="!isMobileViewport"
               class="w-full sm:w-auto"
               bordered
               :modelValue="viewMode"
@@ -53,7 +52,9 @@
 
       <template #content>
         <template v-if="viewMode === 'table'">
-          <TableMain ref="tableRef">
+          <TableMain
+            ref="tableRef"
+            class="accounts-table">
             <template #thead>
               <tr>
                 <th class="px-4 py-2 text-left font-normal">
@@ -1086,13 +1087,6 @@
 
     const viewportChanged = syncViewport();
 
-    if (isMobileViewport.value) {
-      if (viewMode.value !== "cards") {
-        viewMode.value = "cards";
-      }
-      return;
-    }
-
     if (!forceRestore && !viewportChanged) return;
 
     const saved = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
@@ -1111,12 +1105,10 @@
 
   watch(viewMode, mode => {
     if (typeof window === "undefined") return;
-    if (isMobileViewport.value) return;
     localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
   });
 
   const handleChangeViewMode = (nextViewMode: string) => {
-    if (isMobileViewport.value) return;
     if (nextViewMode === "table" || nextViewMode === "cards" || nextViewMode === "full") {
       viewMode.value = nextViewMode;
     }
@@ -1423,6 +1415,7 @@
     flex: 1 1 auto;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   @media (min-width: 768px) {
@@ -1435,7 +1428,12 @@
       width: auto;
       flex: none;
       justify-content: flex-end;
+      flex-wrap: nowrap;
     }
+  }
+
+  .accounts-table :deep(table) {
+    min-width: 720px;
   }
 
   .accounts-empty-state {
@@ -1773,6 +1771,15 @@
   }
 
   @media (max-width: 640px) {
+    .cabinet-controls-row__left,
+    .cabinet-controls-row__right {
+      min-width: 0;
+    }
+
+    .cabinet-controls-row__right :deep(.view-toggle) {
+      flex: 1 1 32px;
+    }
+
     .card-with-actions {
       padding-right: 144px;
     }

@@ -248,6 +248,13 @@
                           class="h-2 w-2 rounded-full"
                           :class="statusDotClass(payment.status)"></span>
                       <span>{{ statusText(payment.status) }}</span>
+                      <span
+                          v-if="hasAdminComment(payment)"
+                          class="payment-admin-comment-indicator"
+                          :title="adminCommentPreview(payment)"
+                          :aria-label="adminCommentPreview(payment)">
+                        <UiIconComment class="payment-admin-comment-indicator__icon"/>
+                      </span>
                     </div>
                   </td>
 
@@ -363,6 +370,13 @@
                           class="h-2 w-2 rounded-full"
                           :class="statusDotClass(payment.status)"></span>
                       <span>{{ statusText(payment.status) }}</span>
+                      <span
+                          v-if="hasAdminComment(payment)"
+                          class="payment-admin-comment-indicator"
+                          :title="adminCommentPreview(payment)"
+                          :aria-label="adminCommentPreview(payment)">
+                        <UiIconComment class="payment-admin-comment-indicator__icon"/>
+                      </span>
                     </div>
                   </div>
 
@@ -490,6 +504,7 @@ import PaginationMain from "~/components/block/paginations/PaginationMain.vue";
 import TableMain from "~/components/block/tables/TableMain.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiIconCardCheck from "~/components/ui/UiIconCardCheck.vue";
+import UiIconComment from "~/components/ui/UiIconComment.vue";
 import UiIconCopy from "~/components/ui/UiIconCopy.vue";
 import UiIconSearch from "~/components/ui/UiIconSearch.vue";
 import UiIconSort from "~/components/ui/UiIconSort.vue";
@@ -741,6 +756,9 @@ const deletePaymentSuccessLabel = computed(() =>
 const deletePaymentErrorLabel = computed(() =>
     resolveI18nValue("cabinet.billing.deletePaymentError", "Не удалось удалить платеж.")
 );
+const adminCommentLabel = computed(() =>
+    resolveI18nValue("cabinet.billing.withdrawalForm.adminComment", "Admin comment")
+);
 const loadPaymentsErrorLabel = computed(() =>
     resolveI18nValue("cabinet.billing.listLoadError", "Не удалось загрузить список платежей.")
 );
@@ -946,6 +964,13 @@ const paymentAmountClass = (payment: any): string => {
   }
 
   return "text-[var(--ui-text-main)]";
+};
+
+const hasAdminComment = (payment: any): boolean => String(payment?.admin_comment ?? "").trim() !== "";
+
+const adminCommentPreview = (payment: any): string => {
+  const comment = String(payment?.admin_comment ?? "").trim();
+  return comment !== "" ? `${adminCommentLabel.value}: ${comment}` : adminCommentLabel.value;
 };
 
 const formatPaymentAmount = (payment: any): string => {
@@ -1819,6 +1844,24 @@ onBeforeUnmount(() => {
   color: var(--ui-text-main);
   text-transform: capitalize;
   font-weight: 600;
+}
+
+.payment-admin-comment-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  border-radius: 999px;
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 32%, transparent);
+  text-transform: none;
+}
+
+.payment-admin-comment-indicator__icon {
+  height: 14px;
+  width: 14px;
 }
 
 .cabinet-card--full-row {

@@ -163,6 +163,25 @@
       padding: 0;
     }
   }
+
+  @media (max-width: 639px) {
+    .accounts-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 8px 4px 4px;
+    }
+
+    .accounts-header__actions,
+    .new-account-btn {
+      width: 100%;
+    }
+
+    .new-account-btn {
+      min-height: 44px;
+      justify-content: center;
+    }
+  }
 </style>
 
 <!--<template>-->

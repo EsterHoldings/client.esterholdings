@@ -112,6 +112,7 @@
   const twoFaErrors = ref<string[]>([]);
 
   const handleTwoFaCodeInput = (value: string) => {
+    twoFaErrors.value = [];
     emit("input2Fa", value);
   };
 
@@ -126,36 +127,87 @@
     return localePath("/");
   };
 
+  const resolveAccessToken = (response: any): string =>
+    String(response?.data?.access_token ?? response?.data?.data?.access_token ?? "").trim();
+
+  const isTwoFaRequiredResponse = (responseData: any): boolean => {
+    const message = String(responseData?.message ?? "").toLowerCase();
+
+    return Boolean(
+      responseData?.data?.two_fa_is_required ||
+        responseData?.errors?.twoFaCode?.length > 0 ||
+        message.includes("two fa") ||
+        message.includes("two-factor") ||
+        message.includes("2fa")
+    );
+  };
+
+  const resolveTwoFaErrors = (responseData: any): string[] => {
+    const rawFieldErrors = Array.isArray(responseData?.errors?.twoFaCode)
+      ? responseData.errors.twoFaCode
+      : [];
+    const messages = [
+      errors.get("twoFaCode"),
+      ...rawFieldErrors,
+      errors.currentMessage(null),
+      responseData?.message,
+    ]
+      .map((message) => String(message ?? "").trim())
+      .filter(Boolean);
+
+    const uniqueMessages = Array.from(new Set(messages));
+
+    return uniqueMessages.length > 0 ? uniqueMessages : ["Invalid 2Fa code"];
+  };
+
   const doSendForm = async () => {
+    let shouldResetFormData = false;
+
     try {
       isLoading.value = true;
+      twoFaErrors.value = [];
+
       const authStore = useAuthStore();
       const response = await appCore.auth.doLogin(props.formData);
-      const accessToken = response.data.access_token;
+      const accessToken = resolveAccessToken(response);
+
+      if (!accessToken) {
+        throw new Error("Missing access token.");
+      }
+
       authStore.setAccessToken(accessToken);
+      await authStore.initAuth(true);
+      shouldResetFormData = true;
+      twoFaEnabled.value = false;
       toast.success("Welcome!");
       navigateTo(resolvePostLoginTarget());
     } catch (e: any) {
       const responseData = e.response?.data;
-      const twoFaRequired =
-        responseData?.data?.two_fa_is_required ||
-        responseData?.errors?.twoFaCode?.length > 0 ||
-        String(responseData?.message ?? "")
-          .toLowerCase()
-          .includes("two fa");
+      const submittedTwoFaCode = String(props.formData.twoFaCode ?? "").trim();
+      const wasTwoFaEnabled = twoFaEnabled.value;
+      const twoFaRequired = isTwoFaRequiredResponse(responseData);
+
       if (twoFaRequired) {
-        if (!twoFaEnabled.value) {
-          toast.info(responseData?.message ?? "");
-          twoFaEnabled.value = true;
+        twoFaEnabled.value = true;
+
+        if (!wasTwoFaEnabled && submittedTwoFaCode === "") {
+          twoFaErrors.value = [];
+          return;
         }
-        twoFaErrors.value = responseData?.errors?.twoFaCode ?? [responseData?.message ?? ""].filter(Boolean);
+
+        twoFaErrors.value = resolveTwoFaErrors(responseData);
       } else if (e.status === 401) {
         toast.error(errors.currentMessage("Invalid credentials"));
       } else {
         toast.error("Invalid credentials");
       }
     } finally {
-      resetValidationLoginForm();
+      if (shouldResetFormData) {
+        resetValidationLoginForm();
+      } else {
+        validatorLoginForm.clearFieldsErrors();
+      }
+
       setTimeout(() => {
         isLoading.value = false;
       }, 1500);

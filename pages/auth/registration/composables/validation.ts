@@ -18,4 +18,5 @@ export const resetValidationRegistrationForm: any = (): void => {
 export const resetFormData: any = (): void => {
   formData.email = "";
   formData.password = "";
+  formData.confirmPassword = "";
 };

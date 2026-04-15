@@ -272,13 +272,15 @@
   @media (max-width: 768px) {
     .accounts__edit {
       &__top {
-        padding-left: 20px;
-        padding-right: 20px;
+        min-height: 52px;
+        padding-left: max(18px, env(safe-area-inset-left, 0px));
+        padding-right: max(54px, calc(env(safe-area-inset-right, 0px) + 54px));
       }
 
       &__content {
         &__fields {
-          padding: 20px;
+          padding: 20px max(16px, env(safe-area-inset-right, 0px)) 24px
+            max(16px, env(safe-area-inset-left, 0px));
         }
       }
 
@@ -289,6 +291,21 @@
       &__save-btn {
         width: 100%;
       }
+    }
+
+    .account-type-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .account-type-card {
+      min-height: 82px;
+      padding: 13px 14px;
+    }
+
+    .accounts__edit__notice {
+      margin-top: 0;
+      padding: 12px;
+      font-size: 12px;
     }
   }
 </style>

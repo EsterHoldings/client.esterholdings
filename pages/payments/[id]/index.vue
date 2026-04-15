@@ -109,9 +109,12 @@
 
           <div
             v-if="payment.admin_comment"
-            class="payment-field md:col-span-2">
-            <UiTextSmall class="payment-field__label">{{ adminCommentLabel }}</UiTextSmall>
-            <div class="payment-field__value">{{ valueOrDash(payment.admin_comment) }}</div>
+            class="payment-field payment-field--admin-comment md:col-span-2">
+            <div class="payment-admin-comment__header">
+              <UiIconComment class="payment-admin-comment__icon" />
+              <UiTextSmall class="payment-field__label">{{ adminCommentLabel }}</UiTextSmall>
+            </div>
+            <div class="payment-field__value payment-admin-comment__value">{{ valueOrDash(payment.admin_comment) }}</div>
           </div>
 
           <div class="payment-field md:col-span-2">
@@ -159,6 +162,7 @@
   import useEventBus from "~/composables/useEventBus";
   import { useAuthStore } from "~/stores/authStore";
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
+  import UiIconComment from "~/components/ui/UiIconComment.vue";
   import UiIconCopy from "~/components/ui/UiIconCopy.vue";
 
   definePageMeta({
@@ -502,6 +506,34 @@
   .payment-field__value {
     color: var(--ui-text-main);
     font-weight: 600;
+  }
+
+  .payment-field--admin-comment {
+    padding: 14px;
+    border: 1px solid color-mix(in srgb, var(--color-warning) 38%, transparent);
+    border-radius: 14px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--color-warning) 12%, transparent) 0%, transparent 70%),
+      color-mix(in srgb, var(--ui-background-card) 82%, transparent);
+  }
+
+  .payment-admin-comment__header {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .payment-admin-comment__icon {
+    height: 18px;
+    width: 18px;
+    color: var(--color-warning);
+    flex: 0 0 auto;
+  }
+
+  .payment-admin-comment__value {
+    line-height: 1.55;
+    white-space: pre-wrap;
   }
 
   .payment-detail-highlight {
