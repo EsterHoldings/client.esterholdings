@@ -1314,22 +1314,31 @@
             "postal_code": "Postal code"
           },
           "placeholders": {
-            "email": "example1test.com",
+            "email": "john.doe{'@'}example.com",
             "first_name": "John",
-            "last_name": "Doe",
-            "mid_name": "William",
-            "birthdate": "",
-            "phone": "",
-            "country": "Country",
-            "state": "State",
-            "city": "City",
-            "address": "Backer Str. 2b, Apartments 8",
-            "postal_code": "00000"
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "Save and send to verification",
           "success": "User data successfully updated and sent for verification!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "Edit",
+            "update": "Update data"
+          },
+          "documentsReminder": {
+            "title": "Documents are required to confirm profile data",
+            "text": "Keep in mind that you also need to upload documents so we can confirm the data entered in this form.",
+            "button": "Go to document upload"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1382,6 +1391,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "What documents to upload",
+            "text": "Upload a passport, national ID card or international passport. The document must let us verify your profile data: first name, last name, date of birth, address and other required details."
+          },
+          "dropzone": {
+            "title": "Drag and drop files",
+            "separator": "or",
+            "action": "click to upload",
+            "hint": "PNG, JPG, JPEG or PDF. Maximum file size: 2 MB.",
+            "disabledHint": "Document upload will be available after the required step is selected."
           }
         },
         "tab-user-photo": {
@@ -1420,7 +1440,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "Admin comment",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1437,14 +1457,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "Upload a passport, national ID card or international passport to confirm the profile data you entered."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "Fill in all required profile fields and keep them up to date."
             }
           },
           "statuses": {
@@ -1452,7 +1474,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "Load more"
+          "loadMore": "Load more",
+          "adminCommentLabel": "Admin comment"
         }
       },
       "generalVerification": {
@@ -1556,7 +1579,8 @@
         "transfer": "Transfer",
         "history": "Transactions",
         "changeType": "Change type",
-        "remove": "Remove"
+        "remove": "Remove",
+        "depositTooltip": "Make a deposit"
       },
       "transactions": {
         "empty": "No transactions yet",
@@ -2461,7 +2485,11 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "Document uploaded successfully.",
+    "documentsSaved": "Documents saved successfully.",
+    "documentDeleted": "Document deleted successfully.",
+    "photoDeleted": "Photo deleted successfully."
   },
   "cabinetExtra": {
     "transactions": {

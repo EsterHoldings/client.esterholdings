@@ -90,7 +90,7 @@
                         @click="handleOrderByAndDirection('balance')" />
                     </div>
                     <span
-                      class="table-account-col table-account-col--actions"
+                      class="table-account-col table-account-col--actions table-account-actions"
                       aria-hidden="true"></span>
                   </div>
                 </th>
@@ -162,14 +162,24 @@
                             :spinning="isBalanceRefreshing(account.id)" />
                         </button>
                       </div>
-                      <button
-                        type="button"
-                        @click.stop="toggleRowOptions(index)"
-                        class="table-account-col table-account-col--actions relative flex items-center justify-center h-[32px] w-[32px] rounded-md hover:border-[var(--color-stroke-ui-light)] border border-transparent transition-colors transition-opacity cursor-pointer"
-                        :ref="el => (triggerRefs[index] = el as HTMLElement)"
-                        :aria-label="openMenuLabel">
-                        <UiIconDotsVertical />
-                      </button>
+                      <div class="table-account-col table-account-col--actions table-account-actions">
+                        <button
+                          type="button"
+                          class="quick-deposit-btn table-account-action-btn"
+                          :title="depositActionTooltip"
+                          :aria-label="depositActionTooltip"
+                          @click.stop="handleClickDeposit(account.id)">
+                          <UiIconPayment class="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          @click.stop="toggleRowOptions(index)"
+                          class="table-account-action-btn relative flex items-center justify-center rounded-md hover:border-[var(--color-stroke-ui-light)] border border-transparent transition-colors transition-opacity cursor-pointer"
+                          :ref="el => (triggerRefs[index] = el as HTMLElement)"
+                          :aria-label="openMenuLabel">
+                          <UiIconDotsVertical />
+                        </button>
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -292,6 +302,14 @@
                 </button>
                 <button
                   type="button"
+                  class="menu-btn quick-deposit-btn"
+                  :title="depositActionTooltip"
+                  :aria-label="depositActionTooltip"
+                  @click.stop="handleClickDeposit(account.id)">
+                  <UiIconPayment class="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
                   class="menu-btn action-btn card-menu-trigger"
                   @click.stop="toggleCardMenu(account.id)"
                   :ref="el => (cardMenuTriggerRefs[account.id] = el as HTMLElement | null)"
@@ -411,11 +429,21 @@
                 <div
                   v-if="viewMode === 'full'"
                   class="cabinet-card__field">
-                  <UiTextSmall class="cabinet-card__label">{{ commonIdLabel }}</UiTextSmall>
-                  <div
-                    class="cabinet-card__value truncate"
-                    :title="account.id">
-                    {{ account.id }}
+                  <UiTextSmall class="cabinet-card__label">
+                    {{ t("cabinet.accounts.columns.balance") }}
+                  </UiTextSmall>
+                  <div class="cabinet-card__value cabinet-card__value--balance">
+                    <span :class="getBalanceHighlightClass(account.id)">$ {{ account.balance }}</span>
+                    <button
+                      type="button"
+                      class="refresh-balance-btn"
+                      @click.stop="refreshAccountBalance(account)"
+                      :disabled="isBalanceRefreshing(account.id)"
+                      :title="refreshBalanceLabel">
+                      <UiIconUpdate
+                        class="h-[14px] w-[14px]"
+                        :spinning="isBalanceRefreshing(account.id)" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -768,9 +796,11 @@
   );
   const favoriteAddLabel = computed(() => resolveText("cabinet.accounts.favoriteAdd", "Add to favorites"));
   const favoriteRemoveLabel = computed(() => resolveText("cabinet.accounts.favoriteRemove", "Remove from favorites"));
-  const commonIdLabel = computed(() => resolveText("cabinet.common.id", "ID"));
   const copyNumberLabel = computed(() => resolveText("cabinet.common.copyNumber", "Copy number"));
   const openMenuLabel = computed(() => resolveText("cabinet.common.openMenu", "Open menu"));
+  const depositActionTooltip = computed(() =>
+    resolveText("cabinet.accounts.actions.depositTooltip", "Make a deposit")
+  );
   const refreshBalanceLabel = computed(() => resolveText("cabinet.accounts.refreshBalance", "Refresh balance"));
   const refreshBalanceErrorLabel = computed(() =>
     resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance.")
@@ -1496,7 +1526,7 @@
   }
 
   .card-with-actions {
-    padding-right: 122px;
+    padding-right: 160px;
   }
 
   .cabinet-card__header {
@@ -1572,8 +1602,7 @@
   }
 
   .cabinet-card--full-row .cabinet-card__head-side {
-    min-width: 0;
-    justify-content: flex-start;
+    display: none;
   }
 
   .cabinet-card--full-row .account-balance-block {
@@ -1605,6 +1634,12 @@
     text-overflow: ellipsis;
   }
 
+  .cabinet-card__value--balance {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .account-balance-block {
     display: inline-flex;
     flex-direction: column;
@@ -1633,7 +1668,7 @@
     display: grid;
     align-items: center;
     justify-content: end;
-    grid-template-columns: 150px 120px 190px 32px;
+    grid-template-columns: 150px 120px 190px 72px;
     column-gap: 20px;
     width: 100%;
   }
@@ -1642,7 +1677,7 @@
     display: grid;
     align-items: center;
     justify-content: end;
-    grid-template-columns: 150px 120px 190px 32px;
+    grid-template-columns: 150px 120px 190px 72px;
     column-gap: 20px;
     width: 100%;
   }
@@ -1664,8 +1699,31 @@
 
   .table-account-col--actions {
     justify-self: end;
-    width: 32px;
+    width: 72px;
     height: 32px;
+  }
+
+  .table-account-actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .table-account-action-btn {
+    height: 32px;
+    width: 32px;
+    flex: 0 0 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background-color 0.2s ease;
   }
 
   .table-account-balance-head {
@@ -1705,7 +1763,7 @@
 
     .table-account-right-head,
     .table-account-right-cell {
-      grid-template-columns: 130px 100px 170px 32px;
+      grid-template-columns: 130px 100px 170px 72px;
       column-gap: 12px;
     }
 
@@ -1716,7 +1774,7 @@
 
   @media (max-width: 640px) {
     .card-with-actions {
-      padding-right: 108px;
+      padding-right: 144px;
     }
 
     .cabinet-card__header {
@@ -1777,6 +1835,18 @@
     border-color: var(--color-stroke-ui-light);
     background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
     transform: translateY(-1px);
+  }
+
+  .quick-deposit-btn,
+  .quick-deposit-btn:hover,
+  .quick-deposit-btn:focus-visible {
+    color: var(--ui-sticker-success);
+  }
+
+  .quick-deposit-btn:hover,
+  .quick-deposit-btn:focus-visible {
+    border-color: color-mix(in srgb, var(--ui-sticker-success) 48%, transparent);
+    background: color-mix(in srgb, var(--ui-sticker-success) 12%, transparent);
   }
 
   .refresh-balance-btn {

@@ -124,6 +124,22 @@ export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
     key: "apiMessages.paymentDetailRestored",
     fallback: "Payment detail restored successfully.",
   },
+  "document uploaded successfully": {
+    key: "apiMessages.documentUploaded",
+    fallback: "Document uploaded successfully.",
+  },
+  "documents saved successfully": {
+    key: "apiMessages.documentsSaved",
+    fallback: "Documents saved successfully.",
+  },
+  "document deleted successfully": {
+    key: "apiMessages.documentDeleted",
+    fallback: "Document deleted successfully.",
+  },
+  "photo deleted successfully": {
+    key: "apiMessages.photoDeleted",
+    fallback: "Photo deleted successfully.",
+  },
   "payment not found": {
     key: "cabinet.billing.paymentNotFound",
     fallback: "Payment not found.",

@@ -1283,22 +1283,31 @@
             "postal_code": "Posta kodu"
           },
           "placeholders": {
-            "email": "ornek1test.com",
-            "first_name": "Ahmet",
-            "last_name": "Yılmaz",
-            "mid_name": "Mehmet",
-            "birthdate": "",
-            "phone": "",
-            "country": "Ülke",
-            "state": "Eyalet",
-            "city": "Şehir",
-            "address": "Backer Sk. 2b, Daire 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "Kaydet ve doğrulamaya gönder",
           "success": "Kullanıcı verileri başarıyla güncellendi ve doğrulamaya gönderildi!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "Düzenle",
+            "update": "Bilgileri güncelle"
+          },
+          "documentsReminder": {
+            "title": "Profil bilgilerini onaylamak için belgeler gereklidir",
+            "text": "Bu formda girilen bilgileri doğrulayabilmemiz için belgeleri de yüklemeniz gerekir.",
+            "button": "Belge yüklemeye git"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "Hangi belgeler yüklenmeli",
+            "text": "Pasaport, ulusal kimlik kartı veya uluslararası pasaport yükleyin. Belge ad, soyad, doğum tarihi, adres ve diğer zorunlu profil bilgilerini doğrulamamıza izin vermelidir."
+          },
+          "dropzone": {
+            "title": "Dosyaları buraya sürükleyin",
+            "separator": "veya",
+            "action": "yüklemek için tıklayın",
+            "hint": "PNG, JPG, JPEG veya PDF. Maksimum dosya boyutu: 2 MB.",
+            "disabledHint": "Belge yükleme, gerekli adım seçildikten sonra kullanılabilir."
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "Yönetici yorumu",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "Girdiğiniz profil bilgilerini onaylamak için pasaport, kimlik kartı veya uluslararası pasaport yükleyin."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "Tüm zorunlu profil alanlarını doldurun ve güncel tutun."
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "Daha fazla yükle"
+          "loadMore": "Daha fazla yükle",
+          "adminCommentLabel": "Yönetici yorumu"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "Aktarım",
         "history": "İşlemler",
         "changeType": "Türü değiştir",
-        "remove": "Kaldırmak"
+        "remove": "Kaldırmak",
+        "depositTooltip": "Para yatır"
       },
       "tabs": {
         "history": "İşlemler",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "Belge başarıyla yüklendi.",
+    "documentsSaved": "Belgeler başarıyla kaydedildi.",
+    "documentDeleted": "Belge başarıyla silindi.",
+    "photoDeleted": "Fotoğraf başarıyla silindi."
   }
 }

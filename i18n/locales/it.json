@@ -1283,22 +1283,31 @@
             "postal_code": "Codice postale"
           },
           "placeholders": {
-            "email": "esempio1test.com",
-            "first_name": "Mario",
-            "last_name": "Rossi",
-            "mid_name": "Antonio",
-            "birthdate": "",
-            "phone": "",
-            "country": "Paese",
-            "state": "Stato",
-            "city": "Città",
-            "address": "Via Backer 2b, Appartamento 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "Salva e invia a verifica",
           "success": "Dati utente aggiornati con successo e inviati per la verifica!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "Modifica",
+            "update": "Aggiorna dati"
+          },
+          "documentsReminder": {
+            "title": "I documenti sono necessari per confermare i dati del profilo",
+            "text": "Tieni presente che devi anche caricare i documenti per permetterci di confermare i dati inseriti in questo modulo.",
+            "button": "Vai al caricamento documenti"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "Quali documenti caricare",
+            "text": "Carica passaporto, carta d’identità nazionale o passaporto internazionale. Il documento deve consentire di verificare i dati del profilo: nome, cognome, data di nascita, indirizzo e altri dati obbligatori."
+          },
+          "dropzone": {
+            "title": "Trascina qui i file",
+            "separator": "o",
+            "action": "clicca per caricare",
+            "hint": "PNG, JPG, JPEG o PDF. Dimensione massima: 2 MB.",
+            "disabledHint": "Il caricamento dei documenti sarà disponibile dopo aver selezionato il passaggio richiesto."
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "Commento dell’amministratore",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "Carica passaporto, carta d’identità o passaporto internazionale per confermare i dati del profilo."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "Compila tutti i campi obbligatori del profilo e tienili aggiornati."
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "Carica altro"
+          "loadMore": "Carica altro",
+          "adminCommentLabel": "Commento dell’amministratore"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "Trasferire",
         "history": "Transazioni",
         "changeType": "Cambia tipo",
-        "remove": "Rimuovere"
+        "remove": "Rimuovere",
+        "depositTooltip": "Effettua un deposito"
       },
       "tabs": {
         "history": "Transazioni",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "Documento caricato correttamente.",
+    "documentsSaved": "Documenti salvati correttamente.",
+    "documentDeleted": "Documento eliminato correttamente.",
+    "photoDeleted": "Foto eliminata correttamente."
   }
 }

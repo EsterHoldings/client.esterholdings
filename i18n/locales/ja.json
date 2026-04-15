@@ -1283,22 +1283,31 @@
             "postal_code": "郵便番号"
           },
           "placeholders": {
-            "email": "example1test.com",
-            "first_name": "太郎",
-            "last_name": "山田",
-            "mid_name": "次郎",
-            "birthdate": "",
-            "phone": "",
-            "country": "国",
-            "state": "州",
-            "city": "市",
-            "address": "ベーカー通り2b、アパート8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "保存して確認に送信",
           "success": "ユーザーデータが正常に更新され、確認に送信されました！",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "編集",
+            "update": "データを更新"
+          },
+          "documentsReminder": {
+            "title": "プロフィール情報の確認には書類が必要です",
+            "text": "このフォームに入力した情報を確認するため、書類のアップロードも必要です。",
+            "button": "書類アップロードへ"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "アップロードする書類",
+            "text": "パスポート、身分証明書、または国際パスポートをアップロードしてください。書類は、名、姓、生年月日、住所などの必須プロフィール情報を確認できる必要があります。"
+          },
+          "dropzone": {
+            "title": "ファイルをドラッグ＆ドロップ",
+            "separator": "または",
+            "action": "クリックしてアップロード",
+            "hint": "PNG、JPG、JPEG または PDF。最大ファイルサイズ: 2 MB。",
+            "disabledHint": "必要なステップを選択すると書類をアップロードできます。"
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "管理者コメント",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "入力したプロフィール情報を確認するため、パスポート、IDカード、または国際パスポートをアップロードしてください。"
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "プロフィールの必須項目をすべて入力し、最新の状態に保ってください。"
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "さらに読み込む"
+          "loadMore": "さらに読み込む",
+          "adminCommentLabel": "管理者コメント"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "移行",
         "history": "トランザクション",
         "changeType": "種類の変更",
-        "remove": "取り除く"
+        "remove": "取り除く",
+        "depositTooltip": "入金する"
       },
       "tabs": {
         "history": "トランザクション",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "書類が正常にアップロードされました。",
+    "documentsSaved": "書類が正常に保存されました。",
+    "documentDeleted": "書類が正常に削除されました。",
+    "photoDeleted": "写真が正常に削除されました。"
   }
 }

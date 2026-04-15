@@ -1283,22 +1283,31 @@
             "postal_code": "우편번호"
           },
           "placeholders": {
-            "email": "example1test.com",
-            "first_name": "홍",
-            "last_name": "길동",
-            "mid_name": "중",
-            "birthdate": "",
-            "phone": "",
-            "country": "국가",
-            "state": "주",
-            "city": "도시",
-            "address": "베이커 스트리트 2b, 아파트 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "저장 및 인증에 전송",
           "success": "사용자 데이터가 성공적으로 업데이트되어 인증에 전송되었습니다!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "수정",
+            "update": "정보 업데이트"
+          },
+          "documentsReminder": {
+            "title": "프로필 정보를 확인하려면 문서가 필요합니다",
+            "text": "이 양식에 입력한 정보를 확인하려면 문서도 업로드해야 합니다.",
+            "button": "문서 업로드로 이동"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "업로드할 문서",
+            "text": "여권, 주민등록증 또는 국제 여권을 업로드하세요. 문서는 이름, 성, 생년월일, 주소 및 기타 필수 프로필 정보를 확인할 수 있어야 합니다."
+          },
+          "dropzone": {
+            "title": "파일을 여기에 끌어다 놓기",
+            "separator": "또는",
+            "action": "클릭하여 업로드",
+            "hint": "PNG, JPG, JPEG 또는 PDF. 최대 파일 크기: 2 MB.",
+            "disabledHint": "필수 단계를 선택한 후 문서 업로드를 사용할 수 있습니다."
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "관리자 의견",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "입력한 프로필 정보를 확인하려면 여권, 신분증 또는 국제 여권을 업로드하세요."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "모든 필수 프로필 필드를 입력하고 최신 상태로 유지하세요."
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "더 불러오기"
+          "loadMore": "더 불러오기",
+          "adminCommentLabel": "관리자 의견"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "옮기다",
         "history": "트랜잭션",
         "changeType": "유형 변경",
-        "remove": "제거하다"
+        "remove": "제거하다",
+        "depositTooltip": "입금하기"
       },
       "tabs": {
         "history": "트랜잭션",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "문서가 성공적으로 업로드되었습니다.",
+    "documentsSaved": "문서가 성공적으로 저장되었습니다.",
+    "documentDeleted": "문서가 성공적으로 삭제되었습니다.",
+    "photoDeleted": "사진이 성공적으로 삭제되었습니다."
   }
 }

@@ -1283,22 +1283,31 @@
             "postal_code": "מיקוד"
           },
           "placeholders": {
-            "email": "example1test.com",
-            "first_name": "משה",
-            "last_name": "כהן",
-            "mid_name": "דוד",
-            "birthdate": "",
-            "phone": "",
-            "country": "מדינה",
-            "state": "מחוז",
-            "city": "עיר",
-            "address": "רחוב בייקר 2ב, דירה 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "שמור ושלח לאימות",
           "success": "נתוני המשתמש עודכנו בהצלחה ונשלחו לאימות!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "עריכה",
+            "update": "עדכון נתונים"
+          },
+          "documentsReminder": {
+            "title": "נדרשים מסמכים לאימות נתוני הפרופיל",
+            "text": "שים לב שעליך גם להעלות מסמכים כדי שנוכל לאמת את הנתונים שהזנת בטופס זה.",
+            "button": "לעבור להעלאת מסמכים"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "אילו מסמכים להעלות",
+            "text": "העלה דרכון, תעודת זהות או דרכון בינלאומי. המסמך צריך לאפשר אימות של נתוני הפרופיל: שם פרטי, שם משפחה, תאריך לידה, כתובת ופרטים נדרשים נוספים."
+          },
+          "dropzone": {
+            "title": "גרור ושחרר קבצים כאן",
+            "separator": "או",
+            "action": "לחץ להעלאה",
+            "hint": "PNG, JPG, JPEG או PDF. גודל קובץ מרבי: 2 MB.",
+            "disabledHint": "העלאת מסמכים תהיה זמינה לאחר בחירת השלב הנדרש."
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "הערת מנהל",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "העלה דרכון, תעודת זהות או דרכון בינלאומי כדי לאמת את נתוני הפרופיל שהזנת."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "מלא את כל שדות החובה בפרופיל ושמור אותם מעודכנים."
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "טען עוד"
+          "loadMore": "טען עוד",
+          "adminCommentLabel": "הערת מנהל"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "לְהַעֲבִיר",
         "history": "עסקאות",
         "changeType": "שנה סוג",
-        "remove": "לְהַסִיר"
+        "remove": "לְהַסִיר",
+        "depositTooltip": "בצע הפקדה"
       },
       "tabs": {
         "history": "עסקאות",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "המסמך הועלה בהצלחה.",
+    "documentsSaved": "המסמכים נשמרו בהצלחה.",
+    "documentDeleted": "המסמך נמחק בהצלחה.",
+    "photoDeleted": "התמונה נמחקה בהצלחה."
   }
 }

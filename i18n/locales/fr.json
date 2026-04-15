@@ -1283,22 +1283,31 @@
             "postal_code": "Code postal"
           },
           "placeholders": {
-            "email": "exemple1test.com",
-            "first_name": "Jean",
-            "last_name": "Dupont",
-            "mid_name": "Pierre",
-            "birthdate": "",
-            "phone": "",
-            "country": "Pays",
-            "state": "État",
-            "city": "Ville",
-            "address": "Rue Backer 2b, Appartement 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "Enregistrer et envoyer pour vérification",
           "success": "Données utilisateur mises à jour avec succès et envoyées pour vérification!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "Modifier",
+            "update": "Mettre à jour les données"
+          },
+          "documentsReminder": {
+            "title": "Les documents sont requis pour confirmer les données du profil",
+            "text": "Veuillez noter que vous devez également téléverser des documents afin que nous puissions confirmer les données saisies dans ce formulaire.",
+            "button": "Aller au téléversement des documents"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "Quels documents téléverser",
+            "text": "Téléversez un passeport, une carte d’identité nationale ou un passeport international. Le document doit permettre de vérifier vos données de profil : prénom, nom, date de naissance, adresse et autres informations obligatoires."
+          },
+          "dropzone": {
+            "title": "Glissez-déposez les fichiers ici",
+            "separator": "ou",
+            "action": "cliquez pour téléverser",
+            "hint": "PNG, JPG, JPEG ou PDF. Taille maximale : 2 Mo.",
+            "disabledHint": "Le téléversement de documents sera disponible après la sélection de l’étape requise."
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "Commentaire de l’administrateur",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "Téléversez un passeport, une carte d’identité ou un passeport international pour confirmer les données du profil."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "Remplissez tous les champs obligatoires du profil et gardez-les à jour."
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "Charger plus"
+          "loadMore": "Charger plus",
+          "adminCommentLabel": "Commentaire de l’administrateur"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "Transfert",
         "history": "Transactions",
         "changeType": "Changer de type",
-        "remove": "Retirer"
+        "remove": "Retirer",
+        "depositTooltip": "Effectuer un dépôt"
       },
       "tabs": {
         "history": "Transactions",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "Document téléversé avec succès.",
+    "documentsSaved": "Documents enregistrés avec succès.",
+    "documentDeleted": "Document supprimé avec succès.",
+    "photoDeleted": "Photo supprimée avec succès."
   }
 }

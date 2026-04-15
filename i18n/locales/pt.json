@@ -1283,22 +1283,31 @@
             "postal_code": "Código postal"
           },
           "placeholders": {
-            "email": "exemplo1test.com",
-            "first_name": "João",
-            "last_name": "Silva",
-            "mid_name": "Carlos",
-            "birthdate": "",
-            "phone": "",
-            "country": "País",
-            "state": "Estado",
-            "city": "Cidade",
-            "address": "Rua Backer 2b, Apartamento 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "Salvar e enviar para verificação",
           "success": "Dados do usuário atualizados com sucesso e enviados para verificação!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "Editar",
+            "update": "Atualizar dados"
+          },
+          "documentsReminder": {
+            "title": "Documentos são necessários para confirmar os dados do perfil",
+            "text": "Lembre-se de que você também precisa enviar documentos para que possamos confirmar os dados inseridos neste formulário.",
+            "button": "Ir para envio de documentos"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "Quais documentos enviar",
+            "text": "Envie passaporte, documento de identidade nacional ou passaporte internacional. O documento deve permitir verificar os dados do perfil: nome, sobrenome, data de nascimento, endereço e outros dados obrigatórios."
+          },
+          "dropzone": {
+            "title": "Arraste os arquivos aqui",
+            "separator": "ou",
+            "action": "clique para enviar",
+            "hint": "PNG, JPG, JPEG ou PDF. Tamanho máximo: 2 MB.",
+            "disabledHint": "O envio de documentos estará disponível após selecionar a etapa obrigatória."
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "Comentário do administrador",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "Envie passaporte, documento de identidade ou passaporte internacional para confirmar os dados do perfil."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "Preencha todos os campos obrigatórios do perfil e mantenha-os atualizados."
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "Carregar mais"
+          "loadMore": "Carregar mais",
+          "adminCommentLabel": "Comentário do administrador"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "Transferir",
         "history": "Transações",
         "changeType": "Tipo de alteração",
-        "remove": "Remover"
+        "remove": "Remover",
+        "depositTooltip": "Fazer um depósito"
       },
       "tabs": {
         "history": "Transações",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "Documento enviado com sucesso.",
+    "documentsSaved": "Documentos salvos com sucesso.",
+    "documentDeleted": "Documento excluído com sucesso.",
+    "photoDeleted": "Foto excluída com sucesso."
   }
 }

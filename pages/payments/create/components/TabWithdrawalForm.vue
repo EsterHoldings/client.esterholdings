@@ -301,7 +301,9 @@
   const selectedPaymentDetail = computed(
     () => paymentDetails.value.find(item => item.id === form.paymentDetailId) ?? null
   );
-  const isTwoFactorEnabled = computed(() => Boolean(authStore.user?.two_factor_enabled));
+  const isTwoFactorEnabled = computed(() =>
+    Boolean(authStore.user?.two_factor_enabled ?? authStore.user?.twoFactorEnabled)
+  );
 
   const extractRows = (response: any): any[] => {
     const root = response?.data;
@@ -545,6 +547,12 @@
   };
 
   onMounted(async () => {
+    try {
+      await authStore.initAuth(true);
+    } catch {
+      // The form still loads; submit validation from the backend remains authoritative.
+    }
+
     await Promise.all([loadAccounts(), loadPaymentDetails()]);
   });
 </script>

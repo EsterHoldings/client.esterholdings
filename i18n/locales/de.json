@@ -1283,22 +1283,31 @@
             "postal_code": "Postleitzahl"
           },
           "placeholders": {
-            "email": "beispiel\\u0040test.com",
-            "first_name": "Hans",
-            "last_name": "Müller",
-            "mid_name": "Wilhelm",
-            "birthdate": "",
-            "phone": "",
-            "country": "Land",
-            "state": "Bundesland",
-            "city": "Stadt",
-            "address": "Bäckerstr. 2b, Wohnung 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "Speichern und zur Verifizierung senden",
           "success": "Benutzerdaten erfolgreich aktualisiert und zur Verifizierung gesendet!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "Bearbeiten",
+            "update": "Daten aktualisieren"
+          },
+          "documentsReminder": {
+            "title": "Dokumente sind zur Bestätigung der Profildaten erforderlich",
+            "text": "Bitte beachten Sie, dass Sie auch Dokumente hochladen müssen, damit wir die in diesem Formular eingegebenen Daten bestätigen können.",
+            "button": "Zum Dokumentenupload"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "Welche Dokumente hochladen",
+            "text": "Laden Sie einen Reisepass, Personalausweis oder internationalen Pass hoch. Das Dokument muss Ihre Profildaten wie Vorname, Nachname, Geburtsdatum, Adresse und weitere Pflichtangaben bestätigen."
+          },
+          "dropzone": {
+            "title": "Dateien hier ablegen",
+            "separator": "oder",
+            "action": "zum Hochladen klicken",
+            "hint": "PNG, JPG, JPEG oder PDF. Maximale Dateigröße: 2 MB.",
+            "disabledHint": "Der Dokumentenupload ist nach Auswahl des erforderlichen Schritts verfügbar."
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "Kommentar des Administrators",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "Laden Sie Reisepass, Personalausweis oder internationalen Pass hoch, um Ihre Profildaten zu bestätigen."
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "Füllen Sie alle Pflichtfelder des Profils aus und halten Sie sie aktuell."
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "Mehr laden"
+          "loadMore": "Mehr laden",
+          "adminCommentLabel": "Kommentar des Administrators"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "Überweisen",
         "history": "Transaktionen",
         "changeType": "Typ ändern",
-        "remove": "Entfernen"
+        "remove": "Entfernen",
+        "depositTooltip": "Einzahlung vornehmen"
       },
       "tabs": {
         "history": "Transaktionen",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "Dokument erfolgreich hochgeladen.",
+    "documentsSaved": "Dokumente erfolgreich gespeichert.",
+    "documentDeleted": "Dokument erfolgreich gelöscht.",
+    "photoDeleted": "Foto erfolgreich gelöscht."
   }
 }

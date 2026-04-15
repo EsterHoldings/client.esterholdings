@@ -55,19 +55,18 @@
                 <div class="flex flex-col w-full">
                   <div class="font-medium truncate">{{ item.title }}</div>
                   <div
-                    class="text-sm text-[var(--ui-text-secondary)] truncate"
+                    class="verification-status-info"
                     v-if="item.subtitle">
-                    ({{ item.subtitle }})
+                    {{ item.subtitle }}
                   </div>
                 </div>
 
                 <div
-                  v-if="item.comment?.value"
-                  class="col-span-2 mt-2">
+                  class="verification-admin-comment">
                   <div class="text-xs font-semibold mb-1 opacity-80">
-                    {{ t("cabinet.profile.components.tab-user-verification.commentLabel") }}
+                    {{ t("cabinet.profile.components.tab-user-verification.adminCommentLabel") }}
                   </div>
-                  <UiTextSmall class="!text-[var(--ui-primary-accent)]">{{ item.comment.value }}</UiTextSmall>
+                  <UiTextSmall>{{ formatAdminComment(item.comment.value) }}</UiTextSmall>
                 </div>
               </div>
 
@@ -294,14 +293,14 @@
     {
       key: "documents",
       title: t("cabinet.profile.components.tab-user-verification.items.documents.title"),
-      subtitle: "",
+      subtitle: t("cabinet.profile.components.tab-user-verification.items.documents.subtitle"),
       status: documentsStatus,
       comment: documentsComment,
     },
     {
       key: "profile",
       title: t("cabinet.profile.components.tab-user-verification.items.profile.title"),
-      subtitle: "",
+      subtitle: t("cabinet.profile.components.tab-user-verification.items.profile.subtitle"),
       status: infoStatus,
       comment: infoComment,
     },
@@ -347,6 +346,11 @@
     "border-[var(--color-warning)]/30 text-[var(--color-warning)] bg-[var(--color-warning)]/10": s === "pending",
     "border-[var(--color-danger)]/30 text-[var(--color-danger)] bg-[var(--color-danger)]/10": s === "rejected",
   });
+
+  const formatAdminComment = (value: unknown): string => {
+    const text = String(value ?? "").trim();
+    return text !== "" ? text : "-";
+  };
 
   const normalizeStatus = (value: unknown): VerificationStatus => {
     if (typeof value !== "string") {
@@ -652,6 +656,25 @@
     border: 1px dashed var(--color-stroke-ui-light);
     border-radius: 10px;
     padding: 12px;
+    color: var(--ui-text-secondary);
+  }
+
+  .verification-status-info {
+    margin-top: 6px;
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 35%, var(--color-stroke-ui-light));
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--ui-primary-main) 9%, var(--ui-background-panel));
+    color: var(--ui-text-secondary);
+    padding: 7px 10px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .verification-admin-comment {
+    margin-top: 8px;
     color: var(--ui-text-secondary);
   }
 

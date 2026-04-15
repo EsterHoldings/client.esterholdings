@@ -1283,22 +1283,31 @@
             "postal_code": "पोस्टल कोड"
           },
           "placeholders": {
-            "email": "example1test.com",
-            "first_name": "राज",
-            "last_name": "कुमार",
-            "mid_name": "सिंह",
-            "birthdate": "",
-            "phone": "",
-            "country": "देश",
-            "state": "राज्य",
-            "city": "शहर",
-            "address": "बेकर स्ट्रीट 2b, अपार्टमेंट 8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "सहेजें और सत्यापन के लिए भेजें",
           "success": "उपयोगकर्ता डेटा सफलतापूर्वक अपडेट किया गया और सत्यापन के लिए भेजा गया!",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "संपादित करें",
+            "update": "डेटा अपडेट करें"
+          },
+          "documentsReminder": {
+            "title": "प्रोफ़ाइल डेटा की पुष्टि के लिए दस्तावेज़ आवश्यक हैं",
+            "text": "ध्यान रखें कि इस फ़ॉर्म में दर्ज डेटा की पुष्टि करने के लिए आपको दस्तावेज़ भी अपलोड करने होंगे।",
+            "button": "दस्तावेज़ अपलोड पर जाएँ"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "कौन से दस्तावेज़ अपलोड करें",
+            "text": "पासपोर्ट, राष्ट्रीय आईडी कार्ड या अंतरराष्ट्रीय पासपोर्ट अपलोड करें। दस्तावेज़ से आपका नाम, उपनाम, जन्म तिथि, पता और अन्य आवश्यक प्रोफ़ाइल डेटा सत्यापित होना चाहिए।"
+          },
+          "dropzone": {
+            "title": "फ़ाइलें यहाँ खींचें और छोड़ें",
+            "separator": "या",
+            "action": "अपलोड करने के लिए क्लिक करें",
+            "hint": "PNG, JPG, JPEG या PDF. अधिकतम फ़ाइल आकार: 2 MB.",
+            "disabledHint": "आवश्यक चरण चुनने के बाद दस्तावेज़ अपलोड उपलब्ध होगा।"
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "प्रशासक की टिप्पणी",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "दर्ज किए गए प्रोफ़ाइल डेटा की पुष्टि के लिए पासपोर्ट, आईडी कार्ड या अंतरराष्ट्रीय पासपोर्ट अपलोड करें।"
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "सभी आवश्यक प्रोफ़ाइल फ़ील्ड भरें और उन्हें अद्यतन रखें।"
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "और लोड करें"
+          "loadMore": "और लोड करें",
+          "adminCommentLabel": "प्रशासक की टिप्पणी"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "स्थानांतरण",
         "history": "लेनदेन",
         "changeType": "प्रकार बदलें",
-        "remove": "निकालना"
+        "remove": "निकालना",
+        "depositTooltip": "जमा करें"
       },
       "tabs": {
         "history": "लेनदेन",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "दस्तावेज़ सफलतापूर्वक अपलोड हुआ।",
+    "documentsSaved": "दस्तावेज़ सफलतापूर्वक सहेजे गए।",
+    "documentDeleted": "दस्तावेज़ सफलतापूर्वक हटाया गया।",
+    "photoDeleted": "फ़ोटो सफलतापूर्वक हटाई गई।"
   }
 }

@@ -11,6 +11,7 @@
         <div class="profile__tab--general__profile-data__form">
           <UiFormControl
             class="profile__tab--general__profile-data__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.email')"
             :errors="validatorUserDataForm.errorsFormData.email.errors">
             <UiInput
@@ -26,6 +27,7 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.first_name')"
             :errors="validatorUserDataForm.errorsFormData.first_name.errors">
             <UiInput
@@ -33,6 +35,7 @@
               type="text"
               :placeholder="t('cabinet.profile.components.tab-general.placeholders.first_name')"
               :value="formData.first_name"
+              :disabled="isProfileFormReadonly"
               :isDirty="validatorUserDataForm.errorsFormData.first_name.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.first_name.errors.length > 0"
               @input="validatorUserDataForm.doValidateField('first_name', $event)"
@@ -41,6 +44,7 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.last_name')"
             :errors="validatorUserDataForm.errorsFormData.last_name.errors">
             <UiInput
@@ -48,6 +52,7 @@
               type="text"
               :placeholder="t('cabinet.profile.components.tab-general.placeholders.last_name')"
               :value="formData.last_name"
+              :disabled="isProfileFormReadonly"
               :isDirty="validatorUserDataForm.errorsFormData.last_name.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.last_name.errors.length > 0"
               @input="validatorUserDataForm.doValidateField('last_name', $event)"
@@ -56,6 +61,7 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.mid_name')"
             :errors="validatorUserDataForm.errorsFormData.mid_name.errors">
             <UiInput
@@ -63,6 +69,7 @@
               type="text"
               :placeholder="t('cabinet.profile.components.tab-general.placeholders.mid_name')"
               :value="formData.mid_name"
+              :disabled="isProfileFormReadonly"
               :isDirty="validatorUserDataForm.errorsFormData.mid_name.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.mid_name.errors.length > 0"
               @input="validatorUserDataForm.doValidateField('mid_name', $event)"
@@ -71,11 +78,14 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.birthdate')"
             :errors="validatorUserDataForm.errorsFormData.birthdate.errors">
             <UiInputDate
               :isLoading="isLoadingAllComponentData"
+              :placeholder="t('cabinet.profile.components.tab-general.placeholders.birthdate')"
               :value="formData.birthdate"
+              :disabled="isProfileFormReadonly"
               :isDirty="validatorUserDataForm.errorsFormData.birthdate.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.birthdate.errors.length > 0"
               @input="handleInputBirthday"
@@ -84,6 +94,7 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.phone')"
             :errors="validatorUserDataForm.errorsFormData.phone.errors">
             <UiInputPhone
@@ -91,6 +102,7 @@
               :isLoading="isLoadingAllComponentData"
               :placeholder="t('cabinet.profile.components.tab-general.placeholders.phone')"
               v-model="formData.phone"
+              :disabled="isProfileFormReadonly"
               :isDirty="validatorUserDataForm.errorsFormData.phone.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.phone.errors.length > 0"
               @input="validatorUserDataForm.doValidateField('phone', $event)"
@@ -103,17 +115,19 @@
         <div class="profile__tab--general__profile-data--additional__form">
           <UiFormControl
             class="profile__tab--general__profile-data--additional__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.country')"
             :errors="validatorUserDataForm.errorsFormData.country.errors">
             <UiSelect
               :data="countryOptions"
               :value="selectedCountryId"
+              :disabled="isProfileFormReadonly"
               :isLoading="isLoadingAllComponentData || countriesMeta.loading"
               :isDirty="validatorUserDataForm.errorsFormData.country.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.country.errors.length > 0"
               searchable
               :searchValue="countrySearch"
-              :searchPlaceholder="t('cabinet.profile.components.tab-general.labels.country')"
+              :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.country')"
               @change="handleCountryChange"
               @blur="handleCountryBlur"
               @search="handleCountrySearch"
@@ -122,18 +136,19 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data--additional__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.state')"
             :errors="validatorUserDataForm.errorsFormData.state.errors">
             <UiSelect
               :data="stateOptions"
               :value="selectedStateId"
-              :disabled="!selectedCountryId"
+              :disabled="isProfileFormReadonly || !selectedCountryId"
               :isLoading="isLoadingAllComponentData || statesMeta.loading"
               :isDirty="validatorUserDataForm.errorsFormData.state.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.state.errors.length > 0"
               searchable
               :searchValue="stateSearch"
-              :searchPlaceholder="t('cabinet.profile.components.tab-general.labels.state')"
+              :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.state')"
               @change="handleStateChange"
               @blur="handleStateBlur"
               @search="handleStateSearch"
@@ -142,18 +157,19 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data--additional__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.city')"
             :errors="validatorUserDataForm.errorsFormData.city.errors">
             <UiSelect
               :data="cityOptions"
               :value="selectedCityId"
-              :disabled="!selectedStateId"
+              :disabled="isProfileFormReadonly || !selectedStateId"
               :isLoading="isLoadingAllComponentData || citiesMeta.loading"
               :isDirty="validatorUserDataForm.errorsFormData.city.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.city.errors.length > 0"
               searchable
               :searchValue="citySearch"
-              :searchPlaceholder="t('cabinet.profile.components.tab-general.labels.city')"
+              :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.city')"
               @change="handleCityChange"
               @blur="handleCityBlur"
               @search="handleCitySearch"
@@ -162,6 +178,7 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data--additional__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.address')"
             :errors="validatorUserDataForm.errorsFormData.address.errors">
             <UiInput
@@ -169,6 +186,7 @@
               type="text"
               :placeholder="t('cabinet.profile.components.tab-general.placeholders.address')"
               :value="formData.address"
+              :disabled="isProfileFormReadonly"
               :isDirty="validatorUserDataForm.errorsFormData.address.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.address.errors.length > 0"
               @input="validatorUserDataForm.doValidateField('address', $event)"
@@ -177,6 +195,7 @@
 
           <UiFormControl
             class="profile__tab--general__profile-data--additional__form__field"
+            required
             :label="t('cabinet.profile.components.tab-general.labels.postal_code')"
             :errors="validatorUserDataForm.errorsFormData.postal_code.errors">
             <UiInput
@@ -184,6 +203,7 @@
               type="text"
               :placeholder="t('cabinet.profile.components.tab-general.placeholders.postal_code')"
               :value="formData.postal_code"
+              :disabled="isProfileFormReadonly"
               :isDirty="validatorUserDataForm.errorsFormData.postal_code.isDirty"
               :isInvalid="validatorUserDataForm.errorsFormData.postal_code.errors.length > 0"
               @input="validatorUserDataForm.doValidateField('postal_code', $event)"
@@ -194,13 +214,30 @@
             <UiButtonDefault
               state="info--outline"
               :isLoading="isLoading"
-              @click="handleValidateAndSubmit">
+              @click="handleProfileFormAction">
               <UiIconSpinnerDefault v-if="isLoading" />
-              <span v-if="!isLoading">{{ t("cabinet.profile.components.tab-general.button") }}</span>
+              <span v-if="!isLoading">{{ profileActionButtonText }}</span>
             </UiButtonDefault>
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="profile-documents-reminder">
+      <div>
+        <div class="profile-documents-reminder__title">
+          {{ t("cabinet.profile.components.tab-general.documentsReminder.title") }}
+        </div>
+        <div class="profile-documents-reminder__text">
+          {{ t("cabinet.profile.components.tab-general.documentsReminder.text") }}
+        </div>
+      </div>
+      <UiButtonDefault
+        state="info--small"
+        class="profile-documents-reminder__button"
+        @click="emit('select-documents-tab')">
+        {{ t("cabinet.profile.components.tab-general.documentsReminder.button") }}
+      </UiButtonDefault>
     </div>
   </div>
 </template>
@@ -256,6 +293,7 @@
         label: string;
       }
     ): void;
+    (e: "select-documents-tab"): void;
   }>();
 
   const { t, locale } = useI18n();
@@ -285,6 +323,8 @@
   let stateSearchTimer: ReturnType<typeof setTimeout> | null = null;
   let citySearchTimer: ReturnType<typeof setTimeout> | null = null;
   const profileInfoVerificationState = ref<ProfileInfoVerificationState>("initial");
+  const profileInfoReviewState = ref<"" | "pending" | "approved" | "rejected">("");
+  const isEditingSubmittedProfile = ref(false);
 
   const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
@@ -303,6 +343,19 @@
       return `${title}: ${resolveText("cabinet.dashboard.accountVerification.statuses.required", "Required")}`;
     }
     return `${title}: ${resolveText("cabinet.dashboard.accountVerification.statuses.inProgress", "In progress")}`;
+  });
+  const isProfileReviewPending = computed(
+    () => profileInfoVerificationState.value !== "initial" && profileInfoReviewState.value === "pending"
+  );
+  const isProfileFormReadonly = computed(() => isProfileReviewPending.value && !isEditingSubmittedProfile.value);
+  const profileActionButtonText = computed(() => {
+    if (!isProfileReviewPending.value) {
+      return t("cabinet.profile.components.tab-general.button");
+    }
+
+    return isEditingSubmittedProfile.value
+      ? t("cabinet.profile.components.tab-general.buttons.update")
+      : t("cabinet.profile.components.tab-general.buttons.edit");
   });
 
   const normalizeText = (value: string): string => value.trim().toLowerCase();
@@ -746,6 +799,7 @@
 
       validatorUserDataForm.clearFieldsErrors();
       await loadProfileInfoVerificationStatus();
+      isEditingSubmittedProfile.value = false;
       toast.success(t("cabinet.profile.components.tab-general.success"));
     } catch (e: any) {
       const responseStatus = e?.response?.status;
@@ -790,12 +844,31 @@
     await handleSubmit();
   };
 
+  const handleProfileFormAction = async () => {
+    if (isProfileReviewPending.value && !isEditingSubmittedProfile.value) {
+      isEditingSubmittedProfile.value = true;
+      return;
+    }
+
+    await handleValidateAndSubmit();
+  };
+
   const normalizeVerificationStatus = (value: unknown): "pending" | "approved" | "rejected" => {
     if (typeof value !== "string") return "pending";
     const normalized = value.trim().toLowerCase();
     if (["approved", "done", "success", "verified"].includes(normalized)) return "approved";
     if (["rejected", "failed", "declined", "required"].includes(normalized)) return "rejected";
     return "pending";
+  };
+
+  const normalizeProfileReviewState = (value: unknown): "" | "pending" | "approved" | "rejected" => {
+    if (typeof value !== "string") return "";
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "") return "";
+    if (["approved", "done", "success", "verified"].includes(normalized)) return "approved";
+    if (["rejected", "failed", "declined", "required"].includes(normalized)) return "rejected";
+    if (["pending", "new", "unprocessed", "viewed", "seen"].includes(normalized)) return "pending";
+    return "";
   };
 
   const hasProfileInfoInput = (): boolean => {
@@ -841,10 +914,17 @@
       const response = await appCore.verifications.get();
       const verificationRecord = response?.data && typeof response.data === "object" ? response.data : {};
       const rawStatus = verificationRecord?.data?.info?.verification_status;
+      const rawReviewStatus =
+        verificationRecord?.data?.info?.review_status ?? verificationRecord?.data?.request_review_state ?? "";
       const hasRequestActivity = hasVerificationActivity(verificationRecord);
       profileInfoVerificationState.value = resolveProfileInfoVerificationState(rawStatus, hasRequestActivity);
+      profileInfoReviewState.value = normalizeProfileReviewState(rawReviewStatus);
+      if (!isProfileReviewPending.value) {
+        isEditingSubmittedProfile.value = false;
+      }
     } catch {
       profileInfoVerificationState.value = hasProfileInfoInput() ? "pending" : "initial";
+      profileInfoReviewState.value = "";
     }
   };
 
@@ -963,6 +1043,36 @@
     }
   }
 
+  .profile-documents-reminder {
+    margin: 0 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 35%, var(--color-stroke-ui-light));
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--ui-primary-main) 8%, var(--ui-background-panel));
+    padding: 14px 16px;
+  }
+
+  .profile-documents-reminder__title {
+    color: var(--ui-text-main);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .profile-documents-reminder__text {
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .profile-documents-reminder__button {
+    flex-shrink: 0;
+    width: auto;
+    white-space: nowrap;
+  }
+
   @media (max-width: 1043px) {
     .profile__tab--general {
       &_wrapper {
@@ -993,6 +1103,12 @@
         margin-bottom: 20px;
         padding: 4px 15px 0;
       }
+    }
+
+    .profile-documents-reminder {
+      margin: 0 15px 15px;
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>

@@ -1283,22 +1283,31 @@
             "postal_code": "邮政编码"
           },
           "placeholders": {
-            "email": "example1test.com",
-            "first_name": "张",
-            "last_name": "伟",
-            "mid_name": "明",
-            "birthdate": "",
-            "phone": "",
-            "country": "国家",
-            "state": "州",
-            "city": "城市",
-            "address": "贝克街2b，公寓8",
-            "postal_code": "00000"
+            "email": "john.doe{'@'}example.com",
+            "first_name": "John",
+            "last_name": "Smith",
+            "mid_name": "Michael",
+            "birthdate": "1990-05-24",
+            "phone": "5550100",
+            "country": "United States",
+            "state": "California",
+            "city": "Los Angeles",
+            "address": "221B Baker Street, Apt 8",
+            "postal_code": "90210"
           },
           "button": "保存并发送验证",
           "success": "用户数据已成功更新并发送验证！",
           "validationError": "Please check form fields.",
-          "serverError": "Unable to save profile data."
+          "serverError": "Unable to save profile data.",
+          "buttons": {
+            "edit": "编辑",
+            "update": "更新资料"
+          },
+          "documentsReminder": {
+            "title": "需要文件来确认个人资料",
+            "text": "请注意，您还需要上传文件，以便我们确认您在此表单中填写的资料。",
+            "button": "前往上传文件"
+          }
         },
         "tab-user-documents": {
           "buttons": {
@@ -1351,6 +1360,17 @@
             "pending": "In progress",
             "approved": "Approved",
             "rejected": "Rejected"
+          },
+          "info": {
+            "title": "需要上传哪些文件",
+            "text": "请上传护照、身份证或国际护照。文件应可用于核验您的个人资料：名、姓、出生日期、地址及其他必填信息。"
+          },
+          "dropzone": {
+            "title": "将文件拖放到此处",
+            "separator": "或",
+            "action": "点击上传",
+            "hint": "PNG、JPG、JPEG 或 PDF。最大文件大小：2 MB。",
+            "disabledHint": "选择必要步骤后即可上传文件。"
           }
         },
         "tab-user-photo": {
@@ -1389,7 +1409,7 @@
             "history": "Verification history"
           },
           "refreshAria": "Refresh verification data",
-          "commentLabel": "Comment",
+          "commentLabel": "管理员评论",
           "emptyPayout": "No payout details yet.",
           "unnamedPaymentDetail": "Untitled payment detail",
           "paymentSystemFallback": "Payment system",
@@ -1406,14 +1426,16 @@
               "subtitle": "Confirm your email"
             },
             "documents": {
-              "title": "Documents"
+              "title": "Documents",
+              "subtitle": "上传护照、身份证或国际护照以确认您填写的个人资料。"
             },
             "deposit": {
               "title": "First deposit",
               "subtitle": "Make a payment to verify the first deposit"
             },
             "profile": {
-              "title": "Profile"
+              "title": "Profile",
+              "subtitle": "填写所有必填的个人资料字段并保持更新。"
             }
           },
           "statuses": {
@@ -1421,7 +1443,8 @@
             "pending": "In progress",
             "rejected": "Rejected"
           },
-          "loadMore": "加载更多"
+          "loadMore": "加载更多",
+          "adminCommentLabel": "管理员评论"
         }
       },
       "index": {
@@ -1487,7 +1510,8 @@
         "transfer": "转移",
         "history": "交易记录",
         "changeType": "变更类型",
-        "remove": "消除"
+        "remove": "消除",
+        "depositTooltip": "进行入金"
       },
       "tabs": {
         "history": "交易记录",
@@ -2462,6 +2486,10 @@
     "emailAlreadyVerified": "Email already verified.",
     "twoFaEnabled": "2FA enabled!",
     "twoFaDisabled": "2FA disabled!",
-    "twoFaWrongCode": "Wrong code!"
+    "twoFaWrongCode": "Wrong code!",
+    "documentUploaded": "文件上传成功。",
+    "documentsSaved": "文件保存成功。",
+    "documentDeleted": "文件删除成功。",
+    "photoDeleted": "照片删除成功。"
   }
 }

@@ -46,7 +46,8 @@
                   <component
                     :is="tabsList[activeTabIndex].component"
                     :key="activeTabIndex"
-                    @profile-info-status-change="handleProfileInfoStatusChange" />
+                    @profile-info-status-change="handleProfileInfoStatusChange"
+                    @select-documents-tab="handleActiveTab(1)" />
                 </div>
               </div>
             </Transition>

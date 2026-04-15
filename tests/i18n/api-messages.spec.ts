@@ -54,6 +54,10 @@ describe("useApiMessages translator helpers", () => {
       "apiMessages.paymentDetailDeleted",
       "apiMessages.paymentDetailRestored",
       "apiMessages.paymentDetailNotFound",
+      "apiMessages.documentUploaded",
+      "apiMessages.documentsSaved",
+      "apiMessages.documentDeleted",
+      "apiMessages.photoDeleted",
       "apiMessages.supportReplyEmailRequired",
       "apiMessages.supportFilesConflict",
       "apiMessages.supportMessageOrFilesRequired",
@@ -112,6 +116,18 @@ describe("useApiMessages translator helpers", () => {
     );
     expect(resolveApiMessageWithTranslator("Payment detail not found.", translateFromRu)).toBe(
       "Платёжный реквизит не найден."
+    );
+    expect(resolveApiMessageWithTranslator("Document uploaded successfully.", translateFromRu)).toBe(
+      "Документ успешно загружен."
+    );
+    expect(resolveApiMessageWithTranslator("Documents saved successfully.", translateFromRu)).toBe(
+      "Документы успешно сохранены."
+    );
+    expect(resolveApiMessageWithTranslator("Document deleted successfully.", translateFromRu)).toBe(
+      "Документ успешно удален."
+    );
+    expect(resolveApiMessageWithTranslator("Photo deleted successfully.", translateFromRu)).toBe(
+      "Фото успешно удалено."
     );
     expect(resolveApiMessageWithTranslator("Reply email is required for email support channel.", translateFromRu)).toBe(
       "Email для ответа обязателен для email-канала поддержки."

@@ -162,10 +162,25 @@
     return "warning";
   };
 
-  const getComment = (key: string): string => {
-    const raw = verificationRequestData?.[key]?.comment;
-    if (typeof raw !== "string") return "";
-    return raw.trim();
+  const stepDescription = (key: VerificationStepKey): string => {
+    if (key === "profile") {
+      return resolveText(
+        "cabinet.profile.components.tab-user-verification.items.profile.subtitle",
+        "Fill in all required profile fields and keep them up to date."
+      );
+    }
+
+    if (key === "email") {
+      return resolveText(
+        "cabinet.profile.components.tab-user-verification.items.email.subtitle",
+        "Confirm your email address."
+      );
+    }
+
+    return resolveText(
+      "cabinet.profile.components.tab-user-verification.items.documents.subtitle",
+      "Upload a passport, ID card, or international passport to confirm your profile details."
+    );
   };
 
   const allSteps = computed(() => [
@@ -175,7 +190,7 @@
       status: infoStatus.value,
       statusLabel: statusLabel(infoStatus.value),
       stateClass: stateClass(infoStatus.value),
-      comment: getComment("info"),
+      comment: stepDescription("profile"),
       icon: UiIconProfile,
     },
     {
@@ -184,7 +199,7 @@
       status: emailStatus.value,
       statusLabel: statusLabel(emailStatus.value),
       stateClass: stateClass(emailStatus.value),
-      comment: getComment("email"),
+      comment: stepDescription("email"),
       icon: UiIconMails,
     },
     {
@@ -193,7 +208,7 @@
       status: documentsStatus.value,
       statusLabel: statusLabel(documentsStatus.value),
       stateClass: stateClass(documentsStatus.value),
-      comment: getComment("documents"),
+      comment: stepDescription("documents"),
       icon: UiIconDocuments,
     },
   ]);
@@ -475,16 +490,10 @@
     height: 18px;
   }
 
-  .verification-step__icon.success {
-    color: var(--color-success);
-  }
-
-  .verification-step__icon.warning {
-    color: var(--color-ui-warning);
-  }
-
+  .verification-step__icon.success,
+  .verification-step__icon.warning,
   .verification-step__icon.danger {
-    color: var(--color-danger);
+    color: var(--ui-text-main);
   }
 
   .verification-step__meta {

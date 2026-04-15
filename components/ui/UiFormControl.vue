@@ -7,7 +7,12 @@
         // 'has-error': props.errors?.length > 0,
       }"
     >
-      {{ props.label }}
+      <span>{{ props.label }}</span>
+      <span
+        v-if="props.required"
+        class="ui-form-control__required"
+        aria-hidden="true"
+      >*</span>
     </div>
     <div><slot /></div>
     <div class="text-error has-error" v-for="error in props.errors">
@@ -26,6 +31,10 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  required: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
@@ -43,11 +52,19 @@ const props = defineProps({
 
 .ui-form-control {
   &__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
     margin-bottom: calc($spacer / 2);
     color: var(--ui-text-main);
     .hide {
       display: none;
     }
+  }
+
+  &__required {
+    color: var(--ui-primary-accent, var(--color-warning));
+    font-weight: 700;
   }
 }
 </style>

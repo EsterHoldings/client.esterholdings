@@ -2,11 +2,25 @@
   <div class="user-docs-page text-[var(--ui-text-main)] space-y-6">
     <UiTextH5>{{ t("cabinet.profile.components.tab-user-documents.title") }}</UiTextH5>
 
+    <div class="documents-info-panel">
+      <div class="documents-info-panel__title">
+        {{ t("cabinet.profile.components.tab-user-documents.info.title") }}
+      </div>
+      <div class="documents-info-panel__text">
+        {{ t("cabinet.profile.components.tab-user-documents.info.text") }}
+      </div>
+    </div>
+
     <div
       class="relative min-h-[100px] grid place-items-center text-center"
       v-if="selectedFiles.length === 0">
       <UiDragAndDrop
         class="absolute top-0 bottom-0 left-0 right-0"
+        :title-text="t('cabinet.profile.components.tab-user-documents.dropzone.title')"
+        :separator-text="t('cabinet.profile.components.tab-user-documents.dropzone.separator')"
+        :action-text="t('cabinet.profile.components.tab-user-documents.dropzone.action')"
+        :hint-text="t('cabinet.profile.components.tab-user-documents.dropzone.hint')"
+        :disabled-hint-text="t('cabinet.profile.components.tab-user-documents.dropzone.disabledHint')"
         @files="handleFilesSelected" />
     </div>
 
@@ -375,6 +389,7 @@
     isUploading.value = false;
 
     await loadUploadedDocuments();
+    await loadVerificationData();
   }
 
   const loadUploadedDocuments = async () => {
@@ -445,5 +460,24 @@
   .document-preview-badge.is-file {
     background: rgba(148, 163, 184, 0.16);
     color: #cbd5e1;
+  }
+
+  .documents-info-panel {
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 35%, var(--color-stroke-ui-light));
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--ui-primary-main) 8%, var(--ui-background-panel));
+    padding: 14px 16px;
+  }
+
+  .documents-info-panel__title {
+    color: var(--ui-text-main);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .documents-info-panel__text {
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
   }
 </style>

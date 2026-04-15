@@ -49,7 +49,7 @@
 
   import { definePageMeta, navigateTo, useLocalePath, useRoute, useRouter } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
-  import { computed, inject, onMounted } from "vue";
+  import { computed, inject, onMounted, watch } from "vue";
   import useAccountCreationEligibility from "~/composables/useAccountCreationEligibility";
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
@@ -91,6 +91,13 @@
     await refreshAccountCreationEligibility();
     await maybeOpenCreateFromQuery();
   });
+
+  watch(
+    () => [route.query?.openCreate, canCreateAccount.value, isEligibilityLoaded.value],
+    async () => {
+      await maybeOpenCreateFromQuery();
+    }
+  );
 
   const handleClickCreateNewAccount = () => {
     if (!canCreateAccount.value) return;
