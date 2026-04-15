@@ -163,7 +163,7 @@
   import { reactive, ref, onBeforeUnmount, onMounted } from "vue";
   import { useI18n } from "vue-i18n";
   import useApi from "~/composables/useApi";
-  import { extractApiErrorMessageWithTranslator, resolveApiMessageWithTranslator } from "~/composables/useApiMessages";
+  import { extractApiErrorMessageWithTranslator } from "~/composables/useApiMessages";
 
   import TabUserDocumentsDocument from "~/pages/profile/components/TabUserDocumentsDocument.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
@@ -353,17 +353,11 @@
     }
 
     try {
-      const response = await apiClient.post("/client/user/documents", {
+      await apiClient.post("/client/user/documents", {
         documents: documentsPayload,
         comment: comment.value || "",
       });
-      toast.success(
-        resolveApiMessageWithTranslator(
-          response?.data?.message,
-          resolveText,
-          t("cabinet.profile.components.tab-user-documents.messages.saveSuccess")
-        ) ?? t("cabinet.profile.components.tab-user-documents.messages.saveSuccess")
-      );
+      toast.success(t("cabinet.profile.components.tab-user-documents.messages.saveSuccess"));
     } catch (error) {
       console.error("Failed to save documents metadata:", error);
       toast.error(

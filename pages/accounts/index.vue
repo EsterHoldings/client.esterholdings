@@ -77,6 +77,7 @@
 
   const maybeOpenCreateFromQuery = async () => {
     if (!queryValueToBoolean(route.query?.openCreate)) return;
+    if (!isEligibilityLoaded.value) return;
 
     if (canCreateAccount.value) {
       handleClickCreateNewAccount();

@@ -64,14 +64,28 @@ export const useAuthStore = defineStore("userAuth", () => {
         accessToken.value = value;
     }
 
-    function setUser(userData: any): void {
+    function normalizeUserPayload(userData: any): any {
         if (!userData || typeof userData !== "object") {
+            return userData;
+        }
+
+        if (userData.data && typeof userData.data === "object" && !userData.id && !userData.email) {
+            return userData.data;
+        }
+
+        return userData;
+    }
+
+    function setUser(userData: any): void {
+        const normalizedUserData = normalizeUserPayload(userData);
+
+        if (!normalizedUserData || typeof normalizedUserData !== "object") {
             resetUserState();
             return;
         }
 
-        user.value = userData;
-        photoUrl.value = userData.photo_url || "";
+        user.value = normalizedUserData;
+        photoUrl.value = normalizedUserData.photo_url || "";
         isUserLoaded.value = true;
         loadedForToken = accessToken.value.trim();
     }

@@ -201,6 +201,7 @@
   const isSubmitting = ref(false);
   const isLoadingAccounts = ref(false);
   const isLoadingPaymentDetails = ref(false);
+  const forceTwoFactorChallenge = ref(false);
   const accounts = ref<AccountOption[]>([]);
   const paymentDetails = ref<PaymentDetailOption[]>([]);
   const errors = reactive<Record<string, string>>({});
@@ -301,9 +302,23 @@
   const selectedPaymentDetail = computed(
     () => paymentDetails.value.find(item => item.id === form.paymentDetailId) ?? null
   );
-  const isTwoFactorEnabled = computed(() =>
-    Boolean(authStore.user?.two_factor_enabled ?? authStore.user?.twoFactorEnabled)
-  );
+  const isTruthyFlag = (value: unknown): boolean => {
+    if (value === true || value === 1) return true;
+    const normalized = String(value ?? "")
+      .trim()
+      .toLowerCase();
+    return normalized === "1" || normalized === "true" || normalized === "yes" || normalized === "enabled";
+  };
+  const resolveTwoFactorFlag = (): boolean => {
+    const user = authStore.user ?? {};
+    return [
+      user?.two_factor_enabled,
+      user?.twoFactorEnabled,
+      user?.data?.two_factor_enabled,
+      user?.data?.twoFactorEnabled,
+    ].some(isTruthyFlag);
+  };
+  const isTwoFactorEnabled = computed(() => forceTwoFactorChallenge.value || resolveTwoFactorFlag());
 
   const extractRows = (response: any): any[] => {
     const root = response?.data;
@@ -509,6 +524,55 @@
     return Object.keys(errors).length === 0;
   };
 
+  const extractBackendFieldMessage = (error: any, field: string): string | null => {
+    const value = error?.response?.data?.errors?.[field] ?? error?.data?.errors?.[field] ?? error?.errors?.[field];
+    if (Array.isArray(value)) {
+      return String(value[0] ?? "").trim() || null;
+    }
+
+    if (typeof value === "string") {
+      return value.trim() || null;
+    }
+
+    return null;
+  };
+
+  const isTwoFactorBackendError = (error: any): boolean => {
+    const message = [
+      extractBackendFieldMessage(error, "otp"),
+      error?.response?.data?.message,
+      error?.response?.data?.errors,
+      error?.data?.message,
+      error?.message,
+    ]
+      .map(value => (typeof value === "string" ? value : JSON.stringify(value ?? "")))
+      .join(" ")
+      .toLowerCase();
+
+    return (
+      message.includes("otp") ||
+      message.includes("two-factor") ||
+      message.includes("two factor") ||
+      message.includes("two_factor") ||
+      message.includes("2fa") ||
+      message.includes("дво") ||
+      message.includes("двух")
+    );
+  };
+
+  const revealTwoFactorChallengeFromBackend = (error: any): boolean => {
+    if (!isTwoFactorBackendError(error)) {
+      return false;
+    }
+
+    forceTwoFactorChallenge.value = true;
+    errors.otp =
+      extractBackendFieldMessage(error, "otp") ??
+      resolveText("cabinet.billing.withdrawalForm.errors.otp", "Enter a valid 6-digit two-factor code.");
+
+    return true;
+  };
+
   const handleGoToPaymentDetails = async (): Promise<void> => {
     closeModal();
     await navigateTo(localePath({ path: "/payments/details", query: { openCreate: "1" } }));
@@ -522,19 +586,24 @@
     isSubmitting.value = true;
 
     try {
+      const otp = form.otp.trim();
+      const shouldSendOtp = isTwoFactorEnabled.value || otp !== "";
       const response = await appCore.payments.post({
         accountId: form.accountId,
         paymentDetailId: form.paymentDetailId,
         amount: Number(form.amount),
         comment: form.comment.trim(),
         investorPassword: form.investorPassword,
-        otp: isTwoFactorEnabled.value ? form.otp.trim() : undefined,
+        otp: shouldSendOtp ? otp : undefined,
+        twoFactorCode: shouldSendOtp ? otp : undefined,
+        two_factor_code: shouldSendOtp ? otp : undefined,
       });
 
       toast.success(resolveApiMessage(response?.data?.message, createdLabel.value) ?? createdLabel.value);
       closeModal();
       useEventBus.emit("loadDataForPayments");
     } catch (error: any) {
+      revealTwoFactorChallengeFromBackend(error);
       toast.error(
         extractApiErrorMessage(
           error,
