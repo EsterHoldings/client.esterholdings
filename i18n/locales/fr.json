@@ -36,39 +36,74 @@
         "Trading": [
           {
             "section": "Aperçu des comptes",
-            "items": ["Standard", "Pro", "Islamique", "Démo"]
+            "items": [
+              "Standard",
+              "Pro",
+              "Islamique",
+              "Démo"
+            ]
           },
           {
             "section": "Instruments de marché",
-            "items": ["Forex", "Métaux", "CFD Crypto", "Indices", "Actions", "Énergie", "ETF"]
+            "items": [
+              "Forex",
+              "Métaux",
+              "CFD Crypto",
+              "Indices",
+              "Actions",
+              "Énergie",
+              "ETF"
+            ]
           },
           {
             "section": "Plateforme",
-            "items": ["MT4 Desktop", "MT 4 Mobile"]
+            "items": [
+              "MT4 Desktop",
+              "MT 4 Mobile"
+            ]
           },
           {
             "section": "Conditions de trading",
-            "items": ["Rechargement du compte", "Retrait de fonds"]
+            "items": [
+              "Rechargement du compte",
+              "Retrait de fonds"
+            ]
           },
           {
             "section": "HUB du Trader",
-            "items": ["Blog du trader", "Calendrier économique", "Actualités du marché"]
+            "items": [
+              "Blog du trader",
+              "Calendrier économique",
+              "Actualités du marché"
+            ]
           },
           {
             "section": "Trading TANDEM",
-            "items": ["Pour trader", "Pour investisseur"]
+            "items": [
+              "Pour trader",
+              "Pour investisseur"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "Partenariat",
-            "items": ["Inscrire IB/ Partenariat", "Comment les IB génèrent des revenus"]
+            "items": [
+              "Inscrire IB/ Partenariat",
+              "Comment les IB génèrent des revenus"
+            ]
           }
         ],
         "Company": [
           {
             "section": "Entreprise",
-            "items": ["À propos de l'entreprise", "Documents", "Actualités de l'entreprise", "Contacts", "Carrière"]
+            "items": [
+              "À propos de l'entreprise",
+              "Documents",
+              "Actualités de l'entreprise",
+              "Contacts",
+              "Carrière"
+            ]
           }
         ]
       }
@@ -201,7 +236,11 @@
           "title": "Démo",
           "subtitle": "compte",
           "description": "Trading sans risque avec des fonds virtuels, parfait pour les débutants pour explorer les marchés.",
-          "features": ["Effet de levier jusqu'à 1:100", "Spreads à partir de 0,0 pips", "Aucun dépôt requis"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Spreads à partir de 0,0 pips",
+            "Aucun dépôt requis"
+          ],
           "buttonText": "Essayer la Démo maintenant",
           "isRecommended": true
         },
@@ -211,7 +250,11 @@
           "title": "Standard",
           "subtitle": "compte",
           "description": "Accès facile aux marchés spot avec des frais faibles — idéal pour les débutants et les traders actifs.",
-          "features": ["Effet de levier jusqu'à 1:100", "Spreads à partir de 1,2 pips", "Premier dépôt de 50$"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Spreads à partir de 1,2 pips",
+            "Premier dépôt de 50$"
+          ],
           "buttonText": "Ouvrir un compte Standard",
           "isRecommended": false
         },
@@ -221,7 +264,11 @@
           "title": "Pro",
           "subtitle": "compte",
           "description": "Découvrez des spreads serrés, un effet de levier plus élevé et un contrôle total sur chaque transaction.",
-          "features": ["Effet de levier jusqu'à 1:100", "Spreads à partir de 0,0 pips", "Premier dépôt de 1000$"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Spreads à partir de 0,0 pips",
+            "Premier dépôt de 1000$"
+          ],
           "buttonText": "Trader comme un Pro",
           "isRecommended": false
         },
@@ -231,7 +278,11 @@
           "title": "Tandem",
           "subtitle": "compte",
           "description": "Associez-vous avec un partenaire, mentor ou co-trader et grandissez ensemble avec des stratégies synchronisées.",
-          "features": ["Effet de levier jusqu'à 1:100", "Accès partagé au compte", "Miroir de trading en temps réel"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Accès partagé au compte",
+            "Miroir de trading en temps réel"
+          ],
           "buttonText": "Trader ensemble",
           "isRecommended": false
         },
@@ -444,7 +495,10 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Pools de liquidité agrégés profonds conçus pour des exécutions stables et un flux d'ordres évolutif.",
-            "benefits": ["Agrégation de liquidité Tier-1", "Profondeur sur plusieurs venues"]
+            "benefits": [
+              "Agrégation de liquidité Tier-1",
+              "Profondeur sur plusieurs venues"
+            ]
           },
           {
             "line1Prefix": "",
@@ -454,7 +508,10 @@
             "line2Accent": "actif",
             "line2Suffix": "",
             "subtitle": "Haute vitesse de traitement des ordres, 0 niveaux limite/stop — conçu pour le flux de trading actif.",
-            "benefits": ["Technologies de serveur rapides", "Configuration de liquidité institutionnelle"]
+            "benefits": [
+              "Technologies de serveur rapides",
+              "Configuration de liquidité institutionnelle"
+            ]
           }
         ]
       }
@@ -493,7 +550,10 @@
         "career": {
           "title": "Carrière",
           "subtitle": "À l'heure actuelle, l'entreprise recherche les spécialistes suivants:",
-          "positions": ["RESPONSABLE DES VENTES", "DIRECTEUR DU DÉPARTEMENT D'ANALYSE"],
+          "positions": [
+            "RESPONSABLE DES VENTES",
+            "DIRECTEUR DU DÉPARTEMENT D'ANALYSE"
+          ],
           "cta": "SI VOUS ÊTES PRÊT POUR UNE CROISSANCE DYNAMIQUE, VOUS ÊTES AMBITIEUX ET TALENTUEUX, ENVOYEZ VOTRE CV.",
           "button": "ENVOYER CV"
         },
@@ -690,15 +750,30 @@
       "description": "L'objectif principal d'Ester est de créer les meilleures conditions et les plus transparentes pour les traders particuliers et institutionnels.",
       "trading": {
         "title": "Trading",
-        "items": ["Aperçu des comptes", "Marchés", "Plateforme", "Conditions de trading", "Trading tandem"]
+        "items": [
+          "Aperçu des comptes",
+          "Marchés",
+          "Plateforme",
+          "Conditions de trading",
+          "Trading tandem"
+        ]
       },
       "partnership": {
         "title": "Partenariat",
-        "items": ["Inscrire IB/ Partenariat", "Comment les IB génèrent des revenus"]
+        "items": [
+          "Inscrire IB/ Partenariat",
+          "Comment les IB génèrent des revenus"
+        ]
       },
       "company": {
         "title": "Entreprise",
-        "items": ["À propos de l'entreprise", "Documents", "Actualités de l'entreprise", "Contacts", "Carrière"]
+        "items": [
+          "À propos de l'entreprise",
+          "Documents",
+          "Actualités de l'entreprise",
+          "Contacts",
+          "Carrière"
+        ]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -848,7 +923,8 @@
         "lastPage": "Last page",
         "tooltip": "Ce bloc affiche les derniers dépôts et retraits afin que le client puisse immédiatement remarquer les paiements mis à jour et ouvrir la transaction nécessaire.",
         "tooltipLabel": "À propos des dernières transactions",
-        "description": "Dépôts et retraits récents sur tous les comptes pour que les changements soient visibles immédiatement."
+        "description": "Dépôts et retraits récents sur tous les comptes pour que les changements soient visibles immédiatement.",
+        "loadMore": "Charger plus"
       },
       "summary": {
         "totalAmount": "Montant total",
@@ -906,12 +982,24 @@
           "account": "Choisissez un compte.",
           "paymentDetail": "Choisissez les détails de paiement approuvés.",
           "amount": "Entrez un montant valide.",
-          "balance": "Le montant du retrait dépasse le solde du compte."
+          "balance": "Le montant du retrait dépasse le solde du compte.",
+          "investorPassword": "Saisissez le mot de passe investisseur de ce compte.",
+          "otp": "Saisissez un code à deux facteurs valide à 6 chiffres.",
+          "invalidInvestorPassword": "Mot de passe investisseur invalide.",
+          "investorPasswordNotConfigured": "Le mot de passe investisseur n’est pas configuré pour ce compte.",
+          "otpRequired": "Le code à deux facteurs est requis.",
+          "invalidOtp": "Code à deux facteurs invalide.",
+          "otpNotConfigured": "L’authentification à deux facteurs n’est pas configurée."
         },
         "loadAccountsError": "Échec du chargement des comptes de trading.",
         "loadPaymentDetailsError": "Échec du chargement des détails du paiement.",
         "processing": "Traitement...",
-        "title": "Demande de retrait"
+        "title": "Demande de retrait",
+        "investorPassword": "Mot de passe investisseur",
+        "investorPasswordPlaceholder": "Saisissez le mot de passe investisseur",
+        "twoFactorCode": "Code à deux facteurs",
+        "twoFactorCodePlaceholder": "Saisissez le code à 6 chiffres",
+        "securityHint": "Confirmez ce retrait avec le mot de passe investisseur du compte MT4 sélectionné."
       },
       "backToList": "Retour à la liste des paiements",
       "backToMethodSelection": "Retour à la sélection du mode de paiement",
@@ -1168,7 +1256,11 @@
             "enable_success": "2FA a été activée !",
             "enable_error": "Invalid code or connection error",
             "disable_success": "2FA a été désactivée",
-            "disable_error": "Failed to disable 2FA"
+            "disable_error": "Failed to disable 2FA",
+            "manual_secret_label": "Clé de configuration manuelle",
+            "manual_secret_hint": "Si vous ne pouvez pas scanner le code QR, saisissez cette clé manuellement dans votre application d’authentification.",
+            "copy_secret": "Copier",
+            "copy_secret_success": "Clé copiée."
           },
           "reset": {
             "pending": "Veuillez patienter avant d'envoyer un autre e-mail de réinitialisation.",
@@ -1328,7 +1420,8 @@
             "approved": "Confirmed",
             "pending": "In progress",
             "rejected": "Rejected"
-          }
+          },
+          "loadMore": "Charger plus"
         }
       },
       "index": {
@@ -1384,7 +1477,9 @@
           "submit": "Ouvrir un nouveau compte"
         },
         "loadTypesError": "Échec du chargement des types de comptes.",
-        "submitError": "Échec de la création du compte."
+        "submitError": "Échec de la création du compte.",
+        "accountTypeCardHint": "Type de compte de trading",
+        "investorPasswordNotice": "Nous générerons automatiquement un mot de passe investisseur pour ce compte MT4 et l’enverrons à votre e-mail. Il sera nécessaire pour confirmer les demandes de retrait."
       },
       "actions": {
         "deposit": "Dépôt",

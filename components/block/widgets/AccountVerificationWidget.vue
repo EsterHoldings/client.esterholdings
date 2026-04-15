@@ -35,11 +35,11 @@
     </div>
 
     <div class="verification-list-wrap">
-      <div
-        v-if="isLoading"
-        class="verification-list">
         <div
-          v-for="idx in 5"
+          v-if="isLoading"
+          class="verification-list">
+        <div
+          v-for="idx in 3"
           :key="idx"
           class="verification-step verification-step--skeleton animate-pulse">
           <div class="h-8 w-8 rounded-lg bg-[var(--color-stroke-ui-light)]"></div>
@@ -98,30 +98,27 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, inject, onBeforeUnmount, onMounted, reactive, ref } from "vue";
+  import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
   import { useI18n } from "vue-i18n";
   import { navigateTo, useLocalePath } from "~/.nuxt/imports";
 
-  import CreateNewDeposit from "~/pages/payments/create/index.vue";
   import UiImageCircle from "~/components/ui/UiImageCircle.vue";
   import UiInfoHint from "~/components/ui/UiInfoHint.vue";
   import UiIconProfile from "~/components/ui/UiIconProfile.vue";
   import UiIconMails from "~/components/ui/UiIconMails.vue";
   import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
-  import UiIconPayment from "~/components/ui/UiIconPayment.vue";
 
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import { useAuthStore } from "~/stores/authStore";
 
   type VerificationStatus = "pending" | "approved" | "rejected";
-  type VerificationStepKey = "profile" | "email" | "documents" | "deposit";
+  type VerificationStepKey = "profile" | "email" | "documents";
 
   const { t } = useI18n({ useScope: "global" });
   const localePath = useLocalePath();
   const appCore = useAppCore();
   const authStore = useAuthStore();
-  const modalControl = inject("modalControl") as { openModal?: Function } | undefined;
 
   const isLoading = ref(false);
   const verificationRequestData = reactive<Record<string, any>>({});
@@ -143,7 +140,6 @@
   const emailStatus = ref<VerificationStatus>("pending");
   const infoStatus = ref<VerificationStatus>("pending");
   const documentsStatus = ref<VerificationStatus>("pending");
-  const depositStatus = ref<VerificationStatus>("pending");
 
   const normalizeStatus = (value: unknown, fallback: VerificationStatus): VerificationStatus => {
     if (typeof value !== "string") return fallback;
@@ -200,15 +196,6 @@
       comment: getComment("documents"),
       icon: UiIconDocuments,
     },
-    {
-      key: "deposit" as VerificationStepKey,
-      title: resolveText("cabinet.dashboard.accountVerification.steps.deposit", "First deposit"),
-      status: depositStatus.value,
-      statusLabel: statusLabel(depositStatus.value),
-      stateClass: stateClass(depositStatus.value),
-      comment: getComment("deposit"),
-      icon: UiIconPayment,
-    },
   ]);
 
   const statusPriority: Record<VerificationStatus, number> = {
@@ -221,7 +208,6 @@
     profile: 0,
     email: 1,
     documents: 2,
-    deposit: 3,
   };
 
   const orderedSteps = computed(() =>
@@ -264,32 +250,15 @@
     loadVerificationData();
   };
 
-  const tryOpenDepositModal = (): boolean => {
-    if (!modalControl?.openModal) return false;
-
-    modalControl.openModal(CreateNewDeposit, {
-      title: t("cabinet.billing.create"),
-      initialTab: "deposit",
-    });
-
-    return true;
-  };
-
   const resolveStepRoute = (key: VerificationStepKey): { path: string; query?: Record<string, string> } => {
     if (key === "documents") {
       return { path: "/profile", query: { tab: "documents" } };
-    }
-
-    if (key === "deposit") {
-      return { path: "/payments", query: { openDeposit: "1" } };
     }
 
     return { path: "/profile", query: { tab: "general" } };
   };
 
   const handleOpenStep = async (key: VerificationStepKey): Promise<void> => {
-    if (key === "deposit" && tryOpenDepositModal()) return;
-
     const target = resolveStepRoute(key);
     await navigateTo(localePath({ path: target.path, query: target.query ?? {} }));
   };
@@ -305,7 +274,6 @@
       emailStatus.value = normalizeStatus(verificationRequestData.email?.verification_status, "pending");
       infoStatus.value = normalizeStatus(verificationRequestData.info?.verification_status, "pending");
       documentsStatus.value = normalizeStatus(verificationRequestData.documents?.verification_status, "pending");
-      depositStatus.value = normalizeStatus(verificationRequestData.deposit?.verification_status, "pending");
     } finally {
       setTimeout(() => {
         isLoading.value = false;

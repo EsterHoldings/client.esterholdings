@@ -13,15 +13,25 @@
         <UiFormControl
           :label="t('cabinet.accounts.accounts-form.fields.accountType')"
           :errors="validatorAccountForm?.errorsFormData?.accountType?.errors">
-          <UiSelect
-            :without-no-select="true"
-            :data="accountTypes"
-            :value="formData.accountType"
-            @change="handleChangeSelectAccountType"
-            :isDirty="validatorAccountForm?.errorsFormData?.accountType?.isDirty"
-            :isInvalid="validatorAccountForm?.errorsFormData?.accountType?.errors?.length > 0"
-            @blur="validatorAccountForm?.doValidateField('accountType', $event)" />
+          <div class="account-type-grid">
+            <button
+              v-for="accountType in accountTypes"
+              :key="accountType.value"
+              type="button"
+              class="account-type-card"
+              :class="{ 'account-type-card--active': formData.accountType === accountType.value }"
+              @click="handleChangeSelectAccountType(accountType.value)">
+              <span class="account-type-card__label">{{ accountType.text }}</span>
+              <span class="account-type-card__meta">
+                {{ t("cabinet.accounts.accounts-form.accountTypeCardHint") }}
+              </span>
+            </button>
+          </div>
         </UiFormControl>
+
+        <div class="accounts__edit__notice">
+          {{ t("cabinet.accounts.accounts-form.investorPasswordNotice") }}
+        </div>
 
         <div class="accounts__edit__actions">
           <UiButtonDefault
@@ -48,7 +58,6 @@
   import useEventBus from "~/composables/useEventBus";
   import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
-  import UiSelect from "~/components/ui/UiSelect.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import { useToast } from "vue-toastification";
 
@@ -63,7 +72,7 @@
   });
 
   const toast = useToast();
-  let accountTypes = reactive([]);
+  let accountTypes = reactive<Array<{ id: string; value: string; text: string }>>([]);
 
   const app = useAppCore();
 
@@ -200,6 +209,64 @@
     &__save-btn {
       min-height: 40px;
     }
+  }
+
+  .account-type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+  }
+
+  .account-type-card {
+    min-height: 92px;
+    border-radius: 16px;
+    border: 1px solid var(--color-stroke-ui-light);
+    background: var(--ui-background-panel);
+    padding: 14px;
+    text-align: left;
+    color: var(--ui-text-main);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .account-type-card:hover {
+    border-color: var(--ui-primary-main);
+    transform: translateY(-1px);
+  }
+
+  .account-type-card--active {
+    border-color: var(--ui-primary-main);
+    background: color-mix(in srgb, var(--ui-primary-main) 16%, var(--ui-background-panel));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 16%, transparent);
+  }
+
+  .account-type-card__label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .account-type-card__meta {
+    display: block;
+    margin-top: 8px;
+    color: var(--ui-text-secondary);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .accounts__edit__notice {
+    margin-top: -4px;
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 44%, var(--color-stroke-ui-light));
+    background: color-mix(in srgb, var(--ui-primary-main) 9%, var(--ui-background-panel));
+    padding: 12px 14px;
+    color: var(--ui-text-main);
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   @media (max-width: 768px) {

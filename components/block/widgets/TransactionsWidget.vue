@@ -19,10 +19,12 @@
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const DASHBOARD_TRANSACTIONS_HIGHLIGHT_SCOPE = "dashboard-transactions";
   const PAYMENT_HIGHLIGHT_DURATION_MS = 4500;
+  const TRANSACTIONS_CHUNK_SIZE = 3;
 
   const payments = reactive<any[]>([]);
   const isLoading = ref(false);
   const errorMsg = ref<string | null>(null);
+  const visiblePaymentsCount = ref(TRANSACTIONS_CHUNK_SIZE);
   const highlightedPaymentIds = ref<string[]>([]);
   const highlightedPaymentPriorities = ref<Record<string, number>>({});
   const paymentHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
@@ -65,7 +67,7 @@
     );
   };
 
-  const displayedPayments = computed(() => {
+  const orderedPayments = computed(() => {
     const rows = [...payments];
 
     rows.sort((a, b) => {
@@ -92,8 +94,14 @@
       return getTimestamp(b?.created_at) - getTimestamp(a?.created_at);
     });
 
-    return rows.slice(0, 5);
+    return rows;
   });
+
+  const displayedPayments = computed(() => orderedPayments.value.slice(0, visiblePaymentsCount.value));
+  const hasMorePayments = computed(() => displayedPayments.value.length < orderedPayments.value.length);
+  const loadMorePayments = () => {
+    visiblePaymentsCount.value += TRANSACTIONS_CHUNK_SIZE;
+  };
 
   const clearPaymentHighlightTimer = (paymentId: string) => {
     const activeTimer = paymentHighlightTimers.get(paymentId);
@@ -188,6 +196,7 @@
       const payload = response?.data?.data;
       const rows = Array.isArray(payload?.data) ? payload.data : [];
 
+      visiblePaymentsCount.value = TRANSACTIONS_CHUNK_SIZE;
       payments.splice(0, payments.length, ...rows);
       applyRecentPaymentHighlights();
     } catch (error: any) {
@@ -354,6 +363,14 @@
               </div>
             </div>
           </NuxtLink>
+
+          <button
+            v-if="hasMorePayments"
+            type="button"
+            class="transactions-widget__load-more"
+            @click="loadMorePayments">
+            {{ t("cabinet.dashboard.transactions.loadMore") }}
+          </button>
         </div>
       </div>
     </div>
@@ -410,6 +427,27 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+  }
+
+  .transactions-widget__load-more {
+    align-self: center;
+    margin-top: 2px;
+    border: 0;
+    background: transparent;
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      color 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .transactions-widget__load-more:hover {
+    color: var(--ui-text-main);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .transaction-row {

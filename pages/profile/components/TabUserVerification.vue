@@ -191,7 +191,7 @@
                 </td>
               </tr>
               <tr
-                v-for="row in historyRows"
+                v-for="row in visibleHistoryRows"
                 :key="row.id"
                 class="hover:bg-[var(--color-stroke-ui-light)]/20">
                 <td class="px-4 py-3">{{ row.name }}</td>
@@ -208,6 +208,14 @@
             </tbody>
           </table>
         </div>
+
+        <button
+          v-if="hasMoreHistoryRows"
+          type="button"
+          class="verification-history__load-more"
+          @click="loadMoreHistoryRows">
+          {{ t("cabinet.profile.components.tab-user-verification.loadMore") }}
+        </button>
       </PanelDefault>
     </div>
   </div>
@@ -258,6 +266,7 @@
   const isLoading = ref(false);
   const isPaymentDetailsLoading = ref(false);
   const activeSection = ref<VerificationSectionTab>("client");
+  const HISTORY_CHUNK_SIZE = 5;
   const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
   const CLIENT_NOTIFICATIONS_MARKED_EVENT = "client-notifications-marked";
   const VERIFICATION_NOTIFICATION_TYPE = "verification.status-updated";
@@ -265,13 +274,12 @@
   let verificationRequestData = reactive<Record<string, any>>({});
   const paymentDetailsRows = ref<PaymentDetailsRow[]>([]);
   const unreadVerificationNotifications = ref<ClientVerificationUnreadNotification[]>([]);
+  const visibleHistoryCount = ref(HISTORY_CHUNK_SIZE);
 
   const documentsStatus = ref<VerificationStatus>("pending");
-  const depositStatus = ref<VerificationStatus>("pending");
   const emailStatus = ref<VerificationStatus>("pending");
   const infoStatus = ref<VerificationStatus>("pending");
   const documentsComment = ref<string>("");
-  const depositComment = ref<string>("");
   const emailComment = ref<string>("");
   const infoComment = ref<string>("");
 
@@ -289,13 +297,6 @@
       subtitle: "",
       status: documentsStatus,
       comment: documentsComment,
-    },
-    {
-      key: "deposit",
-      title: t("cabinet.profile.components.tab-user-verification.items.deposit.title"),
-      subtitle: t("cabinet.profile.components.tab-user-verification.items.deposit.subtitle"),
-      status: depositStatus,
-      comment: depositComment,
     },
     {
       key: "profile",
@@ -325,6 +326,11 @@
       status: normalizeStatus(r.status),
     }));
   });
+  const visibleHistoryRows = computed(() => historyRows.value.slice(0, visibleHistoryCount.value));
+  const hasMoreHistoryRows = computed(() => visibleHistoryRows.value.length < historyRows.value.length);
+  const loadMoreHistoryRows = () => {
+    visibleHistoryCount.value += HISTORY_CHUNK_SIZE;
+  };
 
   const iconByStatus = (s: VerificationStatus) =>
     s === "approved" ? UiIconSuccessFull : s === "pending" ? UiIconWarningFull : UiIconDangerFull;
@@ -441,12 +447,11 @@
       emailStatus.value = normalizeStatus(verificationRequestData["email"]?.["verification_status"]);
       infoStatus.value = normalizeStatus(verificationRequestData["info"]?.["verification_status"]);
       documentsStatus.value = normalizeStatus(verificationRequestData["documents"]?.["verification_status"]);
-      depositStatus.value = normalizeStatus(verificationRequestData["deposit"]?.["verification_status"]);
 
       emailComment.value = verificationRequestData["email"]?.["comment"] ?? "";
       infoComment.value = verificationRequestData["info"]?.["comment"] ?? "";
       documentsComment.value = verificationRequestData["documents"]?.["comment"] ?? "";
-      depositComment.value = verificationRequestData["deposit"]?.["comment"] ?? "";
+      visibleHistoryCount.value = HISTORY_CHUNK_SIZE;
     } finally {
       setTimeout(() => (isLoading.value = false), 400);
     }
@@ -708,6 +713,27 @@
     font-size: 12px;
     line-height: 1.4;
     white-space: pre-wrap;
+  }
+
+  .verification-history__load-more {
+    display: block;
+    margin: 12px auto 0;
+    border: 0;
+    background: transparent;
+    color: var(--ui-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      color 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .verification-history__load-more:hover {
+    color: var(--ui-text-main);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   @media (max-width: 768px) {

@@ -36,39 +36,74 @@
         "Trading": [
           {
             "section": "Kontoübersicht",
-            "items": ["Standard", "Pro", "Islamisch", "Demo"]
+            "items": [
+              "Standard",
+              "Pro",
+              "Islamisch",
+              "Demo"
+            ]
           },
           {
             "section": "Marktinstrumente",
-            "items": ["Forex", "Metalle", "Krypto-CFDs", "Indizes", "Aktien", "Energie", "ETFs"]
+            "items": [
+              "Forex",
+              "Metalle",
+              "Krypto-CFDs",
+              "Indizes",
+              "Aktien",
+              "Energie",
+              "ETFs"
+            ]
           },
           {
             "section": "Plattform",
-            "items": ["MT4 Desktop", "MT 4 Mobile"]
+            "items": [
+              "MT4 Desktop",
+              "MT 4 Mobile"
+            ]
           },
           {
             "section": "Handelsbedingungen",
-            "items": ["Kontoaufladung", "Auszahlung von Geldern"]
+            "items": [
+              "Kontoaufladung",
+              "Auszahlung von Geldern"
+            ]
           },
           {
             "section": "Trader's HUB",
-            "items": ["Trader-Blog", "Wirtschaftskalender", "Marktnachrichten"]
+            "items": [
+              "Trader-Blog",
+              "Wirtschaftskalender",
+              "Marktnachrichten"
+            ]
           },
           {
             "section": "TANDEM-Handel",
-            "items": ["Für Trader", "Für Investoren"]
+            "items": [
+              "Für Trader",
+              "Für Investoren"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "Partnerschaft",
-            "items": ["IB/Partnerschaft registrieren", "Wie IBs Einkommen generieren"]
+            "items": [
+              "IB/Partnerschaft registrieren",
+              "Wie IBs Einkommen generieren"
+            ]
           }
         ],
         "Company": [
           {
             "section": "Unternehmen",
-            "items": ["Über das Unternehmen", "Dokumente", "Unternehmensnachrichten", "Kontakte", "Karriere"]
+            "items": [
+              "Über das Unternehmen",
+              "Dokumente",
+              "Unternehmensnachrichten",
+              "Kontakte",
+              "Karriere"
+            ]
           }
         ]
       }
@@ -201,7 +236,11 @@
           "title": "Demo",
           "subtitle": "Konto",
           "description": "Risikofreier Handel mit virtuellen Geldern, perfekt für Anfänger zur Erkundung der Märkte.",
-          "features": ["Hebel bis zu 1:100", "Spreads ab 0,0 Pips", "Keine Einzahlung erforderlich"],
+          "features": [
+            "Hebel bis zu 1:100",
+            "Spreads ab 0,0 Pips",
+            "Keine Einzahlung erforderlich"
+          ],
           "buttonText": "Demo jetzt ausprobieren",
           "isRecommended": true
         },
@@ -211,7 +250,11 @@
           "title": "Standard",
           "subtitle": "Konto",
           "description": "Einfacher Zugang zu Spotmärkten mit niedrigen Gebühren – ideal für Anfänger und aktive Trader.",
-          "features": ["Hebel bis zu 1:100", "Spreads ab 1,2 Pips", "Ersteinzahlung von 50 $"],
+          "features": [
+            "Hebel bis zu 1:100",
+            "Spreads ab 1,2 Pips",
+            "Ersteinzahlung von 50 $"
+          ],
           "buttonText": "Standard-Konto eröffnen",
           "isRecommended": false
         },
@@ -221,7 +264,11 @@
           "title": "Pro",
           "subtitle": "Konto",
           "description": "Erleben Sie enge Spreads, höheren Hebel und volle Kontrolle über jeden Trade.",
-          "features": ["Hebel bis zu 1:100", "Spreads ab 0,0 Pips", "Ersteinzahlung von 1000 $"],
+          "features": [
+            "Hebel bis zu 1:100",
+            "Spreads ab 0,0 Pips",
+            "Ersteinzahlung von 1000 $"
+          ],
           "buttonText": "Wie ein Profi handeln",
           "isRecommended": false
         },
@@ -231,7 +278,11 @@
           "title": "Tandem",
           "subtitle": "Konto",
           "description": "Arbeiten Sie mit einem Partner, Mentor oder Co-Trader zusammen und wachsen Sie gemeinsam mit synchronisierten Strategien.",
-          "features": ["Hebel bis zu 1:100", "Gemeinsamer Kontozugriff", "Echtzeit-Trade-Spiegelung"],
+          "features": [
+            "Hebel bis zu 1:100",
+            "Gemeinsamer Kontozugriff",
+            "Echtzeit-Trade-Spiegelung"
+          ],
           "buttonText": "Gemeinsam handeln",
           "isRecommended": false
         },
@@ -241,7 +292,11 @@
           "title": "Islamisch",
           "subtitle": "Konto",
           "description": "Swap-frei. Scharia-konform. Handeln Sie ohne Zinsen mit vollem Plattformzugriff.",
-          "features": ["Hebel bis zu 1:100", "Keine Swap-/Zinsgebühren", "Zugriff auf alle Handelsinstrumente"],
+          "features": [
+            "Hebel bis zu 1:100",
+            "Keine Swap-/Zinsgebühren",
+            "Zugriff auf alle Handelsinstrumente"
+          ],
           "buttonText": "Islamisches Konto eröffnen",
           "isRecommended": false
         }
@@ -440,7 +495,10 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Tiefe aggregierte Liquiditätspools für stabile Ausführungen und skalierbaren Auftragsfluss.",
-            "benefits": ["Tier-1-Liquiditätsaggregation", "Tiefe über Handelsplätze hinweg"]
+            "benefits": [
+              "Tier-1-Liquiditätsaggregation",
+              "Tiefe über Handelsplätze hinweg"
+            ]
           },
           {
             "line1Prefix": "",
@@ -450,7 +508,10 @@
             "line2Accent": "Handel",
             "line2Suffix": "",
             "subtitle": "Hohe Auftragsverarbeitungsgeschwindigkeit, 0 Limit-/Stop-Level — für aktiven Handelsfluss konzipiert.",
-            "benefits": ["Schnelle Servertechnologien", "Institutioneller Liquiditätsaufbau"]
+            "benefits": [
+              "Schnelle Servertechnologien",
+              "Institutioneller Liquiditätsaufbau"
+            ]
           }
         ]
       }
@@ -489,7 +550,10 @@
         "career": {
           "title": "Karriere",
           "subtitle": "Derzeit sucht das Unternehmen folgende Spezialisten:",
-          "positions": ["VERTRIEBSLEITER", "LEITER DER ANALYSE-ABTEILUNG"],
+          "positions": [
+            "VERTRIEBSLEITER",
+            "LEITER DER ANALYSE-ABTEILUNG"
+          ],
           "cta": "WENN SIE BEREIT SIND FÜR DYNAMISCHES WACHSTUM, EHRGEIZIG UND TALENTIERT SIND, SENDEN SIE IHREN LEBENSLAUF.",
           "button": "LEBENSLAUF SENDEN"
         },
@@ -686,15 +750,30 @@
       "description": "Das Hauptziel von Ester ist es, die besten und transparentesten Bedingungen für Privat- und Firmenhändler zu schaffen.",
       "trading": {
         "title": "Handel",
-        "items": ["Kontoübersicht", "Märkte", "Plattform", "Handelsbedingungen", "Tandem-Handel"]
+        "items": [
+          "Kontoübersicht",
+          "Märkte",
+          "Plattform",
+          "Handelsbedingungen",
+          "Tandem-Handel"
+        ]
       },
       "partnership": {
         "title": "Partnerschaft",
-        "items": ["IB/Partnerschaft registrieren", "Wie IBs Einkommen generieren"]
+        "items": [
+          "IB/Partnerschaft registrieren",
+          "Wie IBs Einkommen generieren"
+        ]
       },
       "company": {
         "title": "Unternehmen",
-        "items": ["Über das Unternehmen", "Dokumente", "Unternehmensnachrichten", "Kontakte", "Karriere"]
+        "items": [
+          "Über das Unternehmen",
+          "Dokumente",
+          "Unternehmensnachrichten",
+          "Kontakte",
+          "Karriere"
+        ]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -844,7 +923,8 @@
         "lastPage": "Last page",
         "tooltip": "In diesem Block werden die letzten Ein- und Auszahlungen angezeigt, sodass der Kunde aktualisierte Zahlungen sofort erkennen und die erforderliche Transaktion eröffnen kann.",
         "tooltipLabel": "Über letzte Transaktionen",
-        "description": "Letzte Ein- und Auszahlungen über alle Konten hinweg, damit Änderungen sofort sichtbar sind."
+        "description": "Letzte Ein- und Auszahlungen über alle Konten hinweg, damit Änderungen sofort sichtbar sind.",
+        "loadMore": "Mehr laden"
       },
       "summary": {
         "totalAmount": "Gesamtbetrag",
@@ -902,12 +982,24 @@
           "account": "Wählen Sie ein Konto.",
           "paymentDetail": "Wählen Sie genehmigte Zahlungsdetails.",
           "amount": "Geben Sie einen gültigen Betrag ein.",
-          "balance": "Der Auszahlungsbetrag übersteigt den Kontostand."
+          "balance": "Der Auszahlungsbetrag übersteigt den Kontostand.",
+          "investorPassword": "Geben Sie das Investor-Passwort für dieses Konto ein.",
+          "otp": "Geben Sie einen gültigen 6-stelligen Zwei-Faktor-Code ein.",
+          "invalidInvestorPassword": "Ungültiges Investor-Passwort.",
+          "investorPasswordNotConfigured": "Für dieses Konto ist kein Investor-Passwort eingerichtet.",
+          "otpRequired": "Der Zwei-Faktor-Code ist erforderlich.",
+          "invalidOtp": "Ungültiger Zwei-Faktor-Code.",
+          "otpNotConfigured": "Zwei-Faktor-Authentifizierung ist nicht eingerichtet."
         },
         "loadAccountsError": "Handelskonten konnten nicht geladen werden.",
         "loadPaymentDetailsError": "Zahlungsdetails konnten nicht geladen werden.",
         "processing": "Verarbeitung...",
-        "title": "Auszahlungsantrag"
+        "title": "Auszahlungsantrag",
+        "investorPassword": "Investor-Passwort",
+        "investorPasswordPlaceholder": "Investor-Passwort eingeben",
+        "twoFactorCode": "Zwei-Faktor-Code",
+        "twoFactorCodePlaceholder": "6-stelligen Code eingeben",
+        "securityHint": "Bestätigen Sie diese Auszahlung mit dem Investor-Passwort des ausgewählten MT4-Kontos."
       },
       "backToList": "Zurück zur Zahlungsliste",
       "backToMethodSelection": "Zurück zur Auswahl der Zahlungsart",
@@ -1164,7 +1256,11 @@
             "enable_success": "2FA wurde aktiviert!",
             "enable_error": "Invalid code or connection error",
             "disable_success": "2FA wurde deaktiviert",
-            "disable_error": "Failed to disable 2FA"
+            "disable_error": "Failed to disable 2FA",
+            "manual_secret_label": "Schlüssel für manuelle Einrichtung",
+            "manual_secret_hint": "Wenn Sie den QR-Code nicht scannen können, geben Sie diesen Schlüssel manuell in Ihrer Authenticator-App ein.",
+            "copy_secret": "Kopieren",
+            "copy_secret_success": "Geheimer Schlüssel kopiert."
           },
           "reset": {
             "pending": "Bitte warten Sie, bevor Sie eine weitere Reset-E-Mail senden.",
@@ -1324,7 +1420,8 @@
             "approved": "Confirmed",
             "pending": "In progress",
             "rejected": "Rejected"
-          }
+          },
+          "loadMore": "Mehr laden"
         }
       },
       "index": {
@@ -1380,7 +1477,9 @@
           "submit": "Neues Konto eröffnen"
         },
         "loadTypesError": "Kontotypen konnten nicht geladen werden.",
-        "submitError": "Konto konnte nicht erstellt werden."
+        "submitError": "Konto konnte nicht erstellt werden.",
+        "accountTypeCardHint": "Handelskonto-Typ",
+        "investorPasswordNotice": "Wir generieren automatisch ein Investor-Passwort für dieses MT4-Konto und senden es an Ihre E-Mail. Sie benötigen es zur Bestätigung von Auszahlungsanfragen."
       },
       "actions": {
         "deposit": "Kaution",

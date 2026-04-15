@@ -23,6 +23,7 @@
         <UiSelect
           :without-no-select="true"
           :data="accounts"
+          :value="formData.accountId"
           :isDirty="validatorUsdtTrcDataForm.errorsFormData?.accountId?.isDirty"
           :isInvalid="validatorUsdtTrcDataForm.errorsFormData?.accountId?.errors?.length > 0"
           @change="handleChangeAccount"
@@ -94,6 +95,7 @@
 
   const props = defineProps({
     paymentSystem: { type: Object, required: true },
+    initialAccountId: { type: String, default: "" },
   });
 
   const modalControl = inject<any>("modalControl", null);
@@ -221,6 +223,17 @@
     }
   };
 
+  const applyInitialAccount = () => {
+    const initialAccountId = String(props.initialAccountId ?? "").trim();
+    if (initialAccountId === "" || !accounts.value.some(account => account.value === initialAccountId)) {
+      return;
+    }
+
+    formData.accountId = initialAccountId;
+    validatorUsdtTrcDataForm.errorsFormData.accountId.isDirty = true;
+    validatorUsdtTrcDataForm.doValidateField("accountId", initialAccountId);
+  };
+
   const loadAccounts = async (page: number) => {
     if (isLoadingAccounts.value || !hasMoreAccounts.value) return;
 
@@ -241,6 +254,7 @@
       }
 
       appendUnique(normalizeAccounts(list));
+      applyInitialAccount();
       hasMoreAccounts.value = true;
     } catch (error: any) {
       loadAccountsPage.value = Math.max(1, page - 1);
@@ -263,8 +277,10 @@
 
     accounts.value = [];
     loadAccountsPage.value = 1;
+    loadAccountsPerPage.value = props.initialAccountId ? 100 : 10;
     hasMoreAccounts.value = true;
 
     await loadAccounts(1);
+    applyInitialAccount();
   });
 </script>

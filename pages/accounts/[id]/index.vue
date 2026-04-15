@@ -10,6 +10,13 @@
             {{ accountSubtitle }}
           </UiTextSmall>
         </div>
+
+        <UiButtonDefault
+          class="account-page__deposit-btn"
+          state="primary"
+          @click="openDepositModal">
+          {{ depositLabel }}
+        </UiButtonDefault>
       </div>
 
       <PanelDefault
@@ -42,7 +49,8 @@
                 :key="activeTabIndex"
                 :isLoading="isLoading"
                 :is-balance-refreshing="isBalanceRefreshing"
-                @refresh-balance="refreshAccountBalance" />
+                @refresh-balance="refreshAccountBalance"
+                @open-deposit="openDepositModal" />
             </transition>
           </section>
         </div>
@@ -53,12 +61,13 @@
 
 <script lang="ts" setup>
   import UiContainer from "~/components/ui/UiContainer.vue";
+  import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 
   import { definePageMeta } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
-  import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
+  import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
   import { useRoute } from "vue-router";
   import TabGeneral from "~/pages/accounts/[id]/components/TabGeneral.vue";
 
@@ -72,6 +81,7 @@
   import UiIconTime from "~/components/ui/UiIconTime.vue";
   import { extractApiErrorMessage } from "~/composables/useApiMessages";
   import { useToast } from "vue-toastification";
+  import CreateNewDeposit from "~/pages/payments/create/index.vue";
 
   definePageMeta({ layout: "cabinet", middleware: ["auth-client", "client-check-auth"] });
 
@@ -80,6 +90,7 @@
   const route = useRoute();
   const appCore = useAppCore();
   const toast = useToast();
+  const modalControl = inject("modalControl") as { openModal?: Function } | undefined;
 
   const activeTabIndex = ref(0);
   const isLoading = ref(false);
@@ -230,9 +241,18 @@
   const accountLoadErrorLabel = computed(() =>
     resolveText("cabinet.accounts.account.loadError", "Failed to load account details.")
   );
+  const depositLabel = computed(() => resolveText("cabinet.accounts.actions.deposit", "Deposit"));
   const refreshBalanceErrorLabel = computed(() =>
     resolveText("cabinet.accounts.refreshBalanceError", "Failed to refresh account balance.")
   );
+
+  const openDepositModal = () => {
+    modalControl?.openModal?.(CreateNewDeposit, {
+      title: depositLabel.value,
+      initialTab: "deposit",
+      initialAccountId: id.value,
+    });
+  };
   const refreshAccountBalance = async () => {
     if (isLoading.value || isBalanceRefreshing.value) return;
 
@@ -316,6 +336,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .account-page__deposit-btn {
+    min-width: 132px;
   }
 
   .account-page__subtitle {

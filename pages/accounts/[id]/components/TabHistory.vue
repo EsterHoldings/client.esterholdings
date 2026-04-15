@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
+  import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+  import UiTextH5 from "~/components/ui/UiTextH5.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
   import useAppCore from "~/composables/useAppCore";
   import { extractApiErrorMessage } from "~/composables/useApiMessages";
@@ -14,6 +16,9 @@
     balance: string | number;
     isLoading?: boolean;
     isBalanceRefreshing?: boolean;
+  }>();
+  const emit = defineEmits<{
+    (event: "openDeposit"): void;
   }>();
 
   type TransactionRow = {
@@ -39,6 +44,7 @@
   };
 
   const emptyStateLabel = computed(() => resolveText("cabinet.accounts.transactions.empty", "No transactions yet"));
+  const transactionsTitle = computed(() => resolveText("cabinet.accounts.tabs.history", "Transactions"));
   const errorStateLabel = computed(() =>
     resolveText("cabinet.accounts.transactions.error", "Failed to load transactions.")
   );
@@ -187,6 +193,16 @@
 
 <template>
   <div class="account-history">
+    <div class="account-history__header">
+      <UiTextH5 class="account-history__heading">{{ transactionsTitle }}</UiTextH5>
+      <UiButtonDefault
+        class="account-history__deposit-btn"
+        state="primary"
+        @click="emit('openDeposit')">
+        {{ depositLabel }}
+      </UiButtonDefault>
+    </div>
+
     <div
       v-if="isBusy"
       class="account-history__loading">
@@ -224,6 +240,22 @@
 <style scoped lang="scss">
   .account-history {
     width: 100%;
+  }
+
+  .account-history__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .account-history__heading {
+    color: var(--ui-text-main);
+  }
+
+  .account-history__deposit-btn {
+    min-width: 120px;
   }
 
   .account-history__loading {

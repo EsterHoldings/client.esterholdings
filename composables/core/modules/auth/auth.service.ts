@@ -28,6 +28,10 @@ export class AuthService {
     return await this.useApi.post("/auth/social", data);
   }
 
+  async socialRedirect(provider: string, params: object = {}): Promise<any> {
+    return await this.useApi.get(`/auth/social/${provider}/redirect`, params);
+  }
+
   async checkIsAuth(): Promise<any> {
     return await this.useApi.get("/auth/isAuth");
   }

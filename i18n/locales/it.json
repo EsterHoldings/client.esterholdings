@@ -36,39 +36,74 @@
         "Trading": [
           {
             "section": "Panoramica account",
-            "items": ["Standard", "Pro", "Islamico", "Demo"]
+            "items": [
+              "Standard",
+              "Pro",
+              "Islamico",
+              "Demo"
+            ]
           },
           {
             "section": "Strumenti di mercato",
-            "items": ["Forex", "Metalli", "CFD Crypto", "Indici", "Azioni", "Energia", "ETF"]
+            "items": [
+              "Forex",
+              "Metalli",
+              "CFD Crypto",
+              "Indici",
+              "Azioni",
+              "Energia",
+              "ETF"
+            ]
           },
           {
             "section": "Piattaforma",
-            "items": ["MT4 Desktop", "MT 4 Mobile"]
+            "items": [
+              "MT4 Desktop",
+              "MT 4 Mobile"
+            ]
           },
           {
             "section": "Condizioni di trading",
-            "items": ["Ricarica account", "Prelievo fondi"]
+            "items": [
+              "Ricarica account",
+              "Prelievo fondi"
+            ]
           },
           {
             "section": "HUB del Trader",
-            "items": ["Blog del trader", "Calendario economico", "Notizie di mercato"]
+            "items": [
+              "Blog del trader",
+              "Calendario economico",
+              "Notizie di mercato"
+            ]
           },
           {
             "section": "Trading TANDEM",
-            "items": ["Per trader", "Per investitore"]
+            "items": [
+              "Per trader",
+              "Per investitore"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "Partnership",
-            "items": ["Registra IB/ Partnership", "Come gli IB generano reddito"]
+            "items": [
+              "Registra IB/ Partnership",
+              "Come gli IB generano reddito"
+            ]
           }
         ],
         "Company": [
           {
             "section": "Azienda",
-            "items": ["Informazioni sull'azienda", "Documenti", "Notizie aziendali", "Contatti", "Carriera"]
+            "items": [
+              "Informazioni sull'azienda",
+              "Documenti",
+              "Notizie aziendali",
+              "Contatti",
+              "Carriera"
+            ]
           }
         ]
       }
@@ -201,7 +236,11 @@
           "title": "Demo",
           "subtitle": "account",
           "description": "Trading senza rischi con fondi virtuali, perfetto per i principianti per esplorare i mercati.",
-          "features": ["Leva fino a 1:100", "Spread da 0,0 pip", "Nessun deposito richiesto"],
+          "features": [
+            "Leva fino a 1:100",
+            "Spread da 0,0 pip",
+            "Nessun deposito richiesto"
+          ],
           "buttonText": "Prova Demo ora",
           "isRecommended": true
         },
@@ -211,7 +250,11 @@
           "title": "Standard",
           "subtitle": "account",
           "description": "Facile accesso ai mercati spot con commissioni basse — ideale per principianti e trader attivi.",
-          "features": ["Leva fino a 1:100", "Spread da 1,2 pip", "Primo deposito di $50"],
+          "features": [
+            "Leva fino a 1:100",
+            "Spread da 1,2 pip",
+            "Primo deposito di $50"
+          ],
           "buttonText": "Apri account Standard",
           "isRecommended": false
         },
@@ -221,7 +264,11 @@
           "title": "Pro",
           "subtitle": "account",
           "description": "Sperimenta spread stretti, leva più elevata e controllo completo su ogni operazione.",
-          "features": ["Leva fino a 1:100", "Spread da 0,0 pip", "Primo deposito di $1000"],
+          "features": [
+            "Leva fino a 1:100",
+            "Spread da 0,0 pip",
+            "Primo deposito di $1000"
+          ],
           "buttonText": "Fai trading come un Pro",
           "isRecommended": false
         },
@@ -448,7 +495,10 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Pool di liquidità aggregati profondi progettati per riempimenti stabili e flusso di ordini scalabile.",
-            "benefits": ["Aggregazione di liquidità Tier-1", "Profondità su più venue"]
+            "benefits": [
+              "Aggregazione di liquidità Tier-1",
+              "Profondità su più venue"
+            ]
           },
           {
             "line1Prefix": "",
@@ -458,7 +508,10 @@
             "line2Accent": "attivo",
             "line2Suffix": "",
             "subtitle": "Alta velocità di elaborazione degli ordini, 0 livelli limit/stop — costruito per il flusso di trading attivo.",
-            "benefits": ["Tecnologie server veloci", "Setup di liquidità istituzionale"]
+            "benefits": [
+              "Tecnologie server veloci",
+              "Setup di liquidità istituzionale"
+            ]
           }
         ]
       }
@@ -497,7 +550,10 @@
         "career": {
           "title": "Carriera",
           "subtitle": "Al momento l'azienda sta cercando i seguenti specialisti:",
-          "positions": ["MANAGER VENDITE", "RESPONSABILE DEL DIPARTIMENTO DI ANALISI"],
+          "positions": [
+            "MANAGER VENDITE",
+            "RESPONSABILE DEL DIPARTIMENTO DI ANALISI"
+          ],
           "cta": "SE SEI PRONTO PER UNA CRESCITA DINAMICA, SEI AMBIZIOSO E TALENTUOSO, INVIA IL TUO CURRICULUM.",
           "button": "INVIA CV"
         },
@@ -694,15 +750,30 @@
       "description": "L'obiettivo principale di Ester è creare le migliori e più trasparenti condizioni per trader retail e aziendali.",
       "trading": {
         "title": "Trading",
-        "items": ["Panoramica account", "Mercati", "Piattaforma", "Termini di trading", "Trading tandem"]
+        "items": [
+          "Panoramica account",
+          "Mercati",
+          "Piattaforma",
+          "Termini di trading",
+          "Trading tandem"
+        ]
       },
       "partnership": {
         "title": "Partnership",
-        "items": ["Registra IB/ Partnership", "Come gli IB generano reddito"]
+        "items": [
+          "Registra IB/ Partnership",
+          "Come gli IB generano reddito"
+        ]
       },
       "company": {
         "title": "Azienda",
-        "items": ["Informazioni sull'azienda", "Documenti", "Notizie aziendali", "Contatti", "Carriera"]
+        "items": [
+          "Informazioni sull'azienda",
+          "Documenti",
+          "Notizie aziendali",
+          "Contatti",
+          "Carriera"
+        ]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -852,7 +923,8 @@
         "lastPage": "Last page",
         "tooltip": "Questo blocco mostra gli ultimi depositi e prelievi in ​​modo che il cliente possa immediatamente notare i pagamenti aggiornati e aprire la transazione necessaria.",
         "tooltipLabel": "Informazioni sulle ultime transazioni",
-        "description": "Depositi e prelievi recenti su tutti i conti, così le modifiche sono visibili subito."
+        "description": "Depositi e prelievi recenti su tutti i conti, così le modifiche sono visibili subito.",
+        "loadMore": "Carica altro"
       },
       "summary": {
         "totalAmount": "Importo totale",
@@ -910,12 +982,24 @@
           "account": "Scegli un conto.",
           "paymentDetail": "Scegli i dettagli di pagamento approvati.",
           "amount": "Inserisci un importo valido.",
-          "balance": "L'importo del prelievo supera il saldo del conto."
+          "balance": "L'importo del prelievo supera il saldo del conto.",
+          "investorPassword": "Inserisci la password investitore per questo conto.",
+          "otp": "Inserisci un codice a due fattori valido di 6 cifre.",
+          "invalidInvestorPassword": "Password investitore non valida.",
+          "investorPasswordNotConfigured": "La password investitore non è configurata per questo conto.",
+          "otpRequired": "È richiesto il codice a due fattori.",
+          "invalidOtp": "Codice a due fattori non valido.",
+          "otpNotConfigured": "L’autenticazione a due fattori non è configurata."
         },
         "loadAccountsError": "Impossibile caricare i conti di trading.",
         "loadPaymentDetailsError": "Impossibile caricare i dettagli di pagamento.",
         "processing": "Elaborazione...",
-        "title": "Richiesta di ritiro"
+        "title": "Richiesta di ritiro",
+        "investorPassword": "Password investitore",
+        "investorPasswordPlaceholder": "Inserisci la password investitore",
+        "twoFactorCode": "Codice a due fattori",
+        "twoFactorCodePlaceholder": "Inserisci il codice a 6 cifre",
+        "securityHint": "Conferma questo prelievo con la password investitore del conto MT4 selezionato."
       },
       "backToList": "Torna all'elenco dei pagamenti",
       "backToMethodSelection": "Torna alla selezione del metodo di pagamento",
@@ -1172,7 +1256,11 @@
             "enable_success": "2FA è stata abilitata!",
             "enable_error": "Invalid code or connection error",
             "disable_success": "2FA è stata disattivata",
-            "disable_error": "Failed to disable 2FA"
+            "disable_error": "Failed to disable 2FA",
+            "manual_secret_label": "Chiave di configurazione manuale",
+            "manual_secret_hint": "Se non puoi scansionare il codice QR, inserisci questa chiave manualmente nella tua app di autenticazione.",
+            "copy_secret": "Copia",
+            "copy_secret_success": "Chiave copiata."
           },
           "reset": {
             "pending": "Attendi prima di inviare un'altra email di reset.",
@@ -1332,7 +1420,8 @@
             "approved": "Confirmed",
             "pending": "In progress",
             "rejected": "Rejected"
-          }
+          },
+          "loadMore": "Carica altro"
         }
       },
       "index": {
@@ -1388,7 +1477,9 @@
           "submit": "Apri nuovo account"
         },
         "loadTypesError": "Impossibile caricare i tipi di account.",
-        "submitError": "Impossibile creare l'account."
+        "submitError": "Impossibile creare l'account.",
+        "accountTypeCardHint": "Tipo di conto trading",
+        "investorPasswordNotice": "Genereremo automaticamente una password investitore per questo conto MT4 e la invieremo alla tua email. Ti servirà per confermare le richieste di prelievo."
       },
       "actions": {
         "deposit": "Depositare",

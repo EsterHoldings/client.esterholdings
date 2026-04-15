@@ -15,6 +15,7 @@
 
     const code = queryParams.get("code");
     const idToken = hashParams.get("id_token");
+    const accessToken = hashParams.get("access_token") || queryParams.get("access_token");
     const impersonationToken = hashParams.get("impersonation_token") || queryParams.get("impersonation_token");
     const redirect = hashParams.get("redirect") || queryParams.get("redirect");
     const error = queryParams.get("error") || hashParams.get("error");
@@ -42,6 +43,23 @@
       } catch (e) {
         authStore.setAccessToken("");
         console.error("Impersonation login failed:", e);
+        await router.replace(localePath("/auth/login"));
+      }
+
+      return;
+    }
+
+    if (accessToken) {
+      try {
+        authStore.setAccessToken(accessToken);
+        await authStore.initAuth(true);
+        localStorage.removeItem("social_login_type");
+
+        const nextPath = typeof redirect === "string" && redirect.startsWith("/") ? redirect : localePath("/");
+        await router.replace(nextPath);
+      } catch (e) {
+        authStore.setAccessToken("");
+        console.error("Social login failed:", e);
         await router.replace(localePath("/auth/login"));
       }
 

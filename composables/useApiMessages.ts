@@ -144,6 +144,26 @@ export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
     key: "cabinet.billing.withdrawalForm.errors.balance",
     fallback: "Withdrawal amount exceeds the account balance.",
   },
+  "invalid investor password": {
+    key: "cabinet.billing.withdrawalForm.errors.invalidInvestorPassword",
+    fallback: "Invalid investor password.",
+  },
+  "investor password is not configured for this account": {
+    key: "cabinet.billing.withdrawalForm.errors.investorPasswordNotConfigured",
+    fallback: "Investor password is not configured for this account.",
+  },
+  "two-factor authentication code is required": {
+    key: "cabinet.billing.withdrawalForm.errors.otpRequired",
+    fallback: "Two-factor authentication code is required.",
+  },
+  "invalid two-factor authentication code": {
+    key: "cabinet.billing.withdrawalForm.errors.invalidOtp",
+    fallback: "Invalid two-factor authentication code.",
+  },
+  "two-factor authentication is not configured": {
+    key: "cabinet.billing.withdrawalForm.errors.otpNotConfigured",
+    fallback: "Two-factor authentication is not configured.",
+  },
   "the name field is required": {
     key: "apiMessages.requiredField",
     fallback: "This field is required.",

@@ -93,6 +93,41 @@
               @input="handleCommentInput" />
           </UiFormControl>
 
+          <div class="withdrawal-form__security-hint">
+            {{ securityHintLabel }}
+          </div>
+
+          <UiFormControl
+            class="withdrawal-form__field"
+            :label="investorPasswordLabel"
+            :errors="errors.investorPassword ? [errors.investorPassword] : []">
+            <UiInput
+              type="password"
+              :value="form.investorPassword"
+              :placeholder="investorPasswordPlaceholder"
+              @input="handleInvestorPasswordInput" />
+          </UiFormControl>
+
+          <Transition
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="opacity-0 translate-y-1"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 translate-y-1">
+            <UiFormControl
+              v-if="isTwoFactorEnabled"
+              class="withdrawal-form__field"
+              :label="twoFactorCodeLabel"
+              :errors="errors.otp ? [errors.otp] : []">
+              <UiInput
+                :value="form.otp"
+                inputmode="numeric"
+                :placeholder="twoFactorCodePlaceholder"
+                @input="handleOtpInput" />
+            </UiFormControl>
+          </Transition>
+
           <div class="withdrawal-form__actions">
             <UiButtonDefault
               class="withdrawal-form__submit inline-flex items-center justify-center gap-2"
@@ -125,6 +160,7 @@
   import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
+  import { useAuthStore } from "~/stores/authStore";
 
   type PaymentSystem = {
     id?: string;
@@ -156,6 +192,7 @@
   }>();
 
   const appCore = useAppCore();
+  const authStore = useAuthStore();
   const toast = useToast();
   const localePath = useLocalePath();
   const { closeModal } = inject("modalControl") as { closeModal: () => void };
@@ -172,6 +209,8 @@
     paymentDetailId: "",
     amount: "",
     comment: "",
+    investorPassword: "",
+    otp: "",
   });
 
   const resolveText = (key: string, fallback: string): string => {
@@ -190,6 +229,24 @@
   const commentLabel = computed(() => resolveText("cabinet.billing.withdrawalForm.comment", "Comment"));
   const commentPlaceholder = computed(() =>
     resolveText("cabinet.billing.withdrawalForm.commentPlaceholder", "Add a comment for the finance team")
+  );
+  const investorPasswordLabel = computed(() =>
+    resolveText("cabinet.billing.withdrawalForm.investorPassword", "Investor password")
+  );
+  const investorPasswordPlaceholder = computed(() =>
+    resolveText("cabinet.billing.withdrawalForm.investorPasswordPlaceholder", "Enter investor password")
+  );
+  const twoFactorCodeLabel = computed(() =>
+    resolveText("cabinet.billing.withdrawalForm.twoFactorCode", "Two-factor code")
+  );
+  const twoFactorCodePlaceholder = computed(() =>
+    resolveText("cabinet.billing.withdrawalForm.twoFactorCodePlaceholder", "Enter 6-digit code")
+  );
+  const securityHintLabel = computed(() =>
+    resolveText(
+      "cabinet.billing.withdrawalForm.securityHint",
+      "Confirm this withdrawal with the investor password for the selected MT4 account."
+    )
   );
   const submitLabel = computed(() => resolveText("cabinet.billing.withdrawalForm.submit", "Create withdrawal request"));
   const noPaymentDetailsTitle = computed(() =>
@@ -244,6 +301,7 @@
   const selectedPaymentDetail = computed(
     () => paymentDetails.value.find(item => item.id === form.paymentDetailId) ?? null
   );
+  const isTwoFactorEnabled = computed(() => Boolean(authStore.user?.two_factor_enabled));
 
   const extractRows = (response: any): any[] => {
     const root = response?.data;
@@ -306,6 +364,16 @@
   const handleCommentInput = (event: Event): void => {
     form.comment = String((event.target as HTMLTextAreaElement)?.value ?? "");
     clearError("comment");
+  };
+
+  const handleInvestorPasswordInput = (value: string): void => {
+    form.investorPassword = value;
+    clearError("investorPassword");
+  };
+
+  const handleOtpInput = (value: string): void => {
+    form.otp = value;
+    clearError("otp");
   };
 
   const loadAccounts = async (): Promise<void> => {
@@ -422,6 +490,20 @@
       );
     }
 
+    if (form.investorPassword.trim() === "") {
+      errors.investorPassword = resolveText(
+        "cabinet.billing.withdrawalForm.errors.investorPassword",
+        "Enter the investor password for this account."
+      );
+    }
+
+    if (isTwoFactorEnabled.value && !/^\d{6}$/.test(form.otp.trim())) {
+      errors.otp = resolveText(
+        "cabinet.billing.withdrawalForm.errors.otp",
+        "Enter a valid 6-digit two-factor code."
+      );
+    }
+
     return Object.keys(errors).length === 0;
   };
 
@@ -443,6 +525,8 @@
         paymentDetailId: form.paymentDetailId,
         amount: Number(form.amount),
         comment: form.comment.trim(),
+        investorPassword: form.investorPassword,
+        otp: isTwoFactorEnabled.value ? form.otp.trim() : undefined,
       });
 
       toast.success(resolveApiMessage(response?.data?.message, createdLabel.value) ?? createdLabel.value);
@@ -553,6 +637,16 @@
 
   .withdrawal-form__textarea {
     min-height: 140px;
+  }
+
+  .withdrawal-form__security-hint {
+    border-radius: 14px;
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 44%, var(--color-stroke-ui-light));
+    background: color-mix(in srgb, var(--ui-primary-main) 9%, var(--ui-background-panel));
+    padding: 12px 14px;
+    color: var(--ui-text-main);
+    font-size: 13px;
+    line-height: 1.5;
   }
 
   .withdrawal-form__actions {

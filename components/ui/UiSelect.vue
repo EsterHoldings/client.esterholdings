@@ -39,7 +39,7 @@
     <div
       v-if="isOpen"
       ref="menu"
-      class="absolute left-0 z-50 w-full overflow-y-auto rounded border bg-[var(--ui-control-bg)] p-2 shadow-lg border-[var(--color-stroke-ui-light)] data-[down=true]:top-full data-[down=true]:mt-2 data-[up=true]:bottom-full data-[up=true]:mb-2"
+      class="select__menu absolute left-0 z-50 w-full overflow-y-auto rounded border p-2 shadow-lg border-[var(--color-stroke-ui-light)] data-[down=true]:top-full data-[down=true]:mt-2 data-[up=true]:bottom-full data-[up=true]:mb-2"
       role="listbox"
       :data-down="!dropup || null"
       :data-up="dropup || null"
@@ -325,6 +325,11 @@
     background: var(--ui-control-bg-disabled);
     border-style: dashed;
     color: var(--ui-text-secondary);
+  }
+
+  .select__menu {
+    background: color-mix(in srgb, var(--ui-control-bg) 95%, transparent);
+    backdrop-filter: blur(10px);
   }
 
   .select__search-input {

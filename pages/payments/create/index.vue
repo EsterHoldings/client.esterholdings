@@ -256,7 +256,7 @@
 
   const activePaymentSystemFormProps = computed(() => ({
     paymentSystem: paymentSystems.find(ps => ps.config_key === activePaymentSystem.value?.cfgKey) ?? null,
-    initialAccountId: tabActiveIndex.value === 1 ? props.initialAccountId : undefined,
+    initialAccountId: props.initialAccountId || undefined,
   }));
 
   const isSelected = computed(() => activePaymentSystemIndex.value !== null);

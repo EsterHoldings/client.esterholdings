@@ -40,6 +40,10 @@ export class AuthModule implements AuthModuleInterface {
     return this.authService.postSocialLogin(data);
   }
 
+  doSocialRedirect(provider: string, params: object = {}): Promise<any> {
+    return this.authService.socialRedirect(provider, params);
+  }
+
   async doCheckIsAuth(): Promise<any> {
     return await this.authService.checkIsAuth();
   }

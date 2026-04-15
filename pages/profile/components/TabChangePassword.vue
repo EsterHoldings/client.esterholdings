@@ -138,6 +138,26 @@
           </div>
 
           <div class="flex flex-col justify-center">
+            <div
+              v-if="twoFaSecret"
+              class="mb-4 rounded-xl border border-[var(--color-stroke-ui-light)] bg-[var(--ui-background-panel)] p-3">
+              <div class="mb-1 text-xs font-semibold text-[var(--ui-text-secondary)]">
+                {{ t("cabinet.profile.components.tab-change-password.two_fa.manual_secret_label") }}
+              </div>
+              <button
+                type="button"
+                class="two-fa-secret"
+                @click="handleCopyTwoFaSecret">
+                <span>{{ twoFaSecret }}</span>
+                <span class="two-fa-secret__copy">
+                  {{ t("cabinet.profile.components.tab-change-password.two_fa.copy_secret") }}
+                </span>
+              </button>
+              <div class="mt-2 text-xs leading-5 text-[var(--ui-text-secondary)]">
+                {{ t("cabinet.profile.components.tab-change-password.two_fa.manual_secret_hint") }}
+              </div>
+            </div>
+
             <UiFormControl :label="t('cabinet.profile.components.tab-change-password.two_fa.code_label')">
               <UiInput
                 :placeholder="t('cabinet.profile.components.tab-change-password.two_fa.code_placeholder')"
@@ -205,6 +225,7 @@
   const errorDisable = ref<string | null>(null);
   const qrIsLoading = ref(false);
   const qrSvg = ref("");
+  const twoFaSecret = ref("");
   const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
     return translated === key ? fallback : translated;
@@ -217,6 +238,15 @@
 
   const handleInputOtp = (value: string) => {
     otp.value = value;
+  };
+
+  const handleCopyTwoFaSecret = async () => {
+    if (!twoFaSecret.value || typeof navigator === "undefined" || !navigator.clipboard) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(twoFaSecret.value);
+    toast.success(t("cabinet.profile.components.tab-change-password.two_fa.copy_secret_success"));
   };
 
   const handleSubmit = async () => {
@@ -283,6 +313,7 @@
       await appCore.auth2fa.doDisable2fa({});
       toast.success(t("cabinet.profile.components.tab-change-password.two_fa.disable_success"));
       qrSvg.value = "";
+      twoFaSecret.value = "";
       otp.value = "";
       success.value = false;
     } catch (e: any) {
@@ -330,8 +361,10 @@
     if (response.data?.message?.length > 0) {
       twoFaEnabled.value = true;
       qrSvg.value = response.data?.message;
+      twoFaSecret.value = "";
     } else {
       qrSvg.value = response.data.qr;
+      twoFaSecret.value = String(response.data?.secret ?? "");
       twoFaEnabled.value = false;
     }
     qrIsLoading.value = false;
@@ -371,3 +404,36 @@
   const allReqsOk = computed(() => reqs.value.min12 && reqs.value.upper && reqs.value.lower && reqs.value.num);
   const reqClass = (ok: boolean) => (ok ? "text-[var(--color-success)]" : "text-[var(--color-danger)]");
 </script>
+
+<style scoped>
+  .two-fa-secret {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--color-stroke-ui-light);
+    background: var(--ui-control-bg);
+    padding: 9px 10px;
+    color: var(--ui-text-main);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 13px;
+    line-height: 1.35;
+    text-align: left;
+    word-break: break-all;
+  }
+
+  .two-fa-secret:hover {
+    border-color: var(--ui-primary-main);
+  }
+
+  .two-fa-secret__copy {
+    flex-shrink: 0;
+    color: var(--ui-primary-main);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+</style>

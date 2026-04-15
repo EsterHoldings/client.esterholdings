@@ -36,39 +36,74 @@
         "Trading": [
           {
             "section": "계좌 개요",
-            "items": ["스탠다드", "프로", "이슬람", "데모"]
+            "items": [
+              "스탠다드",
+              "프로",
+              "이슬람",
+              "데모"
+            ]
           },
           {
             "section": "시장 상품",
-            "items": ["외환", "귀금속", "암호화폐 CFD", "지수", "주식", "에너지", "ETF"]
+            "items": [
+              "외환",
+              "귀금속",
+              "암호화폐 CFD",
+              "지수",
+              "주식",
+              "에너지",
+              "ETF"
+            ]
           },
           {
             "section": "플랫폼",
-            "items": ["MT4 데스크톱", "MT4 모바일"]
+            "items": [
+              "MT4 데스크톱",
+              "MT4 모바일"
+            ]
           },
           {
             "section": "거래 조건",
-            "items": ["계좌 입금", "출금"]
+            "items": [
+              "계좌 입금",
+              "출금"
+            ]
           },
           {
             "section": "트레이더 HUB",
-            "items": ["트레이더 블로그", "경제 캘린더", "시장 뉴스"]
+            "items": [
+              "트레이더 블로그",
+              "경제 캘린더",
+              "시장 뉴스"
+            ]
           },
           {
             "section": "TANDEM 거래",
-            "items": ["트레이더용", "투자자용"]
+            "items": [
+              "트레이더용",
+              "투자자용"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "파트너십",
-            "items": ["IB/파트너십 등록", "IB 수익 창출 방법"]
+            "items": [
+              "IB/파트너십 등록",
+              "IB 수익 창출 방법"
+            ]
           }
         ],
         "Company": [
           {
             "section": "회사",
-            "items": ["회사 소개", "문서", "회사 뉴스", "연락처", "채용"]
+            "items": [
+              "회사 소개",
+              "문서",
+              "회사 뉴스",
+              "연락처",
+              "채용"
+            ]
           }
         ]
       }
@@ -201,7 +236,11 @@
           "title": "데모",
           "subtitle": "계좌",
           "description": "가상 자금으로 무위험 거래, 초보자가 시장을 탐색하기에 완벽합니다.",
-          "features": ["최대 1:100 레버리지", "0.0핍부터 스프레드", "입금 불필요"],
+          "features": [
+            "최대 1:100 레버리지",
+            "0.0핍부터 스프레드",
+            "입금 불필요"
+          ],
           "buttonText": "지금 데모 체험",
           "isRecommended": true
         },
@@ -211,7 +250,11 @@
           "title": "스탠다드",
           "subtitle": "계좌",
           "description": "낮은 수수료로 현물 시장에 쉽게 접근 — 초보자와 활발한 트레이더에게 이상적입니다.",
-          "features": ["최대 1:100 레버리지", "1.2핍부터 스프레드", "최초 입금 $50"],
+          "features": [
+            "최대 1:100 레버리지",
+            "1.2핍부터 스프레드",
+            "최초 입금 $50"
+          ],
           "buttonText": "스탠다드 계좌 개설",
           "isRecommended": false
         },
@@ -221,7 +264,11 @@
           "title": "프로",
           "subtitle": "계좌",
           "description": "타이트한 스프레드, 더 높은 레버리지, 모든 거래에 대한 완전한 제어를 경험하세요.",
-          "features": ["최대 1:100 레버리지", "0.0핍부터 스프레드", "최초 입금 $1000"],
+          "features": [
+            "최대 1:100 레버리지",
+            "0.0핍부터 스프레드",
+            "최초 입금 $1000"
+          ],
           "buttonText": "프로처럼 거래",
           "isRecommended": false
         },
@@ -231,7 +278,11 @@
           "title": "탠덤",
           "subtitle": "계좌",
           "description": "파트너, 멘토 또는 공동 트레이더와 짝을 이루고 동기화된 전략으로 함께 성장하세요.",
-          "features": ["최대 1:100 레버리지", "공유 계좌 접근", "실시간 거래 미러링"],
+          "features": [
+            "최대 1:100 레버리지",
+            "공유 계좌 접근",
+            "실시간 거래 미러링"
+          ],
           "buttonText": "함께 거래",
           "isRecommended": false
         },
@@ -241,7 +292,11 @@
           "title": "이슬람",
           "subtitle": "계좌",
           "description": "스왑 없음. 샤리아 준수. 이자 없이 거래, 플랫폼에 완전 접근.",
-          "features": ["최대 1:100 레버리지", "스왑/이자 수수료 없음", "모든 거래 상품 접근"],
+          "features": [
+            "최대 1:100 레버리지",
+            "스왑/이자 수수료 없음",
+            "모든 거래 상품 접근"
+          ],
           "buttonText": "이슬람 계좌 개설",
           "isRecommended": false
         }
@@ -440,7 +495,10 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "안정적 체결과 확장 가능한 주문 흐름을 위한 깊은 집계 유동성 풀.",
-            "benefits": ["Tier-1 유동성 집계", "거래소 간 깊이"]
+            "benefits": [
+              "Tier-1 유동성 집계",
+              "거래소 간 깊이"
+            ]
           },
           {
             "line1Prefix": "",
@@ -450,7 +508,10 @@
             "line2Accent": "거래",
             "line2Suffix": "를 위한",
             "subtitle": "높은 주문 처리 속도, 0 제한/스탑 레벨 — 활성 거래 흐름을 위해 구축.",
-            "benefits": ["빠른 서버 기술", "기관급 유동성 설정"]
+            "benefits": [
+              "빠른 서버 기술",
+              "기관급 유동성 설정"
+            ]
           }
         ]
       }
@@ -489,7 +550,10 @@
         "career": {
           "title": "채용",
           "subtitle": "현재 회사는 다음 전문가를 찾고 있습니다:",
-          "positions": ["영업 관리자", "분석 부서장"],
+          "positions": [
+            "영업 관리자",
+            "분석 부서장"
+          ],
           "cta": "역동적인 성장을 준비하고 있고, 야심차고 재능이 있다면 이력서를 보내주세요.",
           "button": "이력서 보내기"
         },
@@ -686,15 +750,30 @@
       "description": "Ester의 주요 목표는 소매 및 기업 트레이더를 위한 최상의 가장 투명한 조건을 만드는 것입니다.",
       "trading": {
         "title": "거래",
-        "items": ["계좌 개요", "시장", "플랫폼", "거래 조건", "탠덤 거래"]
+        "items": [
+          "계좌 개요",
+          "시장",
+          "플랫폼",
+          "거래 조건",
+          "탠덤 거래"
+        ]
       },
       "partnership": {
         "title": "파트너십",
-        "items": ["IB/파트너십 등록", "IB 수익 창출 방법"]
+        "items": [
+          "IB/파트너십 등록",
+          "IB 수익 창출 방법"
+        ]
       },
       "company": {
         "title": "회사",
-        "items": ["회사 소개", "문서", "회사 뉴스", "연락처", "채용"]
+        "items": [
+          "회사 소개",
+          "문서",
+          "회사 뉴스",
+          "연락처",
+          "채용"
+        ]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -844,7 +923,8 @@
         "lastPage": "Last page",
         "tooltip": "이 블록에는 최신 입출금 내역이 표시되므로 고객은 즉시 업데이트된 결제 금액을 확인하고 필요한 거래를 열 수 있습니다.",
         "tooltipLabel": "최근 거래 정보",
-        "description": "모든 계좌의 최근 입출금을 표시해 변경 사항을 즉시 확인할 수 있습니다."
+        "description": "모든 계좌의 최근 입출금을 표시해 변경 사항을 즉시 확인할 수 있습니다.",
+        "loadMore": "더 불러오기"
       },
       "summary": {
         "totalAmount": "총액",
@@ -902,12 +982,24 @@
           "account": "계정을 선택하세요.",
           "paymentDetail": "승인된 결제 세부정보를 선택하세요.",
           "amount": "유효한 금액을 입력하세요.",
-          "balance": "인출 금액이 계좌 잔액을 초과합니다."
+          "balance": "인출 금액이 계좌 잔액을 초과합니다.",
+          "investorPassword": "이 계좌의 투자자 비밀번호를 입력하세요.",
+          "otp": "유효한 6자리 2단계 인증 코드를 입력하세요.",
+          "invalidInvestorPassword": "투자자 비밀번호가 올바르지 않습니다.",
+          "investorPasswordNotConfigured": "이 계좌에는 투자자 비밀번호가 설정되어 있지 않습니다.",
+          "otpRequired": "2단계 인증 코드가 필요합니다.",
+          "invalidOtp": "2단계 인증 코드가 올바르지 않습니다.",
+          "otpNotConfigured": "2단계 인증이 설정되어 있지 않습니다."
         },
         "loadAccountsError": "거래 계좌를 로드하지 못했습니다.",
         "loadPaymentDetailsError": "결제 세부정보를 로드하지 못했습니다.",
         "processing": "처리 중...",
-        "title": "출금요청"
+        "title": "출금요청",
+        "investorPassword": "투자자 비밀번호",
+        "investorPasswordPlaceholder": "투자자 비밀번호 입력",
+        "twoFactorCode": "2단계 인증 코드",
+        "twoFactorCodePlaceholder": "6자리 코드 입력",
+        "securityHint": "선택한 MT4 계좌의 투자자 비밀번호로 이 출금을 확인하세요."
       },
       "backToList": "결제 목록으로 돌아가기",
       "backToMethodSelection": "결제 수단 선택으로 돌아가기",
@@ -1164,7 +1256,11 @@
             "enable_success": "2FA가 활성화되었습니다!",
             "enable_error": "Invalid code or connection error",
             "disable_success": "2FA가 비활성화되었습니다",
-            "disable_error": "Failed to disable 2FA"
+            "disable_error": "Failed to disable 2FA",
+            "manual_secret_label": "수동 설정 키",
+            "manual_secret_hint": "QR 코드를 스캔할 수 없으면 인증 앱에 이 키를 수동으로 입력하세요.",
+            "copy_secret": "복사",
+            "copy_secret_success": "비밀 키가 복사되었습니다."
           },
           "reset": {
             "pending": "다시 보내기 전에 잠시 기다려주세요.",
@@ -1324,7 +1420,8 @@
             "approved": "Confirmed",
             "pending": "In progress",
             "rejected": "Rejected"
-          }
+          },
+          "loadMore": "더 불러오기"
         }
       },
       "index": {
@@ -1380,7 +1477,9 @@
           "submit": "새 계좌 개설"
         },
         "loadTypesError": "계정 유형을 로드하지 못했습니다.",
-        "submitError": "계정을 생성하지 못했습니다."
+        "submitError": "계정을 생성하지 못했습니다.",
+        "accountTypeCardHint": "거래 계좌 유형",
+        "investorPasswordNotice": "이 MT4 계좌의 투자자 비밀번호를 자동으로 생성해 이메일로 보내드립니다. 출금 요청을 확인할 때 필요합니다."
       },
       "actions": {
         "deposit": "보증금",
