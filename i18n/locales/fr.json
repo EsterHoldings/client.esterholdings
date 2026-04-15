@@ -1362,7 +1362,7 @@
             "rejected": "Rejeté"
           },
           "info": {
-            "title": "Quels documents téléverser",
+            "title": "Quels documents téléverser?",
             "text": "Téléversez un passeport, une carte d’identité nationale ou un passeport international. Le document doit permettre de vérifier vos données de profil : prénom, nom, date de naissance, adresse et autres informations obligatoires."
           },
           "dropzone": {

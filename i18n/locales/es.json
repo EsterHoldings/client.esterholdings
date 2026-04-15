@@ -1362,7 +1362,7 @@
             "rejected": "Rechazado"
           },
           "info": {
-            "title": "Qué documentos cargar",
+            "title": "Qué documentos cargar?",
             "text": "Cargue un pasaporte, documento nacional de identidad o pasaporte internacional. El documento debe permitir verificar sus datos de perfil: nombre, apellido, fecha de nacimiento, dirección y otros datos obligatorios."
           },
           "dropzone": {

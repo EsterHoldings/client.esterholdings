@@ -1362,7 +1362,7 @@
             "rejected": "Rejeitado"
           },
           "info": {
-            "title": "Quais documentos enviar",
+            "title": "Quais documentos enviar?",
             "text": "Envie passaporte, documento de identidade nacional ou passaporte internacional. O documento deve permitir verificar os dados do perfil: nome, sobrenome, data de nascimento, endereço e outros dados obrigatórios."
           },
           "dropzone": {

@@ -1362,7 +1362,7 @@
             "rejected": "Abgelehnt"
           },
           "info": {
-            "title": "Welche Dokumente hochladen",
+            "title": "Welche Dokumente hochladen?",
             "text": "Laden Sie einen Reisepass, Personalausweis oder internationalen Pass hoch. Das Dokument muss Ihre Profildaten wie Vorname, Nachname, Geburtsdatum, Adresse und weitere Pflichtangaben bestätigen."
           },
           "dropzone": {

@@ -1362,7 +1362,7 @@
             "rejected": "Reddedildi"
           },
           "info": {
-            "title": "Hangi belgeler yüklenmeli",
+            "title": "Hangi belgeler yüklenmeli?",
             "text": "Pasaport, ulusal kimlik kartı veya uluslararası pasaport yükleyin. Belge ad, soyad, doğum tarihi, adres ve diğer zorunlu profil bilgilerini doğrulamamıza izin vermelidir."
           },
           "dropzone": {

@@ -1393,7 +1393,7 @@
             "rejected": "Rejected"
           },
           "info": {
-            "title": "What documents to upload",
+            "title": "What documents to upload?",
             "text": "Upload a passport, national ID card or international passport. The document must let us verify your profile data: first name, last name, date of birth, address and other required details."
           },
           "dropzone": {

@@ -1362,7 +1362,7 @@
             "rejected": "Rifiutato"
           },
           "info": {
-            "title": "Quali documenti caricare",
+            "title": "Quali documenti caricare?",
             "text": "Carica passaporto, carta d’identità nazionale o passaporto internazionale. Il documento deve consentire di verificare i dati del profilo: nome, cognome, data di nascita, indirizzo e altri dati obbligatori."
           },
           "dropzone": {
