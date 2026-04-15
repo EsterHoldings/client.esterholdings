@@ -68,20 +68,13 @@
       .trim()
       .toLowerCase();
 
-  const isProcessedStatus = (status: unknown): boolean => {
+  const isBalanceChangingStatus = (status: unknown): boolean => {
     return [
       "successful",
       "success",
       "approved",
       "completed",
       "done",
-      "failed",
-      "rejected",
-      "cancelled",
-      "canceled",
-      "refunded",
-      "chargeback",
-      "expired",
     ].includes(statusKey(status));
   };
 
@@ -196,29 +189,31 @@
       const payload = response?.data?.data;
       const list = Array.isArray(payload?.data) ? payload.data : [];
 
-      rows.value = list.filter((row: Record<string, any>) => isProcessedStatus(row?.status)).map((row: Record<string, any>) => {
-        const amount = Number(row?.amount ?? 0);
-        const type = String(row?.type ?? "")
-          .trim()
-          .toLowerCase();
-        const isInternalTransfer = Boolean(row?.is_internal_transfer || row?.meta?.is_internal_transfer);
-        const isPositive = !isInternalTransfer && type !== "withdraw" && type !== "withdrawal";
-        const resolvedType = resolveTransactionType(row);
-        const status = String(row?.status ?? "");
+      rows.value = list
+        .filter((row: Record<string, any>) => isBalanceChangingStatus(row?.status))
+        .map((row: Record<string, any>) => {
+          const amount = Number(row?.amount ?? 0);
+          const type = String(row?.type ?? "")
+            .trim()
+            .toLowerCase();
+          const isInternalTransfer = Boolean(row?.is_internal_transfer || row?.meta?.is_internal_transfer);
+          const isPositive = !isInternalTransfer && type !== "withdraw" && type !== "withdrawal";
+          const resolvedType = resolveTransactionType(row);
+          const status = String(row?.status ?? "");
 
-        return {
-          id: String(row?.id ?? ""),
-          title: resolveTransactionTitle(row),
-          type: resolvedType,
-          typeLabel: transactionTypeLabel(resolvedType),
-          status,
-          statusLabel: statusText(status),
-          amount,
-          currency: String(row?.currency ?? "USD"),
-          createdAt: row?.created_at ? String(row.created_at) : null,
-          isPositive,
-        };
-      });
+          return {
+            id: String(row?.id ?? ""),
+            title: resolveTransactionTitle(row),
+            type: resolvedType,
+            typeLabel: transactionTypeLabel(resolvedType),
+            status,
+            statusLabel: statusText(status),
+            amount,
+            currency: String(row?.currency ?? "USD"),
+            createdAt: row?.created_at ? String(row.created_at) : null,
+            isPositive,
+          };
+        });
       loadErrorText.value = "";
     } catch (error: any) {
       rows.value = [];
