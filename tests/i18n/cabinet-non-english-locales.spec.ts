@@ -43,6 +43,11 @@ describe("cabinet non-english locale quality", () => {
       "cabinet.dashboard.transactions.title",
       "cabinet.dashboard.transactions.searchPlaceholder",
       "cabinet.profile.components.tab-user-photo.buttons.delete_aria",
+      "cabinet.profile.components.tab-user-documents.title",
+      "cabinet.profile.components.tab-user-documents.allDocuments",
+      "cabinet.profile.components.tab-user-documents.buttons.uploadAndSend",
+      "cabinet.profile.components.tab-user-documents.messages.saveSuccess",
+      "cabinet.profile.components.tab-user-documents.statuses.pending",
     ];
 
     for (const key of keys) {

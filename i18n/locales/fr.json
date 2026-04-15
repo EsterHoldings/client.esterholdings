@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "Choisir un fichier",
+            "upload": "Téléverser",
+            "uploading": "Téléversement...",
+            "uploadAndSend": "Téléverser et envoyer à la vérification"
           },
           "messages": {
             "upload_success": "Photo de profil mise à jour avec succès et envoyée pour vérification!",
             "upload_error": "Échec du téléchargement de la photo",
             "delete_error": "Échec de la suppression de la photo",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "Les documents ont été téléversés et envoyés à la vérification.",
+            "saveError": "Impossible d’enregistrer les documents. Veuillez réessayer plus tard."
           },
           "errors": {
             "type": "Seules les images sont autorisées",
             "size": "La taille maximale est de 2 Mo",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "Format de fichier non pris en charge : {files}. Formats autorisés : {formats}.",
+            "noFiles": "Veuillez sélectionner un ou plusieurs fichiers.",
+            "uploadOneFailed": "Impossible de téléverser le fichier \"{file}\". Les autres fichiers seront traités..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
+          "title": "Téléversement des documents",
+          "allDocuments": "Tous les documents",
+          "empty": "Vous n’avez encore téléversé aucun document.",
           "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "refreshAria": "Actualiser les documents",
+          "commentLabel": "Commentaire",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "Titre (Adresse, Passeport, etc.)"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "Le champ ne peut pas contenir plus de 100 caractères."
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "Téléversement : {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "Statut de vérification"
           },
           "columns": {
-            "name": "Name",
-            "status": "Status",
+            "name": "Nom",
+            "status": "Statut",
             "date": "Date"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "Supprimer le document"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "En cours",
+            "approved": "Approuvé",
+            "rejected": "Rejeté"
           },
           "info": {
             "title": "Quels documents téléverser",

@@ -91,10 +91,15 @@
 
   const displayName = computed(() => {
     if (props.data?.document_data?.number) return props.data.document_data.number;
-    if (props.data?.document_type === "passport") {
+    const documentType = String(props.data?.document_type ?? "")
+      .trim()
+      .toLowerCase();
+
+    if (["", "document", "documents", "passport", "id", "id_card", "identity", "identity_document"].includes(documentType)) {
       return t("cabinet.profile.components.tab-user-documents.documentLabel");
     }
-    return props.data.document_type ?? t("cabinet.profile.components.tab-user-documents.documentLabel");
+
+    return t("cabinet.profile.components.tab-user-documents.documentLabel");
   });
 
   const statusText = computed(() => {

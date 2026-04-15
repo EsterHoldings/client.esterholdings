@@ -1359,7 +1359,7 @@
             "size": "Max size is 2MB",
             "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
             "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest..."
           },
           "title": "Upload documents",
           "allDocuments": "All documents",

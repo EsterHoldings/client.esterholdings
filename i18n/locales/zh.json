@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "选择文件",
+            "upload": "上传",
+            "uploading": "正在上传...",
+            "uploadAndSend": "上传并提交验证"
           },
           "messages": {
             "upload_success": "个人资料照片已成功更新并发送验证！",
             "upload_error": "上传照片失败",
             "delete_error": "删除照片失败",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "文件已成功上传并提交验证。",
+            "saveError": "无法保存文件。请稍后再试。"
           },
           "errors": {
             "type": "仅允许图片",
             "size": "最大大小为2MB",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "不支持的文件格式：{files}。允许的格式：{formats}。",
+            "noFiles": "请选择文件。",
+            "uploadOneFailed": "无法上传文件“{file}”。将继续处理其他文件..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "上传文件",
+          "allDocuments": "所有文件",
+          "empty": "您还没有上传文件。",
+          "documentLabel": "文件",
+          "refreshAria": "刷新文件",
+          "commentLabel": "评论",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "标题（地址、护照等）"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "该字段不能超过 100 个字符。"
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "上传中：{value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "验证状态"
           },
           "columns": {
-            "name": "Name",
-            "status": "Status",
-            "date": "Date"
+            "name": "名称",
+            "status": "状态",
+            "date": "日期"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "删除文件"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "处理中",
+            "approved": "已批准",
+            "rejected": "已拒绝"
           },
           "info": {
             "title": "需要上传哪些文件",

@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "Scegli file",
+            "upload": "Carica",
+            "uploading": "Caricamento...",
+            "uploadAndSend": "Carica e invia alla verifica"
           },
           "messages": {
             "upload_success": "Foto del profilo aggiornata con successo e inviata per la verifica!",
             "upload_error": "Impossibile caricare la foto",
             "delete_error": "Impossibile eliminare la foto",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "I documenti sono stati caricati e inviati alla verifica.",
+            "saveError": "Impossibile salvare i documenti. Riprova più tardi."
           },
           "errors": {
             "type": "Sono consentite solo immagini",
             "size": "La dimensione massima è 2MB",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "Formato file non supportato: {files}. Formati consentiti: {formats}.",
+            "noFiles": "Seleziona uno o più file.",
+            "uploadOneFailed": "Impossibile caricare il file \"{file}\". Proseguo con gli altri..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "Caricamento documenti",
+          "allDocuments": "Tutti i documenti",
+          "empty": "Non hai ancora caricato documenti.",
+          "documentLabel": "Documento",
+          "refreshAria": "Aggiorna documenti",
+          "commentLabel": "Commento",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "Titolo (Indirizzo, Passaporto, ecc.)"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "Il campo non può contenere più di 100 caratteri."
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "Caricamento: {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "Stato verifica"
           },
           "columns": {
-            "name": "Name",
-            "status": "Status",
-            "date": "Date"
+            "name": "Nome",
+            "status": "Stato",
+            "date": "Data"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "Elimina documento"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "In corso",
+            "approved": "Approvato",
+            "rejected": "Rifiutato"
           },
           "info": {
             "title": "Quali documenti caricare",

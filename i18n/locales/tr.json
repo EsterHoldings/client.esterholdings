@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "Dosya seç",
+            "upload": "Yükle",
+            "uploading": "Yükleniyor...",
+            "uploadAndSend": "Yükle ve doğrulamaya gönder"
           },
           "messages": {
             "upload_success": "Profil fotoğrafı başarıyla güncellendi ve doğrulamaya gönderildi!",
             "upload_error": "Fotoğraf yüklenemedi",
             "delete_error": "Fotoğraf silinemedi",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "Belgeler başarıyla yüklendi ve doğrulamaya gönderildi.",
+            "saveError": "Belgeler kaydedilemedi. Lütfen daha sonra tekrar deneyin."
           },
           "errors": {
             "type": "Sadece resimler izin verilir",
             "size": "Maksimum boyut 2MB",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "Desteklenmeyen dosya formatı: {files}. İzin verilen formatlar: {formats}.",
+            "noFiles": "Lütfen dosya seçin.",
+            "uploadOneFailed": "\"{file}\" dosyası yüklenemedi. Diğerleriyle devam ediliyor..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "Belge yükleme",
+          "allDocuments": "Tüm belgeler",
+          "empty": "Henüz yüklenmiş belgeniz yok.",
+          "documentLabel": "Belge",
+          "refreshAria": "Belgeleri yenile",
+          "commentLabel": "Yorum",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "Başlık (Adres, Pasaport vb.)"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "Alan 100 karakterden uzun olamaz."
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "Yükleniyor: {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "Doğrulama durumu"
           },
           "columns": {
-            "name": "Name",
-            "status": "Status",
-            "date": "Date"
+            "name": "Ad",
+            "status": "Durum",
+            "date": "Tarih"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "Belgeyi sil"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "İşlemde",
+            "approved": "Onaylandı",
+            "rejected": "Reddedildi"
           },
           "info": {
             "title": "Hangi belgeler yüklenmeli",

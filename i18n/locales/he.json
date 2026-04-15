@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "בחר קובץ",
+            "upload": "העלה",
+            "uploading": "מעלה...",
+            "uploadAndSend": "העלה ושלח לאימות"
           },
           "messages": {
             "upload_success": "תמונת הפרופיל עודכנה בהצלחה ונשלחה לאימות!",
             "upload_error": "העלאת התמונה נכשלה",
             "delete_error": "מחיקת התמונה נכשלה",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "המסמכים הועלו בהצלחה ונשלחו לאימות.",
+            "saveError": "לא ניתן לשמור את המסמכים. נסה שוב מאוחר יותר."
           },
           "errors": {
             "type": "מותרות תמונות בלבד",
             "size": "הגודל המקסימלי הוא 2MB",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "פורמט קובץ לא נתמך: {files}. פורמטים מותרים: {formats}.",
+            "noFiles": "בחר קובץ אחד או יותר.",
+            "uploadOneFailed": "לא ניתן להעלות את הקובץ \"{file}\". ממשיכים עם השאר..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "העלאת מסמכים",
+          "allDocuments": "כל המסמכים",
+          "empty": "עדיין לא העלית מסמכים.",
+          "documentLabel": "מסמך",
+          "refreshAria": "רענן מסמכים",
+          "commentLabel": "תגובה",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "כותרת (כתובת, דרכון וכו׳)"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "השדה לא יכול להכיל יותר מ-100 תווים."
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "מעלה: {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "סטטוס אימות"
           },
           "columns": {
-            "name": "Name",
-            "status": "Status",
-            "date": "Date"
+            "name": "שם",
+            "status": "סטטוס",
+            "date": "תאריך"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "מחק מסמך"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "בתהליך",
+            "approved": "מאושר",
+            "rejected": "נדחה"
           },
           "info": {
             "title": "אילו מסמכים להעלות",

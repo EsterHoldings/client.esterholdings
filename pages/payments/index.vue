@@ -133,6 +133,21 @@
                 <th class="px-4 py-3 text-left font-normal">
                   <div class="flex items-center">
                     <span
+                        class="mr-2.5 cursor-pointer truncate max-w-[90px]"
+                        :title="paymentTypeColumnLabel"
+                        @click="handleOrderByAndDirection('type')">
+                      {{ paymentTypeColumnLabel }}
+                    </span>
+                    <UiIconSort
+                        :active="orderBy === 'type'"
+                        :direction="orderDirection"
+                        @click="handleOrderByAndDirection('type')"/>
+                  </div>
+                </th>
+
+                <th class="px-4 py-3 text-left font-normal">
+                  <div class="flex items-center">
+                    <span
                         class="mr-2.5 cursor-pointer"
                         @click="handleOrderByAndDirection('amount')">
                       {{ t("cabinet.billing.columns.amount") }}
@@ -213,10 +228,18 @@
                     <span>{{ displayPaymentSystem(payment) }}</span>
                   </td>
 
+                  <td class="px-4 py-3 whitespace-nowrap">
+                    <span
+                        class="payment-type-badge"
+                        :class="paymentTypeClass(payment)">
+                      {{ paymentTypeLabel(payment) }}
+                    </span>
+                  </td>
+
                   <td
                       class="px-4 py-3 font-bold whitespace-nowrap"
-                      :class="true ? 'text-[var(--color-success)]' : 'text-[var(--color-danger)]'">
-                    <span>$</span> <span>{{ payment.amount }}</span>
+                      :class="paymentAmountClass(payment)">
+                    <span>$</span> <span>{{ formatPaymentAmount(payment) }}</span>
                   </td>
 
                   <td class="px-4 py-3 whitespace-nowrap">
@@ -307,7 +330,22 @@
                     <UiTextSmall class="cabinet-card__label">
                       {{ t("cabinet.billing.columns.amount") }}
                     </UiTextSmall>
-                    <div class="cabinet-card__value cabinet-card__value--positive">${{ payment.amount }}</div>
+                    <div
+                        class="cabinet-card__value"
+                        :class="paymentAmountClass(payment)">
+                      ${{ formatPaymentAmount(payment) }}
+                    </div>
+                  </div>
+
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ paymentTypeColumnLabel }}
+                    </UiTextSmall>
+                    <span
+                        class="payment-type-badge"
+                        :class="paymentTypeClass(payment)">
+                      {{ paymentTypeLabel(payment) }}
+                    </span>
                   </div>
 
                   <div class="cabinet-card__field">
@@ -683,6 +721,7 @@ const paymentSystemLabel = computed(() =>
     resolveI18nValue("cabinet.billing.columns.paymentSystem", "Payment system")
 );
 const paymentSystemShortLabel = computed(() => resolveI18nValue("cabinet.billing.columns.paymentSystemShort", "PS"));
+const paymentTypeColumnLabel = computed(() => resolveI18nValue("cabinet.dashboard.transactions.type", "Type"));
 const openMenuLabel = computed(() => resolveI18nValue("cabinet.common.openMenu", "Open menu"));
 const openPaymentLabel = computed(() => resolveI18nValue("cabinet.billing.openPayment", "Open"));
 const syncMenuLabel = computed(() => resolveI18nValue("cabinet.billing.syncPayment", "Синхронизировать"));
@@ -853,6 +892,68 @@ const displayPaymentSystem = (payment: any): string => {
 
   const paymentSystemName = String(payment?.payment_system_name ?? "").trim();
   return paymentSystemName !== "" ? paymentSystemName : "-";
+};
+
+const paymentTypeKey = (payment: any): "deposit" | "withdrawal" | "transfer" | "other" => {
+  if (isInternalTransfer(payment)) {
+    return "transfer";
+  }
+
+  const type = String(payment?.type ?? "")
+      .trim()
+      .toLowerCase();
+
+  if (["withdraw", "withdrawal", "виплата", "вывод", "payout"].includes(type)) {
+    return "withdrawal";
+  }
+
+  if (["deposit", "поповнення", "пополнение", "topup"].includes(type)) {
+    return "deposit";
+  }
+
+  return "other";
+};
+
+const paymentTypeLabel = (payment: any): string => {
+  const type = paymentTypeKey(payment);
+
+  if (type === "deposit") {
+    return resolveI18nValue("cabinet.billing.types.deposit", "Deposit");
+  }
+
+  if (type === "withdrawal") {
+    return resolveI18nValue("cabinet.billing.types.withdrawal", "Withdrawal");
+  }
+
+  if (type === "transfer") {
+    return internalTransferLabel.value;
+  }
+
+  return String(payment?.type ?? "").trim() || paymentTypeColumnLabel.value;
+};
+
+const paymentTypeClass = (payment: any): string => `payment-type-badge--${paymentTypeKey(payment)}`;
+
+const paymentAmountClass = (payment: any): string => {
+  const type = paymentTypeKey(payment);
+
+  if (type === "withdrawal" || type === "transfer") {
+    return "text-[var(--ui-sticker-danger)]";
+  }
+
+  if (type === "deposit") {
+    return "text-[var(--ui-sticker-success)]";
+  }
+
+  return "text-[var(--ui-text-main)]";
+};
+
+const formatPaymentAmount = (payment: any): string => {
+  const type = paymentTypeKey(payment);
+  const sign = type === "withdrawal" || type === "transfer" ? "-" : type === "deposit" ? "+" : "";
+  const amount = String(payment?.amount ?? "0").trim();
+
+  return `${sign}${amount}`;
 };
 
 const isTruthyQueryValue = (value: unknown): boolean => {
@@ -1680,6 +1781,35 @@ onBeforeUnmount(() => {
 
 .cabinet-card__value--positive {
   color: var(--ui-sticker-success);
+}
+
+.payment-type-badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.payment-type-badge--deposit {
+  color: var(--ui-sticker-success);
+  background: color-mix(in srgb, var(--ui-sticker-success) 14%, transparent);
+}
+
+.payment-type-badge--withdrawal,
+.payment-type-badge--transfer {
+  color: var(--ui-sticker-danger);
+  background: color-mix(in srgb, var(--ui-sticker-danger) 14%, transparent);
+}
+
+.payment-type-badge--other {
+  color: var(--ui-text-secondary);
+  background: color-mix(in srgb, var(--ui-text-secondary) 10%, transparent);
 }
 
 .status-inline {

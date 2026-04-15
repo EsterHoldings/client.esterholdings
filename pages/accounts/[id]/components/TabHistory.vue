@@ -24,6 +24,10 @@
   type TransactionRow = {
     id: string;
     title: string;
+    type: "deposit" | "withdrawal" | "transfer" | "other";
+    typeLabel: string;
+    status: string;
+    statusLabel: string;
     amount: number;
     currency: string;
     createdAt: string | null;
@@ -58,6 +62,88 @@
     if (isTransactionsLoading.value) return true;
     return !hasLoadedOnce.value && !!props.isLoading;
   });
+
+  const statusKey = (status: unknown): string =>
+    String(status ?? "")
+      .trim()
+      .toLowerCase();
+
+  const isProcessedStatus = (status: unknown): boolean => {
+    return [
+      "successful",
+      "success",
+      "approved",
+      "completed",
+      "done",
+      "failed",
+      "rejected",
+      "cancelled",
+      "canceled",
+      "refunded",
+      "chargeback",
+      "expired",
+    ].includes(statusKey(status));
+  };
+
+  const statusText = (status: unknown): string => {
+    const value = String(status ?? "").trim();
+    const normalizedValue = value.toLowerCase();
+
+    return value === ""
+      ? "-"
+      : resolveText(`cabinet.header.notificationTemplates.statuses.${normalizedValue}`, value);
+  };
+
+  const statusClass = (status: unknown): string => {
+    const normalized = statusKey(status);
+
+    if (["successful", "success", "approved", "completed", "done"].includes(normalized)) {
+      return "is-success";
+    }
+
+    if (["failed", "rejected", "cancelled", "canceled", "refunded", "chargeback", "expired"].includes(normalized)) {
+      return "is-failed";
+    }
+
+    return "is-default";
+  };
+
+  const resolveTransactionType = (row: Record<string, any>): TransactionRow["type"] => {
+    const isInternalTransfer = Boolean(row?.is_internal_transfer || row?.meta?.is_internal_transfer);
+    const type = String(row?.type ?? "")
+      .trim()
+      .toLowerCase();
+
+    if (isInternalTransfer) {
+      return "transfer";
+    }
+
+    if (type === "withdraw" || type === "withdrawal") {
+      return "withdrawal";
+    }
+
+    if (type === "deposit") {
+      return "deposit";
+    }
+
+    return "other";
+  };
+
+  const transactionTypeLabel = (type: TransactionRow["type"]): string => {
+    if (type === "deposit") {
+      return resolveText("cabinet.billing.types.deposit", "Deposit");
+    }
+
+    if (type === "withdrawal") {
+      return resolveText("cabinet.billing.types.withdrawal", "Withdrawal");
+    }
+
+    if (type === "transfer") {
+      return transferLabel.value;
+    }
+
+    return resolveText("cabinet.dashboard.transactions.type", "Type");
+  };
 
   const resolveTransactionTitle = (row: Record<string, any>): string => {
     const isInternalTransfer = Boolean(row?.is_internal_transfer || row?.meta?.is_internal_transfer);
@@ -110,17 +196,23 @@
       const payload = response?.data?.data;
       const list = Array.isArray(payload?.data) ? payload.data : [];
 
-      rows.value = list.map((row: Record<string, any>) => {
+      rows.value = list.filter((row: Record<string, any>) => isProcessedStatus(row?.status)).map((row: Record<string, any>) => {
         const amount = Number(row?.amount ?? 0);
         const type = String(row?.type ?? "")
           .trim()
           .toLowerCase();
         const isInternalTransfer = Boolean(row?.is_internal_transfer || row?.meta?.is_internal_transfer);
         const isPositive = !isInternalTransfer && type !== "withdraw" && type !== "withdrawal";
+        const resolvedType = resolveTransactionType(row);
+        const status = String(row?.status ?? "");
 
         return {
           id: String(row?.id ?? ""),
           title: resolveTransactionTitle(row),
+          type: resolvedType,
+          typeLabel: transactionTypeLabel(resolvedType),
+          status,
+          statusLabel: statusText(status),
           amount,
           currency: String(row?.currency ?? "USD"),
           createdAt: row?.created_at ? String(row.created_at) : null,
@@ -217,8 +309,22 @@
         :key="row.id"
         class="account-history__row">
         <div class="account-history__left">
-          <div class="account-history__title">{{ row.title }}</div>
-          <UiTextSmall class="account-history__date">{{ formatDate(row.createdAt) }}</UiTextSmall>
+          <div class="account-history__title-row">
+            <div class="account-history__title">{{ row.title }}</div>
+            <span
+              class="account-history__type"
+              :class="`is-${row.type}`">
+              {{ row.typeLabel }}
+            </span>
+          </div>
+          <div class="account-history__meta">
+            <UiTextSmall class="account-history__date">{{ formatDate(row.createdAt) }}</UiTextSmall>
+            <span
+              class="account-history__status"
+              :class="statusClass(row.status)">
+              {{ row.statusLabel }}
+            </span>
+          </div>
         </div>
 
         <div
@@ -306,8 +412,66 @@
     word-break: break-word;
   }
 
+  .account-history__title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .account-history__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
   .account-history__date {
     color: var(--ui-text-secondary);
+  }
+
+  .account-history__type,
+  .account-history__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .account-history__type.is-deposit {
+    color: var(--ui-sticker-success);
+    background: color-mix(in srgb, var(--ui-sticker-success) 14%, transparent);
+  }
+
+  .account-history__type.is-withdrawal {
+    color: var(--ui-sticker-danger);
+    background: color-mix(in srgb, var(--ui-sticker-danger) 14%, transparent);
+  }
+
+  .account-history__type.is-transfer,
+  .account-history__type.is-other {
+    color: var(--ui-text-secondary);
+    background: color-mix(in srgb, var(--ui-text-secondary) 10%, transparent);
+  }
+
+  .account-history__status.is-success {
+    color: var(--ui-sticker-success);
+    border: 1px solid color-mix(in srgb, var(--ui-sticker-success) 38%, transparent);
+  }
+
+  .account-history__status.is-failed {
+    color: var(--ui-sticker-danger);
+    border: 1px solid color-mix(in srgb, var(--ui-sticker-danger) 38%, transparent);
+  }
+
+  .account-history__status.is-default {
+    color: var(--ui-text-secondary);
+    border: 1px solid var(--color-stroke-ui-light);
   }
 
   .account-history__amount {

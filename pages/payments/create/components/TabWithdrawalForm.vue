@@ -537,17 +537,58 @@
     return null;
   };
 
-  const isTwoFactorBackendError = (error: any): boolean => {
-    const message = [
-      extractBackendFieldMessage(error, "otp"),
+  const stringifyBackendValue = (value: unknown): string => {
+    if (typeof value === "string") {
+      return value;
+    }
+
+    try {
+      return JSON.stringify(value ?? "");
+    } catch {
+      return "";
+    }
+  };
+
+  const collectBackendMessage = (error: any, extraFields: string[] = []): string => {
+    return [
+      ...extraFields.map(field => extractBackendFieldMessage(error, field)),
       error?.response?.data?.message,
       error?.response?.data?.errors,
       error?.data?.message,
+      error?.data?.errors,
       error?.message,
     ]
-      .map(value => (typeof value === "string" ? value : JSON.stringify(value ?? "")))
+      .map(stringifyBackendValue)
       .join(" ")
       .toLowerCase();
+  };
+
+  const isInvestorPasswordBackendError = (error: any): boolean => {
+    const message = collectBackendMessage(error, ["investor_password", "investorPassword"]);
+
+    return (
+      message.includes("investor password") ||
+      message.includes("investor_password") ||
+      message.includes("пароль инвестора") ||
+      message.includes("пароль інвестора")
+    );
+  };
+
+  const revealInvestorPasswordErrorFromBackend = (error: any): boolean => {
+    if (!isInvestorPasswordBackendError(error)) {
+      return false;
+    }
+
+    errors.investorPassword =
+      extractBackendFieldMessage(error, "investor_password") ??
+      extractBackendFieldMessage(error, "investorPassword") ??
+      resolveText("cabinet.billing.withdrawalForm.errors.invalidInvestorPassword", "Invalid investor password.");
+
+    return true;
+  };
+
+  const isTwoFactorBackendError = (error: any): boolean => {
+    const message = collectBackendMessage(error, ["otp", "twoFactorCode", "two_factor_code"]);
 
     return (
       message.includes("otp") ||
@@ -603,6 +644,7 @@
       closeModal();
       useEventBus.emit("loadDataForPayments");
     } catch (error: any) {
+      revealInvestorPasswordErrorFromBackend(error);
       revealTwoFactorChallengeFromBackend(error);
       toast.error(
         extractApiErrorMessage(

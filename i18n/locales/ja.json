@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "ファイルを選択",
+            "upload": "アップロード",
+            "uploading": "アップロード中...",
+            "uploadAndSend": "アップロードして認証へ送信"
           },
           "messages": {
             "upload_success": "プロフィール写真が正常に更新され、確認に送信されました！",
             "upload_error": "写真のアップロードに失敗しました",
             "delete_error": "写真の削除に失敗しました",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "書類が正常にアップロードされ、認証へ送信されました。",
+            "saveError": "書類を保存できませんでした。後でもう一度お試しください。"
           },
           "errors": {
             "type": "画像のみが許可されています",
             "size": "最大サイズは2MBです",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "対応していないファイル形式です: {files}。許可形式: {formats}。",
+            "noFiles": "ファイルを選択してください。",
+            "uploadOneFailed": "ファイル「{file}」をアップロードできませんでした。残りを続行します..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "書類のアップロード",
+          "allDocuments": "すべての書類",
+          "empty": "アップロード済みの書類はまだありません。",
+          "documentLabel": "書類",
+          "refreshAria": "書類を更新",
+          "commentLabel": "コメント",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "タイトル（住所、パスポートなど）"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "この項目は100文字以内で入力してください。"
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "アップロード中: {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "認証ステータス"
           },
           "columns": {
-            "name": "Name",
-            "status": "Status",
-            "date": "Date"
+            "name": "名前",
+            "status": "ステータス",
+            "date": "日付"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "書類を削除"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "処理中",
+            "approved": "承認済み",
+            "rejected": "却下"
           },
           "info": {
             "title": "アップロードする書類",

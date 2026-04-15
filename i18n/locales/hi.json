@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "फ़ाइल चुनें",
+            "upload": "अपलोड करें",
+            "uploading": "अपलोड हो रहा है...",
+            "uploadAndSend": "अपलोड करें और सत्यापन के लिए भेजें"
           },
           "messages": {
             "upload_success": "प्रोफ़ाइल फोटो सफलतापूर्वक अपडेट की गई और सत्यापन के लिए भेजी गई!",
             "upload_error": "फोटो अपलोड विफल",
             "delete_error": "फोटो हटाना विफल",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "दस्तावेज़ सफलतापूर्वक अपलोड होकर सत्यापन के लिए भेजे गए।",
+            "saveError": "दस्तावेज़ सहेजे नहीं जा सके। कृपया बाद में फिर कोशिश करें।"
           },
           "errors": {
             "type": "केवल छवियों की अनुमति है",
             "size": "अधिकतम आकार 2MB है",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "असमर्थित फ़ाइल फ़ॉर्मैट: {files}. अनुमत फ़ॉर्मैट: {formats}.",
+            "noFiles": "कृपया फ़ाइल चुनें।",
+            "uploadOneFailed": "फ़ाइल \"{file}\" अपलोड नहीं हो सकी। बाकी फ़ाइलों के साथ जारी है..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "दस्तावेज़ अपलोड",
+          "allDocuments": "सभी दस्तावेज़",
+          "empty": "आपने अभी तक कोई दस्तावेज़ अपलोड नहीं किया है।",
+          "documentLabel": "दस्तावेज़",
+          "refreshAria": "दस्तावेज़ रीफ़्रेश करें",
+          "commentLabel": "टिप्पणी",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "शीर्षक (पता, पासपोर्ट आदि)"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "यह फ़ील्ड 100 अक्षरों से अधिक नहीं हो सकती।"
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "अपलोड: {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "सत्यापन स्थिति"
           },
           "columns": {
-            "name": "Name",
-            "status": "Status",
-            "date": "Date"
+            "name": "नाम",
+            "status": "स्थिति",
+            "date": "तारीख"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "दस्तावेज़ हटाएँ"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "प्रगति में",
+            "approved": "स्वीकृत",
+            "rejected": "अस्वीकृत"
           },
           "info": {
             "title": "कौन से दस्तावेज़ अपलोड करें",

@@ -39,11 +39,11 @@
   };
 
   const isSuccessStatus = (status: string): boolean => {
-    return ["success", "approved", "completed", "done"].includes(status);
+    return ["success", "successful", "approved", "completed", "done"].includes(status);
   };
 
   const isFailedStatus = (status: string): boolean => {
-    return ["failed", "rejected", "cancelled", "error"].includes(status);
+    return ["failed", "rejected", "cancelled", "canceled", "error", "refunded", "chargeback", "expired"].includes(status);
   };
 
   const getTimestamp = (value: unknown): number => {
@@ -153,18 +153,73 @@
 
   const paymentDetailLink = (payment: any) => localePath(`/payments/${String(payment?.id ?? "").trim()}`);
 
-  const amountClass = (payment: any) => {
+  const paymentTypeKey = (payment: any): "deposit" | "withdrawal" | "transfer" | "other" => {
+    if (payment?.is_internal_transfer || payment?.meta?.is_internal_transfer) {
+      return "transfer";
+    }
+
     const type = String(payment?.type ?? "").toLowerCase();
 
     if (["withdraw", "withdrawal", "виплата", "вывод", "payout"].includes(type)) {
-      return "text-[var(--ui-sticker-danger)]";
+      return "withdrawal";
     }
 
     if (["deposit", "поповнення", "пополнение", "topup"].includes(type)) {
+      return "deposit";
+    }
+
+    return "other";
+  };
+
+  const paymentTypeLabel = (payment: any): string => {
+    const type = paymentTypeKey(payment);
+
+    if (type === "deposit") {
+      return t("cabinet.billing.types.deposit");
+    }
+
+    if (type === "withdrawal") {
+      return t("cabinet.billing.types.withdrawal");
+    }
+
+    if (type === "transfer") {
+      return t("cabinet.accounts.actions.transfer");
+    }
+
+    return String(payment?.type ?? "").trim() || t("cabinet.dashboard.transactions.type");
+  };
+
+  const paymentTypeClass = (payment: any): string => `transaction-type--${paymentTypeKey(payment)}`;
+
+  const amountClass = (payment: any) => {
+    const type = paymentTypeKey(payment);
+
+    if (type === "withdrawal" || type === "transfer") {
+      return "text-[var(--ui-sticker-danger)]";
+    }
+
+    if (type === "deposit") {
       return "text-[var(--ui-sticker-success)]";
     }
 
     return "text-[var(--ui-text-main)]";
+  };
+
+  const formatPaymentAmount = (payment: any): string => {
+    const type = paymentTypeKey(payment);
+    const sign = type === "withdrawal" || type === "transfer" ? "-" : type === "deposit" ? "+" : "";
+    const amount = String(payment?.amount ?? "0").trim();
+
+    return `${sign}${amount}`;
+  };
+
+  const statusText = (status: unknown): string => {
+    const value = String(status ?? "").trim();
+    const normalizedValue = value.toLowerCase();
+    const key = `cabinet.header.notificationTemplates.statuses.${normalizedValue}`;
+    const translated = t(key);
+
+    return value === "" ? "-" : translated === key ? value : translated;
   };
 
   const statusClass = (status: unknown) => {
@@ -275,7 +330,7 @@
                 <div
                   class="transaction-value font-semibold tabular-nums"
                   :class="amountClass(payment)">
-                  {{ payment.amount }}
+                  {{ formatPaymentAmount(payment) }}
                 </div>
               </div>
 
@@ -286,11 +341,11 @@
 
               <div class="min-w-0">
                 <div class="transaction-label">{{ t("cabinet.dashboard.transactions.type") }}</div>
-                <div
-                  class="transaction-value capitalize truncate"
-                  :title="payment.type">
-                  {{ payment.type }}
-                </div>
+                <span
+                  class="transaction-type"
+                  :class="paymentTypeClass(payment)">
+                  {{ paymentTypeLabel(payment) }}
+                </span>
               </div>
 
               <div class="min-w-0 text-right">
@@ -306,7 +361,7 @@
                 <span
                   class="transaction-status"
                   :class="statusClass(payment.status)">
-                  {{ payment.status }}
+                  {{ statusText(payment.status) }}
                 </span>
               </div>
             </div>
@@ -324,7 +379,7 @@
                 <span
                   class="transaction-status"
                   :class="statusClass(payment.status)">
-                  {{ payment.status }}
+                  {{ statusText(payment.status) }}
                 </span>
               </div>
 
@@ -334,7 +389,7 @@
                   <div
                     class="transaction-value font-semibold tabular-nums"
                     :class="amountClass(payment)">
-                    {{ payment.amount }}
+                    {{ formatPaymentAmount(payment) }}
                   </div>
                 </div>
                 <div class="text-right">
@@ -346,11 +401,11 @@
               <div class="transaction-row__mobile-grid transaction-row__mobile-grid--bordered">
                 <div>
                   <div class="transaction-label">{{ t("cabinet.dashboard.transactions.type") }}</div>
-                  <div
-                    class="transaction-value capitalize truncate"
-                    :title="payment.type">
-                    {{ payment.type }}
-                  </div>
+                  <span
+                    class="transaction-type"
+                    :class="paymentTypeClass(payment)">
+                    {{ paymentTypeLabel(payment) }}
+                  </span>
                 </div>
                 <div class="text-right">
                   <div class="transaction-label">{{ t("cabinet.dashboard.transactions.createdAt") }}</div>
@@ -516,6 +571,35 @@
   .transaction-value {
     color: var(--ui-text-main);
     line-height: 1.28;
+  }
+
+  .transaction-type {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .transaction-type--deposit {
+    color: var(--ui-sticker-success);
+    background: color-mix(in srgb, var(--ui-sticker-success) 14%, transparent);
+  }
+
+  .transaction-type--withdrawal,
+  .transaction-type--transfer {
+    color: var(--ui-sticker-danger);
+    background: color-mix(in srgb, var(--ui-sticker-danger) 14%, transparent);
+  }
+
+  .transaction-type--other {
+    color: var(--ui-text-secondary);
+    background: color-mix(in srgb, var(--ui-text-secondary) 10%, transparent);
   }
 
   .transaction-status {

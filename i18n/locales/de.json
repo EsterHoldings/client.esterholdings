@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "Datei auswählen",
+            "upload": "Hochladen",
+            "uploading": "Wird hochgeladen...",
+            "uploadAndSend": "Hochladen und zur Verifizierung senden"
           },
           "messages": {
             "upload_success": "Profilfoto erfolgreich aktualisiert und zur Verifizierung gesendet!",
             "upload_error": "Foto konnte nicht hochgeladen werden",
             "delete_error": "Foto konnte nicht gelöscht werden",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "Dokumente wurden erfolgreich hochgeladen und zur Verifizierung gesendet.",
+            "saveError": "Dokumente konnten nicht gespeichert werden. Bitte versuchen Sie es später erneut."
           },
           "errors": {
             "type": "Nur Bilder sind erlaubt",
             "size": "Maximale Größe ist 2 MB",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "Nicht unterstütztes Dateiformat: {files}. Erlaubte Formate: {formats}.",
+            "noFiles": "Bitte wählen Sie eine oder mehrere Dateien aus.",
+            "uploadOneFailed": "Datei \"{file}\" konnte nicht hochgeladen werden. Die übrigen Dateien werden weiter verarbeitet..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "Dokumente hochladen",
+          "allDocuments": "Alle Dokumente",
+          "empty": "Sie haben noch keine Dokumente hochgeladen.",
+          "documentLabel": "Dokument",
+          "refreshAria": "Dokumente aktualisieren",
+          "commentLabel": "Kommentar",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "Titel (Adresse, Reisepass usw.)"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "Das Feld darf nicht mehr als 100 Zeichen enthalten."
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "Hochladen: {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "Verifizierungsstatus"
           },
           "columns": {
             "name": "Name",
             "status": "Status",
-            "date": "Date"
+            "date": "Datum"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "Dokument löschen"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "In Bearbeitung",
+            "approved": "Genehmigt",
+            "rejected": "Abgelehnt"
           },
           "info": {
             "title": "Welche Dokumente hochladen",

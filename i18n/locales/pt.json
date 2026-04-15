@@ -1311,55 +1311,55 @@
         },
         "tab-user-documents": {
           "buttons": {
-            "choose": "Choose file",
-            "upload": "Upload",
-            "uploading": "Uploading...",
-            "uploadAndSend": "Upload and send to verification"
+            "choose": "Escolher arquivo",
+            "upload": "Enviar",
+            "uploading": "Enviando...",
+            "uploadAndSend": "Enviar e mandar para verificação"
           },
           "messages": {
             "upload_success": "Foto de perfil atualizada com sucesso e enviada para verificação!",
             "upload_error": "Falha ao carregar foto",
             "delete_error": "Falha ao excluir foto",
-            "saveSuccess": "Documents were successfully uploaded and sent for verification.",
-            "saveError": "Failed to save documents. Please try again later."
+            "saveSuccess": "Os documentos foram enviados com sucesso para verificação.",
+            "saveError": "Não foi possível salvar os documentos. Tente novamente mais tarde."
           },
           "errors": {
             "type": "Apenas imagens são permitidas",
             "size": "O tamanho máximo é 2MB",
-            "invalidFormat": "Unsupported file format(s): {files}. Allowed formats: {formats}.",
-            "noFiles": "Please select file(s).",
-            "uploadOneFailed": "Failed to upload file \"{file}\". Continuing with the rest…"
+            "invalidFormat": "Formato de arquivo não suportado: {files}. Formatos permitidos: {formats}.",
+            "noFiles": "Selecione um ou mais arquivos.",
+            "uploadOneFailed": "Não foi possível enviar o arquivo \"{file}\". Continuando com os demais..."
           },
-          "title": "Upload documents",
-          "allDocuments": "All documents",
-          "empty": "You have no uploaded documents yet.",
-          "documentLabel": "Document",
-          "refreshAria": "Refresh documents",
-          "commentLabel": "Comment",
+          "title": "Envio de documentos",
+          "allDocuments": "Todos os documentos",
+          "empty": "Você ainda não enviou documentos.",
+          "documentLabel": "Documento",
+          "refreshAria": "Atualizar documentos",
+          "commentLabel": "Comentário",
           "fields": {
-            "documentNamePlaceholder": "Title (Address, Passport, etc.)"
+            "documentNamePlaceholder": "Título (Endereço, Passaporte etc.)"
           },
           "validation": {
-            "maxLength": "The field may not contain more than 100 characters."
+            "maxLength": "O campo não pode conter mais de 100 caracteres."
           },
           "progress": {
-            "label": "Uploading: {value}%"
+            "label": "Enviando: {value}%"
           },
           "verificationStatus": {
-            "title": "Verification status"
+            "title": "Status de verificação"
           },
           "columns": {
-            "name": "Name",
+            "name": "Nome",
             "status": "Status",
-            "date": "Date"
+            "date": "Data"
           },
           "actions": {
-            "delete": "Delete document"
+            "delete": "Excluir documento"
           },
           "statuses": {
-            "pending": "In progress",
-            "approved": "Approved",
-            "rejected": "Rejected"
+            "pending": "Em andamento",
+            "approved": "Aprovado",
+            "rejected": "Rejeitado"
           },
           "info": {
             "title": "Quais documentos enviar",
