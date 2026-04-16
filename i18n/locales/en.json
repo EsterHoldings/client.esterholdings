@@ -987,7 +987,7 @@
       "updatedAt": "Updated At",
       "gateway": "Gateway",
       "comment": "Comment",
-      "redirectLink": "Payment link",
+      "redirectLink": "Invoice link",
       "transferFrom": "From account",
       "transferTo": "To account",
       "search": "Search",

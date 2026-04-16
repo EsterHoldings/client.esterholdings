@@ -117,14 +117,21 @@
             <div class="payment-field__value payment-admin-comment__value">{{ valueOrDash(payment.admin_comment) }}</div>
           </div>
 
-          <div class="payment-field md:col-span-2">
+          <div
+            v-if="shouldShowInvoiceLink(payment)"
+            class="payment-field md:col-span-2">
             <UiTextSmall class="payment-field__label text-[var(--ui-text-main)]">{{ redirectLinkLabel }}</UiTextSmall>
-            <div class="flex justify-start items-center gap-2">
-              <UiIconCopy text="valueOrDash(payment.redirect_link)" />
+            <div class="payment-invoice-link">
+              <UiIconCopy
+                class="payment-invoice-link__copy"
+                :text="invoiceLinkValue(payment)" />
               <a
-                  class="payment-field__value break-all"
-                  :href="valueOrDash(payment.redirect_link)"
-              >{{ valueOrDash(payment.redirect_link) }}</a>
+                class="payment-field__value payment-invoice-link__anchor"
+                :href="invoiceLinkValue(payment)"
+                target="_blank"
+                rel="noopener noreferrer">
+                {{ invoiceLinkValue(payment) }}
+              </a>
             </div>
           </div>
 
@@ -239,7 +246,7 @@
   const adminCommentLabel = computed(() =>
     resolveI18nValue("cabinet.billing.withdrawalForm.adminComment", "Комментарий администратора")
   );
-  const redirectLinkLabel = computed(() => resolveI18nValue("cabinet.billing.redirectLink", "Ссылка оплаты"));
+  const redirectLinkLabel = computed(() => resolveI18nValue("cabinet.billing.redirectLink", "Ссылка на инвойс"));
   const internalTransferLabel = computed(() =>
     resolveI18nValue("cabinet.billing.internalTransfer", "Transfer between accounts")
   );
@@ -253,6 +260,27 @@
 
   const isInternalTransfer = (paymentItem: any): boolean =>
     Boolean(paymentItem?.is_internal_transfer || paymentItem?.meta?.is_internal_transfer);
+
+  const normalizedPaymentType = (paymentItem: any): string =>
+    String(paymentItem?.type ?? "")
+      .trim()
+      .toLowerCase();
+
+  const invoiceLinkValue = (paymentItem: any): string => String(paymentItem?.redirect_link ?? "").trim();
+
+  const shouldShowInvoiceLink = (paymentItem: any): boolean => {
+    if (invoiceLinkValue(paymentItem) === "") {
+      return false;
+    }
+
+    if (isInternalTransfer(paymentItem)) {
+      return false;
+    }
+
+    return !["withdraw", "withdrawal", "payout", "transfer", "internal_transfer"].includes(
+      normalizedPaymentType(paymentItem)
+    );
+  };
 
   const canSyncPayment = (paymentItem: any): boolean =>
     String(paymentItem?.type ?? "").trim() === "deposit" &&
@@ -534,6 +562,32 @@
   .payment-admin-comment__value {
     line-height: 1.55;
     white-space: pre-wrap;
+  }
+
+  .payment-invoice-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .payment-invoice-link__copy {
+    flex: 0 0 auto;
+    color: var(--ui-text-secondary);
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .payment-invoice-link__copy:hover {
+    color: var(--ui-text-main);
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 34%, transparent);
+  }
+
+  .payment-invoice-link__anchor {
+    min-width: 0;
+    word-break: break-all;
   }
 
   .payment-detail-highlight {

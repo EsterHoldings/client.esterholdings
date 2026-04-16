@@ -987,7 +987,7 @@
       "updatedAt": "Обновлено",
       "gateway": "Шлюз",
       "comment": "Комментарий",
-      "redirectLink": "Ссылка оплаты",
+      "redirectLink": "Ссылка на инвойс",
       "transferFrom": "Со счёта",
       "transferTo": "На счёт",
       "search": "Поиск",

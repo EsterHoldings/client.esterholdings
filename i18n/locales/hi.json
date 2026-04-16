@@ -1032,7 +1032,7 @@
       "openPayment": "खुला",
       "paymentLoadError": "भुगतान लोड करने में विफल.",
       "paymentNotFound": "भुगतान नहीं मिला.",
-      "redirectLink": "भुगतान लिंक",
+      "redirectLink": "इनवॉइस लिंक",
       "syncPayment": "साथ-साथ करना",
       "syncPaymentError": "भुगतान सिंक्रनाइज़ करने में विफल.",
       "syncPaymentLoading": "सिंक हो रहा है...",

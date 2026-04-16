@@ -1032,7 +1032,7 @@
       "openPayment": "開ける",
       "paymentLoadError": "支払いの読み込みに失敗しました。",
       "paymentNotFound": "支払いが見つかりません。",
-      "redirectLink": "支払いリンク",
+      "redirectLink": "請求書リンク",
       "syncPayment": "同期",
       "syncPaymentError": "支払いを同期できませんでした。",
       "syncPaymentLoading": "同期中...",

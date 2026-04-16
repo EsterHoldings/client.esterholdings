@@ -1032,7 +1032,7 @@
       "openPayment": "打开",
       "paymentLoadError": "加载付款失败。",
       "paymentNotFound": "未找到付款。",
-      "redirectLink": "付款链接",
+      "redirectLink": "发票链接",
       "syncPayment": "同步",
       "syncPaymentError": "同步支付失败。",
       "syncPaymentLoading": "正在同步...",

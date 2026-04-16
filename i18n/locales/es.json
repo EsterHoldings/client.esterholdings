@@ -1032,7 +1032,7 @@
       "openPayment": "Abierto",
       "paymentLoadError": "No se pudo cargar el pago.",
       "paymentNotFound": "Pago no encontrado.",
-      "redirectLink": "Enlace de pago",
+      "redirectLink": "Enlace de factura",
       "syncPayment": "Sincronizar",
       "syncPaymentError": "No se pudo sincronizar el pago.",
       "syncPaymentLoading": "Sincronizando...",
