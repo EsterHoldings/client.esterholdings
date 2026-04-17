@@ -26,7 +26,6 @@
   const errorMsg = ref<string | null>(null);
   const visiblePaymentsCount = ref(TRANSACTIONS_CHUNK_SIZE);
   const highlightedPaymentIds = ref<string[]>([]);
-  const highlightedPaymentPriorities = ref<Record<string, number>>({});
   const paymentHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   const statusKey = (status: unknown): string =>
@@ -43,7 +42,9 @@
   };
 
   const isFailedStatus = (status: string): boolean => {
-    return ["failed", "rejected", "cancelled", "canceled", "error", "refunded", "chargeback", "expired"].includes(status);
+    return ["failed", "rejected", "cancelled", "canceled", "error", "refunded", "chargeback", "expired"].includes(
+      status
+    );
   };
 
   const getTimestamp = (value: unknown): number => {
@@ -51,46 +52,10 @@
     return Number.isFinite(timestamp) ? timestamp : 0;
   };
 
-  const getPendingUpdateTimestamp = (paymentId: unknown): number => {
-    const normalizedPaymentId = String(paymentId ?? "").trim();
-    if (normalizedPaymentId === "") {
-      return 0;
-    }
-
-    return (
-      highlightedPaymentPriorities.value[normalizedPaymentId] ??
-      recentPaymentUpdatesStore.getPendingTimestampForScope(
-        DASHBOARD_TRANSACTIONS_HIGHLIGHT_SCOPE,
-        normalizedPaymentId
-      ) ??
-      0
-    );
-  };
-
   const orderedPayments = computed(() => {
     const rows = [...payments];
 
     rows.sort((a, b) => {
-      const aUpdatedAt = getPendingUpdateTimestamp(a?.id);
-      const bUpdatedAt = getPendingUpdateTimestamp(b?.id);
-      const aHasFreshUpdate = aUpdatedAt > 0;
-      const bHasFreshUpdate = bUpdatedAt > 0;
-
-      if (aHasFreshUpdate !== bHasFreshUpdate) {
-        return aHasFreshUpdate ? -1 : 1;
-      }
-
-      if (aUpdatedAt !== bUpdatedAt) {
-        return bUpdatedAt - aUpdatedAt;
-      }
-
-      const aPending = isPendingStatus(statusKey(a?.status));
-      const bPending = isPendingStatus(statusKey(b?.status));
-
-      if (aPending !== bPending) {
-        return aPending ? -1 : 1;
-      }
-
       return getTimestamp(b?.created_at) - getTimestamp(a?.created_at);
     });
 
@@ -122,17 +87,9 @@
         highlightedPaymentIds.value = [...highlightedPaymentIds.value, paymentId];
       }
 
-      highlightedPaymentPriorities.value = {
-        ...highlightedPaymentPriorities.value,
-        [paymentId]: Date.now(),
-      };
-
       clearPaymentHighlightTimer(paymentId);
       const timer = setTimeout(() => {
         highlightedPaymentIds.value = highlightedPaymentIds.value.filter(item => item !== paymentId);
-        const nextPriorities = { ...highlightedPaymentPriorities.value };
-        delete nextPriorities[paymentId];
-        highlightedPaymentPriorities.value = nextPriorities;
         paymentHighlightTimers.delete(paymentId);
       }, PAYMENT_HIGHLIGHT_DURATION_MS);
 
@@ -272,7 +229,6 @@
     useEventBus.off("dashboardRefresh", loadPaymentsData);
     paymentHighlightTimers.forEach(timer => clearTimeout(timer));
     paymentHighlightTimers.clear();
-    highlightedPaymentPriorities.value = {};
   });
 </script>
 
