@@ -61,8 +61,9 @@
   const appCore = useAppCore();
   const { locale } = useI18n({ useScope: "global" });
   const addCurrentLocaleToPath = (path = "") => `/${locale.value}/${path}`;
-  const SUPPORT_BADGE_REFRESH_MS = 3000;
-  const SUPPORT_REALTIME_RETRY_MS = 5000;
+  const SUPPORT_BADGE_REFRESH_MS = 120000;
+  const SUPPORT_REALTIME_RETRY_MS = 30000;
+  const SUPPORT_RESUME_SYNC_MIN_INTERVAL_MS = 60000;
   const SUPPORT_UNREAD_UPDATED_EVENT = "support-unread-updated";
   const SUPPORT_ACTIVE_TICKET_CHANGED_EVENT = "support-active-ticket-changed";
   const toast = useToast();
@@ -84,6 +85,7 @@
   let supportResumeListenersAttached = false;
   let supportRealtimeInitialized = false;
   let supportRealtimeInitInFlight = false;
+  let lastSupportUnreadSyncAt = 0;
   const notifications = reactive([
     { type: "info", message: "Test info notification message", wasRead: false },
     { type: "warning", message: "Test warning notification message", wasRead: false },
@@ -141,6 +143,8 @@
       return;
     }
 
+    lastSupportUnreadSyncAt = Date.now();
+
     try {
       const response = await appCore.tickets.getUnreadSummary();
       const responseData = response?.data?.data ?? response?.data ?? {};
@@ -168,6 +172,7 @@
     if (supportBadgeTimer) return;
 
     supportBadgeTimer = setInterval(() => {
+      if (isSupportSocketConnected()) return;
       loadSupportUnreadCount().catch(() => {});
     }, SUPPORT_BADGE_REFRESH_MS);
   };
@@ -439,6 +444,13 @@
     }
   };
 
+  const isSupportSocketConnected = () => {
+    const echoClient = resolveEchoClient();
+    const state = String(echoClient?.connector?.pusher?.connection?.state ?? "");
+
+    return state === "connected";
+  };
+
   const connectSupportRealtime = () => {
     if (!isFullSupportEnabled.value) return;
     const echoClient = resolveEchoClient();
@@ -520,7 +532,9 @@
       reconnectSupportSocketTransport();
       bindSupportSocketStateListener();
       connectSupportRealtime();
-      loadSupportUnreadCount().catch(() => {});
+      if (!isSupportSocketConnected()) {
+        loadSupportUnreadCount().catch(() => {});
+      }
     }, SUPPORT_REALTIME_RETRY_MS);
   };
 
@@ -536,6 +550,11 @@
     reconnectSupportSocketTransport();
     bindSupportSocketStateListener();
     connectSupportRealtime();
+
+    const now = Date.now();
+    if (now - lastSupportUnreadSyncAt < SUPPORT_RESUME_SYNC_MIN_INTERVAL_MS) return;
+    lastSupportUnreadSyncAt = now;
+
     loadSupportUnreadCount().catch(() => {});
   };
 

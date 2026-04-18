@@ -501,7 +501,7 @@
   const SUPPORT_PRESENCE_UPDATED_EVENT = "support-presence-updated";
   const SUPPORT_LIST_RELOAD_EVENT = "loadDataForSupport";
   const SUPPORT_PREVIEW_MAX_LENGTH = 160;
-  const SUPPORT_REALTIME_RETRY_MS = 5000;
+  const SUPPORT_REALTIME_RETRY_MS = 30000;
   const { $echo } = useNuxtApp() as { $echo?: any };
 
   const tickets = reactive([]);
@@ -569,7 +569,7 @@
   const orderDirection = ref(ORDER_DIRECTION_DESC);
   const currentRowActiveOptions = ref<number | null>(null);
   const VIEW_MODE_STORAGE_KEY = "support_view_mode";
-  const SUPPORT_LIST_REFRESH_MS = 20000;
+  const SUPPORT_LIST_REFRESH_MS = 60000;
   const viewMode = ref<"table" | "cards" | "full">("table");
   const isMobileViewport = ref(false);
   const viewOptions = [

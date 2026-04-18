@@ -3,8 +3,9 @@ import { watch } from "vue";
 import useAppCore from "~/composables/useAppCore";
 import { useAuthStore } from "~/stores/authStore";
 
-const HEARTBEAT_INTERVAL_MS = 10_000;
-const PRESENCE_TTL_SECONDS = 30;
+const HEARTBEAT_INTERVAL_MS = 45_000;
+const PRESENCE_TTL_SECONDS = 120;
+const MIN_PING_INTERVAL_MS = 30_000;
 const SESSION_STORAGE_KEY = "ester_client_presence_session_id";
 
 const resolvePresenceSessionId = (): string => {
@@ -33,6 +34,7 @@ export default defineNuxtPlugin(() => {
   let heartbeatTimer: ReturnType<typeof setInterval> | null = null;
   let isMarkedOnline = false;
   let inFlight = false;
+  let lastPingAt = 0;
   const presenceSessionId = resolvePresenceSessionId();
 
   const hasAccessToken = () => Boolean(String(authStore.accessToken ?? "").trim());
@@ -59,7 +61,11 @@ export default defineNuxtPlugin(() => {
 
   const pingOnline = async () => {
     if (inFlight) return;
+    if (Date.now() - lastPingAt < MIN_PING_INTERVAL_MS) return;
+
     inFlight = true;
+    lastPingAt = Date.now();
+
     try {
       await appCore.clientPresence.ping({
         active: true,
@@ -70,22 +76,6 @@ export default defineNuxtPlugin(() => {
     } catch {
       // noop
     } finally {
-      inFlight = false;
-    }
-  };
-
-  const leaveOnline = async () => {
-    if (!isMarkedOnline || inFlight) return;
-    inFlight = true;
-    try {
-      await appCore.clientPresence.leave({
-        active: false,
-        session_id: presenceSessionId,
-      });
-    } catch {
-      // noop
-    } finally {
-      isMarkedOnline = false;
       inFlight = false;
     }
   };
@@ -101,7 +91,6 @@ export default defineNuxtPlugin(() => {
       heartbeatTimer = setInterval(() => {
         if (!shouldBeOnline()) {
           stopHeartbeat();
-          void leaveOnline();
           return;
         }
 
@@ -117,7 +106,10 @@ export default defineNuxtPlugin(() => {
     }
 
     stopHeartbeat();
-    await leaveOnline();
+    if (!hasAccessToken()) {
+      isMarkedOnline = false;
+      lastPingAt = 0;
+    }
   };
 
   const handleVisibilityChange = () => {
@@ -134,7 +126,6 @@ export default defineNuxtPlugin(() => {
 
   const handleBeforeUnload = () => {
     stopHeartbeat();
-    void leaveOnline();
   };
 
   window.addEventListener("pageshow", handlePageShow);
