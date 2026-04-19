@@ -211,7 +211,7 @@ export default defineNuxtConfig({
       reverbScheme: process.env.NUXT_PUBLIC_REVERB_SCHEME || process.env.VITE_REVERB_SCHEME || "",
 
       baseApi: process.env.NUXT_PUBLIC_BASE_API || "https://server.esterholdings.com/api/",
-      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || "https://my.esterholdings.website/",
+      baseUrl: process.env.NUXT_PUBLIC_BASE_URL || "https://my.esterholdings.space/",
       cliFacebook: process.env.NUXT_PUBLIC_CLI_FACEBOOK || "1668019407177142",
       cliGoogle:
         process.env.NUXT_PUBLIC_CLI_GOOGLE ||

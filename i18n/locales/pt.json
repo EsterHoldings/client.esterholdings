@@ -36,74 +36,39 @@
         "Trading": [
           {
             "section": "Visão geral de contas",
-            "items": [
-              "Padrão",
-              "Pro",
-              "Islâmica",
-              "Demo"
-            ]
+            "items": ["Padrão", "Pro", "Islâmica", "Demo"]
           },
           {
             "section": "Instrumentos de mercado",
-            "items": [
-              "Forex",
-              "Metais",
-              "CFDs de Cripto",
-              "Índices",
-              "Ações",
-              "Energia",
-              "ETFs"
-            ]
+            "items": ["Forex", "Metais", "CFDs de Cripto", "Índices", "Ações", "Energia", "ETFs"]
           },
           {
             "section": "Plataforma",
-            "items": [
-              "MT4 Desktop",
-              "MT 4 Mobile"
-            ]
+            "items": ["MT4 Desktop", "MT 4 Mobile"]
           },
           {
             "section": "Condições de negociação",
-            "items": [
-              "Recarga de conta",
-              "Retirada de fundos"
-            ]
+            "items": ["Recarga de conta", "Retirada de fundos"]
           },
           {
             "section": "HUB do Trader",
-            "items": [
-              "Blog do trader",
-              "Calendário econômico",
-              "Notícias do mercado"
-            ]
+            "items": ["Blog do trader", "Calendário econômico", "Notícias do mercado"]
           },
           {
             "section": "Negociação TANDEM",
-            "items": [
-              "Para trader",
-              "Para investidor"
-            ]
+            "items": ["Para trader", "Para investidor"]
           }
         ],
         "Partnership": [
           {
             "section": "Parceria",
-            "items": [
-              "Registrar IB/ Parceria",
-              "Como os IB geram renda"
-            ]
+            "items": ["Registrar IB/ Parceria", "Como os IB geram renda"]
           }
         ],
         "Company": [
           {
             "section": "Empresa",
-            "items": [
-              "Sobre a empresa",
-              "Documentos",
-              "Notícias da empresa",
-              "Contatos",
-              "Carreira"
-            ]
+            "items": ["Sobre a empresa", "Documentos", "Notícias da empresa", "Contatos", "Carreira"]
           }
         ]
       }
@@ -236,11 +201,7 @@
           "title": "Demo",
           "subtitle": "conta",
           "description": "Negociação sem risco com fundos virtuais, perfeito para iniciantes explorarem os mercados.",
-          "features": [
-            "Alavancagem até 1:100",
-            "Spreads a partir de 0,0 pips",
-            "Nenhum depósito necessário"
-          ],
+          "features": ["Alavancagem até 1:100", "Spreads a partir de 0,0 pips", "Nenhum depósito necessário"],
           "buttonText": "Experimente Demo Agora",
           "isRecommended": true
         },
@@ -250,11 +211,7 @@
           "title": "Padrão",
           "subtitle": "conta",
           "description": "Acesso fácil aos mercados à vista com taxas baixas — ideal para iniciantes e traders ativos.",
-          "features": [
-            "Alavancagem até 1:100",
-            "Spreads a partir de 1,2 pips",
-            "Primeiro depósito de $50"
-          ],
+          "features": ["Alavancagem até 1:100", "Spreads a partir de 1,2 pips", "Primeiro depósito de $50"],
           "buttonText": "Abrir Conta Padrão",
           "isRecommended": false
         },
@@ -264,11 +221,7 @@
           "title": "Pro",
           "subtitle": "conta",
           "description": "Experimente spreads apertados, maior alavancagem e controle total sobre cada negociação.",
-          "features": [
-            "Alavancagem até 1:100",
-            "Spreads a partir de 0,0 pips",
-            "Primeiro depósito de $1000"
-          ],
+          "features": ["Alavancagem até 1:100", "Spreads a partir de 0,0 pips", "Primeiro depósito de $1000"],
           "buttonText": "Negocie Como um Pro",
           "isRecommended": false
         },
@@ -495,10 +448,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Pools de liquidez agregados profundos projetados para execuções estáveis e fluxo de ordens escalável.",
-            "benefits": [
-              "Agregação de liquidez Tier-1",
-              "Profundidade entre venues"
-            ]
+            "benefits": ["Agregação de liquidez Tier-1", "Profundidade entre venues"]
           },
           {
             "line1Prefix": "",
@@ -508,10 +458,7 @@
             "line2Accent": "ativa",
             "line2Suffix": "",
             "subtitle": "Alta velocidade de processamento de ordens, 0 níveis de limit/stop — construído para fluxo de negociação ativa.",
-            "benefits": [
-              "Tecnologias de servidor rápidas",
-              "Configuração de liquidez institucional"
-            ]
+            "benefits": ["Tecnologias de servidor rápidas", "Configuração de liquidez institucional"]
           }
         ]
       }
@@ -550,10 +497,7 @@
         "career": {
           "title": "Carreira",
           "subtitle": "No momento, a empresa está procurando os seguintes especialistas:",
-          "positions": [
-            "GERENTE DE VENDAS",
-            "CHEFE DO DEPARTAMENTO DE ANÁLISE"
-          ],
+          "positions": ["GERENTE DE VENDAS", "CHEFE DO DEPARTAMENTO DE ANÁLISE"],
           "cta": "SE VOCÊ ESTÁ PRONTO PARA CRESCIMENTO DINÂMICO, VOCÊ É AMBICIOSO E TALENTOSO, ENVIE SEU CURRÍCULO.",
           "button": "ENVIAR CV"
         },
@@ -750,30 +694,15 @@
       "description": "O objetivo principal da Ester é criar as melhores e mais transparentes condições para traders de varejo e corporativos.",
       "trading": {
         "title": "Negociação",
-        "items": [
-          "Visão geral de contas",
-          "Mercados",
-          "Plataforma",
-          "Termos de negociação",
-          "Negociação tandem"
-        ]
+        "items": ["Visão geral de contas", "Mercados", "Plataforma", "Termos de negociação", "Negociação tandem"]
       },
       "partnership": {
         "title": "Parceria",
-        "items": [
-          "Registrar IB/ Parceria",
-          "Como os IB geram renda"
-        ]
+        "items": ["Registrar IB/ Parceria", "Como os IB geram renda"]
       },
       "company": {
         "title": "Empresa",
-        "items": [
-          "Sobre a empresa",
-          "Documentos",
-          "Notícias da empresa",
-          "Contatos",
-          "Carreira"
-        ]
+        "items": ["Sobre a empresa", "Documentos", "Notícias da empresa", "Contatos", "Carreira"]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -2491,5 +2420,49 @@
     "documentsSaved": "Documentos salvos com sucesso.",
     "documentDeleted": "Documento excluído com sucesso.",
     "photoDeleted": "Foto excluída com sucesso."
+  },
+  "authFlow": {
+    "actions": {
+      "goDashboard": "Ir para o Dashboard",
+      "signIn": "Entrar"
+    },
+    "fields": {
+      "email": "Email",
+      "newPassword": "Nova palavra-passe",
+      "confirmPassword": "Confirmar palavra-passe"
+    },
+    "validation": {
+      "emailRequired": "O email é obrigatório.",
+      "passwordMin": "A palavra-passe deve ter pelo menos 8 caracteres.",
+      "passwordMismatch": "As palavras-passe não coincidem."
+    },
+    "forgot": {
+      "title": "Esqueceu a palavra-passe",
+      "subtitle": "Introduza o seu email e enviaremos um link seguro para redefinir a palavra-passe.",
+      "submit": "Enviar link",
+      "sent": "Se este email existir, enviámos um link para redefinir a palavra-passe.",
+      "error": "Não foi possível enviar o link. Tente novamente mais tarde."
+    },
+    "emailVerification": {
+      "eyebrow": "Verificação de email",
+      "loadingTitle": "A verificar o link",
+      "loadingMessage": "Aguarde enquanto confirmamos o seu email.",
+      "successTitle": "Email verificado",
+      "successMessage": "O seu email foi verificado com sucesso.",
+      "errorTitle": "Falha na verificação",
+      "errorMessage": "O link é inválido ou expirou. Solicite um novo email no perfil.",
+      "missingParams": "O link de verificação está incompleto."
+    },
+    "reset": {
+      "eyebrow": "Redefinir palavra-passe",
+      "title": "Crie uma nova palavra-passe",
+      "subtitle": "Introduza uma nova palavra-passe para a sua conta.",
+      "submit": "Atualizar palavra-passe",
+      "successEyebrow": "Palavra-passe atualizada",
+      "successTitle": "Palavra-passe alterada",
+      "successMessage": "A sua palavra-passe foi alterada com sucesso. Pode ir para o Dashboard.",
+      "error": "Não foi possível redefinir a palavra-passe. Verifique o link e tente novamente.",
+      "invalidLink": "O link de redefinição está incompleto ou expirou."
+    }
   }
 }

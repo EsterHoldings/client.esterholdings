@@ -55,6 +55,19 @@ export class AuthModule implements AuthModuleInterface {
   async verifyEmail(payload: { id: string; hash: string; expires: string; signature: string }): Promise<any> {
     return await this.authService.verifyEmail(payload);
   }
+
+  async requestPasswordReset(payload: { email: string }): Promise<any> {
+    return await this.authService.requestPasswordReset(payload);
+  }
+
+  async resetPassword(payload: {
+    token: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }): Promise<any> {
+    return await this.authService.resetPassword(payload);
+  }
 }
 
 export default AuthModule;

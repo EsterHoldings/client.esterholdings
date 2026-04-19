@@ -47,6 +47,19 @@ export class AuthService {
       signature,
     });
   }
+
+  async requestPasswordReset(payload: { email: string }): Promise<any> {
+    return await this.useApi.post("/auth/password/forgot", payload);
+  }
+
+  async resetPassword(payload: {
+    token: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }): Promise<any> {
+    return await this.useApi.post("/auth/password/reset", payload);
+  }
 }
 
 export default AuthService;

@@ -36,74 +36,39 @@
         "Trading": [
           {
             "section": "Panoramica account",
-            "items": [
-              "Standard",
-              "Pro",
-              "Islamico",
-              "Demo"
-            ]
+            "items": ["Standard", "Pro", "Islamico", "Demo"]
           },
           {
             "section": "Strumenti di mercato",
-            "items": [
-              "Forex",
-              "Metalli",
-              "CFD Crypto",
-              "Indici",
-              "Azioni",
-              "Energia",
-              "ETF"
-            ]
+            "items": ["Forex", "Metalli", "CFD Crypto", "Indici", "Azioni", "Energia", "ETF"]
           },
           {
             "section": "Piattaforma",
-            "items": [
-              "MT4 Desktop",
-              "MT 4 Mobile"
-            ]
+            "items": ["MT4 Desktop", "MT 4 Mobile"]
           },
           {
             "section": "Condizioni di trading",
-            "items": [
-              "Ricarica account",
-              "Prelievo fondi"
-            ]
+            "items": ["Ricarica account", "Prelievo fondi"]
           },
           {
             "section": "HUB del Trader",
-            "items": [
-              "Blog del trader",
-              "Calendario economico",
-              "Notizie di mercato"
-            ]
+            "items": ["Blog del trader", "Calendario economico", "Notizie di mercato"]
           },
           {
             "section": "Trading TANDEM",
-            "items": [
-              "Per trader",
-              "Per investitore"
-            ]
+            "items": ["Per trader", "Per investitore"]
           }
         ],
         "Partnership": [
           {
             "section": "Partnership",
-            "items": [
-              "Registra IB/ Partnership",
-              "Come gli IB generano reddito"
-            ]
+            "items": ["Registra IB/ Partnership", "Come gli IB generano reddito"]
           }
         ],
         "Company": [
           {
             "section": "Azienda",
-            "items": [
-              "Informazioni sull'azienda",
-              "Documenti",
-              "Notizie aziendali",
-              "Contatti",
-              "Carriera"
-            ]
+            "items": ["Informazioni sull'azienda", "Documenti", "Notizie aziendali", "Contatti", "Carriera"]
           }
         ]
       }
@@ -236,11 +201,7 @@
           "title": "Demo",
           "subtitle": "account",
           "description": "Trading senza rischi con fondi virtuali, perfetto per i principianti per esplorare i mercati.",
-          "features": [
-            "Leva fino a 1:100",
-            "Spread da 0,0 pip",
-            "Nessun deposito richiesto"
-          ],
+          "features": ["Leva fino a 1:100", "Spread da 0,0 pip", "Nessun deposito richiesto"],
           "buttonText": "Prova Demo ora",
           "isRecommended": true
         },
@@ -250,11 +211,7 @@
           "title": "Standard",
           "subtitle": "account",
           "description": "Facile accesso ai mercati spot con commissioni basse — ideale per principianti e trader attivi.",
-          "features": [
-            "Leva fino a 1:100",
-            "Spread da 1,2 pip",
-            "Primo deposito di $50"
-          ],
+          "features": ["Leva fino a 1:100", "Spread da 1,2 pip", "Primo deposito di $50"],
           "buttonText": "Apri account Standard",
           "isRecommended": false
         },
@@ -264,11 +221,7 @@
           "title": "Pro",
           "subtitle": "account",
           "description": "Sperimenta spread stretti, leva più elevata e controllo completo su ogni operazione.",
-          "features": [
-            "Leva fino a 1:100",
-            "Spread da 0,0 pip",
-            "Primo deposito di $1000"
-          ],
+          "features": ["Leva fino a 1:100", "Spread da 0,0 pip", "Primo deposito di $1000"],
           "buttonText": "Fai trading come un Pro",
           "isRecommended": false
         },
@@ -495,10 +448,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Pool di liquidità aggregati profondi progettati per riempimenti stabili e flusso di ordini scalabile.",
-            "benefits": [
-              "Aggregazione di liquidità Tier-1",
-              "Profondità su più venue"
-            ]
+            "benefits": ["Aggregazione di liquidità Tier-1", "Profondità su più venue"]
           },
           {
             "line1Prefix": "",
@@ -508,10 +458,7 @@
             "line2Accent": "attivo",
             "line2Suffix": "",
             "subtitle": "Alta velocità di elaborazione degli ordini, 0 livelli limit/stop — costruito per il flusso di trading attivo.",
-            "benefits": [
-              "Tecnologie server veloci",
-              "Setup di liquidità istituzionale"
-            ]
+            "benefits": ["Tecnologie server veloci", "Setup di liquidità istituzionale"]
           }
         ]
       }
@@ -550,10 +497,7 @@
         "career": {
           "title": "Carriera",
           "subtitle": "Al momento l'azienda sta cercando i seguenti specialisti:",
-          "positions": [
-            "MANAGER VENDITE",
-            "RESPONSABILE DEL DIPARTIMENTO DI ANALISI"
-          ],
+          "positions": ["MANAGER VENDITE", "RESPONSABILE DEL DIPARTIMENTO DI ANALISI"],
           "cta": "SE SEI PRONTO PER UNA CRESCITA DINAMICA, SEI AMBIZIOSO E TALENTUOSO, INVIA IL TUO CURRICULUM.",
           "button": "INVIA CV"
         },
@@ -750,30 +694,15 @@
       "description": "L'obiettivo principale di Ester è creare le migliori e più trasparenti condizioni per trader retail e aziendali.",
       "trading": {
         "title": "Trading",
-        "items": [
-          "Panoramica account",
-          "Mercati",
-          "Piattaforma",
-          "Termini di trading",
-          "Trading tandem"
-        ]
+        "items": ["Panoramica account", "Mercati", "Piattaforma", "Termini di trading", "Trading tandem"]
       },
       "partnership": {
         "title": "Partnership",
-        "items": [
-          "Registra IB/ Partnership",
-          "Come gli IB generano reddito"
-        ]
+        "items": ["Registra IB/ Partnership", "Come gli IB generano reddito"]
       },
       "company": {
         "title": "Azienda",
-        "items": [
-          "Informazioni sull'azienda",
-          "Documenti",
-          "Notizie aziendali",
-          "Contatti",
-          "Carriera"
-        ]
+        "items": ["Informazioni sull'azienda", "Documenti", "Notizie aziendali", "Contatti", "Carriera"]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -2491,5 +2420,49 @@
     "documentsSaved": "Documenti salvati correttamente.",
     "documentDeleted": "Documento eliminato correttamente.",
     "photoDeleted": "Foto eliminata correttamente."
+  },
+  "authFlow": {
+    "actions": {
+      "goDashboard": "Vai alla Dashboard",
+      "signIn": "Accedi"
+    },
+    "fields": {
+      "email": "Email",
+      "newPassword": "Nuova password",
+      "confirmPassword": "Conferma password"
+    },
+    "validation": {
+      "emailRequired": "L’email è obbligatoria.",
+      "passwordMin": "La password deve contenere almeno 8 caratteri.",
+      "passwordMismatch": "Le password non coincidono."
+    },
+    "forgot": {
+      "title": "Password dimenticata",
+      "subtitle": "Inserisci la tua email e ti invieremo un link sicuro per reimpostarla.",
+      "submit": "Invia link",
+      "sent": "Se questa email esiste, abbiamo inviato un link per reimpostare la password.",
+      "error": "Impossibile inviare il link. Riprova più tardi."
+    },
+    "emailVerification": {
+      "eyebrow": "Verifica email",
+      "loadingTitle": "Controllo del link",
+      "loadingMessage": "Attendi mentre confermiamo il tuo indirizzo email.",
+      "successTitle": "Email verificata",
+      "successMessage": "Il tuo indirizzo email è stato verificato con successo.",
+      "errorTitle": "Verifica non riuscita",
+      "errorMessage": "Il link non è valido o è scaduto. Richiedi una nuova email dal profilo.",
+      "missingParams": "Il link di verifica è incompleto."
+    },
+    "reset": {
+      "eyebrow": "Reimposta password",
+      "title": "Crea una nuova password",
+      "subtitle": "Inserisci una nuova password per il tuo account.",
+      "submit": "Aggiorna password",
+      "successEyebrow": "Password aggiornata",
+      "successTitle": "Password modificata",
+      "successMessage": "La password è stata modificata con successo. Puoi continuare alla Dashboard.",
+      "error": "Impossibile reimpostare la password. Controlla il link e riprova.",
+      "invalidLink": "Il link di reset è incompleto o scaduto."
+    }
   }
 }

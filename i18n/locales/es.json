@@ -36,74 +36,39 @@
         "Trading": [
           {
             "section": "Descripción de cuentas",
-            "items": [
-              "Estándar",
-              "Pro",
-              "Islámica",
-              "Demo"
-            ]
+            "items": ["Estándar", "Pro", "Islámica", "Demo"]
           },
           {
             "section": "Instrumentos de mercado",
-            "items": [
-              "Forex",
-              "Metales",
-              "CFDs de Cripto",
-              "Índices",
-              "Acciones",
-              "Energía",
-              "ETFs"
-            ]
+            "items": ["Forex", "Metales", "CFDs de Cripto", "Índices", "Acciones", "Energía", "ETFs"]
           },
           {
             "section": "Plataforma",
-            "items": [
-              "MT4 Desktop",
-              "MT 4 Mobile"
-            ]
+            "items": ["MT4 Desktop", "MT 4 Mobile"]
           },
           {
             "section": "Condiciones de trading",
-            "items": [
-              "Recarga de cuenta",
-              "Retiro de fondos"
-            ]
+            "items": ["Recarga de cuenta", "Retiro de fondos"]
           },
           {
             "section": "HUB del Trader",
-            "items": [
-              "Blog del trader",
-              "Calendario económico",
-              "Noticias del mercado"
-            ]
+            "items": ["Blog del trader", "Calendario económico", "Noticias del mercado"]
           },
           {
             "section": "Trading TANDEM",
-            "items": [
-              "Para trader",
-              "Para inversor"
-            ]
+            "items": ["Para trader", "Para inversor"]
           }
         ],
         "Partnership": [
           {
             "section": "Asociación",
-            "items": [
-              "Registrar IB/ Asociación",
-              "Cómo los IB generan ingresos"
-            ]
+            "items": ["Registrar IB/ Asociación", "Cómo los IB generan ingresos"]
           }
         ],
         "Company": [
           {
             "section": "Empresa",
-            "items": [
-              "Sobre la empresa",
-              "Documentos",
-              "Noticias de la empresa",
-              "Contactos",
-              "Carrera"
-            ]
+            "items": ["Sobre la empresa", "Documentos", "Noticias de la empresa", "Contactos", "Carrera"]
           }
         ]
       }
@@ -236,11 +201,7 @@
           "title": "Demo",
           "subtitle": "cuenta",
           "description": "Trading sin riesgo con fondos virtuales, perfecto para principiantes para explorar mercados.",
-          "features": [
-            "Apalancamiento hasta 1:100",
-            "Spreads desde 0.0 pips",
-            "No se requiere depósito"
-          ],
+          "features": ["Apalancamiento hasta 1:100", "Spreads desde 0.0 pips", "No se requiere depósito"],
           "buttonText": "Probar Demo Ahora",
           "isRecommended": true
         },
@@ -250,11 +211,7 @@
           "title": "Estándar",
           "subtitle": "cuenta",
           "description": "Fácil acceso a mercados spot con tarifas bajas — ideal para principiantes y traders activos.",
-          "features": [
-            "Apalancamiento hasta 1:100",
-            "Spreads desde 1.2 pips",
-            "Primer depósito de $50"
-          ],
+          "features": ["Apalancamiento hasta 1:100", "Spreads desde 1.2 pips", "Primer depósito de $50"],
           "buttonText": "Abrir Cuenta Estándar",
           "isRecommended": false
         },
@@ -264,11 +221,7 @@
           "title": "Pro",
           "subtitle": "cuenta",
           "description": "Experimenta spreads ajustados, mayor apalancamiento y control total sobre cada operación.",
-          "features": [
-            "Apalancamiento hasta 1:100",
-            "Spreads desde 0.0 pips",
-            "Primer depósito de $1000"
-          ],
+          "features": ["Apalancamiento hasta 1:100", "Spreads desde 0.0 pips", "Primer depósito de $1000"],
           "buttonText": "Opera Como un Pro",
           "isRecommended": false
         },
@@ -495,10 +448,7 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Pools de liquidez agregados profundos diseñados para ejecuciones estables y flujo de órdenes escalable.",
-            "benefits": [
-              "Agregación de liquidez Tier-1",
-              "Profundidad en múltiples venues"
-            ]
+            "benefits": ["Agregación de liquidez Tier-1", "Profundidad en múltiples venues"]
           },
           {
             "line1Prefix": "",
@@ -508,10 +458,7 @@
             "line2Accent": "activo",
             "line2Suffix": "",
             "subtitle": "Alta velocidad de procesamiento de órdenes, 0 niveles de límite/stop — diseñado para el flujo de trading activo.",
-            "benefits": [
-              "Tecnologías de servidor rápidas",
-              "Configuración de liquidez institucional"
-            ]
+            "benefits": ["Tecnologías de servidor rápidas", "Configuración de liquidez institucional"]
           }
         ]
       }
@@ -550,10 +497,7 @@
         "career": {
           "title": "Carrera",
           "subtitle": "En este momento, la empresa está buscando los siguientes especialistas:",
-          "positions": [
-            "GERENTE DE VENTAS",
-            "JEFE DEL DEPARTAMENTO DE ANÁLISIS"
-          ],
+          "positions": ["GERENTE DE VENTAS", "JEFE DEL DEPARTAMENTO DE ANÁLISIS"],
           "cta": "SI ESTÁS LISTO PARA UN CRECIMIENTO DINÁMICO, ERES AMBICIOSO Y TALENTOSO, ENVÍA TU RESUMEN.",
           "button": "ENVIAR CV"
         },
@@ -750,30 +694,15 @@
       "description": "El objetivo principal de Ester es crear las mejores y más transparentes condiciones para traders minoristas y corporativos.",
       "trading": {
         "title": "Trading",
-        "items": [
-          "Descripción de cuentas",
-          "Mercados",
-          "Plataforma",
-          "Términos de trading",
-          "Trading tándem"
-        ]
+        "items": ["Descripción de cuentas", "Mercados", "Plataforma", "Términos de trading", "Trading tándem"]
       },
       "partnership": {
         "title": "Asociación",
-        "items": [
-          "Registrar IB/ Asociación",
-          "Cómo los IB generan ingresos"
-        ]
+        "items": ["Registrar IB/ Asociación", "Cómo los IB generan ingresos"]
       },
       "company": {
         "title": "Empresa",
-        "items": [
-          "Sobre la empresa",
-          "Documentos",
-          "Noticias de la empresa",
-          "Contactos",
-          "Carrera"
-        ]
+        "items": ["Sobre la empresa", "Documentos", "Noticias de la empresa", "Contactos", "Carrera"]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -2491,5 +2420,49 @@
     "documentsSaved": "Documentos guardados correctamente.",
     "documentDeleted": "Documento eliminado correctamente.",
     "photoDeleted": "Foto eliminada correctamente."
+  },
+  "authFlow": {
+    "actions": {
+      "goDashboard": "Ir al panel",
+      "signIn": "Iniciar sesión"
+    },
+    "fields": {
+      "email": "Correo electrónico",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Confirmar contraseña"
+    },
+    "validation": {
+      "emailRequired": "El correo electrónico es obligatorio.",
+      "passwordMin": "La contraseña debe tener al menos 8 caracteres.",
+      "passwordMismatch": "Las contraseñas no coinciden."
+    },
+    "forgot": {
+      "title": "Contraseña olvidada",
+      "subtitle": "Introduce tu correo y te enviaremos un enlace seguro para restablecerla.",
+      "submit": "Enviar enlace",
+      "sent": "Si este correo existe, enviamos un enlace para restablecer la contraseña.",
+      "error": "No se pudo enviar el enlace. Inténtalo más tarde."
+    },
+    "emailVerification": {
+      "eyebrow": "Verificación de correo",
+      "loadingTitle": "Comprobando el enlace",
+      "loadingMessage": "Espera mientras confirmamos tu correo electrónico.",
+      "successTitle": "Correo verificado",
+      "successMessage": "Tu correo electrónico se ha verificado correctamente.",
+      "errorTitle": "Error de verificación",
+      "errorMessage": "El enlace no es válido o ha caducado. Solicita un nuevo correo desde tu perfil.",
+      "missingParams": "El enlace de verificación está incompleto."
+    },
+    "reset": {
+      "eyebrow": "Restablecer contraseña",
+      "title": "Crea una nueva contraseña",
+      "subtitle": "Introduce una nueva contraseña para tu gabinete.",
+      "submit": "Actualizar contraseña",
+      "successEyebrow": "Contraseña actualizada",
+      "successTitle": "Contraseña cambiada",
+      "successMessage": "Tu contraseña se ha cambiado correctamente. Puedes ir al panel.",
+      "error": "No se pudo restablecer la contraseña. Revisa el enlace e inténtalo de nuevo.",
+      "invalidLink": "El enlace de restablecimiento está incompleto o ha caducado."
+    }
   }
 }
