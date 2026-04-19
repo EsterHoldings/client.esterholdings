@@ -602,18 +602,17 @@
   }
 
   .dashboard-widget-link:hover :deep(.dashboard-widget-card) {
-    border-color: var(--color-stroke-ui-light);
     opacity: 0.95;
   }
 
   .dashboard-page :deep(.dashboard-widget-card) {
-    border: 1px solid var(--color-stroke-ui-light) !important;
+    border: 0 !important;
   }
 
   .dashboard-page :deep(.transactions-widget__loading),
   .dashboard-page :deep(.transactions-widget__error),
   .dashboard-page :deep(.transactions-widget__empty) {
-    border: 1px solid var(--color-stroke-ui-light) !important;
+    border: 0 !important;
   }
 
   .dashboard-page :deep(.transactions-widget__empty) {
@@ -622,13 +621,26 @@
   }
 
   .dashboard-page :deep(.transaction-row) {
-    border: 1px solid var(--color-stroke-ui-light) !important;
+    border: 0 !important;
   }
 
   .dashboard-page :deep(.verification-header-card),
   .dashboard-page :deep(.verification-progress-card),
   .dashboard-page :deep(.verification-step) {
-    border-color: var(--color-stroke-ui-light) !important;
+    border-color: transparent !important;
+  }
+
+  .dashboard-page :deep(.mt4-card),
+  .dashboard-page :deep(.mt4-card:hover),
+  .dashboard-page :deep(.mt4-empty-state),
+  .dashboard-page :deep(.mt4-empty-state__icon-wrap),
+  .dashboard-page :deep(.mt4-menu-trigger),
+  .dashboard-page :deep(.mt4-menu-trigger:hover),
+  .dashboard-page :deep(.verification-item),
+  .dashboard-page :deep(.verification-item:hover),
+  .dashboard-page :deep(.transaction-row:hover),
+  .dashboard-page :deep(.transaction-row--highlight) {
+    border-color: transparent !important;
   }
 
   /* MT4 and verification styles moved into widgets */

@@ -61,8 +61,7 @@
                   </div>
                 </div>
 
-                <div
-                  class="verification-admin-comment">
+                <div class="verification-admin-comment">
                   <div class="text-xs font-semibold mb-1 opacity-80">
                     {{ t("cabinet.profile.components.tab-user-verification.adminCommentLabel") }}
                   </div>
@@ -80,6 +79,19 @@
                   {{ textByStatus(item.status.value) }}
                 </span>
               </div>
+
+              <button
+                v-if="item.key === 'email' && canResendEmail"
+                type="button"
+                class="verification-resend"
+                :disabled="isResendingEmail"
+                @click="handleResendEmailVerification">
+                {{
+                  isResendingEmail
+                    ? t("cabinet.profile.components.tab-user-verification.resendingEmail")
+                    : t("cabinet.profile.components.tab-user-verification.resendEmail")
+                }}
+              </button>
             </li>
           </ul>
         </div>
@@ -224,6 +236,7 @@
   import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
   import { useRoute } from "vue-router";
   import { useI18n } from "vue-i18n";
+  import { useToast } from "vue-toastification";
 
   import PanelDefault from "~/components/block/panels/PanelDefault.vue";
   import UiTextH5 from "~/components/ui/UiTextH5.vue";
@@ -238,6 +251,7 @@
   import UiIconWarningFull from "~/components/ui/UiIconWarningFull.vue";
   import UiIconDangerFull from "~/components/ui/UiIconDangerFull.vue";
   import { useNotificationsStore } from "~/stores/notificationsStore";
+  import { useAuthStore } from "~/stores/authStore";
 
   type VerificationStatus = "approved" | "pending" | "rejected";
   type VerificationSectionTab = "client" | "payout";
@@ -258,12 +272,15 @@
   }
 
   const { t } = useI18n({ useScope: "global" });
+  const toast = useToast();
 
   const appCore = useAppCore();
+  const authStore = useAuthStore();
   const notificationsStore = useNotificationsStore();
   const route = useRoute();
   const isLoading = ref(false);
   const isPaymentDetailsLoading = ref(false);
+  const isResendingEmail = ref(false);
   const activeSection = ref<VerificationSectionTab>("client");
   const HISTORY_CHUNK_SIZE = 5;
   const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
@@ -311,6 +328,7 @@
   const hasUnreadPayoutVerificationSignals = computed(() =>
     unreadVerificationNotifications.value.some(item => item.section === "payout")
   );
+  const canResendEmail = computed(() => emailStatus.value !== "approved" && !authStore.user?.email_verified_at);
 
   const historyRows = computed(() => {
     const apiRows = verificationRequestData?.history as Array<any> | undefined;
@@ -502,6 +520,22 @@
     await loadVerificationData();
   };
 
+  const handleResendEmailVerification = async (): Promise<void> => {
+    if (isResendingEmail.value) return;
+    isResendingEmail.value = true;
+
+    try {
+      await appCore.auth.resendEmailVerification();
+      toast.success(t("cabinet.profile.components.tab-user-verification.resendEmailSent"));
+      const response = await appCore.auth.getAuthUser();
+      authStore.setUser(response.data);
+    } catch {
+      toast.error(t("cabinet.profile.components.tab-user-verification.resendEmailError"));
+    } finally {
+      isResendingEmail.value = false;
+    }
+  };
+
   const markVisibleVerificationNotificationsSeen = async (section: VerificationSectionTab): Promise<void> => {
     const targetIds = unreadVerificationNotifications.value
       .filter(item => item.section === section)
@@ -676,6 +710,33 @@
   .verification-admin-comment {
     margin-top: 8px;
     color: var(--ui-text-secondary);
+  }
+
+  .verification-resend {
+    grid-column: 1 / -1;
+    justify-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ui-primary-main) 16%, transparent);
+    color: var(--ui-primary-main);
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    transition:
+      background-color 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .verification-resend:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--ui-primary-main) 24%, transparent);
+  }
+
+  .verification-resend:disabled {
+    cursor: wait;
+    opacity: 0.65;
   }
 
   .payout-list {

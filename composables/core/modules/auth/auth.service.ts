@@ -60,6 +60,10 @@ export class AuthService {
   }): Promise<any> {
     return await this.useApi.post("/auth/password/reset", payload);
   }
+
+  async resendEmailVerification(): Promise<any> {
+    return await this.useApi.post("/auth/email/verification-notification");
+  }
 }
 
 export default AuthService;

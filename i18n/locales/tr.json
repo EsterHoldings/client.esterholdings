@@ -36,39 +36,74 @@
         "Trading": [
           {
             "section": "Hesap özeti",
-            "items": ["Standart", "Pro", "İslami", "Demo"]
+            "items": [
+              "Standart",
+              "Pro",
+              "İslami",
+              "Demo"
+            ]
           },
           {
             "section": "Piyasa Araçları",
-            "items": ["Forex", "Metaller", "Kripto CFD'ler", "Endeksler", "Hisse Senetleri", "Enerji", "ETF'ler"]
+            "items": [
+              "Forex",
+              "Metaller",
+              "Kripto CFD'ler",
+              "Endeksler",
+              "Hisse Senetleri",
+              "Enerji",
+              "ETF'ler"
+            ]
           },
           {
             "section": "Platform",
-            "items": ["MT4 Desktop", "MT 4 Mobile"]
+            "items": [
+              "MT4 Desktop",
+              "MT 4 Mobile"
+            ]
           },
           {
             "section": "İşlem koşulları",
-            "items": ["Hesap yükleme", "Para çekme"]
+            "items": [
+              "Hesap yükleme",
+              "Para çekme"
+            ]
           },
           {
             "section": "Trader'ın HUB'ı",
-            "items": ["Trader blogu", "Ekonomik takvim", "Piyasa haberleri"]
+            "items": [
+              "Trader blogu",
+              "Ekonomik takvim",
+              "Piyasa haberleri"
+            ]
           },
           {
             "section": "TANDEM işlem",
-            "items": ["Trader için", "Yatırımcı için"]
+            "items": [
+              "Trader için",
+              "Yatırımcı için"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "Ortaklık",
-            "items": ["IB/ Ortaklık kaydet", "IB'ler nasıl gelir elde eder"]
+            "items": [
+              "IB/ Ortaklık kaydet",
+              "IB'ler nasıl gelir elde eder"
+            ]
           }
         ],
         "Company": [
           {
             "section": "Şirket",
-            "items": ["Şirket hakkında", "Belgeler", "Şirket haberleri", "İletişim", "Kariyer"]
+            "items": [
+              "Şirket hakkında",
+              "Belgeler",
+              "Şirket haberleri",
+              "İletişim",
+              "Kariyer"
+            ]
           }
         ]
       }
@@ -201,7 +236,11 @@
           "title": "Demo",
           "subtitle": "hesap",
           "description": "Sanal fonlarla risksiz işlem, piyasaları keşfetmek isteyen yeni başlayanlar için mükemmel.",
-          "features": ["1:100'e kadar kaldıraç", "0,0 pip'ten itibaren spreadler", "Depozito gerekmez"],
+          "features": [
+            "1:100'e kadar kaldıraç",
+            "0,0 pip'ten itibaren spreadler",
+            "Depozito gerekmez"
+          ],
           "buttonText": "Şimdi Demoyu Deneyin",
           "isRecommended": true
         },
@@ -211,7 +250,11 @@
           "title": "Standart",
           "subtitle": "hesap",
           "description": "Düşük ücretlerle spot piyasalara kolay erişim — yeni başlayanlar ve aktif trader'lar için ideal.",
-          "features": ["1:100'e kadar kaldıraç", "1,2 pip'ten itibaren spreadler", "İlk depozito $50"],
+          "features": [
+            "1:100'e kadar kaldıraç",
+            "1,2 pip'ten itibaren spreadler",
+            "İlk depozito $50"
+          ],
           "buttonText": "Standart Hesap Aç",
           "isRecommended": false
         },
@@ -221,7 +264,11 @@
           "title": "Pro",
           "subtitle": "hesap",
           "description": "Dar spreadleri, daha yüksek kaldıracı ve her işlem üzerinde tam kontrolü deneyimleyin.",
-          "features": ["1:100'e kadar kaldıraç", "0,0 pip'ten itibaren spreadler", "İlk depozito $1000"],
+          "features": [
+            "1:100'e kadar kaldıraç",
+            "0,0 pip'ten itibaren spreadler",
+            "İlk depozito $1000"
+          ],
           "buttonText": "Pro Gibi İşlem Yapın",
           "isRecommended": false
         },
@@ -231,7 +278,11 @@
           "title": "Tandem",
           "subtitle": "hesap",
           "description": "Bir ortak, mentor veya ortak trader ile işbirliği yapın ve senkronize stratejilerle birlikte büyüyün.",
-          "features": ["1:100'e kadar kaldıraç", "Paylaşımlı hesap erişimi", "Gerçek zamanlı işlem yansıtma"],
+          "features": [
+            "1:100'e kadar kaldıraç",
+            "Paylaşımlı hesap erişimi",
+            "Gerçek zamanlı işlem yansıtma"
+          ],
           "buttonText": "Birlikte İşlem Yapın",
           "isRecommended": false
         },
@@ -241,7 +292,11 @@
           "title": "İslami",
           "subtitle": "hesap",
           "description": "Swap yok. Şeriata uygun. Tam platform erişimiyle faizsiz işlem yapın.",
-          "features": ["1:100'e kadar kaldıraç", "Swap / faiz ücreti yok", "Tüm işlem araçlarına erişim"],
+          "features": [
+            "1:100'e kadar kaldıraç",
+            "Swap / faiz ücreti yok",
+            "Tüm işlem araçlarına erişim"
+          ],
           "buttonText": "İslami Hesap Aç",
           "isRecommended": false
         }
@@ -440,7 +495,10 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "İstikrarlı dolumlar ve ölçeklenebilir emir akışı için tasarlanmış derin agrega likidite havuzları.",
-            "benefits": ["Tier-1 likidite agregasyonu", "Platformlar arası derinlik"]
+            "benefits": [
+              "Tier-1 likidite agregasyonu",
+              "Platformlar arası derinlik"
+            ]
           },
           {
             "line1Prefix": "",
@@ -450,7 +508,10 @@
             "line2Accent": "işlem",
             "line2Suffix": " için",
             "subtitle": "Yüksek emir işleme hızları, 0 limit/stop seviyeleri — aktif işlem akışı için tasarlandı.",
-            "benefits": ["Hızlı sunucu teknolojileri", "Kurumsal likidite kurulumu"]
+            "benefits": [
+              "Hızlı sunucu teknolojileri",
+              "Kurumsal likidite kurulumu"
+            ]
           }
         ]
       }
@@ -489,7 +550,10 @@
         "career": {
           "title": "Kariyer",
           "subtitle": "Şu anda şirket aşağıdaki uzmanları arıyor:",
-          "positions": ["SATIŞ MÜDÜRÜ", "ANALİTİK DEPARTMANI BAŞKANI"],
+          "positions": [
+            "SATIŞ MÜDÜRÜ",
+            "ANALİTİK DEPARTMANI BAŞKANI"
+          ],
           "cta": "DİNAMİK BÜYÜMEYE HAZIR, HİRSLI VE YETENEKLIYSEN, ÖZGEÇMİŞİNİ GÖNDER.",
           "button": "CV GÖNDER"
         },
@@ -686,15 +750,30 @@
       "description": "Ester'in ana hedefi, perakende ve kurumsal trader'lar için en iyi ve en şeffaf koşulları oluşturmaktır.",
       "trading": {
         "title": "İşlem",
-        "items": ["Hesap özeti", "Piyasalar", "Platform", "İşlem koşulları", "Tandem işlem"]
+        "items": [
+          "Hesap özeti",
+          "Piyasalar",
+          "Platform",
+          "İşlem koşulları",
+          "Tandem işlem"
+        ]
       },
       "partnership": {
         "title": "Ortaklık",
-        "items": ["IB/ Ortaklık kaydet", "IB'ler nasıl gelir elde eder"]
+        "items": [
+          "IB/ Ortaklık kaydet",
+          "IB'ler nasıl gelir elde eder"
+        ]
       },
       "company": {
         "title": "Şirket",
-        "items": ["Şirket hakkında", "Belgeler", "Şirket haberleri", "İletişim", "Kariyer"]
+        "items": [
+          "Şirket hakkında",
+          "Belgeler",
+          "Şirket haberleri",
+          "İletişim",
+          "Kariyer"
+        ]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -793,7 +872,11 @@
           "email": "E-posta",
           "documents": "Belgeler",
           "deposit": "İlk para yatırma"
-        }
+        },
+        "resendEmail": "Tekrar gönder",
+        "resendingEmail": "Gönderiliyor...",
+        "resendEmailSent": "Doğrulama e-postası gönderildi.",
+        "resendEmailError": "E-posta gönderilemedi. Lütfen tekrar deneyin."
       },
       "actions": {
         "newDeposit": "Yeni Depozito",
@@ -1365,7 +1448,11 @@
             "rejected": "Rejected"
           },
           "loadMore": "Daha fazla yükle",
-          "adminCommentLabel": "Yönetici yorumu"
+          "adminCommentLabel": "Yönetici yorumu",
+          "resendEmail": "Tekrar gönder",
+          "resendingEmail": "Gönderiliyor...",
+          "resendEmailSent": "Doğrulama e-postası gönderildi.",
+          "resendEmailError": "E-posta gönderilemedi. Lütfen tekrar deneyin."
         }
       },
       "index": {

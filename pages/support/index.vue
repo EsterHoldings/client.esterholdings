@@ -9,10 +9,30 @@
     <div
       v-else
       class="space-y-5 text-[var(--ui-text-main)]">
-      <SupportSimpleRequestForm
-        v-if="!isFullSupportEnabled"
-        :default-email="currentUser.email || ''"
-        @submitted="handleSimpleSupportSubmitted" />
+      <template v-if="!isFullSupportEnabled">
+        <div
+          class="my-5 flex w-full flex-col gap-2 text-[var(--ui-text-main)] sm:flex-row sm:items-end sm:justify-between">
+          <div class="min-w-0">
+            <UiTextH4 class="truncate">{{ t("support.simple.title") }}</UiTextH4>
+            <UiTextSmall class="mt-1 block text-[var(--ui-text-secondary)]">
+              {{ t("support.simple.subtitle") }}
+            </UiTextSmall>
+          </div>
+
+          <UiButtonDefault
+            state="info--small"
+            class="!w-[42px] shrink-0"
+            :aria-label="t('support.simple.historyRefreshAria')"
+            @click="simpleSupportRef?.reloadHistory()">
+            <UiIconUpdate />
+          </UiButtonDefault>
+        </div>
+
+        <SupportSimpleRequestForm
+          ref="simpleSupportRef"
+          :default-email="currentUser.email || ''"
+          @submitted="handleSimpleSupportSubmitted" />
+      </template>
 
       <template v-else>
         <div
@@ -506,6 +526,7 @@
 
   const tickets = reactive([]);
   const ticketLastMessagePreviewById = reactive<Record<string, string>>({});
+  const simpleSupportRef = ref<{ reloadHistory: () => Promise<void> } | null>(null);
 
   const currentUser = reactive({
     id: null,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref } from "vue";
+  import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
   const props = withDefaults(
     defineProps<{
@@ -15,9 +15,37 @@
   const isOpen = ref(false);
   const tooltipRef = ref<HTMLElement | null>(null);
   const triggerRef = ref<HTMLElement | null>(null);
+  const tooltipStyle = ref<Record<string, string>>({});
 
-  const open = () => {
+  const positionTooltip = () => {
+    const trigger = triggerRef.value;
+    if (!trigger) return;
+
+    const rect = trigger.getBoundingClientRect();
+    const viewportPadding = 12;
+    const tooltip = tooltipRef.value;
+    const tooltipWidth = tooltip?.offsetWidth || 320;
+    const tooltipHeight = tooltip?.offsetHeight || 0;
+    const maxLeft = Math.max(viewportPadding, window.innerWidth - tooltipWidth - viewportPadding);
+    const left = Math.min(Math.max(rect.left, viewportPadding), maxLeft);
+    let top = rect.bottom + 10;
+
+    if (tooltipHeight > 0 && top + tooltipHeight + viewportPadding > window.innerHeight) {
+      top = Math.max(viewportPadding, rect.top - tooltipHeight - 10);
+    }
+
+    tooltipStyle.value = {
+      position: "fixed",
+      top: `${top}px`,
+      left: `${left}px`,
+      width: `min(${props.width}, calc(100vw - ${viewportPadding * 2}px))`,
+    };
+  };
+
+  const open = async () => {
     isOpen.value = true;
+    await nextTick();
+    positionTooltip();
   };
 
   const close = () => {
@@ -25,7 +53,12 @@
   };
 
   const toggle = () => {
-    isOpen.value = !isOpen.value;
+    if (isOpen.value) {
+      close();
+      return;
+    }
+
+    void open();
   };
 
   const handleOutside = (event: PointerEvent) => {
@@ -45,6 +78,19 @@
 
   onBeforeUnmount(() => {
     window.removeEventListener("pointerdown", handleOutside, true);
+    window.removeEventListener("resize", positionTooltip);
+    window.removeEventListener("scroll", positionTooltip, true);
+  });
+
+  watch(isOpen, value => {
+    if (!value) {
+      window.removeEventListener("resize", positionTooltip);
+      window.removeEventListener("scroll", positionTooltip, true);
+      return;
+    }
+
+    window.addEventListener("resize", positionTooltip);
+    window.addEventListener("scroll", positionTooltip, true);
   });
 </script>
 
@@ -65,16 +111,18 @@
       <span aria-hidden="true">!</span>
     </button>
 
-    <transition name="info-hint">
-      <div
-        v-if="isOpen"
-        ref="tooltipRef"
-        class="info-hint__tooltip"
-        :style="{ width: `min(${props.width}, calc(100vw - 24px))` }"
-        role="tooltip">
-        {{ props.content }}
-      </div>
-    </transition>
+    <Teleport to="body">
+      <transition name="info-hint">
+        <div
+          v-if="isOpen"
+          ref="tooltipRef"
+          class="info-hint__tooltip"
+          :style="tooltipStyle"
+          role="tooltip">
+          {{ props.content }}
+        </div>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
@@ -117,10 +165,7 @@
   }
 
   .info-hint__tooltip {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    z-index: 20;
+    z-index: 9999;
     border-radius: 12px;
     border: 1px solid color-mix(in srgb, var(--ui-primary-main) 24%, var(--color-stroke-ui-light) 76%);
     background: color-mix(in srgb, var(--ui-background-panel) 94%, var(--ui-background-card) 6%);

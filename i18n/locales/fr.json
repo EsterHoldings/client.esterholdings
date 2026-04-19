@@ -36,39 +36,74 @@
         "Trading": [
           {
             "section": "Aperçu des comptes",
-            "items": ["Standard", "Pro", "Islamique", "Démo"]
+            "items": [
+              "Standard",
+              "Pro",
+              "Islamique",
+              "Démo"
+            ]
           },
           {
             "section": "Instruments de marché",
-            "items": ["Forex", "Métaux", "CFD Crypto", "Indices", "Actions", "Énergie", "ETF"]
+            "items": [
+              "Forex",
+              "Métaux",
+              "CFD Crypto",
+              "Indices",
+              "Actions",
+              "Énergie",
+              "ETF"
+            ]
           },
           {
             "section": "Plateforme",
-            "items": ["MT4 Desktop", "MT 4 Mobile"]
+            "items": [
+              "MT4 Desktop",
+              "MT 4 Mobile"
+            ]
           },
           {
             "section": "Conditions de trading",
-            "items": ["Rechargement du compte", "Retrait de fonds"]
+            "items": [
+              "Rechargement du compte",
+              "Retrait de fonds"
+            ]
           },
           {
             "section": "HUB du Trader",
-            "items": ["Blog du trader", "Calendrier économique", "Actualités du marché"]
+            "items": [
+              "Blog du trader",
+              "Calendrier économique",
+              "Actualités du marché"
+            ]
           },
           {
             "section": "Trading TANDEM",
-            "items": ["Pour trader", "Pour investisseur"]
+            "items": [
+              "Pour trader",
+              "Pour investisseur"
+            ]
           }
         ],
         "Partnership": [
           {
             "section": "Partenariat",
-            "items": ["Inscrire IB/ Partenariat", "Comment les IB génèrent des revenus"]
+            "items": [
+              "Inscrire IB/ Partenariat",
+              "Comment les IB génèrent des revenus"
+            ]
           }
         ],
         "Company": [
           {
             "section": "Entreprise",
-            "items": ["À propos de l'entreprise", "Documents", "Actualités de l'entreprise", "Contacts", "Carrière"]
+            "items": [
+              "À propos de l'entreprise",
+              "Documents",
+              "Actualités de l'entreprise",
+              "Contacts",
+              "Carrière"
+            ]
           }
         ]
       }
@@ -201,7 +236,11 @@
           "title": "Démo",
           "subtitle": "compte",
           "description": "Trading sans risque avec des fonds virtuels, parfait pour les débutants pour explorer les marchés.",
-          "features": ["Effet de levier jusqu'à 1:100", "Spreads à partir de 0,0 pips", "Aucun dépôt requis"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Spreads à partir de 0,0 pips",
+            "Aucun dépôt requis"
+          ],
           "buttonText": "Essayer la Démo maintenant",
           "isRecommended": true
         },
@@ -211,7 +250,11 @@
           "title": "Standard",
           "subtitle": "compte",
           "description": "Accès facile aux marchés spot avec des frais faibles — idéal pour les débutants et les traders actifs.",
-          "features": ["Effet de levier jusqu'à 1:100", "Spreads à partir de 1,2 pips", "Premier dépôt de 50$"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Spreads à partir de 1,2 pips",
+            "Premier dépôt de 50$"
+          ],
           "buttonText": "Ouvrir un compte Standard",
           "isRecommended": false
         },
@@ -221,7 +264,11 @@
           "title": "Pro",
           "subtitle": "compte",
           "description": "Découvrez des spreads serrés, un effet de levier plus élevé et un contrôle total sur chaque transaction.",
-          "features": ["Effet de levier jusqu'à 1:100", "Spreads à partir de 0,0 pips", "Premier dépôt de 1000$"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Spreads à partir de 0,0 pips",
+            "Premier dépôt de 1000$"
+          ],
           "buttonText": "Trader comme un Pro",
           "isRecommended": false
         },
@@ -231,7 +278,11 @@
           "title": "Tandem",
           "subtitle": "compte",
           "description": "Associez-vous avec un partenaire, mentor ou co-trader et grandissez ensemble avec des stratégies synchronisées.",
-          "features": ["Effet de levier jusqu'à 1:100", "Accès partagé au compte", "Miroir de trading en temps réel"],
+          "features": [
+            "Effet de levier jusqu'à 1:100",
+            "Accès partagé au compte",
+            "Miroir de trading en temps réel"
+          ],
           "buttonText": "Trader ensemble",
           "isRecommended": false
         },
@@ -444,7 +495,10 @@
             "line2Accent": "",
             "line2Suffix": "",
             "subtitle": "Pools de liquidité agrégés profonds conçus pour des exécutions stables et un flux d'ordres évolutif.",
-            "benefits": ["Agrégation de liquidité Tier-1", "Profondeur sur plusieurs venues"]
+            "benefits": [
+              "Agrégation de liquidité Tier-1",
+              "Profondeur sur plusieurs venues"
+            ]
           },
           {
             "line1Prefix": "",
@@ -454,7 +508,10 @@
             "line2Accent": "actif",
             "line2Suffix": "",
             "subtitle": "Haute vitesse de traitement des ordres, 0 niveaux limite/stop — conçu pour le flux de trading actif.",
-            "benefits": ["Technologies de serveur rapides", "Configuration de liquidité institutionnelle"]
+            "benefits": [
+              "Technologies de serveur rapides",
+              "Configuration de liquidité institutionnelle"
+            ]
           }
         ]
       }
@@ -493,7 +550,10 @@
         "career": {
           "title": "Carrière",
           "subtitle": "À l'heure actuelle, l'entreprise recherche les spécialistes suivants:",
-          "positions": ["RESPONSABLE DES VENTES", "DIRECTEUR DU DÉPARTEMENT D'ANALYSE"],
+          "positions": [
+            "RESPONSABLE DES VENTES",
+            "DIRECTEUR DU DÉPARTEMENT D'ANALYSE"
+          ],
           "cta": "SI VOUS ÊTES PRÊT POUR UNE CROISSANCE DYNAMIQUE, VOUS ÊTES AMBITIEUX ET TALENTUEUX, ENVOYEZ VOTRE CV.",
           "button": "ENVOYER CV"
         },
@@ -690,15 +750,30 @@
       "description": "L'objectif principal d'Ester est de créer les meilleures conditions et les plus transparentes pour les traders particuliers et institutionnels.",
       "trading": {
         "title": "Trading",
-        "items": ["Aperçu des comptes", "Marchés", "Plateforme", "Conditions de trading", "Trading tandem"]
+        "items": [
+          "Aperçu des comptes",
+          "Marchés",
+          "Plateforme",
+          "Conditions de trading",
+          "Trading tandem"
+        ]
       },
       "partnership": {
         "title": "Partenariat",
-        "items": ["Inscrire IB/ Partenariat", "Comment les IB génèrent des revenus"]
+        "items": [
+          "Inscrire IB/ Partenariat",
+          "Comment les IB génèrent des revenus"
+        ]
       },
       "company": {
         "title": "Entreprise",
-        "items": ["À propos de l'entreprise", "Documents", "Actualités de l'entreprise", "Contacts", "Carrière"]
+        "items": [
+          "À propos de l'entreprise",
+          "Documents",
+          "Actualités de l'entreprise",
+          "Contacts",
+          "Carrière"
+        ]
       },
       "legal": {
         "company_name": "Ester Holdings Ltd.,",
@@ -797,7 +872,11 @@
           "email": "E-mail",
           "documents": "Documents",
           "deposit": "Premier dépôt"
-        }
+        },
+        "resendEmail": "Renvoyer",
+        "resendingEmail": "Envoi...",
+        "resendEmailSent": "L’e-mail de vérification a été envoyé.",
+        "resendEmailError": "Impossible d’envoyer l’e-mail. Réessayez."
       },
       "actions": {
         "newDeposit": "Nouveau dépôt",
@@ -1369,7 +1448,11 @@
             "rejected": "Rejected"
           },
           "loadMore": "Charger plus",
-          "adminCommentLabel": "Commentaire de l’administrateur"
+          "adminCommentLabel": "Commentaire de l’administrateur",
+          "resendEmail": "Renvoyer",
+          "resendingEmail": "Envoi...",
+          "resendEmailSent": "L’e-mail de vérification a été envoyé.",
+          "resendEmailError": "Impossible d’envoyer l’e-mail. Réessayez."
         }
       },
       "index": {

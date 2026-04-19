@@ -35,9 +35,9 @@
     </div>
 
     <div class="verification-list-wrap">
-        <div
-          v-if="isLoading"
-          class="verification-list">
+      <div
+        v-if="isLoading"
+        class="verification-list">
         <div
           v-for="idx in 3"
           :key="idx"
@@ -91,6 +91,19 @@
               </div>
             </div>
           </button>
+
+          <button
+            v-if="step.key === 'email' && canResendEmail"
+            type="button"
+            class="verification-step__resend"
+            :disabled="isResendingEmail"
+            @click="handleResendEmailVerification">
+            {{
+              isResendingEmail
+                ? resolveText("cabinet.dashboard.accountVerification.resendingEmail", "Sending...")
+                : resolveText("cabinet.dashboard.accountVerification.resendEmail", "Send again")
+            }}
+          </button>
         </div>
       </div>
     </div>
@@ -100,6 +113,7 @@
 <script lang="ts" setup>
   import { computed, onBeforeUnmount, onMounted, reactive, ref } from "vue";
   import { useI18n } from "vue-i18n";
+  import { useToast } from "vue-toastification";
   import { navigateTo, useLocalePath } from "~/.nuxt/imports";
 
   import UiImageCircle from "~/components/ui/UiImageCircle.vue";
@@ -116,11 +130,13 @@
   type VerificationStepKey = "profile" | "email" | "documents";
 
   const { t } = useI18n({ useScope: "global" });
+  const toast = useToast();
   const localePath = useLocalePath();
   const appCore = useAppCore();
   const authStore = useAuthStore();
 
   const isLoading = ref(false);
+  const isResendingEmail = ref(false);
   const verificationRequestData = reactive<Record<string, any>>({});
 
   const resolveText = (key: string, fallback: string): string => {
@@ -238,6 +254,10 @@
   const isFullyVerified = computed(
     () => totalCount.value > 0 && allSteps.value.every(step => step.status === "approved")
   );
+  const canResendEmail = computed(() => {
+    if (isResendingEmail.value) return true;
+    return emailStatus.value !== "approved" && !authStore.user?.email_verified_at;
+  });
 
   const verifiedCountText = computed(() =>
     resolveText("cabinet.dashboard.accountVerification.verifiedCount", "Verified {done}/{total}")
@@ -276,6 +296,33 @@
   const handleOpenStep = async (key: VerificationStepKey): Promise<void> => {
     const target = resolveStepRoute(key);
     await navigateTo(localePath({ path: target.path, query: target.query ?? {} }));
+  };
+
+  const refreshAuthUser = async (): Promise<void> => {
+    const response = await appCore.auth.getAuthUser();
+    authStore.setUser(response.data);
+  };
+
+  const handleResendEmailVerification = async (): Promise<void> => {
+    if (isResendingEmail.value) return;
+    isResendingEmail.value = true;
+
+    try {
+      await appCore.auth.resendEmailVerification();
+      toast.success(
+        resolveText("cabinet.dashboard.accountVerification.resendEmailSent", "Verification email has been sent.")
+      );
+      await refreshAuthUser();
+    } catch {
+      toast.error(
+        resolveText(
+          "cabinet.dashboard.accountVerification.resendEmailError",
+          "Failed to send verification email. Please try again."
+        )
+      );
+    } finally {
+      isResendingEmail.value = false;
+    }
   };
 
   const loadVerificationData = async () => {
@@ -556,6 +603,33 @@
     color: var(--ui-text-secondary);
     white-space: normal;
     overflow-wrap: anywhere;
+  }
+
+  .verification-step__resend {
+    margin: 6px 0 0 42px;
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ui-primary-main) 16%, transparent);
+    color: var(--ui-primary-main);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    transition:
+      background-color 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .verification-step__resend:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--ui-primary-main) 24%, transparent);
+  }
+
+  .verification-step__resend:disabled {
+    cursor: wait;
+    opacity: 0.65;
   }
 
   @media (max-width: 767px) {

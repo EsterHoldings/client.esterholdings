@@ -35,6 +35,8 @@
   import { ref, onMounted, onBeforeUnmount } from "vue";
   import { useI18n } from "vue-i18n";
   import UiIconGlobe from "~/components/ui/UiIconGlobe.vue";
+  import useAppCore from "~/composables/useAppCore";
+  import { useAuthStore } from "~/stores/authStore";
 
   const props = defineProps({
     isInvert: Boolean,
@@ -42,6 +44,8 @@
   });
 
   const { locale, setLocale } = useI18n();
+  const appCore = useAppCore();
+  const authStore = useAuthStore();
 
   const isOpen = ref(false);
   const wrapperRef = ref(null);
@@ -105,6 +109,17 @@
   const switchLanguage = async code => {
     await setLocale(code);
     isOpen.value = false;
+
+    if (!authStore.accessToken) {
+      return;
+    }
+
+    try {
+      const response = await appCore.auth.getAuthUser();
+      authStore.setUser(response.data);
+    } catch {
+      // Language switching must never block the UI.
+    }
   };
 
   const handleClickOutside = event => {

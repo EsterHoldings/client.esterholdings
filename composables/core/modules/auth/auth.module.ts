@@ -68,6 +68,10 @@ export class AuthModule implements AuthModuleInterface {
   }): Promise<any> {
     return await this.authService.resetPassword(payload);
   }
+
+  async resendEmailVerification(): Promise<any> {
+    return await this.authService.resendEmailVerification();
+  }
 }
 
 export default AuthModule;

@@ -122,6 +122,13 @@ export default defineNuxtConfig({
     ],
     fallbackLocale: "en",
     defaultLocale: "en",
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: "i18n_redirected",
+      redirectOn: "no prefix",
+      alwaysRedirect: false,
+      fallbackLocale: "en",
+    },
     experimental: {
       // @ts-ignore
       jsTsFormatResource: false,
