@@ -95,6 +95,8 @@
   import { useToast } from "vue-toastification";
 
   import TabDeposit from "~/pages/payments/create/components/TabDeposit.vue";
+  import TabDepositFormBTC from "~/pages/payments/create/components/TabDepositFormBTC.vue";
+  import TabDepositFormUsdc from "~/pages/payments/create/components/TabDepositFormUsdc.vue";
   import TabDepositFormUsdtErc20 from "~/pages/payments/create/components/TabDepositFormUsdtErc20.vue";
   import TabDepositFormUsdtTrc20 from "~/pages/payments/create/components/TabDepositFormUsdtTrc20.vue";
   import TabWithdrawal from "~/pages/payments/create/components/TabWithdrawal.vue";
@@ -180,21 +182,21 @@
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_ERC20,
       name: "USDT ERC-20",
       icon: UiIconUsdtErc20,
-      depositComponentForm: TabDepositFormUsdtTrc20,
+      depositComponentForm: TabDepositFormUsdtErc20,
       withdrawalComponentForm: TabWithdrawalForm,
     },
     btc: {
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_BTC,
       name: "BTC",
       icon: UiIconBTC,
-      depositComponentForm: TabDepositFormUsdtTrc20,
+      depositComponentForm: TabDepositFormBTC,
       withdrawalComponentForm: TabWithdrawalForm,
     },
     usdc: {
       cfgKey: PAYMENT_SYSTEM_CONFIG_KEY_USDC,
       name: "USDC",
       icon: UiIconPayment,
-      depositComponentForm: TabDepositFormUsdtTrc20,
+      depositComponentForm: TabDepositFormUsdc,
       withdrawalComponentForm: TabWithdrawalForm,
     },
     visa_mastercard: {
