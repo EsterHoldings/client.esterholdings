@@ -1026,7 +1026,8 @@
         "error": "Depozito oluşturulamadı.",
         "loadAccountsError": "Ticaret hesapları yüklenemedi.",
         "processing": "İşleme...",
-        "submit": "Depozito oluştur"
+        "submit": "Depozito oluştur",
+        "minimumAmount": "Minimum yatırım tutarı {amount} USD."
       },
       "emptySubtitle": "Başlamak için ilk ödemenizi oluşturun.",
       "emptyTitle": "Henüz ödeme yok",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "Belge başarıyla yüklendi.",
     "documentsSaved": "Belgeler başarıyla kaydedildi.",
     "documentDeleted": "Belge başarıyla silindi.",
-    "photoDeleted": "Fotoğraf başarıyla silindi."
+    "photoDeleted": "Fotoğraf başarıyla silindi.",
+    "minimumDepositAmount": "Minimum yatırım tutarı {amount} USD."
   },
   "authFlow": {
     "actions": {

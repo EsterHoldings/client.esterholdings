@@ -1026,7 +1026,8 @@
         "error": "जमा राशि बनाने में विफल.",
         "loadAccountsError": "ट्रेडिंग खाते लोड करने में विफल.",
         "processing": "प्रसंस्करण...",
-        "submit": "जमा बनाएँ"
+        "submit": "जमा बनाएँ",
+        "minimumAmount": "न्यूनतम जमा राशि {amount} USD है."
       },
       "emptySubtitle": "आरंभ करने के लिए अपना पहला भुगतान बनाएं।",
       "emptyTitle": "अभी तक कोई भुगतान नहीं",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "दस्तावेज़ सफलतापूर्वक अपलोड हुआ।",
     "documentsSaved": "दस्तावेज़ सफलतापूर्वक सहेजे गए।",
     "documentDeleted": "दस्तावेज़ सफलतापूर्वक हटाया गया।",
-    "photoDeleted": "फ़ोटो सफलतापूर्वक हटाई गई।"
+    "photoDeleted": "फ़ोटो सफलतापूर्वक हटाई गई।",
+    "minimumDepositAmount": "न्यूनतम जमा राशि {amount} USD है."
   },
   "authFlow": {
     "actions": {

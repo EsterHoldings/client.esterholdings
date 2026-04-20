@@ -1031,7 +1031,8 @@
         "processing": "Обробка...",
         "created": "Депозит успішно створено.",
         "error": "Не вдалося створити депозит.",
-        "loadAccountsError": "Не вдалося завантажити торгові рахунки."
+        "loadAccountsError": "Не вдалося завантажити торгові рахунки.",
+        "minimumAmount": "Мінімальна сума депозиту — {amount} USD."
       },
       "withdrawalForm": {
         "title": "Заявка на виведення",
@@ -2496,7 +2497,8 @@
     "documentUploaded": "Документ успішно завантажено.",
     "documentsSaved": "Документи успішно збережено.",
     "documentDeleted": "Документ успішно видалено.",
-    "photoDeleted": "Фото успішно видалено."
+    "photoDeleted": "Фото успішно видалено.",
+    "minimumDepositAmount": "Мінімальна сума депозиту — {amount} USD."
   },
   "cabinetExtra": {
     "transactions": {

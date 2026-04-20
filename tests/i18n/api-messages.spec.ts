@@ -43,6 +43,7 @@ describe("useApiMessages translator helpers", () => {
       "apiMessages.invalidField",
       "apiMessages.numericField",
       "apiMessages.positiveNumberField",
+      "apiMessages.minimumDepositAmount",
       "apiMessages.invalidSelection",
       "apiMessages.maxLengthField",
       "apiMessages.minLengthField",
@@ -228,6 +229,9 @@ describe("useApiMessages translator helpers", () => {
     );
     expect(resolveApiMessageWithTranslator("The amount field must be greater than 0.", translateFromRu)).toBe(
       "Введите сумму больше 0."
+    );
+    expect(resolveApiMessageWithTranslator("Minimum deposit amount for USDC is 3 USD.", translateFromRu)).toBe(
+      "Минимальная сумма депозита — 3 USD."
     );
     expect(
       resolveApiMessageWithTranslator("The comment field may not be greater than 5000 characters.", translateFromRu)

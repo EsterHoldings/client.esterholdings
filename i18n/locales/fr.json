@@ -1026,7 +1026,8 @@
         "error": "Échec de la création du dépôt.",
         "loadAccountsError": "Échec du chargement des comptes de trading.",
         "processing": "Traitement...",
-        "submit": "Créer un dépôt"
+        "submit": "Créer un dépôt",
+        "minimumAmount": "Le dépôt minimum est de {amount} USD."
       },
       "emptySubtitle": "Créez votre premier paiement pour commencer.",
       "emptyTitle": "Aucun paiement pour l'instant",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "Document téléversé avec succès.",
     "documentsSaved": "Documents enregistrés avec succès.",
     "documentDeleted": "Document supprimé avec succès.",
-    "photoDeleted": "Photo supprimée avec succès."
+    "photoDeleted": "Photo supprimée avec succès.",
+    "minimumDepositAmount": "Le dépôt minimum est de {amount} USD."
   },
   "authFlow": {
     "actions": {

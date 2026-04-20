@@ -1026,7 +1026,8 @@
         "error": "Falha ao criar depósito.",
         "loadAccountsError": "Falha ao carregar contas de negociação.",
         "processing": "Processamento...",
-        "submit": "Criar depósito"
+        "submit": "Criar depósito",
+        "minimumAmount": "O depósito mínimo é de {amount} USD."
       },
       "emptySubtitle": "Crie seu primeiro pagamento para começar.",
       "emptyTitle": "Nenhum pagamento ainda",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "Documento enviado com sucesso.",
     "documentsSaved": "Documentos salvos com sucesso.",
     "documentDeleted": "Documento excluído com sucesso.",
-    "photoDeleted": "Foto excluída com sucesso."
+    "photoDeleted": "Foto excluída com sucesso.",
+    "minimumDepositAmount": "O depósito mínimo é de {amount} USD."
   },
   "authFlow": {
     "actions": {

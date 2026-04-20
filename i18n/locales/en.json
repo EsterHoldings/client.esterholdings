@@ -1040,7 +1040,8 @@
         "processing": "Processing...",
         "created": "Deposit created successfully.",
         "error": "Failed to create deposit.",
-        "loadAccountsError": "Failed to load trading accounts."
+        "loadAccountsError": "Failed to load trading accounts.",
+        "minimumAmount": "Minimum deposit amount is {amount} USD."
       },
       "withdrawalForm": {
         "title": "Withdrawal request",
@@ -2497,7 +2498,8 @@
     "documentUploaded": "Document uploaded successfully.",
     "documentsSaved": "Documents saved successfully.",
     "documentDeleted": "Document deleted successfully.",
-    "photoDeleted": "Photo deleted successfully."
+    "photoDeleted": "Photo deleted successfully.",
+    "minimumDepositAmount": "Minimum deposit amount is {amount} USD."
   },
   "cabinetExtra": {
     "transactions": {

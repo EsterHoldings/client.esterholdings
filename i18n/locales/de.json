@@ -1026,7 +1026,8 @@
         "error": "Einzahlung konnte nicht erstellt werden.",
         "loadAccountsError": "Handelskonten konnten nicht geladen werden.",
         "processing": "Verarbeitung...",
-        "submit": "Anzahlung erstellen"
+        "submit": "Anzahlung erstellen",
+        "minimumAmount": "Die Mindesteinzahlung beträgt {amount} USD."
       },
       "emptySubtitle": "Erstellen Sie Ihre erste Zahlung, um loszulegen.",
       "emptyTitle": "Noch keine Zahlungen",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "Dokument erfolgreich hochgeladen.",
     "documentsSaved": "Dokumente erfolgreich gespeichert.",
     "documentDeleted": "Dokument erfolgreich gelöscht.",
-    "photoDeleted": "Foto erfolgreich gelöscht."
+    "photoDeleted": "Foto erfolgreich gelöscht.",
+    "minimumDepositAmount": "Die Mindesteinzahlung beträgt {amount} USD."
   },
   "authFlow": {
     "actions": {

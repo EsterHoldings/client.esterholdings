@@ -1026,7 +1026,8 @@
         "error": "Impossibile creare il deposito.",
         "loadAccountsError": "Impossibile caricare i conti di trading.",
         "processing": "Elaborazione...",
-        "submit": "Crea deposito"
+        "submit": "Crea deposito",
+        "minimumAmount": "Il deposito minimo è di {amount} USD."
       },
       "emptySubtitle": "Crea il tuo primo pagamento per iniziare.",
       "emptyTitle": "Nessun pagamento ancora",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "Documento caricato correttamente.",
     "documentsSaved": "Documenti salvati correttamente.",
     "documentDeleted": "Documento eliminato correttamente.",
-    "photoDeleted": "Foto eliminata correttamente."
+    "photoDeleted": "Foto eliminata correttamente.",
+    "minimumDepositAmount": "Il deposito minimo è di {amount} USD."
   },
   "authFlow": {
     "actions": {

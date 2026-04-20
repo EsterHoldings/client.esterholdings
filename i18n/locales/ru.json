@@ -1040,7 +1040,8 @@
         "processing": "Обработка...",
         "created": "Депозит успешно создан.",
         "error": "Не удалось создать депозит.",
-        "loadAccountsError": "Не удалось загрузить торговые счета."
+        "loadAccountsError": "Не удалось загрузить торговые счета.",
+        "minimumAmount": "Минимальная сумма депозита — {amount} USD."
       },
       "withdrawalForm": {
         "title": "Заявка на вывод",
@@ -2497,7 +2498,8 @@
     "documentUploaded": "Документ успешно загружен.",
     "documentsSaved": "Документы успешно сохранены.",
     "documentDeleted": "Документ успешно удален.",
-    "photoDeleted": "Фото успешно удалено."
+    "photoDeleted": "Фото успешно удалено.",
+    "minimumDepositAmount": "Минимальная сумма депозита — {amount} USD."
   },
   "cabinetExtra": {
     "transactions": {

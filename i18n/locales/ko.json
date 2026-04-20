@@ -1026,7 +1026,8 @@
         "error": "보증금을 생성하지 못했습니다.",
         "loadAccountsError": "거래 계좌를 로드하지 못했습니다.",
         "processing": "처리 중...",
-        "submit": "보증금 생성"
+        "submit": "보증금 생성",
+        "minimumAmount": "최소 입금액은 {amount} USD입니다."
       },
       "emptySubtitle": "시작하려면 첫 번째 결제 수단을 만드세요.",
       "emptyTitle": "아직 결제되지 않았습니다.",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "문서가 성공적으로 업로드되었습니다.",
     "documentsSaved": "문서가 성공적으로 저장되었습니다.",
     "documentDeleted": "문서가 성공적으로 삭제되었습니다.",
-    "photoDeleted": "사진이 성공적으로 삭제되었습니다."
+    "photoDeleted": "사진이 성공적으로 삭제되었습니다.",
+    "minimumDepositAmount": "최소 입금액은 {amount} USD입니다."
   },
   "authFlow": {
     "actions": {

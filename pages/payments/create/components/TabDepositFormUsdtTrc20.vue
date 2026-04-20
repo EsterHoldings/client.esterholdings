@@ -60,7 +60,7 @@
         state="info--outline"
         class="mt-3 inline-flex items-center justify-center gap-2"
         :disabled="isLoadingSubmitBtn"
-        @click="validateUsdtTrcDataForm(handleSubmit)">
+        @click="validateDepositForm">
         <span>{{ submitLabel }}</span>
         <UiIconSpinnerDefault v-if="isLoadingSubmitBtn" />
       </UiButtonDefault>
@@ -76,9 +76,9 @@
   import {
     resetFormData,
     resetValidationUsdtTrcDataForm,
-    validateUsdtTrcDataForm,
     validatorUsdtTrcDataForm,
   } from "~/pages/payments/create/composables/TabDepositFormUsdtTrc20/validation";
+  import { PAYMENT_SYSTEM_CONFIG_KEY_USDC } from "~/constants/paymentSystemsCfgKeys";
 
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiFormControl from "~/components/ui/UiFormControl.vue";
@@ -105,6 +105,10 @@
   const localePath = useLocalePath();
   const { t } = useI18n({ useScope: "global" });
   const appCore = useAppCore();
+  const DEFAULT_DEPOSIT_MINIMUM_AMOUNT = 10;
+  const DEPOSIT_MINIMUM_AMOUNTS_BY_CONFIG_KEY: Record<string, number> = {
+    [PAYMENT_SYSTEM_CONFIG_KEY_USDC]: 3,
+  };
 
   const accounts = ref<any[]>([]);
   const loadAccountsPage = ref(1);
@@ -129,6 +133,32 @@
   const amountPlaceholder = computed(() =>
     resolveText("cabinet.billing.depositForm.amountPlaceholder", "Amount in USD")
   );
+  const minimumAmount = computed(() => {
+    const configKey = String(props.paymentSystem?.config_key ?? "").trim();
+
+    return DEPOSIT_MINIMUM_AMOUNTS_BY_CONFIG_KEY[configKey] ?? DEFAULT_DEPOSIT_MINIMUM_AMOUNT;
+  });
+  const parsedAmount = computed(() => {
+    const value = String(formData.amount ?? "").trim();
+    if (!/^\d+(\.\d{1,2})?$/.test(value)) {
+      return null;
+    }
+
+    const amount = Number(value);
+
+    return Number.isFinite(amount) ? amount : null;
+  });
+  const isAmountBelowMinimum = computed(
+    () => parsedAmount.value !== null && parsedAmount.value < minimumAmount.value
+  );
+  const formatMinimumAmount = (amount: number): string =>
+    Number.isInteger(amount) ? String(amount) : String(amount).replace(/\.?0+$/, "");
+  const minimumAmountErrorLabel = computed(() =>
+    resolveText(
+      "cabinet.billing.depositForm.minimumAmount",
+      "Minimum deposit amount is {amount} USD."
+    ).replace("{amount}", formatMinimumAmount(minimumAmount.value))
+  );
   const commentLabel = computed(() => resolveText("cabinet.billing.depositForm.comment", "Comment"));
   const commentPlaceholder = computed(() =>
     resolveText("cabinet.billing.depositForm.commentPlaceholder", "Add a comment for the finance team")
@@ -148,11 +178,21 @@
       (message: string) => resolveApiMessage(message, message) ?? message
     )
   );
-  const amountErrors = computed(() =>
-    (validatorUsdtTrcDataForm?.errorsFormData?.amount?.errors ?? []).map(
+  const amountErrors = computed(() => {
+    const errors = (validatorUsdtTrcDataForm?.errorsFormData?.amount?.errors ?? []).map(
       (message: string) => resolveApiMessage(message, message) ?? message
-    )
-  );
+    );
+
+    if (
+      errors.length === 0 &&
+      validatorUsdtTrcDataForm?.errorsFormData?.amount?.isDirty &&
+      isAmountBelowMinimum.value
+    ) {
+      errors.push(minimumAmountErrorLabel.value);
+    }
+
+    return errors;
+  });
   const commentErrors = computed(() =>
     (validatorUsdtTrcDataForm?.errorsFormData?.comment?.errors ?? []).map(
       (message: string) => resolveApiMessage(message, message) ?? message
@@ -181,6 +221,20 @@
     } finally {
       isLoadingSubmitBtn.value = false;
     }
+  };
+
+  const validateDepositForm = () => {
+    const isValid = validatorUsdtTrcDataForm.doValidate();
+
+    if (isAmountBelowMinimum.value) {
+      validatorUsdtTrcDataForm.errorsFormData.amount.isDirty = true;
+    }
+
+    if (!isValid || isAmountBelowMinimum.value) {
+      return;
+    }
+
+    handleSubmit();
   };
 
   const handleChangeAccount = (value: any) => {

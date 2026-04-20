@@ -1026,7 +1026,8 @@
         "error": "デポジットの作成に失敗しました。",
         "loadAccountsError": "取引口座をロードできませんでした。",
         "processing": "処理...",
-        "submit": "デポジットの作成"
+        "submit": "デポジットの作成",
+        "minimumAmount": "最低入金額は{amount} USDです。"
       },
       "emptySubtitle": "開始するには、最初の支払いを作成してください。",
       "emptyTitle": "まだ支払いはありません",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "書類が正常にアップロードされました。",
     "documentsSaved": "書類が正常に保存されました。",
     "documentDeleted": "書類が正常に削除されました。",
-    "photoDeleted": "写真が正常に削除されました。"
+    "photoDeleted": "写真が正常に削除されました。",
+    "minimumDepositAmount": "最低入金額は{amount} USDです。"
   },
   "authFlow": {
     "actions": {

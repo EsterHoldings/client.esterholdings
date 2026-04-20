@@ -80,6 +80,7 @@ describe("payments locale coverage", () => {
       "cabinet.billing.depositForm.account",
       "cabinet.billing.depositForm.amount",
       "cabinet.billing.depositForm.amountPlaceholder",
+      "cabinet.billing.depositForm.minimumAmount",
       "cabinet.billing.depositForm.comment",
       "cabinet.billing.depositForm.commentPlaceholder",
       "cabinet.billing.depositForm.submit",

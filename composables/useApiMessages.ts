@@ -370,6 +370,16 @@ const API_MESSAGE_PATTERN_TRANSLATIONS: ApiPatternTranslation[] = [
     fallback: "Enter an amount greater than 0.",
   },
   {
+    pattern: /^minimum deposit amount for .+ is ([0-9]+(?:\.[0-9]+)?) USD[.!?]*$/i,
+    key: "apiMessages.minimumDepositAmount",
+    fallback: "Minimum deposit amount is {amount} USD.",
+    format: (match, translate) =>
+      translate("apiMessages.minimumDepositAmount", "Minimum deposit amount is {amount} USD.").replace(
+        "{amount}",
+        String(match[1] ?? "")
+      ),
+  },
+  {
     pattern: /^the selected .+ is invalid[.!?]*$/i,
     key: "apiMessages.invalidSelection",
     fallback: "Selected value is invalid.",

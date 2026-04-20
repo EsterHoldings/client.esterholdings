@@ -1026,7 +1026,8 @@
         "error": "No se pudo crear el depósito.",
         "loadAccountsError": "No se pudieron cargar las cuentas comerciales.",
         "processing": "Tratamiento...",
-        "submit": "Crear depósito"
+        "submit": "Crear depósito",
+        "minimumAmount": "El depósito mínimo es de {amount} USD."
       },
       "emptySubtitle": "Crea tu primer pago para comenzar.",
       "emptyTitle": "Aún no hay pagos",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "Documento cargado correctamente.",
     "documentsSaved": "Documentos guardados correctamente.",
     "documentDeleted": "Documento eliminado correctamente.",
-    "photoDeleted": "Foto eliminada correctamente."
+    "photoDeleted": "Foto eliminada correctamente.",
+    "minimumDepositAmount": "El depósito mínimo es de {amount} USD."
   },
   "authFlow": {
     "actions": {

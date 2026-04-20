@@ -1026,7 +1026,8 @@
         "error": "创建存款失败。",
         "loadAccountsError": "无法加载交易账户。",
         "processing": "加工...",
-        "submit": "创建存款"
+        "submit": "创建存款",
+        "minimumAmount": "最低入金金额为 {amount} USD。"
       },
       "emptySubtitle": "创建您的第一笔付款即可开始。",
       "emptyTitle": "尚未付款",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "文件上传成功。",
     "documentsSaved": "文件保存成功。",
     "documentDeleted": "文件删除成功。",
-    "photoDeleted": "照片删除成功。"
+    "photoDeleted": "照片删除成功。",
+    "minimumDepositAmount": "最低入金金额为 {amount} USD。"
   },
   "authFlow": {
     "actions": {

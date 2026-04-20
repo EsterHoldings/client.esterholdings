@@ -1026,7 +1026,8 @@
         "error": "יצירת ההפקדה נכשלה.",
         "loadAccountsError": "טעינת חשבונות מסחר נכשלה.",
         "processing": "מעבד...",
-        "submit": "צור הפקדה"
+        "submit": "צור הפקדה",
+        "minimumAmount": "סכום ההפקדה המינימלי הוא {amount} USD."
       },
       "emptySubtitle": "צור את התשלום הראשון שלך כדי להתחיל.",
       "emptyTitle": "עדיין אין תשלומים",
@@ -2498,7 +2499,8 @@
     "documentUploaded": "המסמך הועלה בהצלחה.",
     "documentsSaved": "המסמכים נשמרו בהצלחה.",
     "documentDeleted": "המסמך נמחק בהצלחה.",
-    "photoDeleted": "התמונה נמחקה בהצלחה."
+    "photoDeleted": "התמונה נמחקה בהצלחה.",
+    "minimumDepositAmount": "סכום ההפקדה המינימלי הוא {amount} USD."
   },
   "authFlow": {
     "actions": {
