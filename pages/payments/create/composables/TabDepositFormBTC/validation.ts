@@ -3,7 +3,7 @@ import useValidation from "../../../../../composables/useValidation";
 import {formData} from "./index";
 
 export const validatorBTCDataForm: any = useValidation(formData, {
-    amount: ["required", "isDecimal"],
+    amount: ["required", "isDecimal", "min:3"],
     comment: ["max:254"],
 });
 

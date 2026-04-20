@@ -3,7 +3,7 @@ import useValidation from "../../../../../composables/useValidation";
 import {formData} from "./index";
 
 export const validatorUsdtErcDataForm: any = useValidation(formData, {
-    amount: ["required", "isDecimal"],
+    amount: ["required", "isDecimal", "min:10"],
     comment: ["max:254"],
 });
 

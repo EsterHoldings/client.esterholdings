@@ -4,7 +4,7 @@ import {formData} from "./index";
 
 export const validatorUsdtTrcDataForm: any = useValidation(formData, {
     accountId: ["required"],
-    amount: ["required", "isDecimal"],
+    amount: ["required", "isDecimal", "min:10"],
     comment: ["max:254"],
 });
 
