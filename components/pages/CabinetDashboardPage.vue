@@ -45,8 +45,7 @@
               class="h-full"
               :accounts="mt4Accounts"
               :is-loading="isMt4Refreshing"
-              :can-create-account="canCreateAccount"
-              :account-creation-blocked-reason="accountCreationBlockedReason"
+              :account-creation-blocked-reason="mt4VerificationNotice"
               @toggle-favorite="toggleFavorite"
               @refresh-requested="handleRefreshDashboard" />
           </div>
@@ -98,7 +97,7 @@
   const authStore = useAuthStore();
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const appCore = useAppCore();
-  const { canCreateAccount, refreshAccountCreationEligibility } = useAccountCreationEligibility();
+  const { canCreateAccount: canManagePayoutDetails, isEligibilityLoaded, refreshAccountCreationEligibility } = useAccountCreationEligibility();
   const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
 
   type DashboardSummary = {
@@ -363,13 +362,13 @@
     return translated === key ? fallback : translated;
   };
 
-  const accountCreationBlockedReason = computed(() =>
-    canCreateAccount.value
-      ? ""
-      : resolveText(
-          "cabinet.accounts.openBlocked",
-          "Открытие счета будет доступно после верификации данных профиля и документов."
+  const mt4VerificationNotice = computed(() =>
+    isEligibilityLoaded.value && !canManagePayoutDetails.value
+      ? resolveText(
+          "cabinet.dashboard.mt4.payoutVerificationNotice",
+          "Верификация нужна только для создания реквизитов на выплату. Открывать MT4-счета и пользоваться остальными разделами кабинета можно уже сейчас."
         )
+      : ""
   );
 
   const applyFavoriteLimit = (items: Mt4Account[], selectedId: string) => {

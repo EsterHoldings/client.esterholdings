@@ -7,25 +7,11 @@
         </UiTextH4>
 
         <div class="payments-header__actions">
-          <div
-            v-if="isVerificationRequired"
-            class="payments-header__notice">
-            {{ paymentCreationBlockedReason }}
-          </div>
-          <template v-if="canCreatePayment">
-            <UiButtonDefault
-              state="success--outline"
-              class="w-full md:w-auto"
-              @click="handleClickCreateNewDeposit">
-              {{ createDepositLabel }}
-            </UiButtonDefault>
-          </template>
           <UiButtonDefault
-            v-else
-            state="info--outline"
+            state="success--outline"
             class="w-full md:w-auto"
-            @click="handleGoToVerification">
-            {{ verifyActionLabel }}
+            @click="handleClickCreateNewDeposit">
+            {{ createDepositLabel }}
           </UiButtonDefault>
         </div>
       </div>
@@ -452,15 +438,7 @@
           <UiTextSmall class="payments-empty-state__subtitle">
             {{ emptyStateSubtitle }}
           </UiTextSmall>
-          <UiTextSmall
-            v-if="isVerificationRequired"
-            class="payments-empty-state__warning">
-            {{ paymentCreationBlockedReason }}
-          </UiTextSmall>
-
-          <div
-            v-if="canCreatePayment"
-            class="payments-empty-state__actions">
+          <div class="payments-empty-state__actions">
             <UiButtonDefault
               state="success--outline"
               class="payments-empty-state__button"
@@ -468,13 +446,6 @@
               {{ createDepositLabel }}
             </UiButtonDefault>
           </div>
-          <UiButtonDefault
-            v-else
-            state="info--outline"
-            class="payments-empty-state__button"
-            @click="handleGoToVerification">
-            {{ verifyActionLabel }}
-          </UiButtonDefault>
         </div>
       </template>
 
@@ -518,14 +489,13 @@
   import UiSelect from "~/components/ui/UiSelect.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
-  import useAccountCreationEligibility from "~/composables/useAccountCreationEligibility";
   import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import { useAuthStore } from "~/stores/authStore";
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
 
-  import { definePageMeta, navigateTo, useLocalePath, useNuxtApp } from "~/.nuxt/imports";
+  import { definePageMeta, useLocalePath, useNuxtApp } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
   import { computed, h, inject, onBeforeUnmount, onMounted, reactive, ref, watch, nextTick } from "vue";
   import UiIconLogo from "~/components/ui/UiIconLogo.vue";
@@ -548,7 +518,6 @@
   const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
 
   const appCore = useAppCore();
-  const { canCreateAccount, isEligibilityLoaded, refreshAccountCreationEligibility } = useAccountCreationEligibility();
 
   const ORDER_DIRECTION_ASC = "asc";
   const ORDER_DIRECTION_DESC = "desc";
@@ -696,33 +665,13 @@
     return translated === key ? fallback : translated;
   };
 
-  const canCreatePayment = computed(() => canCreateAccount.value);
-  const isVerificationRequired = computed(() => isEligibilityLoaded.value && !canCreateAccount.value);
   const createDepositLabel = computed(() => resolveI18nValue("cabinet.accounts.actions.deposit", "Пополнить счет"));
   const createWithdrawalLabel = computed(() =>
     resolveI18nValue("cabinet.accounts.actions.withdraw", "Вывести средства")
   );
-  const verifyActionLabel = computed(() =>
-    resolveI18nValue("cabinet.dashboard.accountVerification.goToVerification", "Перейти к верификации")
-  );
-  const paymentCreationBlockedReason = computed(() =>
-    resolveI18nValue(
-      "cabinet.accounts.openBlocked",
-      "Открытие счета будет доступно после верификации данных профиля и документов."
-    )
-  );
-  const emptyStateTitle = computed(() =>
-    isVerificationRequired.value
-      ? resolveI18nValue("cabinet.dashboard.mt4.verifyTitle", "Завершите верификацию для создания платежа")
-      : resolveI18nValue("cabinet.billing.emptyTitle", "Платежей пока нет")
-  );
+  const emptyStateTitle = computed(() => resolveI18nValue("cabinet.billing.emptyTitle", "Платежей пока нет"));
   const emptyStateSubtitle = computed(() =>
-    isVerificationRequired.value
-      ? resolveI18nValue(
-          "cabinet.dashboard.mt4.verifySubtitle",
-          "Подтвердите данные профиля и документы, после этого сможете создать платеж."
-        )
-      : resolveI18nValue("cabinet.billing.emptySubtitle", "Создайте первый платёж, чтобы начать работу.")
+    resolveI18nValue("cabinet.billing.emptySubtitle", "Создайте первый платёж, чтобы начать работу.")
   );
 
   const copyIdLabel = computed(() => resolveI18nValue("cabinet.common.copyId", "Copy ID"));
@@ -1366,10 +1315,6 @@
     if (id) navigator.clipboard.writeText(id);
   };
 
-  const handleGoToVerification = async () => {
-    await navigateTo(localePath({ path: "/profile", query: { tab: "verification" } }));
-  };
-
   const resolveQueryString = (value: unknown): string => {
     if (Array.isArray(value)) {
       return String(value[0] ?? "").trim();
@@ -1382,11 +1327,6 @@
     initialTab: "deposit" | "withdrawal" = "deposit",
     initialAccountId = ""
   ) => {
-    if (isVerificationRequired.value) {
-      await handleGoToVerification();
-      return;
-    }
-
     openModal(CreateNewDeposit, {
       title: initialTab === "withdrawal" ? createWithdrawalLabel.value : createDepositLabel.value,
       initialTab,
@@ -1478,7 +1418,7 @@
     useEventBus.on("loadDataForPayments", loadData);
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     subscribeToPaymentRealtime();
-    await Promise.all([loadData(), refreshAccountCreationEligibility()]);
+    await loadData();
     await nextTick();
     const openDeposit = resolveQueryString(route.query?.openDeposit);
     const openWithdrawal = resolveQueryString(route.query?.openWithdrawal);

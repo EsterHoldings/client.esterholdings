@@ -899,7 +899,8 @@
         "emptyTitle": "Nessun account ancora",
         "tooltipLabel": "Informazioni sui conti MT4",
         "verifySubtitle": "Dopo che i dati e i documenti del tuo profilo saranno stati verificati, sarai in grado di aprire un nuovo conto di trading.",
-        "verifyTitle": "Completa la verifica per aprire un conto"
+        "verifyTitle": "Completa la verifica per aprire un conto",
+        "payoutVerificationNotice": "La verifica è richiesta solo per creare i dettagli di pagamento per i prelievi. Puoi già aprire conti MT4 e usare il resto dell’area cliente."
       },
       "transactions": {
         "title": "Ultime transazioni",
@@ -1222,7 +1223,8 @@
           "cards": "Carte",
           "full": "Tutta la larghezza",
           "table": "Lista"
-        }
+        },
+        "verificationRequired": "La verifica del profilo e dei documenti è necessaria per creare o aggiornare i dettagli di pagamento per i prelievi."
       },
       "nothingToShow": "Niente da mostrare =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "Impossibile caricare i tipi di account.",
         "submitError": "Impossibile creare l'account.",
         "accountTypeCardHint": "Tipo di conto trading",
-        "investorPasswordNotice": "Genereremo automaticamente una password investitore per questo conto MT4 e la invieremo alla tua email. Ti servirà per confermare le richieste di prelievo."
+        "investorPasswordNotice": "Genereremo automaticamente per questo conto MT4 sia una password trader sia una password investitore e le invieremo alla tua e-mail. La password investitore sarà necessaria per confermare le richieste di prelievo."
       },
       "actions": {
         "deposit": "Depositare",

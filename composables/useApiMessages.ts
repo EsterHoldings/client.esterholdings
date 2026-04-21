@@ -232,6 +232,14 @@ export const API_MESSAGE_TRANSLATIONS: Record<string, ApiMessageTranslation> = {
     key: "cabinet.accounts.openBlocked",
     fallback: "Account opening will be available after profile and document verification.",
   },
+  "payout details are unavailable until profile data and documents are verified": {
+    key: "cabinet.payments.details.verificationRequired",
+    fallback: "Profile and document verification is required to create or update payout details.",
+  },
+  "profile data and documents verification is required to create or update payout details": {
+    key: "cabinet.payments.details.verificationRequired",
+    fallback: "Profile and document verification is required to create or update payout details.",
+  },
   "client account is blocked": {
     key: "apiMessages.clientAccountBlocked",
     fallback: "Client account is blocked.",

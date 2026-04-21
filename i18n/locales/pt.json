@@ -899,7 +899,8 @@
         "emptyTitle": "Nenhuma conta ainda",
         "tooltipLabel": "Sobre as contas MT4",
         "verifySubtitle": "Após a verificação dos dados e documentos do seu perfil, você poderá abrir uma nova conta de negociação.",
-        "verifyTitle": "Conclua a verificação para abrir uma conta"
+        "verifyTitle": "Conclua a verificação para abrir uma conta",
+        "payoutVerificationNotice": "A verificação é necessária apenas para criar dados de pagamento para saques. Você já pode abrir contas MT4 e usar o restante do gabinete."
       },
       "transactions": {
         "title": "Últimas transações",
@@ -1222,7 +1223,8 @@
           "cards": "Cartões",
           "full": "Largura total",
           "table": "Lista"
-        }
+        },
+        "verificationRequired": "A verificação do perfil e dos documentos é necessária para criar ou atualizar dados de pagamento para saques."
       },
       "nothingToShow": "Nada a mostrar =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "Falha ao carregar tipos de conta.",
         "submitError": "Falha ao criar conta.",
         "accountTypeCardHint": "Tipo de conta de trading",
-        "investorPasswordNotice": "Vamos gerar automaticamente uma senha de investidor para esta conta MT4 e enviá-la para o seu e-mail. Você precisará dela para confirmar solicitações de saque."
+        "investorPasswordNotice": "Vamos gerar automaticamente para esta conta MT4 tanto uma senha de trader quanto uma senha de investidor e enviá-las para o seu e-mail. A senha de investidor será necessária para confirmar solicitações de saque."
       },
       "actions": {
         "deposit": "Depósito",

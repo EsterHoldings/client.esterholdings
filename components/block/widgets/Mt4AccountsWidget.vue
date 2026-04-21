@@ -13,23 +13,12 @@
       </div>
       <div class="mt4-header-card__actions">
         <NuxtLink
-          v-if="canCreateAccount"
           :to="profileAccountsCreateLink"
           class="w-full sm:w-auto">
           <UiButtonDefault
             state="success--outline--small"
             class="mt4-header-card__cta w-full sm:w-auto text-[var(--ui-text-main)]">
             {{ t("cabinet.dashboard.mt4.openNewAccount") }}
-          </UiButtonDefault>
-        </NuxtLink>
-        <NuxtLink
-          v-else
-          :to="profileVerificationLink"
-          class="w-full sm:w-auto">
-          <UiButtonDefault
-            state="info--outline"
-            class="mt4-header-card__cta mt4-header-card__cta--outline w-full sm:w-auto">
-            {{ verifyActionLabel }}
           </UiButtonDefault>
         </NuxtLink>
       </div>
@@ -73,35 +62,24 @@
             <UiIconCardCheck class="mt4-empty-state__icon" />
           </div>
           <div class="mt4-empty-state__title">
-            {{ currentEmptyTitle }}
+            {{ emptyTitle }}
           </div>
           <UiTextSmall class="mt4-empty-state__subtitle">
-            {{ currentEmptySubtitle }}
+            {{ emptySubtitle }}
           </UiTextSmall>
           <UiTextSmall
-            v-if="!canCreateAccount && blockedReasonText"
+            v-if="blockedReasonText"
             class="mt4-empty-state__warning">
             {{ blockedReasonText }}
           </UiTextSmall>
 
           <NuxtLink
-            v-if="canCreateAccount"
             :to="profileAccountsCreateLink"
             class="w-full sm:w-auto">
             <UiButtonDefault
               state="success--outline"
               class="w-full sm:w-auto">
               {{ openAccountLabel }}
-            </UiButtonDefault>
-          </NuxtLink>
-          <NuxtLink
-            v-else
-            :to="profileVerificationLink"
-            class="w-full sm:w-auto">
-            <UiButtonDefault
-              state="info--outline"
-              class="w-full sm:w-auto">
-              {{ verifyActionLabel }}
             </UiButtonDefault>
           </NuxtLink>
         </div>
@@ -281,12 +259,10 @@
     defineProps<{
       accounts: Mt4Account[];
       isLoading?: boolean;
-      canCreateAccount?: boolean;
       accountCreationBlockedReason?: string;
     }>(),
     {
       isLoading: false,
-      canCreateAccount: true,
       accountCreationBlockedReason: "",
     }
   );
@@ -323,8 +299,6 @@
   const balanceHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
   const profileAccountsCreateLink = computed(() => localePath({ path: "/accounts", query: { openCreate: "1" } }));
-  const profileVerificationLink = computed(() => localePath({ path: "/profile", query: { tab: "verification" } }));
-  const canCreateAccount = computed(() => !!props.canCreateAccount);
   const openMenuLabel = computed(() => resolveText("cabinet.common.openMenu", "Open menu"));
   const favoriteAddLabel = computed(() => resolveText("cabinet.accounts.favoriteAdd", "Add to favorites"));
   const favoriteRemoveLabel = computed(() => resolveText("cabinet.accounts.favoriteRemove", "Remove from favorites"));
@@ -351,24 +325,10 @@
   const emptySubtitle = computed(() =>
     resolveText("cabinet.dashboard.mt4.emptySubtitle", "Откройте первый торговый счет, чтобы начать работу.")
   );
-  const verifyTitle = computed(() =>
-    resolveText("cabinet.dashboard.mt4.verifyTitle", "Завершите верификацию для открытия счёта")
-  );
-  const verifySubtitle = computed(() =>
-    resolveText(
-      "cabinet.dashboard.mt4.verifySubtitle",
-      "Подтвердите данные профиля и документы, после этого сможете открыть MT4 счёт."
-    )
-  );
   const openAccountLabel = computed(() => resolveText("cabinet.accounts.openAccount", "Открыть счет"));
-  const verifyActionLabel = computed(() =>
-    resolveText("cabinet.dashboard.accountVerification.goToVerification", "Перейти к верификации")
-  );
   const mt4Description = computed(() =>
     resolveText("cabinet.dashboard.mt4.description", "Быстрый доступ к избранным счетам и открытию нового MT4 счета.")
   );
-  const currentEmptyTitle = computed(() => (canCreateAccount.value ? emptyTitle.value : verifyTitle.value));
-  const currentEmptySubtitle = computed(() => (canCreateAccount.value ? emptySubtitle.value : verifySubtitle.value));
   const blockedReasonText = computed(() => String(props.accountCreationBlockedReason || "").trim());
 
   const getAccountType = (account: Mt4Account): string => {
@@ -684,11 +644,6 @@
 
   const openPaymentModal = async (initialTab: "deposit" | "withdrawal", accountId: string | number): Promise<void> => {
     closeMenu();
-
-    if (!canCreateAccount.value) {
-      await navigateTo(profileVerificationLink.value);
-      return;
-    }
 
     const normalizedAccountId = normalizeAccountId(accountId);
     if (modalControl?.openModal) {

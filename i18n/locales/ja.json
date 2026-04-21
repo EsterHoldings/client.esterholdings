@@ -899,7 +899,8 @@
         "emptyTitle": "まだアカウントがありません",
         "tooltipLabel": "MT4口座について",
         "verifySubtitle": "プロフィールデータと書類が確認された後、新しい取引口座を開設できるようになります。",
-        "verifyTitle": "口座開設のための認証を完了する"
+        "verifyTitle": "口座開設のための認証を完了する",
+        "payoutVerificationNotice": "認証が必要なのは出金用の支払い情報を作成する場合のみです。MT4口座の開設やキャビネットの他の機能はすでに利用できます。"
       },
       "transactions": {
         "title": "最新の取引",
@@ -1222,7 +1223,8 @@
           "cards": "カード",
           "full": "全幅",
           "table": "リスト"
-        }
+        },
+        "verificationRequired": "出金用の支払い情報を作成または更新するには、プロフィールと書類の認証が必要です。"
       },
       "nothingToShow": "表示するものがありません =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "アカウントタイプの読み込みに失敗しました。",
         "submitError": "アカウントの作成に失敗しました。",
         "accountTypeCardHint": "取引口座タイプ",
-        "investorPasswordNotice": "このMT4口座の投資家パスワードを自動生成し、メールで送信します。出金申請の確認に必要です。"
+        "investorPasswordNotice": "このMT4口座について、トレーダーパスワードと投資家パスワードの両方を自動生成し、メールで送信します。投資家パスワードは出金申請を確認する際に必要になります。"
       },
       "actions": {
         "deposit": "デポジット",

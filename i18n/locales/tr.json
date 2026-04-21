@@ -899,7 +899,8 @@
         "emptyTitle": "Henüz hesap yok",
         "tooltipLabel": "MT4 hesapları hakkında",
         "verifySubtitle": "Profil verileriniz ve belgeleriniz doğrulandıktan sonra yeni bir işlem hesabı açabileceksiniz.",
-        "verifyTitle": "Hesap açmak için doğrulamayı tamamlayın"
+        "verifyTitle": "Hesap açmak için doğrulamayı tamamlayın",
+        "payoutVerificationNotice": "Doğrulama yalnızca para çekme için ödeme bilgileri oluşturmak için gereklidir. MT4 hesapları açabilir ve müşteri alanının geri kalanını şimdiden kullanabilirsiniz."
       },
       "transactions": {
         "title": "Son işlemler",
@@ -1222,7 +1223,8 @@
           "cards": "Kartlar",
           "full": "Tam genişlik",
           "table": "Liste"
-        }
+        },
+        "verificationRequired": "Para çekme ödeme bilgilerini oluşturmak veya güncellemek için profil ve belge doğrulaması gereklidir."
       },
       "nothingToShow": "Gösterilecek bir şey yok =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "Hesap türleri yüklenemedi.",
         "submitError": "Hesap oluşturulamadı.",
         "accountTypeCardHint": "İşlem hesabı türü",
-        "investorPasswordNotice": "Bu MT4 hesabı için otomatik olarak bir yatırımcı şifresi oluşturup e-posta adresinize göndereceğiz. Para çekme taleplerini onaylamak için bu şifre gerekecek."
+        "investorPasswordNotice": "Bu MT4 hesabı için hem trader şifresi hem de yatırımcı şifresi otomatik olarak oluşturulacak ve e-posta adresinize gönderilecektir. Para çekme taleplerini onaylamak için yatırımcı şifresi gerekecektir."
       },
       "actions": {
         "deposit": "Mevduat",

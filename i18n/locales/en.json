@@ -937,7 +937,8 @@
           "status": "Status",
           "active": "Active",
           "inactive": "Inactive"
-        }
+        },
+        "payoutVerificationNotice": "Verification is required only to create payout details. You can already open MT4 accounts and use the rest of the cabinet."
       },
       "transactions": {
         "title": "Latest transactions",
@@ -1253,7 +1254,8 @@
             "shortname": "Short name",
             "merchant": "Merchant"
           }
-        }
+        },
+        "verificationRequired": "Profile and document verification is required to create or update payout details."
       },
       "nothingToShow": "Nothing to show =(",
       "pagination": {
@@ -1580,7 +1582,7 @@
           "submit": "Open new account"
         },
         "accountTypeCardHint": "Trading account type",
-        "investorPasswordNotice": "We will generate an investor password for this MT4 account and send it to your email. You will need it to confirm withdrawal requests."
+        "investorPasswordNotice": "We will automatically generate both a trader password and an investor password for this MT4 account and send them to your email. The investor password will be required to confirm withdrawal requests."
       },
       "actions": {
         "deposit": "Deposit",

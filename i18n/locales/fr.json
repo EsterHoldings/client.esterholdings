@@ -899,7 +899,8 @@
         "emptyTitle": "Aucun compte pour l'instant",
         "tooltipLabel": "À propos des comptes MT4",
         "verifySubtitle": "Une fois vos données de profil et vos documents vérifiés, vous pourrez ouvrir un nouveau compte de trading.",
-        "verifyTitle": "Vérification complète pour ouvrir un compte"
+        "verifyTitle": "Vérification complète pour ouvrir un compte",
+        "payoutVerificationNotice": "La vérification est requise uniquement pour créer des coordonnées de paiement pour les retraits. Vous pouvez déjà ouvrir des comptes MT4 et utiliser le reste du cabinet."
       },
       "transactions": {
         "title": "Dernières transactions",
@@ -1222,7 +1223,8 @@
           "cards": "Cartes",
           "full": "Pleine largeur",
           "table": "Liste"
-        }
+        },
+        "verificationRequired": "La vérification du profil et des documents est requise pour créer ou mettre à jour les coordonnées de paiement pour les retraits."
       },
       "nothingToShow": "Rien à afficher =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "Échec du chargement des types de comptes.",
         "submitError": "Échec de la création du compte.",
         "accountTypeCardHint": "Type de compte de trading",
-        "investorPasswordNotice": "Nous générerons automatiquement un mot de passe investisseur pour ce compte MT4 et l’enverrons à votre e-mail. Il sera nécessaire pour confirmer les demandes de retrait."
+        "investorPasswordNotice": "Nous générerons automatiquement pour ce compte MT4 un mot de passe trader et un mot de passe investisseur, puis nous les enverrons à votre e-mail. Le mot de passe investisseur sera nécessaire pour confirmer les demandes de retrait."
       },
       "actions": {
         "deposit": "Dépôt",

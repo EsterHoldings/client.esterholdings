@@ -899,7 +899,8 @@
         "emptyTitle": "Aún no hay cuentas",
         "tooltipLabel": "Sobre las cuentas MT4",
         "verifySubtitle": "Una vez verificados los datos y documentos de su perfil, podrá abrir una nueva cuenta comercial.",
-        "verifyTitle": "Verificación completa para abrir una cuenta"
+        "verifyTitle": "Verificación completa para abrir una cuenta",
+        "payoutVerificationNotice": "La verificación solo es necesaria para crear datos de pago para retiros. Ya puede abrir cuentas MT4 y usar el resto del gabinete."
       },
       "transactions": {
         "title": "Últimas transacciones",
@@ -1222,7 +1223,8 @@
           "cards": "Tarjetas",
           "full": "Ancho completo",
           "table": "Lista"
-        }
+        },
+        "verificationRequired": "La verificación del perfil y de los documentos es obligatoria para crear o actualizar datos de pago para retiros."
       },
       "nothingToShow": "Nada que mostrar =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "No se pudieron cargar los tipos de cuenta.",
         "submitError": "No se pudo crear la cuenta.",
         "accountTypeCardHint": "Tipo de cuenta de trading",
-        "investorPasswordNotice": "Generaremos automáticamente una contraseña de inversor para esta cuenta MT4 y la enviaremos a tu correo. La necesitarás para confirmar solicitudes de retiro."
+        "investorPasswordNotice": "Generaremos automáticamente tanto una contraseña de trader como una contraseña de inversor para esta cuenta MT4 y las enviaremos a su correo electrónico. La contraseña de inversor será necesaria para confirmar solicitudes de retiro."
       },
       "actions": {
         "deposit": "Depósito",

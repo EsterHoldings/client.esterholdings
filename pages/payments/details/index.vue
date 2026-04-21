@@ -654,8 +654,8 @@
   );
   const paymentDetailCreationBlockedReason = computed(() =>
     resolveText(
-      "cabinet.accounts.openBlocked",
-      "Открытие счета будет доступно после верификации данных профиля и документов."
+      "cabinet.payments.details.verificationRequired",
+      "Для создания или обновления реквизитов на выплату нужна верификация профиля и документов."
     )
   );
   const emptyStateTitle = computed(() =>

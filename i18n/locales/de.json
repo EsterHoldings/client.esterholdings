@@ -899,7 +899,8 @@
         "emptyTitle": "Noch keine Konten",
         "tooltipLabel": "Über MT4-Konten",
         "verifySubtitle": "Nachdem Ihre Profildaten und Dokumente überprüft wurden, können Sie ein neues Handelskonto eröffnen.",
-        "verifyTitle": "Vervollständigen Sie die Verifizierung, um ein Konto zu eröffnen"
+        "verifyTitle": "Vervollständigen Sie die Verifizierung, um ein Konto zu eröffnen",
+        "payoutVerificationNotice": "Eine Verifizierung ist nur zum Erstellen von Auszahlungsdetails erforderlich. MT4-Konten können Sie bereits jetzt eröffnen und den restlichen Kundenbereich nutzen."
       },
       "transactions": {
         "title": "Letzte Transaktionen",
@@ -1222,7 +1223,8 @@
           "cards": "Karten",
           "full": "Volle Breite",
           "table": "Liste"
-        }
+        },
+        "verificationRequired": "Für das Erstellen oder Aktualisieren von Auszahlungsdetails ist die Verifizierung von Profil und Dokumenten erforderlich."
       },
       "nothingToShow": "Nichts anzuzeigen =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "Kontotypen konnten nicht geladen werden.",
         "submitError": "Konto konnte nicht erstellt werden.",
         "accountTypeCardHint": "Handelskonto-Typ",
-        "investorPasswordNotice": "Wir generieren automatisch ein Investor-Passwort für dieses MT4-Konto und senden es an Ihre E-Mail. Sie benötigen es zur Bestätigung von Auszahlungsanfragen."
+        "investorPasswordNotice": "Wir erstellen für dieses MT4-Konto automatisch sowohl ein Trader-Passwort als auch ein Investor-Passwort und senden beide an Ihre E-Mail-Adresse. Das Investor-Passwort wird benötigt, um Auszahlungsanfragen zu bestätigen."
       },
       "actions": {
         "deposit": "Kaution",

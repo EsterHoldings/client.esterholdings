@@ -899,7 +899,8 @@
         "emptyTitle": "还没有账户",
         "tooltipLabel": "关于 MT4 账户",
         "verifySubtitle": "在验证您的个人资料和文件后，您将能够开设新的交易账户。",
-        "verifyTitle": "完成验证以开设账户"
+        "verifyTitle": "完成验证以开设账户",
+        "payoutVerificationNotice": "只有创建出金收款信息时才需要完成验证。您现在已经可以开设 MT4 账户并使用柜台中的其他功能。"
       },
       "transactions": {
         "title": "最新交易",
@@ -1222,7 +1223,8 @@
           "cards": "牌",
           "full": "全宽",
           "table": "列表"
-        }
+        },
+        "verificationRequired": "创建或更新出金收款信息需要完成个人资料和文件验证。"
       },
       "nothingToShow": "无数据显示 =(",
       "pagination": {
@@ -1511,7 +1513,7 @@
         "loadTypesError": "无法加载帐户类型。",
         "submitError": "创建帐户失败。",
         "accountTypeCardHint": "交易账户类型",
-        "investorPasswordNotice": "我们将为此 MT4 账户自动生成投资者密码，并发送到您的邮箱。确认出金申请时需要使用该密码。"
+        "investorPasswordNotice": "我们将为此 MT4 账户自动生成交易员密码和投资者密码，并发送到您的邮箱。投资者密码将用于确认出金申请。"
       },
       "actions": {
         "deposit": "订金",

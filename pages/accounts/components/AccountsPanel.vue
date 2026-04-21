@@ -465,28 +465,13 @@
         <UiTextSmall class="accounts-empty-state__subtitle">
           {{ currentEmptySubtitle }}
         </UiTextSmall>
-        <UiTextSmall
-          v-if="showBlockedNotice"
-          class="accounts-empty-state__warning">
-          {{ props.accountCreationBlockedReason }}
-        </UiTextSmall>
-
         <UiButtonDefault
-          v-if="!isVerificationRequired"
           state="success--outline"
           class="accounts-empty-state__button"
-          :disabled="!props.canCreateAccount"
           @click="handleClickCreateNewAccount">
           {{ openNewAccountLabel }}
           &nbsp;
           <UiIconSuccess />
-        </UiButtonDefault>
-        <UiButtonDefault
-          v-else
-          state="info--outline"
-          class="accounts-empty-state__button"
-          @click="handleClickGoToVerification">
-          {{ verifyActionLabel }}
         </UiButtonDefault>
       </div>
     </template>
@@ -538,7 +523,7 @@
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import { computed, inject, onMounted, reactive, ref, nextTick, onBeforeUnmount, watch, h } from "vue";
-  import { navigateTo, useLocalePath } from "~/.nuxt/imports";
+  import { navigateTo } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import UiIconSortBy from "~/components/ui/UiIconSortBy.vue";
@@ -552,22 +537,10 @@
   import ViewModeToggle from "~/components/block/controls/ViewModeToggle.vue";
 
   const isInitialLoading = ref(true);
-  const props = withDefaults(
-    defineProps<{
-      canCreateAccount?: boolean;
-      accountCreationBlockedReason?: string;
-      isEligibilityLoaded?: boolean;
-    }>(),
-    {
-      canCreateAccount: true,
-      accountCreationBlockedReason: "",
-      isEligibilityLoaded: false,
-    }
-  );
+  defineProps<{}>();
 
   const { t } = useI18n({ useScope: "global" });
   const appCore = useAppCore();
-  const localePath = useLocalePath();
 
   const ORDER_DIRECTION_ASC = "asc";
   const ORDER_DIRECTION_DESC = "desc";
@@ -812,26 +785,9 @@
   const archiveConfirmLabel = computed(() => resolveText("cabinet.accounts.deleteConfirm", "Archive this account?"));
   const archiveSuccessLabel = computed(() => resolveText("cabinet.accounts.deleteSuccess", "Account archived!"));
   const archiveErrorLabel = computed(() => resolveText("cabinet.accounts.deleteError", "Failed to archive account."));
-  const verifyTitle = computed(() =>
-    resolveText("cabinet.dashboard.mt4.verifyTitle", "Завершите верификацию для открытия счёта")
-  );
-  const verifySubtitle = computed(() =>
-    resolveText(
-      "cabinet.dashboard.mt4.verifySubtitle",
-      "Подтвердите данные профиля и документы, после этого сможете открыть MT4 счёт."
-    )
-  );
   const openNewAccountLabel = computed(() => resolveText("cabinet.accounts.openNew", "Открыть новый счёт"));
-  const verifyActionLabel = computed(() =>
-    resolveText("cabinet.dashboard.accountVerification.goToVerification", "Перейти к верификации")
-  );
-  const showBlockedNotice = computed(() => props.isEligibilityLoaded && !props.canCreateAccount);
-  const isVerificationRequired = computed(() => props.isEligibilityLoaded && !props.canCreateAccount);
-  const currentEmptyTitle = computed(() => (isVerificationRequired.value ? verifyTitle.value : emptyTitle.value));
-  const currentEmptySubtitle = computed(() =>
-    isVerificationRequired.value ? verifySubtitle.value : emptySubtitle.value
-  );
-  const verificationLink = computed(() => localePath({ path: "/profile", query: { tab: "verification" } }));
+  const currentEmptyTitle = computed(() => emptyTitle.value);
+  const currentEmptySubtitle = computed(() => emptySubtitle.value);
   const getOpenAccountLabel = (accountNumber: unknown): string =>
     resolveText("cabinet.accounts.openAccountLabel", "Open account {number}").replace(
       "{number}",
@@ -1311,11 +1267,6 @@
     closeOptions();
     closeCardMenu();
 
-    if (isVerificationRequired.value) {
-      await handleClickGoToVerification();
-      return;
-    }
-
     openModal(CreateNewDeposit, {
       title: resolvePaymentModalTitle(initialTab),
       initialTab,
@@ -1381,14 +1332,9 @@
   };
 
   const handleClickCreateNewAccount = () => {
-    if (!props.canCreateAccount) return;
     openModal(AccountsCreateNew, {
       title: t("cabinet.accounts.accounts-form.title"),
     });
-  };
-
-  const handleClickGoToVerification = async () => {
-    await navigateTo(verificationLink.value);
   };
 </script>
 
