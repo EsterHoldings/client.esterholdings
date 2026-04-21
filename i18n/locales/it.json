@@ -1224,7 +1224,9 @@
           "full": "Tutta la larghezza",
           "table": "Lista"
         },
-        "verificationRequired": "La verifica del profilo e dei documenti è necessaria per creare o aggiornare i dettagli di pagamento per i prelievi."
+        "verificationRequired": "Completa la verifica del profilo e dei documenti per creare o aggiornare i dati di pagamento per i prelievi.",
+        "verifyTitle": "Completa la verifica per creare i dati di pagamento",
+        "verifySubtitle": "Dopo la verifica del profilo e dei documenti potrai creare i dati di pagamento e usarli per le richieste di prelievo."
       },
       "nothingToShow": "Niente da mostrare =(",
       "pagination": {

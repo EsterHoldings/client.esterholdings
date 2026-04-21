@@ -1255,7 +1255,9 @@
             "merchant": "Merchant"
           }
         },
-        "verificationRequired": "Profile and document verification is required to create or update payout details."
+        "verificationRequired": "Complete profile and document verification to create or update payment details for withdrawals.",
+        "verifyTitle": "Complete verification to create payment details",
+        "verifySubtitle": "After profile and document verification you will be able to create payment details and use them for withdrawal requests."
       },
       "nothingToShow": "Nothing to show =(",
       "pagination": {

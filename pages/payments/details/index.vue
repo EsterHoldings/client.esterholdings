@@ -7,12 +7,6 @@
         </UiTextH4>
 
         <div class="flex justify-between items-center gap-2">
-          <div
-            v-if="isVerificationRequired"
-            class="payments-details-header__notice">
-            {{ paymentDetailCreationBlockedReason }}
-          </div>
-
           <UiButtonDefault
             v-if="canCreatePaymentDetail"
             state="info"
@@ -664,7 +658,10 @@
       : archivedFilter.value === "all"
         ? resolveText("cabinet.payments.details.emptyFilteredTitle", "Payment details were not found")
         : isVerificationRequired.value
-          ? resolveText("cabinet.dashboard.mt4.verifyTitle", "Complete verification to add a payment detail")
+          ? resolveText(
+              "cabinet.payments.details.verifyTitle",
+              "Complete verification to create payment details"
+            )
           : resolveText("cabinet.payments.details.emptyTitle", "No payment details yet")
   );
   const emptyStateSubtitle = computed(() =>
@@ -677,8 +674,8 @@
         ? resolveText("cabinet.payments.details.emptyFilteredSubtitle", "Try changing the search query or filters.")
         : isVerificationRequired.value
           ? resolveText(
-              "cabinet.dashboard.mt4.verifySubtitle",
-              "Verify your profile details and documents, then you will be able to add a payment detail."
+              "cabinet.payments.details.verifySubtitle",
+              "After profile and document verification you will be able to create payment details and use them for withdrawal requests."
             )
           : resolveText("cabinet.payments.details.emptySubtitle", "Add your first payment detail to receive payouts.")
   );
@@ -1382,13 +1379,6 @@
     justify-content: space-between;
     gap: 8px;
     padding: 12px;
-  }
-
-  .payments-details-header__notice {
-    margin-top: 8px;
-    color: var(--color-warning);
-    font-size: 13px;
-    line-height: 1.35;
   }
 
   .payments-details-empty-state {

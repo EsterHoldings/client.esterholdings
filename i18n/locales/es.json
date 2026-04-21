@@ -1224,7 +1224,9 @@
           "full": "Ancho completo",
           "table": "Lista"
         },
-        "verificationRequired": "La verificación del perfil y de los documentos es obligatoria para crear o actualizar datos de pago para retiros."
+        "verificationRequired": "Complete la verificación del perfil y de los documentos para crear o actualizar los datos de pago para retiros.",
+        "verifyTitle": "Complete la verificación para crear datos de pago",
+        "verifySubtitle": "Después de verificar el perfil y los documentos, podrá crear datos de pago y usarlos para solicitudes de retiro."
       },
       "nothingToShow": "Nada que mostrar =(",
       "pagination": {

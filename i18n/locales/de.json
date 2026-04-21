@@ -1224,7 +1224,9 @@
           "full": "Volle Breite",
           "table": "Liste"
         },
-        "verificationRequired": "Für das Erstellen oder Aktualisieren von Auszahlungsdetails ist die Verifizierung von Profil und Dokumenten erforderlich."
+        "verificationRequired": "Schließen Sie die Verifizierung von Profil und Dokumenten ab, um Auszahlungs-Zahlungsdaten zu erstellen oder zu aktualisieren.",
+        "verifyTitle": "Schließen Sie die Verifizierung ab, um Zahlungsdaten anzulegen",
+        "verifySubtitle": "Nach der Verifizierung von Profil und Dokumenten können Sie Zahlungsdaten anlegen und für Auszahlungsanfragen verwenden."
       },
       "nothingToShow": "Nichts anzuzeigen =(",
       "pagination": {

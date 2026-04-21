@@ -1224,7 +1224,9 @@
           "full": "全宽",
           "table": "列表"
         },
-        "verificationRequired": "创建或更新出金收款信息需要完成个人资料和文件验证。"
+        "verificationRequired": "请先完成资料和文件验证，才能创建或更新用于提现的支付信息。",
+        "verifyTitle": "完成验证后即可创建支付信息",
+        "verifySubtitle": "资料和文件验证完成后，您将可以创建支付信息并将其用于提现申请。"
       },
       "nothingToShow": "无数据显示 =(",
       "pagination": {

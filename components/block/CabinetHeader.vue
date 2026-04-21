@@ -1234,7 +1234,7 @@ onUnmounted(() => {
               class="fixed sm:absolute top-[80px] sm:top-9 left-5 right-5 sm:left-auto sm:right-0 sm:w-fit bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)] rounded-md z-10"
               v-if="profileMenuIsOpen">
             <NuxtLink
-                :to="addCurrentLocaleToPath('profile')"
+                :to="{ path: addCurrentLocaleToPath('profile'), query: { tab: 'general' } }"
                 :aria-label="t('cabinet.header.profile')">
               <div
                   class="flex items-center justify-between gap-4 hover:bg-[var(--ui-primary-main)] py-2 px-5 m-1 rounded-md">

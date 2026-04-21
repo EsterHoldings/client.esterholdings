@@ -1,37 +1,12 @@
 <template>
   <div class="tab-user-verification text-[var(--ui-text-main)]">
-    <div class="verification-switch">
-      <button
-        type="button"
-        class="verification-switch__btn"
-        :class="{ 'verification-switch__btn--active': activeSection === 'client' }"
-        @click="activeSection = 'client'">
-        <span>{{ t("cabinet.profile.components.tab-user-verification.sections.client") }}</span>
-        <span
-          v-if="hasUnreadClientVerificationSignals"
-          class="verification-switch__indicator" />
-      </button>
-      <button
-        type="button"
-        class="verification-switch__btn"
-        :class="{ 'verification-switch__btn--active': activeSection === 'payout' }"
-        @click="activeSection = 'payout'">
-        <span>{{ t("cabinet.profile.components.tab-user-verification.sections.payout") }}</span>
-        <span
-          v-if="hasUnreadPayoutVerificationSignals"
-          class="verification-switch__indicator" />
-      </button>
-    </div>
-
-    <div
-      v-if="activeSection === 'client'"
-      class="w-full mb-10">
-      <div class="mb-5 flex items-start justify-between">
+    <div class="w-full mb-10">
+      <div class="mb-5 flex items-start justify-between gap-3">
         <UiTextH5>{{ t("cabinet.profile.components.tab-user-verification.titles.clientStatus") }}</UiTextH5>
 
         <button
           type="button"
-          @click="handleRefreshActiveSection"
+          @click="handleRefreshVerification"
           class="inline-flex items-center justify-center w-10 h-10 rounded-lg ring-1 ring-[var(--ui-primary-main)] text-[var(--ui-primary-main)] hover:bg-[var(--ui-primary-main)]/10 transition"
           :aria-label="t('cabinet.profile.components.tab-user-verification.refreshAria')">
           <UiIconUpdate :class="{ 'animate-spin': isLoading }" />
@@ -50,18 +25,19 @@
             <li
               v-for="item in items"
               :key="item.key"
-              class="grid grid-cols-[1fr,auto] items-center gap-3 py-3">
-              <div class="min-w-0 w-full">
-                <div class="flex flex-col w-full">
-                  <div class="font-medium truncate">{{ item.title }}</div>
-                  <div
-                    class="verification-status-info"
-                    v-if="item.subtitle">
-                    {{ item.subtitle }}
-                  </div>
+              class="verification-item">
+              <div class="verification-item__content">
+                <div class="font-medium truncate">{{ item.title }}</div>
+
+                <div
+                  v-if="item.subtitle"
+                  class="verification-status-info">
+                  {{ item.subtitle }}
                 </div>
 
-                <div class="verification-admin-comment">
+                <div
+                  v-if="hasAdminComment(item.comment.value)"
+                  class="verification-admin-comment">
                   <div class="text-xs font-semibold mb-1 opacity-80">
                     {{ t("cabinet.profile.components.tab-user-verification.adminCommentLabel") }}
                   </div>
@@ -69,102 +45,34 @@
                 </div>
               </div>
 
-              <div class="flex items-center justify-end gap-1">
-                <component
-                  :is="iconByStatus(item.status.value)"
-                  class="shrink-0" />
-                <span
-                  class="rounded-md text-xs font-medium"
-                  :class="pillClass(item.status.value)">
-                  {{ textByStatus(item.status.value) }}
-                </span>
-              </div>
+              <div class="verification-item__side">
+                <div class="verification-item__status">
+                  <component
+                    :is="iconByStatus(item.status.value)"
+                    class="shrink-0" />
+                  <span
+                    class="rounded-md text-xs font-medium"
+                    :class="pillClass(item.status.value)">
+                    {{ textByStatus(item.status.value) }}
+                  </span>
+                </div>
 
-              <button
-                v-if="item.key === 'email' && canResendEmail"
-                type="button"
-                class="verification-resend"
-                :disabled="isResendingEmail"
-                @click="handleResendEmailVerification">
-                {{
-                  isResendingEmail
-                    ? t("cabinet.profile.components.tab-user-verification.resendingEmail")
-                    : t("cabinet.profile.components.tab-user-verification.resendEmail")
-                }}
-              </button>
+                <button
+                  v-if="item.key === 'email' && canResendEmail"
+                  type="button"
+                  class="verification-resend"
+                  :disabled="isResendingEmail"
+                  @click="handleResendEmailVerification">
+                  {{
+                    isResendingEmail
+                      ? t("cabinet.profile.components.tab-user-verification.resendingEmail")
+                      : t("cabinet.profile.components.tab-user-verification.resendEmail")
+                  }}
+                </button>
+              </div>
             </li>
           </ul>
         </div>
-      </PanelDefault>
-    </div>
-
-    <div
-      v-else
-      class="w-full mb-10">
-      <div class="mb-5 flex items-start justify-between">
-        <UiTextH5>{{ t("cabinet.profile.components.tab-user-verification.titles.payoutStatus") }}</UiTextH5>
-
-        <button
-          type="button"
-          @click="handleRefreshActiveSection"
-          class="inline-flex items-center justify-center w-10 h-10 rounded-lg ring-1 ring-[var(--ui-primary-main)] text-[var(--ui-primary-main)] hover:bg-[var(--ui-primary-main)]/10 transition"
-          :aria-label="t('cabinet.profile.components.tab-user-verification.refreshAria')">
-          <UiIconUpdate :class="{ 'animate-spin': isPaymentDetailsLoading }" />
-        </button>
-      </div>
-
-      <PanelDefault class="p-5 relative">
-        <div
-          v-if="isPaymentDetailsLoading"
-          class="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-[var(--ui-background)]/40 backdrop-blur-sm">
-          <UiIconSpinnerDefault />
-        </div>
-
-        <div
-          v-if="paymentDetailsRows.length === 0 && !isPaymentDetailsLoading"
-          class="payout-empty">
-          {{ t("cabinet.profile.components.tab-user-verification.emptyPayout") }}
-        </div>
-
-        <ul
-          v-else
-          class="payout-list">
-          <li
-            v-for="row in paymentDetailsRows"
-            :key="row.id"
-            class="payout-list__item">
-            <div class="payout-list__main">
-              <div class="payout-list__name">
-                {{ row.name || t("cabinet.profile.components.tab-user-verification.unnamedPaymentDetail") }}
-              </div>
-              <div class="payout-list__meta">
-                {{
-                  row.paymentSystemName || t("cabinet.profile.components.tab-user-verification.paymentSystemFallback")
-                }}
-                ·
-                {{ row.updatedAt || "-" }}
-              </div>
-              <div class="payout-list__meta">
-                {{
-                  t("cabinet.profile.components.tab-user-verification.documentsCount", { count: row.documentsCount })
-                }}
-              </div>
-              <div
-                v-if="row.adminComment"
-                class="payout-list__comment">
-                {{ row.adminComment }}
-              </div>
-            </div>
-            <div class="payout-list__status">
-              <component :is="iconByStatus(row.status)" />
-              <span
-                class="rounded-md text-xs font-medium"
-                :class="pillClass(row.status)">
-                {{ textByStatus(row.status) }}
-              </span>
-            </div>
-          </li>
-        </ul>
       </PanelDefault>
     </div>
 
@@ -233,8 +141,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
-  import { useRoute } from "vue-router";
+  import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
 
@@ -254,21 +161,9 @@
   import { useAuthStore } from "~/stores/authStore";
 
   type VerificationStatus = "approved" | "pending" | "rejected";
-  type VerificationSectionTab = "client" | "payout";
 
   interface ClientVerificationUnreadNotification {
     id: string;
-    section: VerificationSectionTab;
-  }
-
-  interface PaymentDetailsRow {
-    id: string;
-    name: string;
-    paymentSystemName: string;
-    status: VerificationStatus;
-    updatedAt: string;
-    documentsCount: number;
-    adminComment: string;
   }
 
   const { t } = useI18n({ useScope: "global" });
@@ -277,18 +172,14 @@
   const appCore = useAppCore();
   const authStore = useAuthStore();
   const notificationsStore = useNotificationsStore();
-  const route = useRoute();
   const isLoading = ref(false);
-  const isPaymentDetailsLoading = ref(false);
   const isResendingEmail = ref(false);
-  const activeSection = ref<VerificationSectionTab>("client");
   const HISTORY_CHUNK_SIZE = 5;
   const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
   const CLIENT_NOTIFICATIONS_MARKED_EVENT = "client-notifications-marked";
   const VERIFICATION_NOTIFICATION_TYPE = "verification.status-updated";
 
-  let verificationRequestData = reactive<Record<string, any>>({});
-  const paymentDetailsRows = ref<PaymentDetailsRow[]>([]);
+  const verificationRequestData = reactive<Record<string, any>>({});
   const unreadVerificationNotifications = ref<ClientVerificationUnreadNotification[]>([]);
   const visibleHistoryCount = ref(HISTORY_CHUNK_SIZE);
 
@@ -322,12 +213,7 @@
       comment: infoComment,
     },
   ]);
-  const hasUnreadClientVerificationSignals = computed(() =>
-    unreadVerificationNotifications.value.some(item => item.section === "client")
-  );
-  const hasUnreadPayoutVerificationSignals = computed(() =>
-    unreadVerificationNotifications.value.some(item => item.section === "payout")
-  );
+
   const canResendEmail = computed(() => emailStatus.value !== "approved" && !authStore.user?.email_verified_at);
 
   const historyRows = computed(() => {
@@ -336,39 +222,42 @@
       return [];
     }
 
-    return apiRows.map((r, i) => ({
-      id: r.id ?? i,
-      name: r.name ?? r.message ?? "",
-      date: r.date ?? r.created_at ?? "",
-      status: normalizeStatus(r.status),
+    return apiRows.map((row, index) => ({
+      id: row.id ?? index,
+      name: row.name ?? row.message ?? "",
+      date: row.date ?? row.created_at ?? "",
+      status: normalizeStatus(row.status),
     }));
   });
+
   const visibleHistoryRows = computed(() => historyRows.value.slice(0, visibleHistoryCount.value));
   const hasMoreHistoryRows = computed(() => visibleHistoryRows.value.length < historyRows.value.length);
+
   const loadMoreHistoryRows = () => {
     visibleHistoryCount.value += HISTORY_CHUNK_SIZE;
   };
 
-  const iconByStatus = (s: VerificationStatus) =>
-    s === "approved" ? UiIconSuccessFull : s === "pending" ? UiIconWarningFull : UiIconDangerFull;
+  const iconByStatus = (status: VerificationStatus) =>
+    status === "approved" ? UiIconSuccessFull : status === "pending" ? UiIconWarningFull : UiIconDangerFull;
 
-  const textByStatus = (s: VerificationStatus) =>
-    s === "approved"
+  const textByStatus = (status: VerificationStatus) =>
+    status === "approved"
       ? t("cabinet.profile.components.tab-user-verification.statuses.approved")
-      : s === "pending"
+      : status === "pending"
         ? t("cabinet.profile.components.tab-user-verification.statuses.pending")
         : t("cabinet.profile.components.tab-user-verification.statuses.rejected");
 
-  const pillClass = (s: VerificationStatus) => ({
-    "border-[var(--color-success)]/30 text-[var(--color-success)] bg-[var(--color-success)]/10": s === "approved",
-    "border-[var(--color-warning)]/30 text-[var(--color-warning)] bg-[var(--color-warning)]/10": s === "pending",
-    "border-[var(--color-danger)]/30 text-[var(--color-danger)] bg-[var(--color-danger)]/10": s === "rejected",
+  const pillClass = (status: VerificationStatus) => ({
+    "border-[var(--color-success)]/30 text-[var(--color-success)] bg-[var(--color-success)]/10":
+      status === "approved",
+    "border-[var(--color-warning)]/30 text-[var(--color-warning)] bg-[var(--color-warning)]/10":
+      status === "pending",
+    "border-[var(--color-danger)]/30 text-[var(--color-danger)] bg-[var(--color-danger)]/10":
+      status === "rejected",
   });
 
-  const formatAdminComment = (value: unknown): string => {
-    const text = String(value ?? "").trim();
-    return text !== "" ? text : "-";
-  };
+  const formatAdminComment = (value: unknown): string => String(value ?? "").trim();
+  const hasAdminComment = (value: unknown): boolean => formatAdminComment(value) !== "";
 
   const normalizeStatus = (value: unknown): VerificationStatus => {
     if (typeof value !== "string") {
@@ -387,29 +276,9 @@
     return "pending";
   };
 
-  const parseVerificationSection = (value: unknown): VerificationSectionTab | null => {
-    const normalized = String(value ?? "")
-      .trim()
-      .toLowerCase();
-
-    if (normalized === "client" || normalized === "payout") {
-      return normalized;
-    }
-
-    return null;
-  };
-
-  const mapNotificationStepToSection = (value: unknown): VerificationSectionTab => {
-    const normalized = String(value ?? "")
-      .trim()
-      .toLowerCase();
-    return normalized === "payout" ? "payout" : "client";
-  };
-
   const normalizeUnreadVerificationNotification = (raw: any): ClientVerificationUnreadNotification | null => {
     const id = String(raw?.id ?? "").trim();
     const type = String(raw?.type ?? "").trim();
-    const payload = raw?.payload && typeof raw.payload === "object" ? raw.payload : null;
     const readAt = raw?.read_at ? String(raw.read_at).trim() : "";
     const isUnread = raw?.is_unread ?? readAt === "";
 
@@ -417,10 +286,7 @@
       return null;
     }
 
-    return {
-      id,
-      section: mapNotificationStepToSection(payload?.step),
-    };
+    return { id };
   };
 
   const upsertUnreadVerificationNotification = (notification: ClientVerificationUnreadNotification): void => {
@@ -460,8 +326,9 @@
     }
   };
 
-  const loadVerificationData = async () => {
+  const loadVerificationData = async (): Promise<void> => {
     isLoading.value = true;
+
     try {
       const response = await appCore.verifications.get();
       Object.assign(verificationRequestData, response.data.data);
@@ -479,68 +346,8 @@
     }
   };
 
-  const loadPayoutVerificationData = async () => {
-    isPaymentDetailsLoading.value = true;
-
-    try {
-      const response = await appCore.paymentDetails.get({
-        page: 1,
-        perPage: 100,
-        orderBy: "updated_at",
-        orderDirection: "desc",
-      });
-
-      const rows = Array.isArray(response?.data?.data?.data) ? response.data.data.data : [];
-      paymentDetailsRows.value = rows.map((row: any) => ({
-        id: String(row.id),
-        name: String(row.name ?? ""),
-        paymentSystemName: String(
-          row.payment_system_name ?? row?.payment_system?.name ?? row?.paymentSystem?.name ?? ""
-        ),
-        status: normalizeStatus(row.status),
-        updatedAt: String(row.updated_at ?? ""),
-        documentsCount: Array.isArray(row.documents)
-          ? row.documents.length
-          : row.documents && typeof row.documents === "object"
-            ? Object.keys(row.documents).length
-            : 0,
-        adminComment: String(row.admin_comment ?? ""),
-      }));
-    } finally {
-      setTimeout(() => (isPaymentDetailsLoading.value = false), 250);
-    }
-  };
-
-  const handleRefreshActiveSection = async () => {
-    if (activeSection.value === "payout") {
-      await loadPayoutVerificationData();
-      return;
-    }
-
-    await loadVerificationData();
-  };
-
-  const handleResendEmailVerification = async (): Promise<void> => {
-    if (isResendingEmail.value) return;
-    isResendingEmail.value = true;
-
-    try {
-      await appCore.auth.resendEmailVerification();
-      toast.success(t("cabinet.profile.components.tab-user-verification.resendEmailSent"));
-      const response = await appCore.auth.getAuthUser();
-      authStore.setUser(response.data);
-    } catch {
-      toast.error(t("cabinet.profile.components.tab-user-verification.resendEmailError"));
-    } finally {
-      isResendingEmail.value = false;
-    }
-  };
-
-  const markVisibleVerificationNotificationsSeen = async (section: VerificationSectionTab): Promise<void> => {
-    const targetIds = unreadVerificationNotifications.value
-      .filter(item => item.section === section)
-      .map(item => item.id);
-
+  const markUnreadVerificationNotificationsSeen = async (): Promise<void> => {
+    const targetIds = unreadVerificationNotifications.value.map(item => item.id);
     if (targetIds.length === 0) {
       return;
     }
@@ -568,6 +375,30 @@
     });
   };
 
+  const handleRefreshVerification = async (): Promise<void> => {
+    await loadVerificationData();
+    await markUnreadVerificationNotificationsSeen();
+  };
+
+  const handleResendEmailVerification = async (): Promise<void> => {
+    if (isResendingEmail.value) {
+      return;
+    }
+
+    isResendingEmail.value = true;
+
+    try {
+      await appCore.auth.resendEmailVerification();
+      toast.success(t("cabinet.profile.components.tab-user-verification.resendEmailSent"));
+      const response = await appCore.auth.getAuthUser();
+      authStore.setUser(response.data);
+    } catch {
+      toast.error(t("cabinet.profile.components.tab-user-verification.resendEmailError"));
+    } finally {
+      isResendingEmail.value = false;
+    }
+  };
+
   const handleClientNotificationReceived = (payload?: { notification?: any }): void => {
     const notification = normalizeUnreadVerificationNotification(payload?.notification ?? null);
     if (!notification) {
@@ -576,60 +407,23 @@
 
     upsertUnreadVerificationNotification(notification);
 
-    if (notification.section === "payout") {
-      void loadPayoutVerificationData().then(async () => {
-        if (activeSection.value === "payout") {
-          await nextTick();
-          await markVisibleVerificationNotificationsSeen("payout");
-        }
-      });
-
-      return;
-    }
-
     void loadVerificationData().then(async () => {
-      if (activeSection.value === "client") {
-        await nextTick();
-        await markVisibleVerificationNotificationsSeen("client");
-      }
+      await nextTick();
+      await markUnreadVerificationNotificationsSeen();
     });
   };
 
   const handleMarkedNotifications = (payload?: { ids?: string[] }) => {
     const ids = Array.isArray(payload?.ids) ? payload.ids.map(item => String(item ?? "").trim()).filter(Boolean) : [];
-
     removeUnreadVerificationNotifications(ids);
   };
-
-  watch(activeSection, section => {
-    void nextTick(async () => {
-      await markVisibleVerificationNotificationsSeen(section);
-    });
-  });
-
-  watch(
-    () => route.query.verificationSection,
-    value => {
-      const section = parseVerificationSection(value);
-      if (!section) {
-        return;
-      }
-
-      activeSection.value = section;
-    }
-  );
 
   onMounted(async () => {
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
 
-    const initialSection = parseVerificationSection(route.query.verificationSection);
-    if (initialSection) {
-      activeSection.value = initialSection;
-    }
-
-    await Promise.all([loadVerificationData(), loadPayoutVerificationData(), loadUnreadVerificationNotifications()]);
-    await markVisibleVerificationNotificationsSeen(activeSection.value);
+    await Promise.all([loadVerificationData(), loadUnreadVerificationNotifications()]);
+    await markUnreadVerificationNotificationsSeen();
   });
 
   onBeforeUnmount(() => {
@@ -639,58 +433,31 @@
 </script>
 
 <style scoped>
-  .verification-switch {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
+  .verification-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+    padding: 14px 0;
   }
 
-  .verification-switch__btn {
-    position: relative;
+  .verification-item__content {
+    min-width: 0;
+  }
+
+  .verification-item__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    align-self: start;
+  }
+
+  .verification-item__status {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    height: 34px;
-    border-radius: 999px;
-    padding: 0 14px;
-    border: 1px solid var(--color-stroke-ui-light);
-    background: var(--ui-background-panel);
-    color: var(--ui-text-secondary);
-    font-size: 13px;
-    font-weight: 600;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
-  }
-
-  .verification-switch__btn:hover {
-    border-color: var(--ui-primary-main);
-    color: var(--ui-text-main);
-  }
-
-  .verification-switch__btn--active {
-    border-color: var(--ui-primary-main);
-    color: var(--ui-text-main);
-    background: color-mix(in srgb, var(--ui-primary-main) 22%, transparent);
-  }
-
-  .verification-switch__indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    background: var(--color-warning);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-warning) 18%, transparent);
-  }
-
-  .payout-empty {
-    border: 1px dashed var(--color-stroke-ui-light);
-    border-radius: 10px;
-    padding: 12px;
-    color: var(--ui-text-secondary);
+    justify-content: flex-end;
+    gap: 6px;
   }
 
   .verification-status-info {
@@ -713,8 +480,6 @@
   }
 
   .verification-resend {
-    grid-column: 1 / -1;
-    justify-self: flex-start;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -739,91 +504,29 @@
     opacity: 0.65;
   }
 
-  .payout-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .payout-list__item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-height: 50px;
-    border: 1px solid var(--color-stroke-ui-light);
-    border-radius: 10px;
-    padding: 10px 12px;
-    background: var(--ui-background-panel);
-  }
-
-  .payout-list__main {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .payout-list__name {
-    font-weight: 600;
-    color: var(--ui-text-main);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .payout-list__meta {
-    color: var(--ui-text-secondary);
-    font-size: 12px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .payout-list__status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-
-  .payout-list__comment {
-    margin-top: 4px;
-    padding: 6px 8px;
-    border-radius: 8px;
-    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 50%, var(--color-stroke-ui-light));
-    background: color-mix(in srgb, var(--ui-primary-main) 9%, var(--ui-background-panel));
-    color: var(--ui-text-main);
-    font-size: 12px;
-    line-height: 1.4;
-    white-space: pre-wrap;
-  }
-
   .verification-history__load-more {
     display: block;
-    margin: 12px auto 0;
+    margin: 14px auto 0;
     border: 0;
     background: transparent;
     color: var(--ui-text-secondary);
     font-size: 13px;
     font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    transition:
-      color 0.2s ease,
-      opacity 0.2s ease;
-  }
-
-  .verification-history__load-more:hover {
-    color: var(--ui-text-main);
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
   }
 
-  @media (max-width: 768px) {
-    .payout-list__item {
-      flex-direction: column;
+  @media (max-width: 767px) {
+    .verification-item {
+      grid-template-columns: 1fr;
+    }
+
+    .verification-item__side {
       align-items: flex-start;
+    }
+
+    .verification-item__status {
+      justify-content: flex-start;
     }
   }
 </style>

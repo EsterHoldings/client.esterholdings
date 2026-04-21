@@ -1224,7 +1224,9 @@
           "full": "Largura total",
           "table": "Lista"
         },
-        "verificationRequired": "A verificação do perfil e dos documentos é necessária para criar ou atualizar dados de pagamento para saques."
+        "verificationRequired": "Conclua a verificação do perfil e dos documentos para criar ou atualizar os dados de pagamento para saques.",
+        "verifyTitle": "Conclua a verificação para criar dados de pagamento",
+        "verifySubtitle": "Após a verificação do perfil e dos documentos, você poderá criar dados de pagamento e usá-los em solicitações de saque."
       },
       "nothingToShow": "Nada a mostrar =(",
       "pagination": {

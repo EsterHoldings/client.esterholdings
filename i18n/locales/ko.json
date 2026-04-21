@@ -1224,7 +1224,9 @@
           "full": "전폭",
           "table": "목록"
         },
-        "verificationRequired": "출금용 결제 정보를 생성하거나 수정하려면 프로필 및 서류 인증이 필요합니다."
+        "verificationRequired": "출금용 결제 정보를 생성하거나 업데이트하려면 프로필 및 서류 인증을 완료하세요.",
+        "verifyTitle": "결제 정보를 만들려면 인증을 완료하세요",
+        "verifySubtitle": "프로필 및 서류 인증이 완료되면 결제 정보를 생성하고 출금 요청에 사용할 수 있습니다."
       },
       "nothingToShow": "표시할 내용이 없습니다 =(",
       "pagination": {

@@ -223,7 +223,9 @@
       </div>
     </div>
 
-    <div class="profile-documents-reminder">
+    <div
+      v-if="!hasUploadedDocuments"
+      class="profile-documents-reminder">
       <div>
         <div class="profile-documents-reminder__title">
           {{ t("cabinet.profile.components.tab-general.documentsReminder.title") }}
@@ -302,6 +304,7 @@
 
   const isLoading = ref(false);
   const isLoadingAllComponentData = ref(false);
+  const hasUploadedDocuments = ref(false);
 
   const selectedCountryId = ref<string | null>(null);
   const selectedStateId = ref<string | null>(null);
@@ -928,6 +931,16 @@
     }
   };
 
+  const loadDocumentsReminderState = async (): Promise<void> => {
+    try {
+      const response = await appCore.documents.get();
+      const rows = Array.isArray(response?.data?.data?.data) ? response.data.data.data : [];
+      hasUploadedDocuments.value = rows.length > 0;
+    } catch {
+      hasUploadedDocuments.value = false;
+    }
+  };
+
   watch(
     [profileInfoVerificationState, profileInfoVerificationLabel],
     ([state, label]) => {
@@ -959,7 +972,7 @@
       formData.city_id = null;
 
       await initializeLocationSelections(formData.country, formData.state, formData.city);
-      await loadProfileInfoVerificationStatus();
+      await Promise.all([loadProfileInfoVerificationStatus(), loadDocumentsReminderState()]);
     } finally {
       isLoadingAllComponentData.value = false;
     }

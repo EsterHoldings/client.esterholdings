@@ -1224,7 +1224,9 @@
           "full": "Pleine largeur",
           "table": "Liste"
         },
-        "verificationRequired": "La vérification du profil et des documents est requise pour créer ou mettre à jour les coordonnées de paiement pour les retraits."
+        "verificationRequired": "Terminez la vérification du profil et des documents pour créer ou mettre à jour des coordonnées de paiement pour les retraits.",
+        "verifyTitle": "Terminez la vérification pour créer des coordonnées de paiement",
+        "verifySubtitle": "Après la vérification du profil et des documents, vous pourrez créer des coordonnées de paiement et les utiliser pour les demandes de retrait."
       },
       "nothingToShow": "Rien à afficher =(",
       "pagination": {

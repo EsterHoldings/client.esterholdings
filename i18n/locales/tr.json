@@ -1224,7 +1224,9 @@
           "full": "Tam genişlik",
           "table": "Liste"
         },
-        "verificationRequired": "Para çekme ödeme bilgilerini oluşturmak veya güncellemek için profil ve belge doğrulaması gereklidir."
+        "verificationRequired": "Çekim için ödeme bilgileri oluşturmak veya güncellemek üzere profil ve belge doğrulamasını tamamlayın.",
+        "verifyTitle": "Ödeme bilgileri oluşturmak için doğrulamayı tamamlayın",
+        "verifySubtitle": "Profil ve belge doğrulamasından sonra ödeme bilgileri oluşturabilir ve bunları çekim taleplerinde kullanabilirsiniz."
       },
       "nothingToShow": "Gösterilecek bir şey yok =(",
       "pagination": {
