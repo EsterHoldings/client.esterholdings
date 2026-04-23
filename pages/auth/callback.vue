@@ -9,6 +9,19 @@
   const localePath = useLocalePath();
   const authStore = useAuthStore();
 
+  const normalizeRedirectPath = (redirect: string | null): string => {
+    const rawRedirect = String(redirect ?? "").trim();
+    if (rawRedirect === "" || !rawRedirect.startsWith("/")) {
+      return localePath("/");
+    }
+
+    if (/^\/[a-z]{2}(\/|$)/i.test(rawRedirect)) {
+      return rawRedirect;
+    }
+
+    return localePath(rawRedirect);
+  };
+
   onMounted(async () => {
     const queryParams = new URLSearchParams(window.location.search);
     const hashParams = new URLSearchParams(window.location.hash.slice(1));
@@ -38,7 +51,7 @@
         await authStore.initAuth(true);
         localStorage.removeItem("social_login_type");
 
-        const nextPath = typeof redirect === "string" && redirect.startsWith("/") ? redirect : localePath("/");
+        const nextPath = normalizeRedirectPath(redirect);
         await router.replace(nextPath);
       } catch (e) {
         authStore.setAccessToken("");
@@ -55,7 +68,7 @@
         await authStore.initAuth(true);
         localStorage.removeItem("social_login_type");
 
-        const nextPath = typeof redirect === "string" && redirect.startsWith("/") ? redirect : localePath("/");
+        const nextPath = normalizeRedirectPath(redirect);
         await router.replace(nextPath);
       } catch (e) {
         authStore.setAccessToken("");
