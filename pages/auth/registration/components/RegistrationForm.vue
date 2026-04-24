@@ -95,8 +95,6 @@
 
     <div class="registration-form__social-links">
       <GoogleLogin/>
-      <FacebookLogin/>
-      <LinkedInLogin/>
     </div>
 
   </div>
@@ -115,9 +113,7 @@ import {
   resetValidationRegistrationForm
 } from "../composables/validation";
 
-import FacebookLogin from "../../login/components/FacebookLogin.vue";
 import GoogleLogin from "../../login/components/GoogleLogin.vue";
-import LinkedInLogin from "../../login/components/LinkedInLogin.vue";
 import UiButtonPrimary from "~/components/ui/UiButtonPrimary.vue";
 import UiFormControl from "~/components/ui/UiFormControl.vue";
 import UiInput from "~/components/ui/UiInput.vue";

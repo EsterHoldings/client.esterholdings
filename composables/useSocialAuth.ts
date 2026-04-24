@@ -1,10 +1,11 @@
 import { navigateTo, useRoute, useRuntimeConfig } from "nuxt/app";
 import { useLocalePath } from "#imports";
+import { ref } from "vue";
 import { useToast } from "vue-toastification";
 import { useAppCore } from "~/composables/useAppCore";
 import { useAuthStore } from "~/stores/authStore";
 
-type SocialProvider = "google" | "facebook" | "linkedin";
+type SocialProvider = "google";
 
 type SocialLoginMessage = {
   type?: "social-login:success" | "social-login:error";
@@ -22,6 +23,8 @@ export function useSocialAuth() {
   const route = useRoute();
   const toast = useToast();
   const { public: pub } = useRuntimeConfig();
+  const isLoading = ref(false);
+  const activeProvider = ref<SocialProvider | null>(null);
 
   const resolvePostLoginTarget = (): string => {
     if (process.client) {
@@ -83,7 +86,13 @@ export function useSocialAuth() {
       return;
     }
 
+    if (isLoading.value) {
+      return;
+    }
+
     rememberPostLoginTarget();
+    isLoading.value = true;
+    activeProvider.value = provider;
 
     try {
       const response = await appCore.auth.doSocialRedirect(provider, {
@@ -107,58 +116,81 @@ export function useSocialAuth() {
 
       const allowedOrigins = resolveAllowedOrigins();
       let popupWatcher: ReturnType<typeof window.setInterval> | null = null;
+      await new Promise<void>((resolve) => {
+        const finalize = () => {
+          isLoading.value = false;
+          activeProvider.value = null;
+        };
 
-      const cleanup = () => {
-        window.removeEventListener("message", popupListener);
-        if (popupWatcher) {
-          window.clearInterval(popupWatcher);
-          popupWatcher = null;
-        }
-      };
+        const cleanup = () => {
+          window.removeEventListener("message", popupListener);
+          if (popupWatcher) {
+            window.clearInterval(popupWatcher);
+            popupWatcher = null;
+          }
+        };
 
-      const popupListener = async (event: MessageEvent<SocialLoginMessage>) => {
-        if (!allowedOrigins.has(event.origin)) {
-          return;
-        }
-
-        const payload = event.data;
-        if (!payload || !payload.type?.startsWith("social-login:")) {
-          return;
-        }
-
-        cleanup();
-
-        if (payload.type === "social-login:error") {
-          clearPostLoginTarget();
-          toast.error(payload.message || "Social login failed.");
-          return;
-        }
-
-        if (!payload.access_token) {
-          clearPostLoginTarget();
-          toast.error("Social login did not return an access token.");
-          return;
-        }
-
-        await finishLogin(payload.access_token);
-      };
-
-      window.addEventListener("message", popupListener);
-
-      popupWatcher = window.setInterval(() => {
-        if (popup.closed) {
+        const done = () => {
           cleanup();
-        }
-      }, 500);
+          finalize();
+          resolve();
+        };
+
+        const popupListener = async (event: MessageEvent<SocialLoginMessage>) => {
+          if (!allowedOrigins.has(event.origin)) {
+            return;
+          }
+
+          const payload = event.data;
+          if (!payload || !payload.type?.startsWith("social-login:")) {
+            return;
+          }
+
+          if (payload.type === "social-login:error") {
+            clearPostLoginTarget();
+            toast.error(payload.message || "Social login failed.");
+            done();
+            return;
+          }
+
+          if (!payload.access_token) {
+            clearPostLoginTarget();
+            toast.error("Social login did not return an access token.");
+            done();
+            return;
+          }
+
+          try {
+            await finishLogin(payload.access_token);
+          } finally {
+            done();
+          }
+        };
+
+        window.addEventListener("message", popupListener);
+
+        popupWatcher = window.setInterval(() => {
+          if (popup.closed) {
+            done();
+          }
+        }, 500);
+      });
     } catch (error) {
       clearPostLoginTarget();
+      isLoading.value = false;
+      activeProvider.value = null;
       console.error(`Social login failed for ${provider}:`, error);
       toast.error("Social login failed.");
+    } finally {
+      isLoading.value = false;
+      activeProvider.value = null;
     }
   };
 
   return {
+    activeProvider,
     finishLogin,
+    isLoading,
     startSocialLogin,
   };
 }

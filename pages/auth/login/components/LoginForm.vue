@@ -64,16 +64,12 @@
 
     <div class="login-form__social-links">
       <GoogleLogin />
-      <FacebookLogin />
-      <LinkedInLogin />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import FacebookLogin from "./FacebookLogin.vue";
   import GoogleLogin from "./GoogleLogin.vue";
-  import LinkedInLogin from "./LinkedInLogin.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiFormControl from "~/components/ui/UiFormControl.vue";
   import UiInput from "~/components/ui/UiInput.vue";
