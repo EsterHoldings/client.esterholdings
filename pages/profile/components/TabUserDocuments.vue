@@ -1,6 +1,6 @@
 <template>
   <div class="user-docs-page text-[var(--ui-text-main)] space-y-6">
-    <UiTextH5>{{ t("cabinet.profile.components.tab-user-documents.title") }}</UiTextH5>
+    <UiTextH5 v-if="showTitle">{{ t("cabinet.profile.components.tab-user-documents.title") }}</UiTextH5>
 
     <div class="documents-info-panel">
       <div class="documents-info-panel__title">
@@ -160,7 +160,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, onBeforeUnmount, onMounted } from "vue";
+  import { reactive, ref, onBeforeUnmount, onMounted, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import useApi from "~/composables/useApi";
   import { extractApiErrorMessageWithTranslator } from "~/composables/useApiMessages";
@@ -188,6 +188,27 @@
     _previewUrl?: string;
   }
 
+  type DocumentsVerificationStatus = "" | "pending" | "approved" | "rejected";
+
+  withDefaults(
+    defineProps<{
+      showTitle?: boolean;
+    }>(),
+    {
+      showTitle: true,
+    }
+  );
+
+  const emit = defineEmits<{
+    (
+      e: "documents-state-change",
+      payload: {
+        hasDocuments: boolean;
+        verificationStatus: DocumentsVerificationStatus;
+      }
+    ): void;
+  }>();
+
   const selectedFiles = reactive<FileWithPreview[]>([]);
   const docNumbers = reactive<string[]>([]);
   const uploadProgress = reactive<number[]>([]);
@@ -207,7 +228,7 @@
   let documents = reactive<any[]>([]);
 
   let verificationAddressStatus = ref<"pending" | "approved" | "rejected">("pending");
-  let verificationDocumentsStatus = ref<"pending" | "approved" | "rejected">("pending");
+  let verificationDocumentsStatus = ref<DocumentsVerificationStatus>("");
 
   let verificationAddressComment = ref("");
   let verificationDocumentsComment = ref("");
@@ -409,6 +430,17 @@
     await loadVerificationData();
     await loadUploadedDocuments();
   };
+
+  watch(
+    [() => documents.length, verificationDocumentsStatus],
+    ([documentsCount, status]) => {
+      emit("documents-state-change", {
+        hasDocuments: documentsCount > 0,
+        verificationStatus: status,
+      });
+    },
+    { immediate: true }
+  );
 
   onBeforeUnmount(() => {
     selectedFiles.forEach(f => {

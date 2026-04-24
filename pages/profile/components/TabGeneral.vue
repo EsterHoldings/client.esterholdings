@@ -1,251 +1,358 @@
 <template>
-  <div class="profile__tab--general">
+  <div class="profile__tab--general space-y-6">
     <div class="profile__tab--general__profile-data__photo">
       <div class="profile__tab--general__profile-data__photo-uploader">
         <UserPhotoUploader />
       </div>
     </div>
 
-    <div class="profile__tab--general_wrapper">
-      <div class="profile__tab--general__profile-data">
-        <div class="profile__tab--general__profile-data__form">
-          <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.email')"
-            :errors="validatorUserDataForm.errorsFormData.email.errors">
-            <UiInput
-              :isLoading="isLoadingAllComponentData"
-              type="text"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.email')"
-              :value="formData.email"
-              :disabled="true"
-              :isDirty="validatorUserDataForm.errorsFormData.email.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.email.errors.length > 0"
-              @blur="validatorUserDataForm.doValidateField('email', formData.email)" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.first_name')"
-            :errors="validatorUserDataForm.errorsFormData.first_name.errors">
-            <UiInput
-              :isLoading="isLoadingAllComponentData"
-              type="text"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.first_name')"
-              :value="formData.first_name"
-              :disabled="isProfileFormReadonly"
-              :isDirty="validatorUserDataForm.errorsFormData.first_name.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.first_name.errors.length > 0"
-              @input="validatorUserDataForm.doValidateField('first_name', $event)"
-              @blur="validatorUserDataForm.doValidateField('first_name', $event.target.value)" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.last_name')"
-            :errors="validatorUserDataForm.errorsFormData.last_name.errors">
-            <UiInput
-              :isLoading="isLoadingAllComponentData"
-              type="text"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.last_name')"
-              :value="formData.last_name"
-              :disabled="isProfileFormReadonly"
-              :isDirty="validatorUserDataForm.errorsFormData.last_name.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.last_name.errors.length > 0"
-              @input="validatorUserDataForm.doValidateField('last_name', $event)"
-              @blur="validatorUserDataForm.doValidateField('last_name', $event.target.value)" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.mid_name')"
-            :errors="validatorUserDataForm.errorsFormData.mid_name.errors">
-            <UiInput
-              :isLoading="isLoadingAllComponentData"
-              type="text"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.mid_name')"
-              :value="formData.mid_name"
-              :disabled="isProfileFormReadonly"
-              :isDirty="validatorUserDataForm.errorsFormData.mid_name.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.mid_name.errors.length > 0"
-              @input="validatorUserDataForm.doValidateField('mid_name', $event)"
-              @blur="validatorUserDataForm.doValidateField('mid_name', $event.target.value)" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.birthdate')"
-            :errors="validatorUserDataForm.errorsFormData.birthdate.errors">
-            <UiInputDate
-              :isLoading="isLoadingAllComponentData"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.birthdate')"
-              :value="formData.birthdate"
-              :disabled="isProfileFormReadonly"
-              :isDirty="validatorUserDataForm.errorsFormData.birthdate.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.birthdate.errors.length > 0"
-              @input="handleInputBirthday"
-              @blur="handleInputBirthday" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.phone')"
-            :errors="validatorUserDataForm.errorsFormData.phone.errors">
-            <UiInputPhone
-              type="number"
-              :isLoading="isLoadingAllComponentData"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.phone')"
-              v-model="formData.phone"
-              :disabled="isProfileFormReadonly"
-              :isDirty="validatorUserDataForm.errorsFormData.phone.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.phone.errors.length > 0"
-              @input="validatorUserDataForm.doValidateField('phone', $event)"
-              @blur="validatorUserDataForm.doValidateField('phone', formData.phone)" />
-          </UiFormControl>
-        </div>
-      </div>
-
-      <div class="profile__tab--general__profile-data--additional">
-        <div class="profile__tab--general__profile-data--additional__form">
-          <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.country')"
-            :errors="validatorUserDataForm.errorsFormData.country.errors">
-            <UiSelect
-              :data="countryOptions"
-              :value="selectedCountryId"
-              :disabled="isProfileFormReadonly"
-              :isLoading="isLoadingAllComponentData || countriesMeta.loading"
-              :isDirty="validatorUserDataForm.errorsFormData.country.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.country.errors.length > 0"
-              searchable
-              :searchValue="countrySearch"
-              :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.country')"
-              @change="handleCountryChange"
-              @blur="handleCountryBlur"
-              @search="handleCountrySearch"
-              @loadMore="loadMoreCountries" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.state')"
-            :errors="validatorUserDataForm.errorsFormData.state.errors">
-            <UiSelect
-              :data="stateOptions"
-              :value="selectedStateId"
-              :disabled="isProfileFormReadonly || !selectedCountryId"
-              :isLoading="isLoadingAllComponentData || statesMeta.loading"
-              :isDirty="validatorUserDataForm.errorsFormData.state.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.state.errors.length > 0"
-              searchable
-              :searchValue="stateSearch"
-              :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.state')"
-              @change="handleStateChange"
-              @blur="handleStateBlur"
-              @search="handleStateSearch"
-              @loadMore="loadMoreStates" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.city')"
-            :errors="validatorUserDataForm.errorsFormData.city.errors">
-            <UiSelect
-              :data="cityOptions"
-              :value="selectedCityId"
-              :disabled="isProfileFormReadonly || !selectedStateId"
-              :isLoading="isLoadingAllComponentData || citiesMeta.loading"
-              :isDirty="validatorUserDataForm.errorsFormData.city.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.city.errors.length > 0"
-              searchable
-              :searchValue="citySearch"
-              :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.city')"
-              @change="handleCityChange"
-              @blur="handleCityBlur"
-              @search="handleCitySearch"
-              @loadMore="loadMoreCities" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.address')"
-            :errors="validatorUserDataForm.errorsFormData.address.errors">
-            <UiInput
-              :isLoading="isLoadingAllComponentData"
-              type="text"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.address')"
-              :value="formData.address"
-              :disabled="isProfileFormReadonly"
-              :isDirty="validatorUserDataForm.errorsFormData.address.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.address.errors.length > 0"
-              @input="validatorUserDataForm.doValidateField('address', $event)"
-              @blur="validatorUserDataForm.doValidateField('address', $event.target.value)" />
-          </UiFormControl>
-
-          <UiFormControl
-            class="profile__tab--general__profile-data--additional__form__field"
-            required
-            :label="t('cabinet.profile.components.tab-general.labels.postal_code')"
-            :errors="validatorUserDataForm.errorsFormData.postal_code.errors">
-            <UiInput
-              :isLoading="isLoadingAllComponentData"
-              type="text"
-              :placeholder="t('cabinet.profile.components.tab-general.placeholders.postal_code')"
-              :value="formData.postal_code"
-              :disabled="isProfileFormReadonly"
-              :isDirty="validatorUserDataForm.errorsFormData.postal_code.isDirty"
-              :isInvalid="validatorUserDataForm.errorsFormData.postal_code.errors.length > 0"
-              @input="validatorUserDataForm.doValidateField('postal_code', $event)"
-              @blur="validatorUserDataForm.doValidateField('postal_code', $event.target.value)" />
-          </UiFormControl>
-
-          <div class="profile__tab--general__profile-data--additional__form__field__save_btn">
-            <UiButtonDefault
-              state="info--outline"
-              :isLoading="isLoading"
-              @click="handleProfileFormAction">
-              <UiIconSpinnerDefault v-if="isLoading" />
-              <span v-if="!isLoading">{{ profileActionButtonText }}</span>
-            </UiButtonDefault>
+    <div class="grid gap-3 lg:grid-cols-2">
+      <button
+        type="button"
+        class="flex min-w-0 items-start justify-between gap-4 rounded-2xl border p-4 text-left transition"
+        :class="
+          currentStep === 'profile'
+            ? 'border-[var(--ui-primary-main)] bg-[color-mix(in_srgb,var(--ui-primary-main)_10%,var(--ui-background-panel))]'
+            : 'border-[var(--color-stroke-ui-dark)] bg-[var(--ui-background-panel)] hover:border-[var(--ui-primary-main)]/50'
+        "
+        @click="goToProfileStep">
+        <div class="flex min-w-0 items-start gap-3">
+          <div
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+            :class="
+              currentStep === 'profile'
+                ? 'bg-[var(--ui-primary-main)] text-white'
+                : 'bg-[color-mix(in_srgb,var(--ui-primary-main)_14%,transparent)] text-[var(--ui-primary-main)]'
+            ">
+            1
+          </div>
+          <div class="min-w-0">
+            <div class="font-semibold text-[var(--ui-text-main)]">
+              {{ t("cabinet.profile.index.tabs.general") }}
+            </div>
+            <div class="mt-1 text-sm text-[var(--ui-text-secondary)]">
+              {{ profileStepDescription }}
+            </div>
           </div>
         </div>
-      </div>
+        <div class="shrink-0 text-xs font-medium" :class="stepStateClass(profileInfoVerificationState)">
+          {{ profileStepStatusLabel }}
+        </div>
+      </button>
+
+      <button
+        type="button"
+        class="flex min-w-0 items-start justify-between gap-4 rounded-2xl border p-4 text-left transition"
+        :class="
+          currentStep === 'documents'
+            ? 'border-[var(--ui-primary-main)] bg-[color-mix(in_srgb,var(--ui-primary-main)_10%,var(--ui-background-panel))]'
+            : 'border-[var(--color-stroke-ui-dark)] bg-[var(--ui-background-panel)] hover:border-[var(--ui-primary-main)]/50'
+        "
+        @click="goToDocumentsStep">
+        <div class="flex min-w-0 items-start gap-3">
+          <div
+            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold"
+            :class="
+              currentStep === 'documents'
+                ? 'bg-[var(--ui-primary-main)] text-white'
+                : 'bg-[color-mix(in_srgb,var(--ui-primary-main)_14%,transparent)] text-[var(--ui-primary-main)]'
+            ">
+            2
+          </div>
+          <div class="min-w-0">
+            <div class="font-semibold text-[var(--ui-text-main)]">
+              {{ t("cabinet.profile.index.tabs.documents") }}
+            </div>
+            <div class="mt-1 text-sm text-[var(--ui-text-secondary)]">
+              {{ documentsStepDescription }}
+            </div>
+          </div>
+        </div>
+        <div class="shrink-0 text-xs font-medium" :class="stepStateClass(documentsStepState)">
+          {{ documentsStepStatusLabel }}
+        </div>
+      </button>
     </div>
 
-    <div
-      v-if="!hasUploadedDocuments"
-      class="profile-documents-reminder">
-      <div>
-        <div class="profile-documents-reminder__title">
-          {{ t("cabinet.profile.components.tab-general.documentsReminder.title") }}
+    <Transition
+      enter-active-class="transition ease-linear duration-150"
+      enter-from-class="opacity-0 translate-y-2"
+      enter-to-class="opacity-100 translate-y-0"
+      leave-active-class="transition ease-linear duration-100"
+      leave-from-class="opacity-100 translate-y-0"
+      leave-to-class="opacity-0 -translate-y-2"
+      mode="out-in">
+      <div
+        v-if="currentStep === 'profile'"
+        key="profile-step"
+        class="space-y-6">
+        <div class="profile__tab--general_wrapper">
+          <div class="profile__tab--general__profile-data">
+            <div class="profile__tab--general__profile-data__form">
+              <UiFormControl
+                class="profile__tab--general__profile-data__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.email')"
+                :errors="validatorUserDataForm.errorsFormData.email.errors">
+                <UiInput
+                  :isLoading="isLoadingAllComponentData"
+                  type="text"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.email')"
+                  :value="formData.email"
+                  :disabled="true"
+                  :isDirty="validatorUserDataForm.errorsFormData.email.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.email.errors.length > 0"
+                  @blur="validatorUserDataForm.doValidateField('email', formData.email)" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.first_name')"
+                :errors="validatorUserDataForm.errorsFormData.first_name.errors">
+                <UiInput
+                  :isLoading="isLoadingAllComponentData"
+                  type="text"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.first_name')"
+                  :value="formData.first_name"
+                  :disabled="isProfileFormReadonly"
+                  :isDirty="validatorUserDataForm.errorsFormData.first_name.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.first_name.errors.length > 0"
+                  @input="validatorUserDataForm.doValidateField('first_name', $event)"
+                  @blur="validatorUserDataForm.doValidateField('first_name', $event.target.value)" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.last_name')"
+                :errors="validatorUserDataForm.errorsFormData.last_name.errors">
+                <UiInput
+                  :isLoading="isLoadingAllComponentData"
+                  type="text"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.last_name')"
+                  :value="formData.last_name"
+                  :disabled="isProfileFormReadonly"
+                  :isDirty="validatorUserDataForm.errorsFormData.last_name.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.last_name.errors.length > 0"
+                  @input="validatorUserDataForm.doValidateField('last_name', $event)"
+                  @blur="validatorUserDataForm.doValidateField('last_name', $event.target.value)" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.mid_name')"
+                :errors="validatorUserDataForm.errorsFormData.mid_name.errors">
+                <UiInput
+                  :isLoading="isLoadingAllComponentData"
+                  type="text"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.mid_name')"
+                  :value="formData.mid_name"
+                  :disabled="isProfileFormReadonly"
+                  :isDirty="validatorUserDataForm.errorsFormData.mid_name.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.mid_name.errors.length > 0"
+                  @input="validatorUserDataForm.doValidateField('mid_name', $event)"
+                  @blur="validatorUserDataForm.doValidateField('mid_name', $event.target.value)" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.birthdate')"
+                :errors="validatorUserDataForm.errorsFormData.birthdate.errors">
+                <UiInputDate
+                  :isLoading="isLoadingAllComponentData"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.birthdate')"
+                  :value="formData.birthdate"
+                  :disabled="isProfileFormReadonly"
+                  :isDirty="validatorUserDataForm.errorsFormData.birthdate.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.birthdate.errors.length > 0"
+                  @input="handleInputBirthday"
+                  @blur="handleInputBirthday" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.phone')"
+                :errors="validatorUserDataForm.errorsFormData.phone.errors">
+                <UiInputPhone
+                  type="number"
+                  :isLoading="isLoadingAllComponentData"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.phone')"
+                  v-model="formData.phone"
+                  :disabled="isProfileFormReadonly"
+                  :isDirty="validatorUserDataForm.errorsFormData.phone.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.phone.errors.length > 0"
+                  @input="validatorUserDataForm.doValidateField('phone', $event)"
+                  @blur="validatorUserDataForm.doValidateField('phone', formData.phone)" />
+              </UiFormControl>
+            </div>
+          </div>
+
+          <div class="profile__tab--general__profile-data--additional">
+            <div class="profile__tab--general__profile-data--additional__form">
+              <UiFormControl
+                class="profile__tab--general__profile-data--additional__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.country')"
+                :errors="validatorUserDataForm.errorsFormData.country.errors">
+                <UiSelect
+                  :data="countryOptions"
+                  :value="selectedCountryId"
+                  :disabled="isProfileFormReadonly"
+                  :isLoading="isLoadingAllComponentData || countriesMeta.loading"
+                  :isDirty="validatorUserDataForm.errorsFormData.country.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.country.errors.length > 0"
+                  searchable
+                  :searchValue="countrySearch"
+                  :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.country')"
+                  @change="handleCountryChange"
+                  @blur="handleCountryBlur"
+                  @search="handleCountrySearch"
+                  @loadMore="loadMoreCountries" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data--additional__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.state')"
+                :errors="validatorUserDataForm.errorsFormData.state.errors">
+                <UiSelect
+                  :data="stateOptions"
+                  :value="selectedStateId"
+                  :disabled="isProfileFormReadonly || !selectedCountryId"
+                  :isLoading="isLoadingAllComponentData || statesMeta.loading"
+                  :isDirty="validatorUserDataForm.errorsFormData.state.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.state.errors.length > 0"
+                  searchable
+                  :searchValue="stateSearch"
+                  :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.state')"
+                  @change="handleStateChange"
+                  @blur="handleStateBlur"
+                  @search="handleStateSearch"
+                  @loadMore="loadMoreStates" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data--additional__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.city')"
+                :errors="validatorUserDataForm.errorsFormData.city.errors">
+                <UiSelect
+                  :data="cityOptions"
+                  :value="selectedCityId"
+                  :disabled="isProfileFormReadonly || !selectedStateId"
+                  :isLoading="isLoadingAllComponentData || citiesMeta.loading"
+                  :isDirty="validatorUserDataForm.errorsFormData.city.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.city.errors.length > 0"
+                  searchable
+                  :searchValue="citySearch"
+                  :searchPlaceholder="t('cabinet.profile.components.tab-general.placeholders.city')"
+                  @change="handleCityChange"
+                  @blur="handleCityBlur"
+                  @search="handleCitySearch"
+                  @loadMore="loadMoreCities" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data--additional__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.address')"
+                :errors="validatorUserDataForm.errorsFormData.address.errors">
+                <UiInput
+                  :isLoading="isLoadingAllComponentData"
+                  type="text"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.address')"
+                  :value="formData.address"
+                  :disabled="isProfileFormReadonly"
+                  :isDirty="validatorUserDataForm.errorsFormData.address.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.address.errors.length > 0"
+                  @input="validatorUserDataForm.doValidateField('address', $event)"
+                  @blur="validatorUserDataForm.doValidateField('address', $event.target.value)" />
+              </UiFormControl>
+
+              <UiFormControl
+                class="profile__tab--general__profile-data--additional__form__field"
+                required
+                :label="t('cabinet.profile.components.tab-general.labels.postal_code')"
+                :errors="validatorUserDataForm.errorsFormData.postal_code.errors">
+                <UiInput
+                  :isLoading="isLoadingAllComponentData"
+                  type="text"
+                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.postal_code')"
+                  :value="formData.postal_code"
+                  :disabled="isProfileFormReadonly"
+                  :isDirty="validatorUserDataForm.errorsFormData.postal_code.isDirty"
+                  :isInvalid="validatorUserDataForm.errorsFormData.postal_code.errors.length > 0"
+                  @input="validatorUserDataForm.doValidateField('postal_code', $event)"
+                  @blur="validatorUserDataForm.doValidateField('postal_code', $event.target.value)" />
+              </UiFormControl>
+
+              <div class="profile__tab--general__profile-data--additional__form__field__save_btn">
+                <UiButtonDefault
+                  state="info--outline"
+                  :isLoading="isLoading"
+                  @click="handleProfileFormAction">
+                  <UiIconSpinnerDefault v-if="isLoading" />
+                  <span v-if="!isLoading">{{ profileActionButtonText }}</span>
+                </UiButtonDefault>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="profile-documents-reminder__text">
-          {{ t("cabinet.profile.components.tab-general.documentsReminder.text") }}
+
+        <div class="profile-documents-reminder">
+          <div>
+            <div class="profile-documents-reminder__title">
+              {{ t("cabinet.profile.components.tab-general.documentsReminder.title") }}
+            </div>
+            <div class="profile-documents-reminder__text">
+              {{ t("cabinet.profile.components.tab-general.documentsReminder.text") }}
+            </div>
+          </div>
+          <UiButtonDefault
+            state="info--small"
+            class="profile-documents-reminder__button"
+            @click="goToDocumentsStep">
+            {{ t("cabinet.profile.components.tab-general.documentsReminder.button") }}
+          </UiButtonDefault>
         </div>
       </div>
-      <UiButtonDefault
-        state="info--small"
-        class="profile-documents-reminder__button"
-        @click="emit('select-documents-tab')">
-        {{ t("cabinet.profile.components.tab-general.documentsReminder.button") }}
-      </UiButtonDefault>
-    </div>
+
+      <div
+        v-else
+        key="documents-step"
+        class="space-y-4">
+        <div class="profile-documents-reminder !m-0">
+          <div>
+            <div class="profile-documents-reminder__title">
+              {{ t("cabinet.profile.components.tab-user-documents.info.title") }}
+            </div>
+            <div class="profile-documents-reminder__text">
+              {{ t("cabinet.profile.components.tab-user-documents.info.text") }}
+            </div>
+          </div>
+          <UiButtonDefault
+            state="info--outline"
+            class="profile-documents-reminder__button"
+            @click="goToProfileStep">
+            {{ t("cabinet.profile.index.tabs.general") }}
+          </UiButtonDefault>
+        </div>
+
+        <TabUserDocuments
+          :showTitle="false"
+          @documents-state-change="handleDocumentsStateChange" />
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
   import { computed, onMounted, reactive, ref, watch } from "vue";
+  import { useRoute } from "#imports";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import useAppCore from "~/composables/useAppCore";
@@ -260,6 +367,7 @@
   import UiInputPhone from "~/components/ui/UiInputPhone.vue";
   import UiSelect from "~/components/ui/UiSelect.vue";
   import UserPhotoUploader from "~/components/block/uploaders/UserPhotoUploader.vue";
+  import TabUserDocuments from "~/pages/profile/components/TabUserDocuments.vue";
 
   interface SelectOption {
     id: string;
@@ -286,6 +394,8 @@
   }
 
   type ProfileInfoVerificationState = "initial" | "pending" | "approved" | "rejected";
+  type DocumentsVerificationStatus = "" | "pending" | "approved" | "rejected";
+  type ProfileWizardStep = "profile" | "documents";
 
   const emit = defineEmits<{
     (
@@ -295,16 +405,18 @@
         label: string;
       }
     ): void;
-    (e: "select-documents-tab"): void;
   }>();
 
   const { t, locale } = useI18n();
   const toast = useToast();
   const appCore = useAppCore();
+  const route = useRoute();
 
   const isLoading = ref(false);
   const isLoadingAllComponentData = ref(false);
   const hasUploadedDocuments = ref(false);
+  const verificationDocumentsStatus = ref<DocumentsVerificationStatus>("");
+  const currentStep = ref<ProfileWizardStep>("profile");
 
   const selectedCountryId = ref<string | null>(null);
   const selectedStateId = ref<string | null>(null);
@@ -347,6 +459,40 @@
     }
     return `${title}: ${resolveText("cabinet.dashboard.accountVerification.statuses.inProgress", "In progress")}`;
   });
+  const profileStepDescription = computed(() =>
+    resolveText(
+      "cabinet.profile.components.tab-general.documentsReminder.text",
+      "Fill in and save your profile data before moving to document verification."
+    )
+  );
+  const documentsStepState = computed<ProfileInfoVerificationState>(() => {
+    if (verificationDocumentsStatus.value === "approved" || verificationDocumentsStatus.value === "rejected") {
+      return verificationDocumentsStatus.value;
+    }
+
+    return hasUploadedDocuments.value ? "pending" : "initial";
+  });
+  const documentsStepDescription = computed(() =>
+    resolveText(
+      "cabinet.profile.components.tab-user-documents.info.text",
+      "Upload documents to confirm the profile data entered on the previous step."
+    )
+  );
+  const resolveStepStatusLabel = (state: ProfileInfoVerificationState): string => {
+    if (state === "approved") {
+      return resolveText("cabinet.dashboard.accountVerification.statuses.done", "Done");
+    }
+    if (state === "rejected") {
+      return resolveText("cabinet.dashboard.accountVerification.statuses.required", "Required");
+    }
+    if (state === "pending") {
+      return resolveText("cabinet.dashboard.accountVerification.statuses.inProgress", "In progress");
+    }
+
+    return resolveText("cabinet.profile.generalVerification.notStarted", "Not started");
+  };
+  const profileStepStatusLabel = computed(() => resolveStepStatusLabel(profileInfoVerificationState.value));
+  const documentsStepStatusLabel = computed(() => resolveStepStatusLabel(documentsStepState.value));
   const isProfileReviewPending = computed(
     () => profileInfoVerificationState.value !== "initial" && profileInfoReviewState.value === "pending"
   );
@@ -363,6 +509,31 @@
 
   const normalizeText = (value: string): string => value.trim().toLowerCase();
   const activeLocale = computed(() => String(locale.value || "").trim() || undefined);
+  const stepStateClass = (state: ProfileInfoVerificationState): string => {
+    if (state === "approved") return "text-[var(--color-success)]";
+    if (state === "rejected") return "text-[var(--color-danger)]";
+    if (state === "pending") return "text-[var(--color-warning)]";
+    return "text-[var(--ui-text-secondary)]";
+  };
+  const goToProfileStep = (): void => {
+    currentStep.value = "profile";
+  };
+  const goToDocumentsStep = (): void => {
+    currentStep.value = "documents";
+  };
+  const syncStepFromRoute = (value: unknown): void => {
+    const nextStep = String(value ?? "")
+      .trim()
+      .toLowerCase();
+    currentStep.value = nextStep === "documents" ? "documents" : "profile";
+  };
+  const handleDocumentsStateChange = (payload: {
+    hasDocuments: boolean;
+    verificationStatus: DocumentsVerificationStatus;
+  }): void => {
+    hasUploadedDocuments.value = payload.hasDocuments;
+    verificationDocumentsStatus.value = payload.verificationStatus;
+  };
 
   const normalizeBirthdateValue = (value: unknown): string => {
     const rawValue = String(value ?? "").trim();
@@ -783,6 +954,7 @@
   const handleSubmit = async () => {
     try {
       isLoading.value = true;
+      const shouldMoveToDocumentsStep = currentStep.value === "profile" && !hasUploadedDocuments.value;
 
       const toNullableInt = (value: string | null): number | null => {
         if (!value) {
@@ -803,6 +975,9 @@
       validatorUserDataForm.clearFieldsErrors();
       await loadProfileInfoVerificationStatus();
       isEditingSubmittedProfile.value = false;
+      if (shouldMoveToDocumentsStep) {
+        currentStep.value = "documents";
+      }
       toast.success(t("cabinet.profile.components.tab-general.success"));
     } catch (e: any) {
       const responseStatus = e?.response?.status;
@@ -863,6 +1038,15 @@
     if (["rejected", "failed", "declined", "required"].includes(normalized)) return "rejected";
     return "pending";
   };
+  const normalizeOptionalVerificationStatus = (value: unknown): DocumentsVerificationStatus => {
+    if (typeof value !== "string") return "";
+    const normalized = value.trim().toLowerCase();
+    if (normalized === "") return "";
+    if (["approved", "done", "success", "verified"].includes(normalized)) return "approved";
+    if (["rejected", "failed", "declined", "required"].includes(normalized)) return "rejected";
+    if (["pending", "new", "unprocessed", "viewed", "seen"].includes(normalized)) return "pending";
+    return "";
+  };
 
   const normalizeProfileReviewState = (value: unknown): "" | "pending" | "approved" | "rejected" => {
     if (typeof value !== "string") return "";
@@ -917,16 +1101,19 @@
       const response = await appCore.verifications.get();
       const verificationRecord = response?.data && typeof response.data === "object" ? response.data : {};
       const rawStatus = verificationRecord?.data?.info?.verification_status;
+      const rawDocumentsStatus = verificationRecord?.data?.documents?.verification_status;
       const rawReviewStatus =
         verificationRecord?.data?.info?.review_status ?? verificationRecord?.data?.request_review_state ?? "";
       const hasRequestActivity = hasVerificationActivity(verificationRecord);
       profileInfoVerificationState.value = resolveProfileInfoVerificationState(rawStatus, hasRequestActivity);
+      verificationDocumentsStatus.value = normalizeOptionalVerificationStatus(rawDocumentsStatus);
       profileInfoReviewState.value = normalizeProfileReviewState(rawReviewStatus);
       if (!isProfileReviewPending.value) {
         isEditingSubmittedProfile.value = false;
       }
     } catch {
       profileInfoVerificationState.value = hasProfileInfoInput() ? "pending" : "initial";
+      verificationDocumentsStatus.value = "";
       profileInfoReviewState.value = "";
     }
   };
@@ -945,6 +1132,13 @@
     [profileInfoVerificationState, profileInfoVerificationLabel],
     ([state, label]) => {
       emit("profile-info-status-change", { state, label });
+    },
+    { immediate: true }
+  );
+  watch(
+    () => route.query?.tab,
+    value => {
+      syncStepFromRoute(value);
     },
     { immediate: true }
   );

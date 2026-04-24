@@ -46,8 +46,7 @@
                   <component
                     :is="tabsList[activeTabIndex].component"
                     :key="activeTabIndex"
-                    @profile-info-status-change="handleProfileInfoStatusChange"
-                    @select-documents-tab="handleActiveTab(1)" />
+                    @profile-info-status-change="handleProfileInfoStatusChange" />
                 </div>
               </div>
             </Transition>
@@ -70,12 +69,10 @@
   import TabsAsList from "~/components/block/tabs/TabsAsList.vue";
 
   import TabGeneral from "~/pages/profile/components/TabGeneral.vue";
-  import TabUserDocuments from "~/pages/profile/components/TabUserDocuments.vue";
   import TabChangePassword from "~/pages/profile/components/TabChangePassword.vue";
   import TabUserVerification from "~/pages/profile/components/TabUserVerification.vue";
 
   import UiIconSetting from "~/components/ui/UiIconSetting.vue";
-  import UiIconDocuments from "~/components/ui/UiIconDocuments.vue";
   import UiIconUser from "~/components/ui/UiIconUser.vue";
 
   definePageMeta({
@@ -85,7 +82,7 @@
 
   const { t } = useI18n();
 
-  const STORAGE_KEY = "profileActiveTab";
+  const STORAGE_KEY = "profileActiveTabV2";
   const activeTabIndex = ref(0);
   const route = useRoute();
   type ProfileInfoVerificationState = "initial" | "pending" | "approved" | "rejected";
@@ -97,11 +94,6 @@
       icon: UiIconSetting,
       label: t("cabinet.profile.index.tabs.general"),
       component: TabGeneral,
-    },
-    {
-      icon: UiIconDocuments,
-      label: t("cabinet.profile.index.tabs.documents"),
-      component: TabUserDocuments,
     },
     {
       icon: UiIconUser,
@@ -117,11 +109,11 @@
 
   const tabIndexByQueryKey: Record<string, number> = {
     general: 0,
-    documents: 1,
-    verification: 2,
-    security: 3,
-    password: 3,
-    change_password: 3,
+    documents: 0,
+    verification: 1,
+    security: 2,
+    password: 2,
+    change_password: 2,
   };
 
   const resolveTabIndexFromQuery = (value: unknown): number | null => {
