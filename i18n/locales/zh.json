@@ -802,7 +802,8 @@
       "referral_system": "推荐系统",
       "billing": "交易",
       "support": "支持",
-      "settings": "设置"
+      "settings": "设置",
+      "profile_verification": "个人资料与验证"
     },
     "header": {
       "notifications": "通知",

@@ -94,15 +94,63 @@
                 required
                 :label="t('cabinet.profile.components.tab-general.labels.email')"
                 :errors="validatorUserDataForm.errorsFormData.email.errors">
-                <UiInput
-                  :isLoading="isLoadingAllComponentData"
-                  type="text"
-                  :placeholder="t('cabinet.profile.components.tab-general.placeholders.email')"
-                  :value="formData.email"
-                  :disabled="true"
-                  :isDirty="validatorUserDataForm.errorsFormData.email.isDirty"
-                  :isInvalid="validatorUserDataForm.errorsFormData.email.errors.length > 0"
-                  @blur="validatorUserDataForm.doValidateField('email', formData.email)" />
+                <div class="profile-email-field">
+                  <UiInput
+                    :isLoading="isLoadingAllComponentData"
+                    type="text"
+                    :placeholder="t('cabinet.profile.components.tab-general.placeholders.email')"
+                    :value="formData.email"
+                    :disabled="true"
+                    :isDirty="validatorUserDataForm.errorsFormData.email.isDirty"
+                    :isInvalid="validatorUserDataForm.errorsFormData.email.errors.length > 0"
+                    @blur="validatorUserDataForm.doValidateField('email', formData.email)" />
+
+                  <div class="profile-email-field__status">
+                    <UiInfoHint
+                      :label="emailVerificationTitle"
+                      :content="emailVerificationTooltip">
+                      <template #trigger="{ isOpen, toggle, open, close }">
+                        <button
+                          type="button"
+                          class="profile-email-field__status-trigger"
+                          :class="isEmailVerified ? 'is-approved' : 'is-pending'"
+                          :aria-label="emailVerificationTitle"
+                          :aria-expanded="isOpen"
+                          @click.stop="toggle"
+                          @focus="open"
+                          @blur="close">
+                          <UiIconSuccessFull
+                            v-if="isEmailVerified"
+                            class="h-[16px] w-[16px]" />
+                          <UiIconWarningFull
+                            v-else
+                            class="h-[16px] w-[16px]" />
+                        </button>
+                      </template>
+                    </UiInfoHint>
+                  </div>
+                </div>
+
+                <div class="profile-email-field__meta">
+                  <span
+                    class="profile-email-field__meta-status"
+                    :class="isEmailVerified ? 'is-approved' : 'is-pending'">
+                    {{ emailVerificationStatusText }}
+                  </span>
+
+                  <button
+                    v-if="canResendEmail"
+                    type="button"
+                    class="profile-email-field__meta-action"
+                    :disabled="isResendingEmail"
+                    @click="handleResendEmailVerification">
+                    {{
+                      isResendingEmail
+                        ? t("cabinet.profile.components.tab-user-verification.resendingEmail")
+                        : t("cabinet.profile.components.tab-user-verification.resendEmail")
+                    }}
+                  </button>
+                </div>
               </UiFormControl>
 
               <UiFormControl
@@ -303,7 +351,9 @@
           </div>
         </div>
 
-        <div class="profile-documents-reminder">
+        <div
+          v-if="!hasUploadedDocuments"
+          class="profile-documents-reminder">
           <div>
             <div class="profile-documents-reminder__title">
               {{ t("cabinet.profile.components.tab-general.documentsReminder.title") }}
@@ -347,6 +397,10 @@
           @documents-state-change="handleDocumentsStateChange" />
       </div>
     </Transition>
+
+    <div class="px-5 pb-5">
+      <TabUserVerification history-only />
+    </div>
   </div>
 </template>
 
@@ -357,17 +411,22 @@
   import { useToast } from "vue-toastification";
   import useAppCore from "~/composables/useAppCore";
   import { localizeApiErrorsWithTranslator } from "~/composables/useApiMessages";
+  import { useAuthStore } from "~/stores/authStore";
   import { formData } from "~/pages/profile/composables";
   import { validatorUserDataForm } from "~/pages/profile/composables/validation";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiFormControl from "~/components/ui/UiFormControl.vue";
+  import UiInfoHint from "~/components/ui/UiInfoHint.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+  import UiIconSuccessFull from "~/components/ui/UiIconSuccessFull.vue";
+  import UiIconWarningFull from "~/components/ui/UiIconWarningFull.vue";
   import UiInput from "~/components/ui/UiInput.vue";
   import UiInputDate from "~/components/ui/UiInputDate.vue";
   import UiInputPhone from "~/components/ui/UiInputPhone.vue";
   import UiSelect from "~/components/ui/UiSelect.vue";
   import UserPhotoUploader from "~/components/block/uploaders/UserPhotoUploader.vue";
   import TabUserDocuments from "~/pages/profile/components/TabUserDocuments.vue";
+  import TabUserVerification from "~/pages/profile/components/TabUserVerification.vue";
 
   interface SelectOption {
     id: string;
@@ -410,10 +469,12 @@
   const { t, locale } = useI18n();
   const toast = useToast();
   const appCore = useAppCore();
+  const authStore = useAuthStore();
   const route = useRoute();
 
   const isLoading = ref(false);
   const isLoadingAllComponentData = ref(false);
+  const isResendingEmail = ref(false);
   const hasUploadedDocuments = ref(false);
   const verificationDocumentsStatus = ref<DocumentsVerificationStatus>("");
   const currentStep = ref<ProfileWizardStep>("profile");
@@ -445,6 +506,21 @@
     const translated = t(key);
     return translated === key ? fallback : translated;
   };
+  const isEmailVerified = computed(() => Boolean(authStore.user?.email_verified_at));
+  const canResendEmail = computed(() => !isEmailVerified.value);
+  const emailVerificationTitle = computed(() =>
+    t("cabinet.profile.components.tab-user-verification.items.email.title")
+  );
+  const emailVerificationStatusText = computed(() =>
+    isEmailVerified.value
+      ? t("cabinet.profile.components.tab-user-verification.statuses.approved")
+      : t("cabinet.profile.components.tab-user-verification.statuses.pending")
+  );
+  const emailVerificationTooltip = computed(() =>
+    isEmailVerified.value
+      ? `${emailVerificationTitle.value}: ${t("cabinet.profile.components.tab-user-verification.statuses.approved")}`
+      : t("cabinet.profile.components.tab-user-verification.items.email.subtitle")
+  );
 
   const profileInfoVerificationLabel = computed(() => {
     const title = resolveText("cabinet.dashboard.accountVerification.steps.profile", "Profile data verification");
@@ -533,6 +609,28 @@
   }): void => {
     hasUploadedDocuments.value = payload.hasDocuments;
     verificationDocumentsStatus.value = payload.verificationStatus;
+  };
+  const refreshAuthUser = async (): Promise<void> => {
+    const response = await appCore.auth.getAuthUser();
+    authStore.setUser(response.data);
+  };
+
+  const handleResendEmailVerification = async (): Promise<void> => {
+    if (isResendingEmail.value) {
+      return;
+    }
+
+    isResendingEmail.value = true;
+
+    try {
+      await appCore.auth.resendEmailVerification();
+      toast.success(t("cabinet.profile.components.tab-user-verification.resendEmailSent"));
+      await refreshAuthUser();
+    } catch {
+      toast.error(t("cabinet.profile.components.tab-user-verification.resendEmailError"));
+    } finally {
+      isResendingEmail.value = false;
+    }
   };
 
   const normalizeBirthdateValue = (value: unknown): string => {
@@ -1136,7 +1234,7 @@
     { immediate: true }
   );
   watch(
-    () => route.query?.tab,
+    () => route.query?.step ?? route.query?.tab,
     value => {
       syncStepFromRoute(value);
     },
@@ -1280,6 +1378,87 @@
     white-space: nowrap;
   }
 
+  .profile-email-field {
+    position: relative;
+  }
+
+  .profile-email-field__status {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+  .profile-email-field__status-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    transition: opacity 0.2s ease;
+
+    &.is-approved {
+      color: var(--color-success);
+    }
+
+    &.is-pending {
+      color: var(--color-warning);
+    }
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.9;
+      outline: none;
+    }
+  }
+
+  .profile-email-field__meta {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .profile-email-field__meta-status {
+    font-size: 12px;
+    font-weight: 600;
+
+    &.is-approved {
+      color: var(--color-success);
+    }
+
+    &.is-pending {
+      color: var(--color-warning);
+    }
+  }
+
+  .profile-email-field__meta-action {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: var(--ui-primary-main);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s ease;
+
+    &:disabled {
+      cursor: wait;
+      opacity: 0.6;
+    }
+  }
+
+  .profile-email-field :deep(input) {
+    padding-right: 40px;
+  }
+
   @media (max-width: 1043px) {
     .profile__tab--general {
       &_wrapper {
@@ -1316,6 +1495,11 @@
       margin: 0 15px 15px;
       flex-direction: column;
       align-items: flex-start;
+    }
+
+    .profile-email-field__meta {
+      align-items: flex-start;
+      flex-direction: column;
     }
   }
 </style>

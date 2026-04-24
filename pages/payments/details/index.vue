@@ -1280,7 +1280,7 @@
   };
 
   const handleGoToVerification = async () => {
-    await navigateTo(localePath({ path: "/profile", query: { tab: "verification" } }));
+    await navigateTo(localePath({ path: "/profile" }));
   };
 
   const handleClickCreateNewPaymentDetail = async () => {

@@ -802,7 +802,8 @@
       "referral_system": "Système de parrainage",
       "billing": "Opérations",
       "support": "Support",
-      "settings": "Paramètres"
+      "settings": "Paramètres",
+      "profile_verification": "Profil et vérification"
     },
     "header": {
       "notifications": "Notifications",

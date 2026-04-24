@@ -96,20 +96,27 @@
 
 <template>
   <div
+    ref="triggerRef"
     class="info-hint"
     @mouseenter="open"
     @mouseleave="close">
-    <button
-      ref="triggerRef"
-      type="button"
-      class="info-hint__trigger"
-      :aria-label="props.label"
-      :aria-expanded="isOpen"
-      @click.stop="toggle"
-      @focus="open"
-      @blur="close">
-      <span aria-hidden="true">!</span>
-    </button>
+    <slot
+      name="trigger"
+      :is-open="isOpen"
+      :open="open"
+      :close="close"
+      :toggle="toggle">
+      <button
+        type="button"
+        class="info-hint__trigger"
+        :aria-label="props.label"
+        :aria-expanded="isOpen"
+        @click.stop="toggle"
+        @focus="open"
+        @blur="close">
+        <span aria-hidden="true">!</span>
+      </button>
+    </slot>
 
     <Teleport to="body">
       <transition name="info-hint">

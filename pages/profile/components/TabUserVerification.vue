@@ -1,6 +1,8 @@
 <template>
   <div class="tab-user-verification text-[var(--ui-text-main)]">
-    <div class="w-full mb-10">
+    <div
+      v-if="!props.historyOnly"
+      class="w-full mb-10">
       <div class="mb-5 flex items-start justify-between gap-3">
         <UiTextH5>{{ t("cabinet.profile.components.tab-user-verification.titles.clientStatus") }}</UiTextH5>
 
@@ -77,7 +79,17 @@
     </div>
 
     <div class="w-full">
-      <UiTextH5 class="mb-5">{{ t("cabinet.profile.components.tab-user-verification.titles.history") }}</UiTextH5>
+      <div class="mb-5 flex items-start justify-between gap-3">
+        <UiTextH5>{{ t("cabinet.profile.components.tab-user-verification.titles.history") }}</UiTextH5>
+
+        <button
+          type="button"
+          @click="handleRefreshVerification"
+          class="inline-flex items-center justify-center w-10 h-10 rounded-lg ring-1 ring-[var(--ui-primary-main)] text-[var(--ui-primary-main)] hover:bg-[var(--ui-primary-main)]/10 transition"
+          :aria-label="t('cabinet.profile.components.tab-user-verification.refreshAria')">
+          <UiIconUpdate :class="{ 'animate-spin': isLoading }" />
+        </button>
+      </div>
 
       <PanelDefault class="relative">
         <div
@@ -159,6 +171,15 @@
   import UiIconDangerFull from "~/components/ui/UiIconDangerFull.vue";
   import { useNotificationsStore } from "~/stores/notificationsStore";
   import { useAuthStore } from "~/stores/authStore";
+
+  const props = withDefaults(
+    defineProps<{
+      historyOnly?: boolean;
+    }>(),
+    {
+      historyOnly: false,
+    }
+  );
 
   type VerificationStatus = "approved" | "pending" | "rejected";
 

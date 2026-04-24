@@ -802,7 +802,8 @@
       "referral_system": "Реферальна система",
       "billing": "Транзакції",
       "support": "Підтримка",
-      "settings": "Налаштування"
+      "settings": "Налаштування",
+      "profile_verification": "Профіль і верифікація"
     },
     "header": {
       "notifications": "Сповіщення",

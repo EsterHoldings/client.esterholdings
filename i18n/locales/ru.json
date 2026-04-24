@@ -802,7 +802,8 @@
       "referral_system": "Реферальная система",
       "billing": "Транзакции",
       "support": "Поддержка",
-      "settings": "Настройки"
+      "settings": "Настройки",
+      "profile_verification": "Профиль и верификация"
     },
     "common": {
       "id": "ID",

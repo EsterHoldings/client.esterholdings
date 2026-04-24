@@ -84,10 +84,15 @@
       notificationsCount: props.supportUnreadCount,
     },
     {
-      title: t("cabinet.menu.settings"),
+      title: t("cabinet.menu.profile_verification"),
       to: addCurrentLocaleToPath("profile"),
-      icon: UiIconSetting,
+      icon: UiIconUser,
       notificationsCount: props.verificationNotificationsCount,
+    },
+    {
+      title: t("cabinet.menu.settings"),
+      to: addCurrentLocaleToPath("settings"),
+      icon: UiIconSetting,
     },
   ]);
 

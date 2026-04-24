@@ -802,7 +802,8 @@
       "referral_system": "추천 시스템",
       "billing": "거래",
       "support": "지원",
-      "settings": "설정"
+      "settings": "설정",
+      "profile_verification": "프로필 및 인증"
     },
     "header": {
       "notifications": "알림",

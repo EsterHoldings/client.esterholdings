@@ -287,10 +287,10 @@
 
   const resolveStepRoute = (key: VerificationStepKey): { path: string; query?: Record<string, string> } => {
     if (key === "documents") {
-      return { path: "/profile", query: { tab: "documents" } };
+      return { path: "/profile", query: { step: "documents" } };
     }
 
-    return { path: "/profile", query: { tab: "general" } };
+    return { path: "/profile" };
   };
 
   const handleOpenStep = async (key: VerificationStepKey): Promise<void> => {

@@ -802,7 +802,8 @@
       "referral_system": "Empfehlungssystem",
       "billing": "Transaktionen",
       "support": "Support",
-      "settings": "Einstellungen"
+      "settings": "Einstellungen",
+      "profile_verification": "Profil und Verifizierung"
     },
     "header": {
       "notifications": "Benachrichtigungen",

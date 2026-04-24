@@ -802,7 +802,8 @@
       "referral_system": "रेफरल सिस्टम",
       "billing": "लेनदेन",
       "support": "सहायता",
-      "settings": "सेटिंग्स"
+      "settings": "सेटिंग्स",
+      "profile_verification": "प्रोफ़ाइल और सत्यापन"
     },
     "header": {
       "notifications": "सूचनाएं",

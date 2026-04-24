@@ -802,7 +802,8 @@
       "referral_system": "Referral system",
       "billing": "Transactions",
       "support": "Support",
-      "settings": "Settings"
+      "settings": "Settings",
+      "profile_verification": "Profile verification"
     },
     "common": {
       "id": "ID",
