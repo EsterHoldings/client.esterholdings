@@ -405,11 +405,12 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, onMounted, reactive, ref, watch } from "vue";
+  import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
   import { useRoute } from "#imports";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import useAppCore from "~/composables/useAppCore";
+  import useEventBus from "~/composables/useEventBus";
   import { localizeApiErrorsWithTranslator } from "~/composables/useApiMessages";
   import { useAuthStore } from "~/stores/authStore";
   import { formData } from "~/pages/profile/composables";
@@ -471,6 +472,8 @@
   const appCore = useAppCore();
   const authStore = useAuthStore();
   const route = useRoute();
+  const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
+  const VERIFICATION_NOTIFICATION_TYPE = "verification.status-updated";
 
   const isLoading = ref(false);
   const isLoadingAllComponentData = ref(false);
@@ -613,6 +616,34 @@
   const refreshAuthUser = async (): Promise<void> => {
     const response = await appCore.auth.getAuthUser();
     authStore.setUser(response.data);
+  };
+
+  const syncFormDataWithAuthUser = async (data: Record<string, any> | null | undefined): Promise<void> => {
+    formData.email = data?.email || "";
+    formData.first_name = data?.first_name || "";
+    formData.mid_name = data?.mid_name || "";
+    formData.last_name = data?.last_name || "";
+    formData.birthdate = normalizeBirthdateValue(data?.birthdate);
+    formData.phone = data?.phone || "";
+    formData.country = data?.country || "";
+    formData.state = data?.state || "";
+    formData.city = data?.city || "";
+    formData.address = data?.address || "";
+    formData.postal_code = data?.postal_code || "";
+
+    formData.country_id = null;
+    formData.state_id = null;
+    formData.city_id = null;
+
+    await initializeLocationSelections(formData.country, formData.state, formData.city);
+  };
+
+  const reloadProfileFormState = async (): Promise<void> => {
+    const { data } = await appCore.auth.getAuthUser();
+    authStore.setUser(data);
+    validatorUserDataForm.clearFieldsErrors();
+    await syncFormDataWithAuthUser(data);
+    await Promise.all([loadProfileInfoVerificationStatus(), loadDocumentsReminderState()]);
   };
 
   const handleResendEmailVerification = async (): Promise<void> => {
@@ -1203,9 +1234,14 @@
       const rawReviewStatus =
         verificationRecord?.data?.info?.review_status ?? verificationRecord?.data?.request_review_state ?? "";
       const hasRequestActivity = hasVerificationActivity(verificationRecord);
+      const hasReviewActivity =
+        hasRequestActivity ||
+        Boolean(verificationRecord?.data?.request_viewed_at || verificationRecord?.data?.request_reviewed_at);
+      const normalizedReviewStatus = normalizeProfileReviewState(rawReviewStatus);
       profileInfoVerificationState.value = resolveProfileInfoVerificationState(rawStatus, hasRequestActivity);
       verificationDocumentsStatus.value = normalizeOptionalVerificationStatus(rawDocumentsStatus);
-      profileInfoReviewState.value = normalizeProfileReviewState(rawReviewStatus);
+      profileInfoReviewState.value =
+        normalizedReviewStatus === "pending" && !hasReviewActivity ? "" : normalizedReviewStatus;
       if (!isProfileReviewPending.value) {
         isEditingSubmittedProfile.value = false;
       }
@@ -1226,6 +1262,23 @@
     }
   };
 
+  const handleClientNotificationReceived = (payload?: { notification?: any }): void => {
+    const notification = payload?.notification;
+    const type = String(notification?.type ?? "").trim();
+    if (type !== VERIFICATION_NOTIFICATION_TYPE) {
+      return;
+    }
+
+    isEditingSubmittedProfile.value = false;
+
+    void reloadProfileFormState().then(() => {
+      const step = String(notification?.payload?.step ?? "").trim().toLowerCase();
+      if (step === "info") {
+        currentStep.value = "profile";
+      }
+    });
+  };
+
   watch(
     [profileInfoVerificationState, profileInfoVerificationLabel],
     ([state, label]) => {
@@ -1242,32 +1295,18 @@
   );
 
   onMounted(async () => {
+    useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     validatorUserDataForm.clearFieldsErrors();
     isLoadingAllComponentData.value = true;
     try {
-      const { data } = await appCore.auth.getAuthUser();
-
-      formData.email = data?.email || "";
-      formData.first_name = data?.first_name || "";
-      formData.mid_name = data?.mid_name || "";
-      formData.last_name = data?.last_name || "";
-      formData.birthdate = normalizeBirthdateValue(data?.birthdate);
-      formData.phone = data?.phone || "";
-      formData.country = data?.country || "";
-      formData.state = data?.state || "";
-      formData.city = data?.city || "";
-      formData.address = data?.address || "";
-      formData.postal_code = data?.postal_code || "";
-
-      formData.country_id = null;
-      formData.state_id = null;
-      formData.city_id = null;
-
-      await initializeLocationSelections(formData.country, formData.state, formData.city);
-      await Promise.all([loadProfileInfoVerificationStatus(), loadDocumentsReminderState()]);
+      await reloadProfileFormState();
     } finally {
       isLoadingAllComponentData.value = false;
     }
+  });
+
+  onBeforeUnmount(() => {
+    useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
   });
 </script>
 
