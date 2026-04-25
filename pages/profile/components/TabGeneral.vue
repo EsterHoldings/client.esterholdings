@@ -413,6 +413,7 @@
   import useEventBus from "~/composables/useEventBus";
   import { localizeApiErrorsWithTranslator } from "~/composables/useApiMessages";
   import { useAuthStore } from "~/stores/authStore";
+  import { useNotificationsStore } from "~/stores/notificationsStore";
   import { formData } from "~/pages/profile/composables";
   import { validatorUserDataForm } from "~/pages/profile/composables/validation";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
@@ -471,6 +472,7 @@
   const toast = useToast();
   const appCore = useAppCore();
   const authStore = useAuthStore();
+  const notificationsStore = useNotificationsStore();
   const route = useRoute();
   const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
   const VERIFICATION_NOTIFICATION_TYPE = "verification.status-updated";
@@ -504,6 +506,8 @@
   const profileInfoVerificationState = ref<ProfileInfoVerificationState>("initial");
   const profileInfoReviewState = ref<"" | "pending" | "approved" | "rejected">("");
   const isEditingSubmittedProfile = ref(false);
+  const lastSeenVerificationUnreadCount = ref(0);
+  const isRealtimeProfileReloading = ref(false);
 
   const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
@@ -644,6 +648,25 @@
     validatorUserDataForm.clearFieldsErrors();
     await syncFormDataWithAuthUser(data);
     await Promise.all([loadProfileInfoVerificationStatus(), loadDocumentsReminderState()]);
+  };
+
+  const triggerRealtimeProfileReload = async (options: { forceProfileStep?: boolean } = {}): Promise<void> => {
+    if (isRealtimeProfileReloading.value) {
+      return;
+    }
+
+    isRealtimeProfileReloading.value = true;
+
+    try {
+      isEditingSubmittedProfile.value = false;
+      await reloadProfileFormState();
+
+      if (options.forceProfileStep) {
+        currentStep.value = "profile";
+      }
+    } finally {
+      isRealtimeProfileReloading.value = false;
+    }
   };
 
   const handleResendEmailVerification = async (): Promise<void> => {
@@ -1269,15 +1292,28 @@
       return;
     }
 
-    isEditingSubmittedProfile.value = false;
-
-    void reloadProfileFormState().then(() => {
-      const step = String(notification?.payload?.step ?? "").trim().toLowerCase();
-      if (step === "info") {
-        currentStep.value = "profile";
-      }
+    const step = String(notification?.payload?.step ?? "").trim().toLowerCase();
+    void triggerRealtimeProfileReload({
+      forceProfileStep: step === "info",
     });
   };
+
+  watch(
+    () => notificationsStore.unreadVerificationNotificationsCount,
+    (nextValue, previousValue) => {
+      const normalizedNext = Number(nextValue ?? 0);
+      const normalizedPrevious =
+        previousValue === undefined ? lastSeenVerificationUnreadCount.value : Number(previousValue ?? 0);
+
+      lastSeenVerificationUnreadCount.value = normalizedNext;
+
+      if (normalizedNext <= normalizedPrevious) {
+        return;
+      }
+
+      void triggerRealtimeProfileReload();
+    }
+  );
 
   watch(
     [profileInfoVerificationState, profileInfoVerificationLabel],
@@ -1296,6 +1332,7 @@
 
   onMounted(async () => {
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
+    lastSeenVerificationUnreadCount.value = Number(notificationsStore.unreadVerificationNotificationsCount ?? 0);
     validatorUserDataForm.clearFieldsErrors();
     isLoadingAllComponentData.value = true;
     try {

@@ -153,7 +153,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue";
+  import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
 
@@ -203,6 +203,8 @@
   const verificationRequestData = reactive<Record<string, any>>({});
   const unreadVerificationNotifications = ref<ClientVerificationUnreadNotification[]>([]);
   const visibleHistoryCount = ref(HISTORY_CHUNK_SIZE);
+  const lastSeenVerificationUnreadCount = ref(0);
+  const isRealtimeVerificationReloading = ref(false);
 
   const documentsStatus = ref<VerificationStatus>("pending");
   const emailStatus = ref<VerificationStatus>("pending");
@@ -367,6 +369,22 @@
     }
   };
 
+  const triggerRealtimeVerificationReload = async (): Promise<void> => {
+    if (isRealtimeVerificationReloading.value) {
+      return;
+    }
+
+    isRealtimeVerificationReloading.value = true;
+
+    try {
+      await loadVerificationData();
+      await nextTick();
+      await markUnreadVerificationNotificationsSeen();
+    } finally {
+      isRealtimeVerificationReloading.value = false;
+    }
+  };
+
   const markUnreadVerificationNotificationsSeen = async (): Promise<void> => {
     const targetIds = unreadVerificationNotifications.value.map(item => item.id);
     if (targetIds.length === 0) {
@@ -428,10 +446,7 @@
 
     upsertUnreadVerificationNotification(notification);
 
-    void loadVerificationData().then(async () => {
-      await nextTick();
-      await markUnreadVerificationNotificationsSeen();
-    });
+    void triggerRealtimeVerificationReload();
   };
 
   const handleMarkedNotifications = (payload?: { ids?: string[] }) => {
@@ -439,9 +454,27 @@
     removeUnreadVerificationNotifications(ids);
   };
 
+  watch(
+    () => notificationsStore.unreadVerificationNotificationsCount,
+    (nextValue, previousValue) => {
+      const normalizedNext = Number(nextValue ?? 0);
+      const normalizedPrevious =
+        previousValue === undefined ? lastSeenVerificationUnreadCount.value : Number(previousValue ?? 0);
+
+      lastSeenVerificationUnreadCount.value = normalizedNext;
+
+      if (normalizedNext <= normalizedPrevious) {
+        return;
+      }
+
+      void triggerRealtimeVerificationReload();
+    }
+  );
+
   onMounted(async () => {
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
     useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
+    lastSeenVerificationUnreadCount.value = Number(notificationsStore.unreadVerificationNotificationsCount ?? 0);
 
     await Promise.all([loadVerificationData(), loadUnreadVerificationNotifications()]);
     await markUnreadVerificationNotificationsSeen();
