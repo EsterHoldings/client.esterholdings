@@ -205,6 +205,7 @@
   const visibleHistoryCount = ref(HISTORY_CHUNK_SIZE);
   const lastSeenVerificationUnreadCount = ref(0);
   const isRealtimeVerificationReloading = ref(false);
+  const lastHandledVerificationNotificationId = ref("");
 
   const documentsStatus = ref<VerificationStatus>("pending");
   const emailStatus = ref<VerificationStatus>("pending");
@@ -439,7 +440,19 @@
   };
 
   const handleClientNotificationReceived = (payload?: { notification?: any }): void => {
-    const notification = normalizeUnreadVerificationNotification(payload?.notification ?? null);
+    const rawNotification = payload?.notification ?? null;
+    const notificationId = String(rawNotification?.id ?? "").trim();
+    if (notificationId === "") {
+      return;
+    }
+
+    if (lastHandledVerificationNotificationId.value === notificationId) {
+      return;
+    }
+
+    lastHandledVerificationNotificationId.value = notificationId;
+
+    const notification = normalizeUnreadVerificationNotification(rawNotification);
     if (!notification) {
       return;
     }

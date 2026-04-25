@@ -508,6 +508,7 @@
   const isEditingSubmittedProfile = ref(false);
   const lastSeenVerificationUnreadCount = ref(0);
   const isRealtimeProfileReloading = ref(false);
+  const lastHandledVerificationNotificationId = ref("");
 
   const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
@@ -1287,10 +1288,17 @@
 
   const handleClientNotificationReceived = (payload?: { notification?: any }): void => {
     const notification = payload?.notification;
+    const notificationId = String(notification?.id ?? "").trim();
     const type = String(notification?.type ?? "").trim();
-    if (type !== VERIFICATION_NOTIFICATION_TYPE) {
+    if (type !== VERIFICATION_NOTIFICATION_TYPE || notificationId === "") {
       return;
     }
+
+    if (lastHandledVerificationNotificationId.value === notificationId) {
+      return;
+    }
+
+    lastHandledVerificationNotificationId.value = notificationId;
 
     const step = String(notification?.payload?.step ?? "").trim().toLowerCase();
     void triggerRealtimeProfileReload({
