@@ -2,15 +2,6 @@
   <div class="user-docs-page text-[var(--ui-text-main)] space-y-6">
     <UiTextH5 v-if="showTitle">{{ t("cabinet.profile.components.tab-user-documents.title") }}</UiTextH5>
 
-    <div class="documents-info-panel">
-      <div class="documents-info-panel__title">
-        {{ t("cabinet.profile.components.tab-user-documents.info.title") }}
-      </div>
-      <div class="documents-info-panel__text">
-        {{ t("cabinet.profile.components.tab-user-documents.info.text") }}
-      </div>
-    </div>
-
     <div
       class="relative min-h-[100px] grid place-items-center text-center"
       v-if="selectedFiles.length === 0">
