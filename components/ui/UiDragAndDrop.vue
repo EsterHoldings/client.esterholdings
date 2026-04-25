@@ -14,7 +14,7 @@
 
     <div class="text-base leading-tight">
       <span class="opacity-90 text-[var(--ui-text-main)]">{{ titleText }}</span>
-      <span class="opacity-90 text-[var(--ui-text-main)]"> {{ separatorText }} </span>
+      <span class="opacity-90 text-[var(--ui-text-main)]">&nbsp;{{ separatorText }}&nbsp;</span>
       <button
         type="button"
         class="underline decoration-2 underline-offset-4 text-orange-500 hover:opacity-80 disabled:no-underline disabled:text-[var(--ui-text-secondary)] disabled:cursor-default"
