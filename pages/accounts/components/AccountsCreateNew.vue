@@ -50,6 +50,7 @@
 <script lang="ts" setup>
   import { useI18n } from "vue-i18n";
   import { reactive, inject, onMounted, ref } from "vue";
+  import { navigateTo, useLocalePath } from "~/.nuxt/imports";
   import UiFormControl from "~/components/ui/UiFormControl.vue";
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import { validateAccountForm, validatorAccountForm } from "~/pages/accounts/composables/validation";
@@ -69,9 +70,14 @@
       type: String,
       default: "",
     },
+    redirectToAccountsOnSuccess: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const toast = useToast();
+  const localePath = useLocalePath();
   let accountTypes = reactive<Array<{ id: string; value: string; text: string }>>([]);
 
   const app = useAppCore();
@@ -142,6 +148,10 @@
         closeModal();
         useEventBus.emit("loadDataForAccounts");
         toast.success(resolveApiMessage(response?.data?.message, createSuccessLabel()) ?? createSuccessLabel());
+
+        if (props.redirectToAccountsOnSuccess) {
+          await navigateTo(localePath({ path: "/accounts" }));
+        }
       } catch (error: any) {
         toast.error(extractApiErrorMessage(error, submitErrorLabel()) ?? submitErrorLabel());
       } finally {

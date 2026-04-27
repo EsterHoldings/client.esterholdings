@@ -12,15 +12,12 @@
         </div>
       </div>
       <div class="mt4-header-card__actions">
-        <NuxtLink
-          :to="profileAccountsCreateLink"
-          class="w-full sm:w-auto">
-          <UiButtonDefault
-            state="success--outline--small"
-            class="mt4-header-card__cta w-full sm:w-auto text-[var(--ui-text-main)]">
-            {{ t("cabinet.dashboard.mt4.openNewAccount") }}
-          </UiButtonDefault>
-        </NuxtLink>
+        <UiButtonDefault
+          state="success--outline--small"
+          class="mt4-header-card__cta w-full sm:w-auto text-[var(--ui-text-main)]"
+          @click="openCreateAccountModal">
+          {{ t("cabinet.dashboard.mt4.openNewAccount") }}
+        </UiButtonDefault>
       </div>
     </div>
 
@@ -73,15 +70,12 @@
             {{ blockedReasonText }}
           </UiTextSmall>
 
-          <NuxtLink
-            :to="profileAccountsCreateLink"
-            class="w-full sm:w-auto">
-            <UiButtonDefault
-              state="success--outline"
-              class="w-full sm:w-auto">
-              {{ openAccountLabel }}
-            </UiButtonDefault>
-          </NuxtLink>
+          <UiButtonDefault
+            state="success--outline"
+            class="w-full sm:w-auto"
+            @click="openCreateAccountModal">
+            {{ openAccountLabel }}
+          </UiButtonDefault>
         </div>
 
         <div
@@ -220,6 +214,7 @@
 </template>
 
 <script lang="ts" setup>
+  import AccountsCreateNew from "~/pages/accounts/components/AccountsCreateNew.vue";
   import AccountsTransferModal from "~/components/block/modals/AccountsTransferModal.vue";
   import CreateNewDeposit from "~/pages/payments/create/index.vue";
   import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, toRefs, watch } from "vue";
@@ -298,7 +293,6 @@
   const balanceHighlightById = reactive<Record<string, BalanceChangeDirection | undefined>>({});
   const balanceHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
-  const profileAccountsCreateLink = computed(() => localePath({ path: "/accounts", query: { openCreate: "1" } }));
   const openMenuLabel = computed(() => resolveText("cabinet.common.openMenu", "Open menu"));
   const favoriteAddLabel = computed(() => resolveText("cabinet.accounts.favoriteAdd", "Add to favorites"));
   const favoriteRemoveLabel = computed(() => resolveText("cabinet.accounts.favoriteRemove", "Remove from favorites"));
@@ -330,6 +324,18 @@
     resolveText("cabinet.dashboard.mt4.description", "Быстрый доступ к избранным счетам и открытию нового MT4 счета.")
   );
   const blockedReasonText = computed(() => String(props.accountCreationBlockedReason || "").trim());
+
+  const openCreateAccountModal = async (): Promise<void> => {
+    if (modalControl?.openModal) {
+      modalControl.openModal(AccountsCreateNew, {
+        title: t("cabinet.accounts.accounts-form.title"),
+        redirectToAccountsOnSuccess: true,
+      });
+      return;
+    }
+
+    await navigateTo(localePath({ path: "/accounts", query: { openCreate: "1" } }));
+  };
 
   const getAccountType = (account: Mt4Account): string => {
     const type = String(account.type ?? "").trim();

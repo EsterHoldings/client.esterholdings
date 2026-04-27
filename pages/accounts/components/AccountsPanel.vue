@@ -386,11 +386,13 @@
                   <UiTextSmall class="cabinet-card__eyebrow">
                     {{ t("cabinet.accounts.columns.number") }}
                   </UiTextSmall>
-                  <div class="cabinet-card__title">#{{ account.number }}</div>
+                  <div class="cabinet-card__title cabinet-card__title--account">{{ account.number }}</div>
                   <div class="cabinet-card__subtitle">{{ account.account_type.name }}</div>
                 </div>
 
-                <div class="cabinet-card__head-side">
+                <div
+                  v-if="viewMode === 'full'"
+                  class="cabinet-card__head-side">
                   <div class="account-balance-block">
                     <UiTextSmall class="cabinet-card__eyebrow">
                       {{ t("cabinet.accounts.columns.balance") }}
@@ -435,6 +437,29 @@
                   </UiTextSmall>
                   <div class="cabinet-card__value cabinet-card__value--balance">
                     <span :class="getBalanceHighlightClass(account.id)">$ {{ account.balance }}</span>
+                    <button
+                      type="button"
+                      class="refresh-balance-btn"
+                      @click.stop="refreshAccountBalance(account)"
+                      :disabled="isBalanceRefreshing(account.id)"
+                      :title="refreshBalanceLabel">
+                      <UiIconUpdate
+                        class="h-[14px] w-[14px]"
+                        :spinning="isBalanceRefreshing(account.id)" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                v-if="viewMode !== 'full'"
+                class="cabinet-card__footer">
+                <div class="account-balance-block account-balance-block--footer">
+                  <UiTextSmall class="cabinet-card__eyebrow">
+                    {{ t("cabinet.accounts.columns.balance") }}
+                  </UiTextSmall>
+                  <div class="account-balance-block__value">
+                    <span :class="getBalanceHighlightClass(account.id)">${{ account.balance }}</span>
                     <button
                       type="button"
                       class="refresh-balance-btn"
@@ -1470,7 +1495,8 @@
   }
 
   .card-with-actions {
-    padding-right: 160px;
+    padding-right: 148px;
+    min-height: 154px;
   }
 
   .cabinet-card__header {
@@ -1503,12 +1529,15 @@
 
   .cabinet-card__title {
     color: var(--ui-text-main);
-    font-size: 18px;
+    font-size: 17px;
     line-height: 1.2;
     font-weight: 700;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  }
+
+  .cabinet-card__title--account {
+    overflow: visible;
+    text-overflow: clip;
   }
 
   .cabinet-card__subtitle {
@@ -1525,6 +1554,7 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px 14px;
+    align-items: start;
   }
 
   .cabinet-card__grid--full {
@@ -1600,6 +1630,19 @@
     line-height: 1;
     font-weight: 700;
     white-space: nowrap;
+  }
+
+  .cabinet-card__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: 14px;
+    min-height: 40px;
+  }
+
+  .account-balance-block--footer {
+    align-items: flex-end;
+    justify-content: flex-end;
   }
 
   .table-account-number {
@@ -1727,7 +1770,7 @@
     }
 
     .card-with-actions {
-      padding-right: 144px;
+      padding-right: 136px;
     }
 
     .cabinet-card__header {
