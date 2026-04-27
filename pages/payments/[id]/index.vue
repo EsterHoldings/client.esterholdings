@@ -5,15 +5,6 @@
         {{ pageTitle }}
       </UiTextH4>
 
-      <UiButtonDefault
-        v-if="payment && canSyncPayment(payment)"
-        state="primary"
-        class="w-full md:w-auto"
-        :disabled="isSyncing"
-        @click="handleSyncPayment">
-        {{ isSyncing ? syncPaymentLoadingLabel : syncPaymentLabel }}
-      </UiButtonDefault>
-
       <NuxtLink
         :to="paymentsListLink"
         class="w-full md:w-auto">
@@ -162,8 +153,7 @@
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiTextH4 from "~/components/ui/UiTextH4.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
-  import { useToast } from "vue-toastification";
-  import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
+  import { extractApiErrorMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import useUserPaymentRealtime from "~/composables/useUserPaymentRealtime";
@@ -193,10 +183,7 @@
   const localePath = useLocalePath();
   const { t } = useI18n({ useScope: "global" });
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
-  const toast = useToast();
-
   const isLoading = ref(true);
-  const isSyncing = ref(false);
   const errorMessage = ref<string | null>(null);
   const payment = ref<any | null>(null);
   const isPaymentHighlighted = ref(false);
@@ -213,16 +200,6 @@
   const pageTitle = computed(() => `${resolveI18nValue("cabinet.billing.title", "Платежи")} #${paymentId.value}`);
   const backLabel = computed(() => resolveI18nValue("cabinet.billing.backToList", "К списку платежей"));
   const idLabel = computed(() => resolveI18nValue("cabinet.common.id", "ID"));
-  const syncPaymentLabel = computed(() => resolveI18nValue("cabinet.billing.syncPayment", "Синхронизировать"));
-  const syncPaymentLoadingLabel = computed(() =>
-    resolveI18nValue("cabinet.billing.syncPaymentLoading", "Синхронизация...")
-  );
-  const syncPaymentSuccessLabel = computed(() =>
-    resolveI18nValue("cabinet.billing.syncPaymentSuccess", "Платеж успешно синхронизирован.")
-  );
-  const syncPaymentErrorLabel = computed(() =>
-    resolveI18nValue("cabinet.billing.syncPaymentError", "Не удалось синхронизировать платеж.")
-  );
   const accountLabel = computed(() => resolveI18nValue("cabinet.billing.columns.accountNumber", "Номер счета"));
   const amountLabel = computed(() => resolveI18nValue("cabinet.billing.columns.amount", "Сумма"));
   const currencyLabel = computed(() => resolveI18nValue("cabinet.billing.columns.currency", "Валюта"));
@@ -276,10 +253,6 @@
       normalizedPaymentType(paymentItem)
     );
   };
-
-  const canSyncPayment = (paymentItem: any): boolean =>
-    String(paymentItem?.type ?? "").trim() === "deposit" &&
-    String(paymentItem?.payment_gateway ?? "").trim() === "coinsbuy";
 
   const displayAccountRoute = (paymentItem: any): string => {
     if (isInternalTransfer(paymentItem)) {
@@ -382,26 +355,6 @@
         ) ?? resolveI18nValue("cabinet.billing.paymentLoadError", "Не удалось загрузить платеж.");
     } finally {
       isLoading.value = false;
-    }
-  };
-
-  const handleSyncPayment = async () => {
-    if (!payment.value || isSyncing.value || !canSyncPayment(payment.value)) {
-      return;
-    }
-
-    isSyncing.value = true;
-    try {
-      const response = await appCore.payments.sync(paymentId.value);
-      registerRecentPaymentUpdate(response?.data?.data, new Date().toISOString());
-      await fetchPayment();
-      toast.success(
-        resolveApiMessage(response?.data?.message, syncPaymentSuccessLabel.value) ?? syncPaymentSuccessLabel.value
-      );
-    } catch (error: any) {
-      toast.error(extractApiErrorMessage(error, syncPaymentErrorLabel.value) ?? syncPaymentErrorLabel.value);
-    } finally {
-      isSyncing.value = false;
     }
   };
 

@@ -390,18 +390,6 @@
               </button>
 
               <button
-                v-if="activePaymentMenuId !== null && canSyncPaymentById(activePaymentMenuId)"
-                type="button"
-                class="flex h-8 items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
-                :disabled="syncingPaymentId === activePaymentMenuId"
-                @click="handleSyncPayment(activePaymentMenuId)">
-                <UiIconUpdate
-                  class="!h-[14px] !w-[14px]"
-                  :spinning="syncingPaymentId === activePaymentMenuId" />
-                <UiTextSmall class="whitespace-nowrap">{{ syncMenuLabel }}</UiTextSmall>
-              </button>
-
-              <button
                 type="button"
                 class="flex h-8 items-center justify-start gap-2 rounded-md px-2 hover:bg-[var(--color-stroke-ui-light)] hover:opacity-70"
                 :disabled="deletingPaymentId === activePaymentMenuId"
@@ -647,7 +635,6 @@
   const spinIcon = ref(false);
   const activePaymentMenuId = ref<string | null>(null);
   const deletingPaymentId = ref<string | null>(null);
-  const syncingPaymentId = ref<string | null>(null);
   const paymentMenuReady = ref(false);
   const paymentMenuRef = ref<HTMLElement | null>(null);
   const paymentMenuTriggerRefs = ref<Record<string, HTMLElement | null>>({});
@@ -683,14 +670,7 @@
   const paymentTypeColumnLabel = computed(() => resolveI18nValue("cabinet.dashboard.transactions.type", "Type"));
   const openMenuLabel = computed(() => resolveI18nValue("cabinet.common.openMenu", "Open menu"));
   const openPaymentLabel = computed(() => resolveI18nValue("cabinet.billing.openPayment", "Open"));
-  const syncMenuLabel = computed(() => resolveI18nValue("cabinet.billing.syncPayment", "Синхронизировать"));
   const deleteMenuLabel = computed(() => resolveI18nValue("cabinet.billing.deletePayment", "Удалить"));
-  const syncPaymentSuccessLabel = computed(() =>
-    resolveI18nValue("cabinet.billing.syncPaymentSuccess", "Синхронизация платежа выполнена.")
-  );
-  const syncPaymentErrorLabel = computed(() =>
-    resolveI18nValue("cabinet.billing.syncPaymentError", "Не удалось синхронизировать платеж.")
-  );
   const deletePaymentConfirmLabel = computed(() =>
     resolveI18nValue("cabinet.billing.deletePaymentConfirm", "Удалить платеж?")
   );
@@ -1077,42 +1057,6 @@
       toast.error(extractApiErrorMessage(error, deletePaymentErrorLabel.value) ?? deletePaymentErrorLabel.value);
     } finally {
       deletingPaymentId.value = null;
-    }
-  };
-
-  const canSyncPayment = (payment: any): boolean => {
-    return (
-      String(payment?.type ?? "").trim() === "deposit" && String(payment?.payment_gateway ?? "").trim() === "coinsbuy"
-    );
-  };
-
-  const canSyncPaymentById = (paymentId: string | number): boolean => {
-    const payment = payments.find(item => String(item?.id ?? "") === String(paymentId));
-    return payment ? canSyncPayment(payment) : false;
-  };
-
-  const handleSyncPayment = async (paymentId: string | number | null) => {
-    if (paymentId === null) return;
-
-    const id = String(paymentId);
-    if (!canSyncPaymentById(id)) {
-      return;
-    }
-
-    closePaymentMenu();
-    syncingPaymentId.value = id;
-
-    try {
-      const response = await appCore.payments.sync(id);
-      registerRecentPaymentUpdate(response?.data?.data, new Date().toISOString());
-      await loadData({ silent: true });
-      toast.success(
-        resolveApiMessage(response?.data?.message, syncPaymentSuccessLabel.value) ?? syncPaymentSuccessLabel.value
-      );
-    } catch (error: any) {
-      toast.error(extractApiErrorMessage(error, syncPaymentErrorLabel.value) ?? syncPaymentErrorLabel.value);
-    } finally {
-      syncingPaymentId.value = null;
     }
   };
 

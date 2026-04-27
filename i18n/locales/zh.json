@@ -1029,6 +1029,8 @@
         "loadAccountsError": "无法加载交易账户。",
         "processing": "加工...",
         "submit": "创建存款",
+        "amountRequired": "请输入入金金额。",
+        "amountInvalid": "请输入有效的 USD 金额，例如 15.25。",
         "minimumAmount": "最低入金金额为 {amount} USD。"
       },
       "emptySubtitle": "创建您的第一笔付款即可开始。",

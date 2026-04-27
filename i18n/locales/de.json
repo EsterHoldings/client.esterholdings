@@ -1029,6 +1029,8 @@
         "loadAccountsError": "Handelskonten konnten nicht geladen werden.",
         "processing": "Verarbeitung...",
         "submit": "Anzahlung erstellen",
+        "amountRequired": "Geben Sie den Einzahlungsbetrag ein.",
+        "amountInvalid": "Geben Sie einen gültigen Betrag in USD ein, zum Beispiel 15.25.",
         "minimumAmount": "Die Mindesteinzahlung beträgt {amount} USD."
       },
       "emptySubtitle": "Erstellen Sie Ihre erste Zahlung, um loszulegen.",

@@ -1495,8 +1495,10 @@
   }
 
   .card-with-actions {
-    padding-right: 148px;
-    min-height: 154px;
+    display: flex;
+    flex-direction: column;
+    padding-right: 172px;
+    min-height: 172px;
   }
 
   .cabinet-card__header {
@@ -1532,7 +1534,9 @@
     font-size: 17px;
     line-height: 1.2;
     font-weight: 700;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    padding-right: 6px;
   }
 
   .cabinet-card__title--account {
@@ -1544,9 +1548,8 @@
     color: var(--ui-text-secondary);
     font-size: 13px;
     line-height: 1.25;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .cabinet-card__grid {
@@ -1636,7 +1639,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-    margin-top: 14px;
+    margin-top: auto;
     min-height: 40px;
   }
 
@@ -1770,7 +1773,7 @@
     }
 
     .card-with-actions {
-      padding-right: 136px;
+      padding-right: 144px;
     }
 
     .cabinet-card__header {
@@ -1885,11 +1888,12 @@
     width: 180px;
     border-radius: 10px;
     border: 1px solid var(--color-stroke-ui-light);
-    background: var(--ui-background-panel);
-    opacity: 1;
+    background: color-mix(in srgb, var(--ui-background-card) 100%, transparent);
+    opacity: 1 !important;
+    backdrop-filter: none;
     pointer-events: auto;
     padding: 8px;
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.18);
   }
 
   .card-menu-trigger {

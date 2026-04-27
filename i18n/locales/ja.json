@@ -1029,6 +1029,8 @@
         "loadAccountsError": "取引口座をロードできませんでした。",
         "processing": "処理...",
         "submit": "デポジットの作成",
+        "amountRequired": "入金額を入力してください。",
+        "amountInvalid": "USDで有効な金額を入力してください。例: 15.25",
         "minimumAmount": "最低入金額は{amount} USDです。"
       },
       "emptySubtitle": "開始するには、最初の支払いを作成してください。",

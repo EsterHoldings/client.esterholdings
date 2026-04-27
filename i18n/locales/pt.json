@@ -1029,6 +1029,8 @@
         "loadAccountsError": "Falha ao carregar contas de negociação.",
         "processing": "Processamento...",
         "submit": "Criar depósito",
+        "amountRequired": "Informe o valor do depósito.",
+        "amountInvalid": "Informe um valor válido em USD, por exemplo 15.25.",
         "minimumAmount": "O depósito mínimo é de {amount} USD."
       },
       "emptySubtitle": "Crie seu primeiro pagamento para começar.",

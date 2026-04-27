@@ -1029,6 +1029,8 @@
         "loadAccountsError": "ट्रेडिंग खाते लोड करने में विफल.",
         "processing": "प्रसंस्करण...",
         "submit": "जमा बनाएँ",
+        "amountRequired": "जमा राशि दर्ज करें।",
+        "amountInvalid": "USD में सही राशि दर्ज करें, उदाहरण के लिए 15.25.",
         "minimumAmount": "न्यूनतम जमा राशि {amount} USD है."
       },
       "emptySubtitle": "आरंभ करने के लिए अपना पहला भुगतान बनाएं।",

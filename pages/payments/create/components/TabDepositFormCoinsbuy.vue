@@ -179,9 +179,22 @@
     )
   );
   const amountErrors = computed(() => {
-    const errors = (validatorDepositForm?.errorsFormData?.amount?.errors ?? []).map(
-      (message: string) => resolveApiMessage(message, message) ?? message
-    );
+    const errors = (validatorDepositForm?.errorsFormData?.amount?.errors ?? []).map((message: string) => {
+      const normalizedMessage = String(message ?? "").trim();
+
+      if (/required/i.test(normalizedMessage)) {
+        return resolveText("cabinet.billing.depositForm.amountRequired", "Enter the deposit amount.");
+      }
+
+      if (/incorrect/i.test(normalizedMessage)) {
+        return resolveText(
+          "cabinet.billing.depositForm.amountInvalid",
+          "Enter a valid amount in USD, for example 15.25."
+        );
+      }
+
+      return resolveApiMessage(message, message) ?? message;
+    });
 
     if (
       errors.length === 0 &&
@@ -206,16 +219,17 @@
       formData.paymentSystemId = props.paymentSystem.id;
 
       const response: any = await appCore.deposit.post(formData);
-      const redirectUrl = response.data.data.redirectUrl;
+      const redirectUrl = String(response?.data?.data?.redirectUrl ?? "").trim();
+
+      if (redirectUrl !== "") {
+        window.location.assign(redirectUrl);
+        return;
+      }
 
       toast.success(resolveApiMessage(response?.data?.message, createdLabel.value) ?? createdLabel.value);
       closeModal();
       useEventBus.emit("loadDataForPayments");
       await navigateTo(localePath("/payments"));
-
-      if (redirectUrl) {
-        window.open(redirectUrl, "_blank", "noopener");
-      }
     } catch (error: any) {
       toast.error(extractApiErrorMessage(error, submitErrorLabel.value) ?? submitErrorLabel.value);
     } finally {

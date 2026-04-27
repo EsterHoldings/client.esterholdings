@@ -1043,6 +1043,8 @@
         "created": "Deposit created successfully.",
         "error": "Failed to create deposit.",
         "loadAccountsError": "Failed to load trading accounts.",
+        "amountRequired": "Enter the deposit amount.",
+        "amountInvalid": "Enter a valid amount in USD, for example 15.25.",
         "minimumAmount": "Minimum deposit amount is {amount} USD."
       },
       "withdrawalForm": {

@@ -1029,6 +1029,8 @@
         "loadAccountsError": "טעינת חשבונות מסחר נכשלה.",
         "processing": "מעבד...",
         "submit": "צור הפקדה",
+        "amountRequired": "יש להזין את סכום ההפקדה.",
+        "amountInvalid": "יש להזין סכום תקין בדולר ארה\"ב, לדוגמה 15.25.",
         "minimumAmount": "סכום ההפקדה המינימלי הוא {amount} USD."
       },
       "emptySubtitle": "צור את התשלום הראשון שלך כדי להתחיל.",

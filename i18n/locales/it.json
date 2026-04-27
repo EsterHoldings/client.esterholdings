@@ -1029,6 +1029,8 @@
         "loadAccountsError": "Impossibile caricare i conti di trading.",
         "processing": "Elaborazione...",
         "submit": "Crea deposito",
+        "amountRequired": "Inserisci l'importo del deposito.",
+        "amountInvalid": "Inserisci un importo valido in USD, ad esempio 15.25.",
         "minimumAmount": "Il deposito minimo è di {amount} USD."
       },
       "emptySubtitle": "Crea il tuo primo pagamento per iniziare.",

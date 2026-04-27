@@ -1029,6 +1029,8 @@
         "loadAccountsError": "Ticaret hesapları yüklenemedi.",
         "processing": "İşleme...",
         "submit": "Depozito oluştur",
+        "amountRequired": "Yatırma tutarını girin.",
+        "amountInvalid": "USD cinsinden geçerli bir tutar girin, örneğin 15.25.",
         "minimumAmount": "Minimum yatırım tutarı {amount} USD."
       },
       "emptySubtitle": "Başlamak için ilk ödemenizi oluşturun.",

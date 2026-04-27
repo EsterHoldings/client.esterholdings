@@ -1029,6 +1029,8 @@
         "loadAccountsError": "No se pudieron cargar las cuentas comerciales.",
         "processing": "Tratamiento...",
         "submit": "Crear depósito",
+        "amountRequired": "Introduzca el importe del depósito.",
+        "amountInvalid": "Introduzca un importe válido en USD, por ejemplo 15.25.",
         "minimumAmount": "El depósito mínimo es de {amount} USD."
       },
       "emptySubtitle": "Crea tu primer pago para comenzar.",

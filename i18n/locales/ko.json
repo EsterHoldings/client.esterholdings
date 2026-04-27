@@ -1029,6 +1029,8 @@
         "loadAccountsError": "거래 계좌를 로드하지 못했습니다.",
         "processing": "처리 중...",
         "submit": "보증금 생성",
+        "amountRequired": "입금 금액을 입력하세요.",
+        "amountInvalid": "USD 기준의 올바른 금액을 입력하세요. 예: 15.25",
         "minimumAmount": "최소 입금액은 {amount} USD입니다."
       },
       "emptySubtitle": "시작하려면 첫 번째 결제 수단을 만드세요.",
