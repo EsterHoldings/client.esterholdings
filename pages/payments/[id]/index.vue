@@ -152,10 +152,9 @@
 </template>
 
 <script lang="ts" setup>
-  import type Echo from "laravel-echo";
-  import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+  import { computed, onBeforeUnmount, onMounted, ref } from "vue";
   import { useRoute } from "vue-router";
-  import { definePageMeta, useLocalePath, useNuxtApp } from "~/.nuxt/imports";
+  import { definePageMeta, useLocalePath } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
 
   import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
@@ -167,7 +166,7 @@
   import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
-  import { useAuthStore } from "~/stores/authStore";
+  import useUserPaymentRealtime from "~/composables/useUserPaymentRealtime";
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
   import UiIconComment from "~/components/ui/UiIconComment.vue";
   import UiIconCopy from "~/components/ui/UiIconCopy.vue";
@@ -193,17 +192,13 @@
   const route = useRoute();
   const localePath = useLocalePath();
   const { t } = useI18n({ useScope: "global" });
-  const authStore = useAuthStore();
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
-  const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
   const toast = useToast();
 
   const isLoading = ref(true);
   const isSyncing = ref(false);
   const errorMessage = ref<string | null>(null);
   const payment = ref<any | null>(null);
-  const paymentRealtimeChannel = ref<any>(null);
-  const currentPaymentRealtimeChannelName = ref("");
   const isPaymentHighlighted = ref(false);
   let paymentHighlightTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -427,21 +422,6 @@
     await fetchPayment();
   };
 
-  const resolveEchoClient = () => {
-    if ($echo && typeof ($echo as any).private === "function") {
-      return $echo as any;
-    }
-
-    if (typeof window !== "undefined") {
-      const fallbackEcho = (window as any).Echo;
-      if (fallbackEcho && typeof fallbackEcho.private === "function") {
-        return fallbackEcho;
-      }
-    }
-
-    return null;
-  };
-
   const handlePaymentRealtimeUpdated = async (payload: any) => {
     const paymentIdFromEvent = String(payload?.payment_id ?? "").trim();
     if (paymentIdFromEvent !== "" && paymentIdFromEvent !== paymentId.value) {
@@ -452,69 +432,21 @@
     await fetchPayment();
   };
 
-  const subscribeToPaymentRealtime = () => {
-    const userId = String(authStore.user?.id ?? "").trim();
-    if (userId === "") {
-      return;
-    }
-
-    const echoClient = resolveEchoClient();
-    if (!echoClient) {
-      return;
-    }
-
-    const channelName = `payments.user.${userId}`;
-    if (currentPaymentRealtimeChannelName.value === channelName && paymentRealtimeChannel.value) {
-      return;
-    }
-
-    unsubscribeFromPaymentRealtime();
-    currentPaymentRealtimeChannelName.value = channelName;
-    paymentRealtimeChannel.value = echoClient.private(channelName);
-
-    PAYMENT_REALTIME_EVENT_NAMES.forEach(eventName => {
-      paymentRealtimeChannel.value.stopListening(eventName, handlePaymentRealtimeUpdated);
-      paymentRealtimeChannel.value.listen(eventName, handlePaymentRealtimeUpdated);
-    });
-  };
-
-  const unsubscribeFromPaymentRealtime = () => {
-    const channelName = currentPaymentRealtimeChannelName.value;
-    currentPaymentRealtimeChannelName.value = "";
-    paymentRealtimeChannel.value = null;
-
-    if (channelName === "") {
-      return;
-    }
-
-    const echoClient = resolveEchoClient();
-    if (!echoClient) {
-      return;
-    }
-
-    try {
-      echoClient.leave(channelName);
-    } catch {
-      // no-op
-    }
-  };
-
-  watch(
-    () => authStore.user?.id,
-    () => {
-      subscribeToPaymentRealtime();
-    }
-  );
+  useUserPaymentRealtime({
+    eventNames: PAYMENT_REALTIME_EVENT_NAMES,
+    onPaymentUpdated: handlePaymentRealtimeUpdated,
+    onReconnectSync: async () => {
+      await fetchPayment();
+    },
+  });
 
   onMounted(async () => {
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
-    subscribeToPaymentRealtime();
     await fetchPayment();
   });
 
   onBeforeUnmount(() => {
     useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
-    unsubscribeFromPaymentRealtime();
     if (paymentHighlightTimer) {
       clearTimeout(paymentHighlightTimer);
       paymentHighlightTimer = null;

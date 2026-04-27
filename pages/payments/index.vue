@@ -467,7 +467,6 @@
 </template>
 
 <script lang="ts" setup>
-  import type Echo from "laravel-echo";
   import CreateNewDeposit from "~/pages/payments/create/index.vue";
   import PageStructureContent from "~/components/block/pages/PageStructureContent.vue";
   import PageStructureDefault from "~/components/block/pages/PageStructureDefault.vue";
@@ -492,10 +491,10 @@
   import { extractApiErrorMessage, resolveApiMessage } from "~/composables/useApiMessages";
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
-  import { useAuthStore } from "~/stores/authStore";
+  import useUserPaymentRealtime from "~/composables/useUserPaymentRealtime";
   import { useRecentPaymentUpdatesStore } from "~/stores/recentPaymentUpdatesStore";
 
-  import { definePageMeta, useLocalePath, useNuxtApp } from "~/.nuxt/imports";
+  import { definePageMeta, useLocalePath } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
   import { computed, h, inject, onBeforeUnmount, onMounted, reactive, ref, watch, nextTick } from "vue";
   import UiIconLogo from "~/components/ui/UiIconLogo.vue";
@@ -513,9 +512,7 @@
   const router = useRouter();
   const localePath = useLocalePath();
   const toast = useToast();
-  const authStore = useAuthStore();
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
-  const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
 
   const appCore = useAppCore();
 
@@ -655,8 +652,6 @@
   const paymentMenuRef = ref<HTMLElement | null>(null);
   const paymentMenuTriggerRefs = ref<Record<string, HTMLElement | null>>({});
   const paymentMenuPosition = reactive({ top: 0, left: 0 });
-  const paymentRealtimeChannel = ref<any>(null);
-  const currentPaymentRealtimeChannelName = ref("");
   const highlightedPaymentIds = ref<string[]>([]);
   const paymentHighlightTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
@@ -1236,21 +1231,6 @@
     }
   };
 
-  const resolveEchoClient = () => {
-    if ($echo && typeof ($echo as any).private === "function") {
-      return $echo as any;
-    }
-
-    if (typeof window !== "undefined") {
-      const fallbackEcho = (window as any).Echo;
-      if (fallbackEcho && typeof fallbackEcho.private === "function") {
-        return fallbackEcho;
-      }
-    }
-
-    return null;
-  };
-
   const handlePaymentRealtimeUpdated = async (payload: any) => {
     registerRecentPaymentUpdate(payload);
 
@@ -1261,52 +1241,13 @@
     }
   };
 
-  const subscribeToPaymentRealtime = () => {
-    const userId = String(authStore.user?.id ?? "").trim();
-    if (userId === "") {
-      return;
-    }
-
-    const echoClient = resolveEchoClient();
-    if (!echoClient) {
-      return;
-    }
-
-    const channelName = `payments.user.${userId}`;
-    if (currentPaymentRealtimeChannelName.value === channelName && paymentRealtimeChannel.value) {
-      return;
-    }
-
-    unsubscribeFromPaymentRealtime();
-    currentPaymentRealtimeChannelName.value = channelName;
-    paymentRealtimeChannel.value = echoClient.private(channelName);
-
-    PAYMENT_REALTIME_EVENT_NAMES.forEach(eventName => {
-      paymentRealtimeChannel.value.stopListening(eventName, handlePaymentRealtimeUpdated);
-      paymentRealtimeChannel.value.listen(eventName, handlePaymentRealtimeUpdated);
-    });
-  };
-
-  const unsubscribeFromPaymentRealtime = () => {
-    const channelName = currentPaymentRealtimeChannelName.value;
-    currentPaymentRealtimeChannelName.value = "";
-    paymentRealtimeChannel.value = null;
-
-    if (channelName === "") {
-      return;
-    }
-
-    const echoClient = resolveEchoClient();
-    if (!echoClient) {
-      return;
-    }
-
-    try {
-      echoClient.leave(channelName);
-    } catch {
-      // no-op
-    }
-  };
+  useUserPaymentRealtime({
+    eventNames: PAYMENT_REALTIME_EVENT_NAMES,
+    onPaymentUpdated: handlePaymentRealtimeUpdated,
+    onReconnectSync: async () => {
+      await loadData({ silent: true });
+    },
+  });
 
   const shortId = (uuid: string) => uuid.split("-").pop();
 
@@ -1357,13 +1298,6 @@
     if (isMobileViewport.value) return;
     localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
   });
-
-  watch(
-    () => authStore.user?.id,
-    () => {
-      subscribeToPaymentRealtime();
-    }
-  );
 
   const handleChangeViewMode = (nextViewMode: string) => {
     if (isMobileViewport.value) return;
@@ -1417,7 +1351,6 @@
     initViewMode();
     useEventBus.on("loadDataForPayments", loadData);
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
-    subscribeToPaymentRealtime();
     await loadData();
     await nextTick();
     const openDeposit = resolveQueryString(route.query?.openDeposit);
@@ -1441,7 +1374,6 @@
   onBeforeUnmount(() => {
     useEventBus.off("loadDataForPayments", loadData);
     useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
-    unsubscribeFromPaymentRealtime();
     paymentHighlightTimers.forEach(timer => clearTimeout(timer));
     paymentHighlightTimers.clear();
     window.removeEventListener("resize", handleViewportResize);

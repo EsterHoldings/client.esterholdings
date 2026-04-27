@@ -64,10 +64,8 @@
 </template>
 
 <script lang="ts" setup>
-  import type Echo from "laravel-echo";
-  import { useNuxtApp } from "nuxt/app";
   import { useI18n } from "vue-i18n";
-  import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+  import { computed, onBeforeUnmount, onMounted, ref } from "vue";
   import { useRoute, useRouter } from "vue-router";
   import { useToast } from "vue-toastification";
   import { useLocalePath } from "~/.nuxt/imports";
@@ -88,6 +86,7 @@
   import useAppCore from "~/composables/useAppCore";
   import useEventBus from "~/composables/useEventBus";
   import useAccountCreationEligibility from "~/composables/useAccountCreationEligibility";
+  import useUserPaymentRealtime from "~/composables/useUserPaymentRealtime";
 
   const { t } = useI18n({ useScope: "global" });
   const localePath = useLocalePath();
@@ -98,7 +97,6 @@
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const appCore = useAppCore();
   const { canCreateAccount: canManagePayoutDetails, isEligibilityLoaded, refreshAccountCreationEligibility } = useAccountCreationEligibility();
-  const { $echo } = useNuxtApp() as { $echo?: Echo<any> };
 
   type DashboardSummary = {
     totalAmount: number;
@@ -116,9 +114,6 @@
     currency: "USD",
   });
   const isSummaryLoading = ref(false);
-  const paymentRealtimeChannel = ref<any>(null);
-  const currentPaymentRealtimeChannelName = ref("");
-
   const EMAIL_VERIFY_QUERY_FLAG = "verify_email";
   const EMAIL_VERIFY_QUERY_ID = "verify_id";
   const EMAIL_VERIFY_QUERY_HASH = "verify_hash";
@@ -212,21 +207,6 @@
     }
   };
 
-  const resolveEchoClient = () => {
-    if ($echo && typeof ($echo as any).private === "function") {
-      return $echo as any;
-    }
-
-    if (typeof window !== "undefined") {
-      const fallbackEcho = (window as any).Echo;
-      if (fallbackEcho && typeof fallbackEcho.private === "function") {
-        return fallbackEcho;
-      }
-    }
-
-    return null;
-  };
-
   const registerRecentPaymentUpdate = (payload: any, fallbackUpdatedAt?: string) => {
     const paymentId = String(payload?.payment_id ?? payload?.id ?? "").trim();
     if (paymentId === "") {
@@ -267,66 +247,19 @@
     }
   };
 
-  const subscribeToPaymentRealtime = () => {
-    const userId = String(authStore.user?.id ?? "").trim();
-    if (userId === "") {
-      return;
-    }
-
-    const echoClient = resolveEchoClient();
-    if (!echoClient) {
-      return;
-    }
-
-    const channelName = `payments.user.${userId}`;
-    if (currentPaymentRealtimeChannelName.value === channelName && paymentRealtimeChannel.value) {
-      return;
-    }
-
-    unsubscribeFromPaymentRealtime();
-    currentPaymentRealtimeChannelName.value = channelName;
-    paymentRealtimeChannel.value = echoClient.private(channelName);
-
-    PAYMENT_REALTIME_EVENT_NAMES.forEach(eventName => {
-      paymentRealtimeChannel.value.stopListening(eventName, handlePaymentRealtimeUpdated);
-      paymentRealtimeChannel.value.listen(eventName, handlePaymentRealtimeUpdated);
-    });
-  };
-
-  const unsubscribeFromPaymentRealtime = () => {
-    const channelName = currentPaymentRealtimeChannelName.value;
-    currentPaymentRealtimeChannelName.value = "";
-    paymentRealtimeChannel.value = null;
-
-    if (channelName === "") {
-      return;
-    }
-
-    const echoClient = resolveEchoClient();
-    if (!echoClient) {
-      return;
-    }
-
-    try {
-      echoClient.leave(channelName);
-    } catch {
-      // no-op
-    }
-  };
+  useUserPaymentRealtime({
+    eventNames: PAYMENT_REALTIME_EVENT_NAMES,
+    onPaymentUpdated: handlePaymentRealtimeUpdated,
+    onReconnectSync: async () => {
+      await handleRefreshDashboard({ suppressBalanceErrorToast: true });
+    },
+  });
 
   onMounted(async () => {
     await handleEmailVerificationFromQuery();
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
-    subscribeToPaymentRealtime();
     await handleRefreshDashboard({ suppressBalanceErrorToast: true });
   });
-
-  watch(
-    () => authStore.user?.id,
-    () => {
-      subscribeToPaymentRealtime();
-    }
-  );
 
   type Mt4Status = "active" | "inactive";
 
@@ -509,7 +442,6 @@
 
   onBeforeUnmount(() => {
     useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
-    unsubscribeFromPaymentRealtime();
   });
 </script>
 
