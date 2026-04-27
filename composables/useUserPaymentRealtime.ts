@@ -22,9 +22,9 @@ const DEFAULT_PAYMENT_REALTIME_EVENT_NAMES = [
   "UserPaymentUpdated",
 ];
 
-const DEFAULT_PAYMENT_REALTIME_RETRY_MS = 10000;
-const DEFAULT_PAYMENT_FALLBACK_POLL_MS = 20000;
-const DEFAULT_PAYMENT_RESUME_SYNC_MIN_INTERVAL_MS = 20000;
+const DEFAULT_PAYMENT_REALTIME_RETRY_MS = 3000;
+const DEFAULT_PAYMENT_FALLBACK_POLL_MS = 5000;
+const DEFAULT_PAYMENT_RESUME_SYNC_MIN_INTERVAL_MS = 5000;
 
 export default function useUserPaymentRealtime(options: UserPaymentRealtimeOptions) {
   const authStore = useAuthStore();
