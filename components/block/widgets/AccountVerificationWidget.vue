@@ -281,8 +281,8 @@
     return resolveText("cabinet.dashboard.accountVerification.notComplete", "Account is not fully verified");
   });
 
-  const handleDashboardRefresh = () => {
-    loadVerificationData();
+  const handleDashboardRefresh = (payload?: { silent?: boolean }) => {
+    void loadVerificationData({ showLoading: payload?.silent !== true });
   };
 
   const resolveStepRoute = (key: VerificationStepKey): { path: string; query?: Record<string, string> } => {
@@ -325,9 +325,11 @@
     }
   };
 
-  const loadVerificationData = async () => {
+  const loadVerificationData = async (options: { showLoading?: boolean } = {}) => {
     if (isLoading.value) return;
-    isLoading.value = true;
+    if (options.showLoading) {
+      isLoading.value = true;
+    }
 
     try {
       const response = await appCore.verifications.get();
@@ -337,14 +339,16 @@
       infoStatus.value = normalizeStatus(verificationRequestData.info?.verification_status, "pending");
       documentsStatus.value = normalizeStatus(verificationRequestData.documents?.verification_status, "pending");
     } finally {
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 250);
+      if (options.showLoading) {
+        setTimeout(() => {
+          isLoading.value = false;
+        }, 250);
+      }
     }
   };
 
   onMounted(async () => {
-    await loadVerificationData();
+    await loadVerificationData({ showLoading: true });
     useEventBus.on("dashboardRefresh", handleDashboardRefresh);
   });
 

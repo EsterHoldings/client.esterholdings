@@ -1501,12 +1501,13 @@
   }
 
   .profile-email-field__meta {
-    margin-top: 8px;
+    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
+    padding: 0 2px;
   }
 
   .profile-email-field__meta-status {
@@ -1523,15 +1524,22 @@
   }
 
   .profile-email-field__meta-action {
-    border: 0;
-    background: transparent;
-    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 28%, transparent);
+    background: color-mix(in srgb, var(--ui-primary-main) 10%, transparent);
+    padding: 6px 10px;
+    border-radius: 999px;
     color: var(--ui-primary-main);
     font-size: 12px;
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    transition: opacity 0.2s ease;
+    font-weight: 700;
+    transition:
+      opacity 0.2s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+
+    &:not(:disabled):hover {
+      background: color-mix(in srgb, var(--ui-primary-main) 16%, transparent);
+      border-color: color-mix(in srgb, var(--ui-primary-main) 38%, transparent);
+    }
 
     &:disabled {
       cursor: wait;

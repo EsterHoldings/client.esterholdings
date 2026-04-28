@@ -10,7 +10,7 @@
             state="info--small"
             class="!w-[36px] shrink-0"
             @click="handleManualRefresh">
-            <UiIconUpdate :spinning="isMt4Refreshing" />
+            <UiIconUpdate :spinning="isRefreshIndicatorActive" />
           </UiButtonDefault>
         </div>
       </div>
@@ -26,7 +26,7 @@
                   class="dashboard-widget-card"
                   :amount="dashboardSummary.totalAmount"
                   :currency="dashboardSummary.currency"
-                  :is-loading="isSummaryLoading" />
+                  :is-loading="isSummaryVisibleLoading" />
               </NuxtLink>
               <NuxtLink
                 :to="localePath('/referrals')"
@@ -35,7 +35,7 @@
                   class="dashboard-widget-card"
                   :amount="dashboardSummary.referralTotal"
                   :currency="dashboardSummary.currency"
-                  :is-loading="isSummaryLoading" />
+                  :is-loading="isSummaryVisibleLoading" />
               </NuxtLink>
             </div>
           </div>
@@ -44,7 +44,7 @@
             <Mt4AccountsWidget
               class="h-full"
               :accounts="mt4Accounts"
-              :is-loading="isMt4Refreshing"
+              :is-loading="isMt4VisibleLoading"
               :account-creation-blocked-reason="mt4VerificationNotice"
               @toggle-favorite="toggleFavorite"
               @refresh-requested="handleRefreshDashboard" />
@@ -97,6 +97,8 @@
   const recentPaymentUpdatesStore = useRecentPaymentUpdatesStore();
   const appCore = useAppCore();
   const { canCreateAccount: canManagePayoutDetails, isEligibilityLoaded, refreshAccountCreationEligibility } = useAccountCreationEligibility();
+  const DASHBOARD_AUTO_REFRESH_MS = 10000;
+  const DASHBOARD_REFRESH_ICON_MIN_DURATION_MS = 350;
 
   type DashboardSummary = {
     totalAmount: number;
@@ -113,7 +115,11 @@
     referralTotal: 0,
     currency: "USD",
   });
-  const isSummaryLoading = ref(false);
+  const isSummaryVisibleLoading = ref(false);
+  const isMt4VisibleLoading = ref(false);
+  const isRefreshIndicatorActive = ref(false);
+  const isDashboardRefreshing = ref(false);
+  let dashboardAutoRefreshTimer: ReturnType<typeof setInterval> | null = null;
   const EMAIL_VERIFY_QUERY_FLAG = "verify_email";
   const EMAIL_VERIFY_QUERY_ID = "verify_id";
   const EMAIL_VERIFY_QUERY_HASH = "verify_hash";
@@ -225,7 +231,10 @@
     registerRecentPaymentUpdate(payload);
 
     try {
-      await handleRefreshDashboard({ suppressBalanceErrorToast: true });
+      await handleRefreshDashboard({
+        silent: true,
+        suppressBalanceErrorToast: true,
+      });
     } catch {
       // no-op
     }
@@ -241,7 +250,10 @@
     registerRecentPaymentUpdate(notification?.payload, notification?.createdAt ?? notification?.created_at);
 
     try {
-      await handleRefreshDashboard({ suppressBalanceErrorToast: true });
+      await handleRefreshDashboard({
+        silent: true,
+        suppressBalanceErrorToast: true,
+      });
     } catch {
       // no-op
     }
@@ -251,14 +263,55 @@
     eventNames: PAYMENT_REALTIME_EVENT_NAMES,
     onPaymentUpdated: handlePaymentRealtimeUpdated,
     onReconnectSync: async () => {
-      await handleRefreshDashboard({ suppressBalanceErrorToast: true });
+      await handleRefreshDashboard({
+        silent: true,
+        suppressBalanceErrorToast: true,
+      });
     },
+    retryMs: DASHBOARD_AUTO_REFRESH_MS,
+    fallbackPollMs: DASHBOARD_AUTO_REFRESH_MS,
+    resumeSyncMinIntervalMs: DASHBOARD_AUTO_REFRESH_MS,
   });
+
+  const sleep = (ms: number) =>
+    new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
+
+  const startDashboardAutoRefresh = () => {
+    if (dashboardAutoRefreshTimer) {
+      return;
+    }
+
+    dashboardAutoRefreshTimer = setInterval(() => {
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+        return;
+      }
+
+      void handleRefreshDashboard({
+        silent: true,
+        suppressBalanceErrorToast: true,
+      });
+    }, DASHBOARD_AUTO_REFRESH_MS);
+  };
+
+  const stopDashboardAutoRefresh = () => {
+    if (!dashboardAutoRefreshTimer) {
+      return;
+    }
+
+    clearInterval(dashboardAutoRefreshTimer);
+    dashboardAutoRefreshTimer = null;
+  };
 
   onMounted(async () => {
     await handleEmailVerificationFromQuery();
     useEventBus.on(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
-    await handleRefreshDashboard({ suppressBalanceErrorToast: true });
+    await handleRefreshDashboard({
+      silent: false,
+      suppressBalanceErrorToast: true,
+    });
+    startDashboardAutoRefresh();
   });
 
   type Mt4Status = "active" | "inactive";
@@ -354,7 +407,6 @@
       handleRefreshMt4();
     }
   };
-  const isMt4Refreshing = ref(false);
   const refreshAllAccountBalances = async (options: { suppressErrorToast?: boolean } = {}) => {
     try {
       await appCore.accounts.refreshAllBalances();
@@ -392,10 +444,10 @@
     mt4Accounts.value = sortAccounts(mapped);
   };
 
-  const handleRefreshSummary = async () => {
-    if (isSummaryLoading.value) return;
-
-    isSummaryLoading.value = true;
+  const handleRefreshSummary = async (options: { showLoading?: boolean } = {}) => {
+    if (options.showLoading) {
+      isSummaryVisibleLoading.value = true;
+    }
     try {
       const response = await appCore.dashboard.getSummary();
       const payload = response?.data?.data ?? {};
@@ -408,40 +460,64 @@
       };
     } catch {
     } finally {
-      isSummaryLoading.value = false;
+      if (options.showLoading) {
+        isSummaryVisibleLoading.value = false;
+      }
     }
   };
 
-  const handleRefreshMt4 = async () => {
-    if (isMt4Refreshing.value) return;
-    isMt4Refreshing.value = true;
+  const handleRefreshMt4 = async (options: { showLoading?: boolean } = {}) => {
+    if (options.showLoading) {
+      isMt4VisibleLoading.value = true;
+    }
     try {
       await loadMt4Accounts();
     } finally {
-      setTimeout(() => {
-        isMt4Refreshing.value = false;
-      }, 400);
+      if (options.showLoading) {
+        await sleep(250);
+        isMt4VisibleLoading.value = false;
+      }
     }
   };
 
-  const handleRefreshDashboard = async (options: { suppressBalanceErrorToast?: boolean } = {}) => {
-    await refreshAllAccountBalances({
-      suppressErrorToast: options.suppressBalanceErrorToast,
-    });
+  const handleRefreshDashboard = async (options: { suppressBalanceErrorToast?: boolean; silent?: boolean } = {}) => {
+    if (isDashboardRefreshing.value) {
+      return;
+    }
+
+    const showLoading = options.silent !== true;
+    const startedAt = Date.now();
+    isDashboardRefreshing.value = true;
+    isRefreshIndicatorActive.value = true;
+    useEventBus.emit("dashboardRefresh", { silent: options.silent === true });
 
     try {
-      await Promise.all([handleRefreshMt4(), handleRefreshSummary(), refreshAccountCreationEligibility()]);
+      await refreshAllAccountBalances({
+        suppressErrorToast: options.suppressBalanceErrorToast,
+      });
+
+      await Promise.all([
+        handleRefreshMt4({ showLoading }),
+        handleRefreshSummary({ showLoading }),
+        refreshAccountCreationEligibility(),
+      ]);
     } finally {
-      useEventBus.emit("dashboardRefresh");
+      const elapsed = Date.now() - startedAt;
+      if (elapsed < DASHBOARD_REFRESH_ICON_MIN_DURATION_MS) {
+        await sleep(DASHBOARD_REFRESH_ICON_MIN_DURATION_MS - elapsed);
+      }
+      isRefreshIndicatorActive.value = false;
+      isDashboardRefreshing.value = false;
     }
   };
 
   const handleManualRefresh = () => {
-    handleRefreshDashboard();
+    void handleRefreshDashboard({ silent: false });
   };
 
   onBeforeUnmount(() => {
     useEventBus.off(CLIENT_NOTIFICATION_RECEIVED_EVENT, handleClientNotificationReceived);
+    stopDashboardAutoRefresh();
   });
 </script>
 
@@ -524,20 +600,27 @@
     height: 100%;
     cursor: pointer;
     background:
-      linear-gradient(136deg, color-mix(in srgb, var(--ui-primary-main) 10%, transparent) 0%, transparent 70.44%),
-      var(--ui-background-card) !important;
+      linear-gradient(136deg, color-mix(in srgb, var(--ui-primary-main) 12%, transparent) 0%, transparent 72%),
+      color-mix(in srgb, var(--ui-background-card) 72%, transparent) !important;
     transition:
       background-color 0.2s ease,
       border-color 0.2s ease,
-      opacity 0.2s ease;
+      opacity 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+    backdrop-filter: blur(20px) saturate(1.08);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 44%, transparent),
+      0 16px 42px -30px color-mix(in srgb, var(--ui-primary-main) 44%, transparent);
   }
 
   .dashboard-widget-link:hover :deep(.dashboard-widget-card) {
-    opacity: 0.95;
+    opacity: 0.98;
+    transform: translateY(-1px);
   }
 
   .dashboard-page :deep(.dashboard-widget-card) {
-    border: 0 !important;
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 14%, var(--color-stroke-ui-light)) !important;
   }
 
   .dashboard-page :deep(.transactions-widget__loading),
@@ -559,6 +642,28 @@
   .dashboard-page :deep(.verification-progress-card),
   .dashboard-page :deep(.verification-step) {
     border-color: transparent !important;
+  }
+
+  .dashboard-page :deep(.mt4-widget),
+  .dashboard-page :deep(.verification-widget),
+  .dashboard-page :deep(.transactions-widget),
+  .dashboard-page :deep(.transaction-row),
+  .dashboard-page :deep(.verification-step__button),
+  .dashboard-page :deep(.mt4-card),
+  .dashboard-page :deep(.mt4-empty-state) {
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--ui-primary-main) 10%, transparent) 0%, transparent 74%),
+      color-mix(in srgb, var(--ui-background-panel) 74%, transparent) !important;
+    backdrop-filter: blur(20px) saturate(1.06);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, white 34%, transparent),
+      0 18px 40px -34px color-mix(in srgb, var(--ui-primary-main) 48%, transparent);
+  }
+
+  .dashboard-page :deep(.verification-step__button:hover),
+  .dashboard-page :deep(.mt4-card:hover),
+  .dashboard-page :deep(.transaction-row:hover) {
+    transform: translateY(-1px);
   }
 
   .dashboard-page :deep(.mt4-card),

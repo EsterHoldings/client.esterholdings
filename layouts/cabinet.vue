@@ -1,5 +1,11 @@
 <template>
   <div class="cabinet-layout min-h-dvh flex flex-col bg-[var(--ui-background)] bg-blend-multiply">
+    <div
+      class="cabinet-layout__city-bg"
+      aria-hidden="true">
+      <UiCabinetCityBackground />
+    </div>
+
     <CabinetHeader
       class="cabinet-header shrink-0"
       :breadcrumbs="breadcrumbs"
@@ -36,6 +42,7 @@
   import CabinetSidebar from "~/components/block/CabinetSidebar.vue";
   import TheFooter from "~/components/block/TheFooter.vue";
   import CabinetHeader from "~/components/block/CabinetHeader.vue";
+  import UiCabinetCityBackground from "~/components/ui/UiCabinetCityBackground.vue";
   import UiIconHome from "~/components/ui/UiIconHome.vue";
 
   const route = useRoute();
@@ -130,6 +137,22 @@
     background: var(--ui-background);
   }
 
+  .cabinet-layout__city-bg {
+    position: fixed;
+    right: max(-120px, calc(env(safe-area-inset-right, 0px) - 120px));
+    bottom: -24px;
+    z-index: 0;
+    width: min(38vw, 540px);
+    min-width: 260px;
+    opacity: 0.2;
+    pointer-events: none;
+    filter: drop-shadow(0 24px 60px color-mix(in srgb, var(--ui-primary-main) 16%, transparent));
+  }
+
+  .cabinet-layout__city-bg :deep(.cabinet-city-svg) {
+    color: inherit;
+  }
+
   .cabinet-header {
     position: fixed;
     top: 0;
@@ -137,16 +160,26 @@
     right: 0;
     z-index: 10;
     padding-top: env(safe-area-inset-top, 0px);
-    background: var(--ui-background);
+    background: color-mix(in srgb, var(--ui-background) 90%, transparent);
+    backdrop-filter: blur(22px) saturate(1.08);
   }
 
   .cabinet-main {
+    position: relative;
+    z-index: 1;
     padding-top: calc(60px + env(safe-area-inset-top, 0px));
     overscroll-behavior-y: none;
     overflow-anchor: none;
   }
 
   @media (max-width: 1023px) {
+    .cabinet-layout__city-bg {
+      width: min(72vw, 380px);
+      right: -82px;
+      bottom: 46px;
+      opacity: 0.14;
+    }
+
     .cabinet-main {
       padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px));
     }

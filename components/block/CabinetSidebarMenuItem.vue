@@ -1,7 +1,8 @@
 <template>
   <li
+    :ref="handleSetRootRef"
     class="relative md:w-[120px] lg:w-full mt-px h-[40px] flex justify-center transition-colors duration-300 cursor-pointer rounded-md"
-    :class="isActive ? 'bg-[var(--ui-primary-main)]' : 'hover:bg-[var(--color-stroke-ui-dark)] hover:opacity-80'"
+    :class="itemClasses"
     @click="handleClickMenuItem">
     <div class="text-[var(--ui-text-main)] flex items-center justify-center h-full w-[60px] max-sm:w-[50px] relative">
       <component
@@ -16,7 +17,7 @@
 
     <div
       :class="{
-        '!text-[--ui-text-invert]': isActive,
+        '!text-[var(--ui-text-invert)]': isActive,
         'opacity-100': props.sideBarIsOpen,
         'opacity-0 lg:w-0': !props.sideBarIsOpen,
       }"
@@ -37,9 +38,38 @@
     icon: { type: Object, default: "" },
     sideBarIsOpen: { type: Boolean, default: false },
     notificationsCount: { type: Number, default: 0 },
+    registerItemRef: { type: Function, default: null },
+    useExternalActiveHighlight: { type: Boolean, default: false },
   });
 
   const route = useRoute();
-  const isActive = computed(() => route.path === props.to);
+  const isActive = computed(() => {
+    const currentPath = String(route.path ?? "");
+    const targetPath = String(props.to ?? "");
+
+    return currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
+  });
+  const itemClasses = computed(() => {
+    if (isActive.value) {
+      return props.useExternalActiveHighlight
+        ? "sidebar-menu-item sidebar-menu-item--active"
+        : "sidebar-menu-item sidebar-menu-item--active sidebar-menu-item--active-solid";
+    }
+
+    return "sidebar-menu-item hover:bg-[var(--color-stroke-ui-dark)] hover:opacity-80";
+  });
+  const handleSetRootRef = (el: HTMLElement | null) => {
+    props.registerItemRef?.(props.to, el);
+  };
   const handleClickMenuItem = () => emit("click", props.to);
 </script>
+
+<style scoped>
+  .sidebar-menu-item--active {
+    color: var(--ui-text-invert);
+  }
+
+  .sidebar-menu-item--active-solid {
+    background: var(--ui-primary-main);
+  }
+</style>

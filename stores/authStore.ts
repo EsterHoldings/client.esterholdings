@@ -1,7 +1,7 @@
 import useAppCore from "~/composables/useAppCore";
 import { ROUTE_AUTH_LOGIN } from "~/constants/routes";
 import { defineStore } from "pinia";
-import { navigateTo } from "nuxt/app";
+import { navigateTo, useCookie } from "nuxt/app";
 import { ref, computed, watch } from "vue";
 import { USER_ACCESS_TOKEN } from "~/constants/auth";
 
@@ -88,6 +88,17 @@ export const useAuthStore = defineStore("userAuth", () => {
         photoUrl.value = normalizedUserData.photo_url || "";
         isUserLoaded.value = true;
         loadedForToken = accessToken.value.trim();
+
+        if (process.client) {
+            const preferredLocale = String(normalizedUserData.preferred_locale ?? "").trim().toLowerCase();
+
+            if (preferredLocale) {
+                const localeCookie = useCookie<string>("locale");
+                const i18nRedirected = useCookie<string>("i18n_redirected");
+                localeCookie.value = preferredLocale;
+                i18nRedirected.value = preferredLocale;
+            }
+        }
     }
 
     function setPhotoUrl(url: string): void {

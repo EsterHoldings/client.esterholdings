@@ -4,7 +4,6 @@
   import { useLocalePath } from "~/.nuxt/imports";
 
   import UiInfoHint from "~/components/ui/UiInfoHint.vue";
-  import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiTextH5 from "~/components/ui/UiTextH5.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 
@@ -191,10 +190,12 @@
     };
   };
 
-  const loadPaymentsData = async () => {
+  const loadPaymentsData = async (options: { showLoading?: boolean } = {}) => {
     if (isLoading.value) return;
 
-    isLoading.value = true;
+    if (options.showLoading) {
+      isLoading.value = true;
+    }
     errorMsg.value = null;
 
     try {
@@ -212,21 +213,29 @@
       payments.splice(0, payments.length, ...rows);
       applyRecentPaymentHighlights();
     } catch (error: any) {
-      errorMsg.value =
-        extractApiErrorMessage(error, t("cabinet.dashboard.transactions.errorLoad")) ??
-        t("cabinet.dashboard.transactions.errorLoad");
+      if (options.showLoading || payments.length === 0) {
+        errorMsg.value =
+          extractApiErrorMessage(error, t("cabinet.dashboard.transactions.errorLoad")) ??
+          t("cabinet.dashboard.transactions.errorLoad");
+      }
     } finally {
-      isLoading.value = false;
+      if (options.showLoading) {
+        isLoading.value = false;
+      }
     }
   };
 
+  const handleDashboardRefresh = (payload?: { silent?: boolean }) => {
+    void loadPaymentsData({ showLoading: payload?.silent !== true });
+  };
+
   onMounted(() => {
-    loadPaymentsData();
-    useEventBus.on("dashboardRefresh", loadPaymentsData);
+    void loadPaymentsData({ showLoading: true });
+    useEventBus.on("dashboardRefresh", handleDashboardRefresh);
   });
 
   onBeforeUnmount(() => {
-    useEventBus.off("dashboardRefresh", loadPaymentsData);
+    useEventBus.off("dashboardRefresh", handleDashboardRefresh);
     paymentHighlightTimers.forEach(timer => clearTimeout(timer));
     paymentHighlightTimers.clear();
   });
@@ -248,7 +257,68 @@
         <div
           v-if="isLoading"
           class="transactions-widget__loading">
-          <UiIconSpinnerDefault />
+          <div class="transactions-widget__skeleton-list">
+            <div
+              v-for="idx in TRANSACTIONS_CHUNK_SIZE"
+              :key="`payment-skeleton-${idx}`"
+              class="transaction-row transaction-row--skeleton">
+              <div class="hidden md:grid transaction-row__desktop">
+                <div class="space-y-2">
+                  <div class="transactions-skeleton transactions-skeleton--label animate-pulse"></div>
+                  <div class="transactions-skeleton transactions-skeleton--value animate-pulse"></div>
+                </div>
+                <div class="space-y-2">
+                  <div class="transactions-skeleton transactions-skeleton--label animate-pulse"></div>
+                  <div class="transactions-skeleton transactions-skeleton--value transactions-skeleton--value-sm animate-pulse"></div>
+                </div>
+                <div class="space-y-2">
+                  <div class="transactions-skeleton transactions-skeleton--label animate-pulse"></div>
+                  <div class="transactions-skeleton transactions-skeleton--value transactions-skeleton--value-xs animate-pulse"></div>
+                </div>
+                <div class="space-y-2">
+                  <div class="transactions-skeleton transactions-skeleton--label animate-pulse"></div>
+                  <div class="transactions-skeleton transactions-skeleton--pill animate-pulse"></div>
+                </div>
+                <div class="space-y-2 justify-self-end text-right">
+                  <div class="transactions-skeleton transactions-skeleton--label animate-pulse ml-auto"></div>
+                  <div class="transactions-skeleton transactions-skeleton--value transactions-skeleton--date animate-pulse ml-auto"></div>
+                </div>
+                <div class="justify-self-end">
+                  <div class="transactions-skeleton transactions-skeleton--pill animate-pulse"></div>
+                </div>
+              </div>
+
+              <div class="md:hidden flex flex-col gap-[10px]">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="space-y-2">
+                    <div class="transactions-skeleton transactions-skeleton--label animate-pulse"></div>
+                    <div class="transactions-skeleton transactions-skeleton--value animate-pulse"></div>
+                  </div>
+                  <div class="transactions-skeleton transactions-skeleton--pill animate-pulse"></div>
+                </div>
+                <div class="transaction-row__mobile-grid">
+                  <div class="space-y-2">
+                    <div class="transactions-skeleton transactions-skeleton--label animate-pulse"></div>
+                    <div class="transactions-skeleton transactions-skeleton--value transactions-skeleton--value-sm animate-pulse"></div>
+                  </div>
+                  <div class="space-y-2 text-right">
+                    <div class="transactions-skeleton transactions-skeleton--label animate-pulse ml-auto"></div>
+                    <div class="transactions-skeleton transactions-skeleton--value transactions-skeleton--value-xs animate-pulse ml-auto"></div>
+                  </div>
+                </div>
+                <div class="transaction-row__mobile-grid transaction-row__mobile-grid--bordered">
+                  <div class="space-y-2">
+                    <div class="transactions-skeleton transactions-skeleton--label animate-pulse"></div>
+                    <div class="transactions-skeleton transactions-skeleton--pill animate-pulse"></div>
+                  </div>
+                  <div class="space-y-2 text-right">
+                    <div class="transactions-skeleton transactions-skeleton--label animate-pulse ml-auto"></div>
+                    <div class="transactions-skeleton transactions-skeleton--value transactions-skeleton--date animate-pulse ml-auto"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div
@@ -430,6 +500,19 @@
     text-align: center;
   }
 
+  .transactions-widget__loading {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    min-height: 0;
+  }
+
+  .transactions-widget__skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   .transactions-widget__error {
     color: var(--ui-sticker-danger);
   }
@@ -471,6 +554,44 @@
       background-color 0.2s ease,
       border-color 0.2s ease,
       opacity 0.2s ease;
+  }
+
+  .transaction-row--skeleton {
+    pointer-events: none;
+  }
+
+  .transactions-skeleton {
+    display: block;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 82%, transparent);
+  }
+
+  .transactions-skeleton--label {
+    width: 64px;
+    height: 10px;
+  }
+
+  .transactions-skeleton--value {
+    width: 132px;
+    height: 14px;
+  }
+
+  .transactions-skeleton--value-sm {
+    width: 72px;
+  }
+
+  .transactions-skeleton--value-xs {
+    width: 54px;
+  }
+
+  .transactions-skeleton--pill {
+    width: 84px;
+    height: 24px;
+    border-radius: 999px;
+  }
+
+  .transactions-skeleton--date {
+    width: 108px;
   }
 
   .transaction-row:hover {

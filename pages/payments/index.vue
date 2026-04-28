@@ -1401,8 +1401,8 @@
     margin: 0 auto;
     max-width: 680px;
     border-radius: 14px;
-    border: 1px dashed var(--color-stroke-ui-light);
-    background: color-mix(in srgb, var(--ui-background-card) 76%, transparent);
+    border: 0;
+    background: transparent;
   }
 
   .payments-error-state {
