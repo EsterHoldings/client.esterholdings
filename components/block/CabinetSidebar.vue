@@ -7,7 +7,9 @@
           <UiIconLogoLight
             v-if="isThemeLight"
             class="cabinet-logo cabinet-logo--light" />
-          <UiIconLogo v-else />
+          <UiIconLogo
+            v-else
+            class="cabinet-logo" />
         </NuxtLink>
       </div>
     </div>
@@ -657,6 +659,16 @@
     supportRealtimeInitInFlight = false;
   });
 </script>
+
+<style scoped>
+.cabinet-logo {
+  display: block;
+}
+
+.cabinet-logo--light {
+  clip-path: inset(2px 2px 2px 2px);
+}
+</style>
 
 <style scoped>
   .cabinet-logo--light {

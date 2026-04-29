@@ -1137,7 +1137,9 @@ onUnmounted(() => {
       class="h-[60px] flex items-center justify-between lg:justify-start border-b border-[--color-stroke-ui-light] lg:ml-[240px] pl-5 pr-5 lg:gap-4">
     <div class="lg:absolute lg:top-[-100px]">
       <NuxtLink :to="`/${locale}`">
-        <UiIconLogo v-if="!isThemeLight"/>
+        <UiIconLogo
+          v-if="!isThemeLight"
+          class="cabinet-logo" />
         <UiIconLogoLight
           v-else
           class="cabinet-logo cabinet-logo--light" />
@@ -1170,7 +1172,6 @@ onUnmounted(() => {
       <div class="h-[60px] flex items-center justify-center">
         <LanguageSwitcher
             isSidebar
-            :isInvert="isThemeLight"
             class="icon"/>
       </div>
 
@@ -1372,8 +1373,12 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+:deep(.cabinet-logo) {
+  display: block;
+}
+
 :deep(.cabinet-logo--light) {
-  filter: brightness(0) saturate(100%);
+  clip-path: inset(2px 2px 2px 2px);
 }
 
 :deep(.dashboard-header-deposit-button) {

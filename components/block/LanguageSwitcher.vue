@@ -8,11 +8,7 @@
       :aria-expanded="isOpen"
       :aria-label="localeLabel"
       @click="toggleDropdown">
-      <UiIconGlobe
-        class="icon"
-        :class="{
-          'svg-invert': props.isInvert,
-        }" />
+      <UiIconGlobe class="icon" />
     </button>
 
     <transition name="dropdown-expand">
@@ -174,11 +170,11 @@
       transform: translateX(-50%);
       transform-origin: top center;
       width: min(520px, calc(100vw - 24px));
-      background: color-mix(in srgb, var(--ui-background-panel) 88%, transparent);
+      background: var(--ui-background);
       border: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 78%, transparent);
       border-radius: 16px;
       box-shadow: 0 18px 48px -24px rgba(0, 0, 0, 0.32);
-      backdrop-filter: blur(16px) saturate(1.04);
+      backdrop-filter: none;
       padding: 12px;
       z-index: 11;
       max-height: min(72vh, 520px);
@@ -224,7 +220,7 @@
         gap: 6px;
         font-size: 13px;
         cursor: pointer;
-        background: color-mix(in srgb, var(--ui-background-card) 84%, transparent);
+        background: var(--ui-background-card);
         border: 1px solid transparent;
         border-radius: 12px;
         padding: 10px 12px;
@@ -250,10 +246,6 @@
         }
       }
     }
-  }
-
-  .svg-invert {
-    filter: invert(1);
   }
 
   .dropdown-expand-enter-active,

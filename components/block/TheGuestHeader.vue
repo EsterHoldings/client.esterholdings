@@ -4,15 +4,16 @@
       <NuxtLink
         :to="localePath('/')"
         class="header__logo-link">
+        <UiIconLogoLight
+          v-if="isThemeLight"
+          class="header__logo header__logo--light" />
         <UiIconLogo
-          :class="{
-            'svg-invert': isThemeLight,
-          }" />
+          v-else
+          class="header__logo" />
       </NuxtLink>
 
       <div class="header__controls">
         <LanguageSwitcher
-          :isInvert="isThemeLight"
           class="header__control header__control--language" />
 
         <button
@@ -39,6 +40,7 @@ import { useI18n } from "vue-i18n";
 import { useThemeStore } from "~/stores/themeStore.js";
 import LanguageSwitcher from "~/components/block/LanguageSwitcher.vue";
 import UiIconLogo from "~/components/ui/UiIconLogo.vue";
+import UiIconLogoLight from "~/components/ui/UiIconLogoLight.vue";
 import UiIconMoon from "~/components/ui/UiIconMoon.vue";
 import UiIconSun from "~/components/ui/UiIconSun.vue";
 
@@ -99,6 +101,14 @@ const handleToggleTheme = () => {
   justify-content: center;
 }
 
+.header__logo {
+  display: block;
+}
+
+.header__logo--light {
+  clip-path: inset(2px 2px 2px 2px);
+}
+
 .header__controls {
   margin-top: 20px;
   display: inline-flex;
@@ -115,9 +125,9 @@ const handleToggleTheme = () => {
   height: 40px;
   color: var(--ui-text-main);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--ui-background-panel) 82%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-stroke-ui-light) 74%, transparent);
-  backdrop-filter: blur(10px);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .header__theme-toggle {
@@ -131,12 +141,7 @@ const handleToggleTheme = () => {
 
 .header__theme-toggle:hover {
   transform: translateY(-1px);
-  background: color-mix(in srgb, var(--ui-primary-main) 12%, var(--ui-background-panel));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 28%, transparent);
-}
-
-.svg-invert {
-  filter: invert(1);
+  color: var(--ui-primary-main);
 }
 
 .header__controls :deep(.language-trigger) {
@@ -147,7 +152,7 @@ const handleToggleTheme = () => {
 }
 
 .header__controls :deep(.language-trigger:hover) {
-  background: color-mix(in srgb, var(--ui-primary-main) 12%, var(--ui-background-panel));
+  color: var(--ui-primary-main);
 }
 
 .header__controls :deep(.icon),
