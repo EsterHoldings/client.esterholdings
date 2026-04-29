@@ -1172,7 +1172,7 @@ onUnmounted(() => {
       <div class="h-[60px] flex items-center justify-center">
         <LanguageSwitcher
             isSidebar
-            class="icon"/>
+            class="header-language-switcher"/>
       </div>
 
       <div
@@ -1377,10 +1377,6 @@ onUnmounted(() => {
   display: block;
 }
 
-:deep(.cabinet-logo--light) {
-  clip-path: inset(2px 2px 2px 2px);
-}
-
 :deep(.dashboard-header-deposit-button) {
   min-height: 42px;
   border-radius: 999px !important;
@@ -1415,6 +1411,14 @@ onUnmounted(() => {
   justify-content: center;
   color: var(--ui-text-main);
   transition: color 0.2s ease, transform 0.2s ease;
+}
+
+:deep(.header-language-switcher .language-trigger) {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ui-text-main);
 }
 
 .header-bell-button--has-unread {

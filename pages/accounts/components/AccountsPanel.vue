@@ -41,6 +41,7 @@
             </UiSelect>
 
             <ViewModeToggle
+              v-if="!isMobileViewport"
               class="w-full sm:w-auto"
               bordered
               :modelValue="viewMode"
@@ -1053,7 +1054,7 @@
     value === "table" || value === "cards" || value === "full";
 
   const resolveDefaultViewMode = (width: number): "table" | "cards" | "full" => {
-    if (width < 768) return "cards";
+    if (width < 768) return "full";
     if (width < 1024) return "full";
     return "table";
   };
@@ -1069,6 +1070,13 @@
     if (typeof window === "undefined") return;
 
     const viewportChanged = syncViewport();
+
+    if (isMobileViewport.value) {
+      if (viewMode.value !== "full") {
+        viewMode.value = "full";
+      }
+      return;
+    }
 
     if (!forceRestore && !viewportChanged) return;
 
@@ -1088,10 +1096,12 @@
 
   watch(viewMode, mode => {
     if (typeof window === "undefined") return;
+    if (isMobileViewport.value) return;
     localStorage.setItem(VIEW_MODE_STORAGE_KEY, mode);
   });
 
   const handleChangeViewMode = (nextViewMode: string) => {
+    if (isMobileViewport.value) return;
     if (nextViewMode === "table" || nextViewMode === "cards" || nextViewMode === "full") {
       viewMode.value = nextViewMode;
     }

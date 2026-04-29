@@ -105,10 +105,6 @@ const handleToggleTheme = () => {
   display: block;
 }
 
-.header__logo--light {
-  clip-path: inset(2px 2px 2px 2px);
-}
-
 .header__controls {
   margin-top: 20px;
   display: inline-flex;
@@ -118,13 +114,15 @@ const handleToggleTheme = () => {
 }
 
 .header__control {
+  appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
   color: var(--ui-text-main);
-  border-radius: 999px;
+  border: 0;
+  border-radius: 0;
   background: transparent;
   box-shadow: none;
   backdrop-filter: none;
@@ -145,10 +143,13 @@ const handleToggleTheme = () => {
 }
 
 .header__controls :deep(.language-trigger) {
+  appearance: none;
   width: 40px;
   height: 40px;
-  border-radius: 999px;
+  border: 0;
+  border-radius: 0;
   background: transparent;
+  box-shadow: none;
 }
 
 .header__controls :deep(.language-trigger:hover) {

@@ -664,17 +664,9 @@
 .cabinet-logo {
   display: block;
 }
-
-.cabinet-logo--light {
-  clip-path: inset(2px 2px 2px 2px);
-}
 </style>
 
 <style scoped>
-  .cabinet-logo--light {
-    filter: brightness(0) saturate(100%);
-  }
-
   .logo :deep(svg),
   .logo :deep(img) {
     display: block;

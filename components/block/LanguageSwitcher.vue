@@ -144,11 +144,13 @@
     position: relative;
 
     .language-trigger {
+      appearance: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border: 0;
       background: transparent;
+      box-shadow: none;
       padding: 0;
       color: var(--ui-text-main);
       cursor: pointer;
@@ -170,7 +172,7 @@
       transform: translateX(-50%);
       transform-origin: top center;
       width: min(520px, calc(100vw - 24px));
-      background: var(--ui-background);
+      background: color-mix(in srgb, var(--ui-background) 96%, white 4%);
       border: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 78%, transparent);
       border-radius: 16px;
       box-shadow: 0 18px 48px -24px rgba(0, 0, 0, 0.32);
@@ -220,7 +222,7 @@
         gap: 6px;
         font-size: 13px;
         cursor: pointer;
-        background: var(--ui-background-card);
+        background: color-mix(in srgb, var(--ui-background-card) 96%, var(--ui-background) 4%);
         border: 1px solid transparent;
         border-radius: 12px;
         padding: 10px 12px;

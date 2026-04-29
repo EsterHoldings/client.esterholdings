@@ -6,7 +6,7 @@
           {{ t("cabinet.payments.title") }}
         </UiTextH4>
 
-        <div class="flex justify-between items-center gap-2">
+        <div class="payments-details-header__actions">
           <UiButtonDefault
             v-if="canCreatePaymentDetail"
             state="info"
@@ -1207,7 +1207,7 @@
     value === "table" || value === "cards" || value === "full";
 
   const resolveDefaultViewMode = (width: number): "table" | "cards" | "full" => {
-    if (width < 768) return "cards";
+    if (width < 768) return "full";
     if (width < 1024) return "full";
     return "table";
   };
@@ -1225,8 +1225,8 @@
     const viewportChanged = syncViewport();
 
     if (isMobileViewport.value) {
-      if (viewMode.value !== "cards") {
-        viewMode.value = "cards";
+      if (viewMode.value !== "full") {
+        viewMode.value = "full";
       }
       return;
     }
@@ -1381,6 +1381,20 @@
     padding: 12px;
   }
 
+  @media (min-width: 640px) {
+    .payments-details-header {
+      padding: 0;
+    }
+  }
+
+  .payments-details-header__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
   .payments-details-empty-state {
     min-height: calc(100vh - 370px);
     display: flex;
@@ -1437,6 +1451,13 @@
 
   @media (max-width: 767px) {
     .payments-details-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      padding: 8px 4px 4px;
+    }
+
+    .payments-details-header__actions {
       flex-direction: column;
       align-items: stretch;
     }
@@ -1625,8 +1646,8 @@
     }
 
     .cabinet-card__header {
-      flex-direction: column;
-      align-items: flex-start;
+      min-height: 0;
+      gap: 8px;
     }
 
     .cabinet-card__head-side {
@@ -1635,9 +1656,24 @@
       justify-content: flex-start;
     }
 
-    .cabinet-card__grid,
-    .cabinet-card__grid--full {
+    .cabinet-card__grid {
       grid-template-columns: 1fr;
+    }
+
+    .cabinet-card--full-row {
+      padding: 14px 14px 12px;
+      row-gap: 12px;
+    }
+
+    .cabinet-card--full-row .cabinet-card__grid--full {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 12px;
+    }
+
+    .cabinet-card--full-row .cabinet-card__value,
+    .cabinet-card--full-row .status-inline,
+    .cabinet-card--full-row .payment-row-docs {
+      font-size: 13px;
     }
   }
 
