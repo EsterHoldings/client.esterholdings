@@ -3,7 +3,9 @@
     <div
       class="cabinet-layout__city-bg"
       aria-hidden="true">
-      <UiCabinetCityBackground />
+      <component
+        :is="cityBackgroundComponent"
+        class="cabinet-layout__city-illustration" />
     </div>
 
     <CabinetHeader
@@ -24,7 +26,7 @@
         leave-to-class="opacity-0">
         <main
           :key="route.fullPath"
-          class="cabinet-main flex-1 min-h-0 overflow-y-auto no-scrollbar box-border w-full p-1 lg:pl-[250px] text-white">
+          class="cabinet-main flex-1 min-h-0 overflow-y-auto no-scrollbar box-border w-full lg:pl-[250px] text-white">
           <slot />
         </main>
       </Transition>
@@ -38,15 +40,18 @@
   import { useRoute } from "vue-router";
   import { useI18n } from "vue-i18n";
   import { useHead } from "#imports";
+  import { useThemeStore } from "~/stores/themeStore";
 
   import CabinetSidebar from "~/components/block/CabinetSidebar.vue";
   import TheFooter from "~/components/block/TheFooter.vue";
   import CabinetHeader from "~/components/block/CabinetHeader.vue";
   import UiCabinetCityBackground from "~/components/ui/UiCabinetCityBackground.vue";
+  import UiHomeBannerV2 from "~/components/ui/UiHomeBannerV2.vue";
   import UiIconHome from "~/components/ui/UiIconHome.vue";
 
   const route = useRoute();
   const { t, locale } = useI18n({ useScope: "global" });
+  const themeStore = useThemeStore();
 
   useHead({
     htmlAttrs: {
@@ -103,6 +108,10 @@
     const visibleSegments = segments.slice(startIdx);
     return visibleSegments.join("/") !== "";
   });
+
+  const cityBackgroundComponent = computed(() =>
+    themeStore.currentTheme === "light" ? UiHomeBannerV2 : UiCabinetCityBackground
+  );
 </script>
 
 <style>
@@ -139,18 +148,35 @@
 
   .cabinet-layout__city-bg {
     position: fixed;
-    right: max(-120px, calc(env(safe-area-inset-right, 0px) - 120px));
-    bottom: -24px;
+    top: calc(60px + env(safe-area-inset-top, 0px));
+    right: 0;
+    bottom: 0;
     z-index: 0;
-    width: min(38vw, 540px);
-    min-width: 260px;
+    width: min(42vw, 620px);
+    min-width: 280px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
     opacity: 0.2;
     pointer-events: none;
     filter: drop-shadow(0 24px 60px color-mix(in srgb, var(--ui-primary-main) 16%, transparent));
   }
 
-  .cabinet-layout__city-bg :deep(.cabinet-city-svg) {
+  .cabinet-layout__city-illustration {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    opacity: 0.96;
+  }
+
+  .cabinet-layout__city-bg :deep(.cabinet-city-svg),
+  .cabinet-layout__city-bg :deep(svg) {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
     color: inherit;
+    object-fit: contain;
+    object-position: right bottom;
   }
 
   .cabinet-header {
@@ -174,9 +200,7 @@
 
   @media (max-width: 1023px) {
     .cabinet-layout__city-bg {
-      width: min(72vw, 380px);
-      right: -82px;
-      bottom: 46px;
+      width: min(72vw, 420px);
       opacity: 0.14;
     }
 

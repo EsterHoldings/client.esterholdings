@@ -58,52 +58,57 @@
           v-for="step in orderedSteps"
           :key="step.key"
           class="verification-step">
-          <button
-            type="button"
-            class="verification-step__button"
-            @click="handleOpenStep(step.key)">
-            <div
-              class="verification-step__icon"
-              :class="step.stateClass">
-              <component
-                :is="step.icon"
-                class="verification-step__icon-svg" />
-            </div>
-
-            <div class="verification-step__meta">
-              <div class="verification-step__title-row">
-                <div
-                  class="verification-step__title"
-                  :title="step.title">
-                  {{ step.title }}
-                </div>
-                <div class="verification-step__status verification-step__status--inline">
-                  <span
-                    class="verification-step__status-dot"
-                    :class="step.stateClass"></span>
-                  {{ step.statusLabel }}
-                </div>
-              </div>
+          <div class="verification-step__card">
+            <button
+              type="button"
+              class="verification-step__button"
+              @click="handleOpenStep(step.key)">
               <div
-                v-if="step.comment"
-                class="verification-step__comment">
-                {{ step.comment }}
+                class="verification-step__icon"
+                :class="step.stateClass">
+                <component
+                  :is="step.icon"
+                  class="verification-step__icon-svg" />
               </div>
-            </div>
-          </button>
 
-          <button
-            v-if="step.key === 'email' && canResendEmail"
-            type="button"
-            class="verification-step__resend"
-            :disabled="isResendingEmail"
-            @click="handleResendEmailVerification">
-            {{
-              isResendingEmail
-                ? resolveText("cabinet.dashboard.accountVerification.resendingEmail", "Sending...")
-                : resolveText("cabinet.dashboard.accountVerification.resendEmail", "Send again")
-            }}
-          </button>
+              <div class="verification-step__meta">
+                <div class="verification-step__title-row">
+                  <div
+                    class="verification-step__title"
+                    :title="step.title">
+                    {{ step.title }}
+                  </div>
+                  <div class="verification-step__status verification-step__status--inline">
+                    <span
+                      class="verification-step__status-dot"
+                      :class="step.stateClass"></span>
+                    {{ step.statusLabel }}
+                  </div>
+                </div>
+                <div
+                  v-if="step.comment"
+                  class="verification-step__comment">
+                  {{ step.comment }}
+                </div>
+              </div>
+            </button>
+
+            <div
+              v-if="step.key === 'email' && canResendEmail"
+              class="verification-step__footer">
+              <button
+                type="button"
+                class="verification-step__resend"
+                :disabled="isResendingEmail"
+                @click.stop="handleResendEmailVerification">
+                {{
+                  isResendingEmail
+                    ? resolveText("cabinet.dashboard.accountVerification.resendingEmail", "Sending...")
+                    : resolveText("cabinet.dashboard.accountVerification.resendEmail", "Send again")
+                }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -490,8 +495,22 @@
 
   .verification-step {
     border-radius: 12px;
-    border: 0;
+    border: 1px solid transparent;
+    background: var(--ui-background-card);
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .verification-step:hover {
     background: transparent;
+    border-color: var(--color-stroke-ui-light);
+  }
+
+  .verification-step__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 
   .verification-step__button {
@@ -500,20 +519,12 @@
     grid-template-columns: 32px minmax(0, 1fr);
     align-items: flex-start;
     gap: 10px;
-    border: 1px solid transparent;
-    background: var(--ui-background-card);
-    padding: 9px 12px;
+    border: 0;
+    background: transparent;
+    padding: 9px 12px 0;
     border-radius: 12px;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease;
     text-align: left;
     cursor: pointer;
-  }
-
-  .verification-step__button:hover {
-    background: transparent;
-    border-color: var(--color-stroke-ui-light);
   }
 
   .verification-step__button:focus-visible {
@@ -609,8 +620,14 @@
     overflow-wrap: anywhere;
   }
 
+  .verification-step__footer {
+    margin-top: 2px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 12px 10px;
+  }
+
   .verification-step__resend {
-    margin: 6px 0 0 42px;
     display: inline-flex;
     width: fit-content;
     align-items: center;

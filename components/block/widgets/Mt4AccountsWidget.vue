@@ -11,7 +11,9 @@
             :content="mt4Description" />
         </div>
       </div>
-      <div class="mt4-header-card__actions">
+      <div
+        v-if="visibleAccounts.length > 0"
+        class="mt4-header-card__actions">
         <UiButtonDefault
           state="success--outline--small"
           class="mt4-header-card__cta w-full sm:w-auto text-[var(--ui-text-main)]"
@@ -792,12 +794,15 @@
   .mt4-list-wrap {
     min-height: 0;
     flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .mt4-list {
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
     gap: 8px;
     align-content: start;
     overflow-y: auto;
@@ -806,16 +811,17 @@
 
   .mt4-empty-state {
     min-height: 100%;
+    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
     gap: 10px;
-    padding: 18px 12px;
+    padding: 20px 12px;
     border-radius: 12px;
-    background: color-mix(in srgb, var(--ui-background-card) 72%, transparent);
-    border: 1px dashed var(--color-stroke-ui-light);
+    background: transparent;
+    border: 0;
   }
 
   .mt4-empty-state__icon-wrap {
@@ -825,8 +831,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: color-mix(in srgb, var(--ui-primary-main) 20%, transparent);
-    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 40%, transparent);
+    background: color-mix(in srgb, var(--ui-primary-main) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 26%, transparent);
   }
 
   .mt4-empty-state__icon {
@@ -996,8 +1002,7 @@
     width: 180px;
     border-radius: 10px;
     border: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 82%, var(--ui-text-main) 18%);
-    background: color-mix(in srgb, var(--ui-background-panel) 94%, var(--ui-background-card) 6%);
-    backdrop-filter: blur(20px) saturate(125%);
+    background: color-mix(in srgb, var(--ui-background-panel) 100%, var(--ui-background-card) 0%);
     opacity: 1;
     pointer-events: auto;
     padding: 8px;

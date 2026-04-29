@@ -6,7 +6,7 @@ const props = defineProps<{ plain?: boolean }>();
 
 <template>
   <div>
-    <div class="mb-5 flex w-full items-center justify-between gap-5">
+    <div class="mb-5 flex w-full items-center justify-between gap-4 sm:mb-6 sm:gap-5">
       <slot name="top" />
     </div>
 

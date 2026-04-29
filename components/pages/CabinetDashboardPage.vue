@@ -557,6 +557,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
+    align-items: stretch;
   }
 
   .dashboard-top-grid__summary {
@@ -577,7 +578,7 @@
   @media (min-width: 1024px) {
     .dashboard-top-grid {
       grid-template-columns: minmax(0, 1.28fr) minmax(320px, 0.92fr);
-      align-items: start;
+      align-items: stretch;
     }
 
     .dashboard-top-grid__summary {
@@ -632,6 +633,8 @@
   .dashboard-page :deep(.transactions-widget__empty) {
     min-height: 92px !important;
     padding: 10px !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   .dashboard-page :deep(.transaction-row) {
@@ -648,9 +651,8 @@
   .dashboard-page :deep(.verification-widget),
   .dashboard-page :deep(.transactions-widget),
   .dashboard-page :deep(.transaction-row),
-  .dashboard-page :deep(.verification-step__button),
-  .dashboard-page :deep(.mt4-card),
-  .dashboard-page :deep(.mt4-empty-state) {
+  .dashboard-page :deep(.verification-step),
+  .dashboard-page :deep(.mt4-card) {
     background:
       linear-gradient(135deg, color-mix(in srgb, var(--ui-primary-main) 10%, transparent) 0%, transparent 74%),
       color-mix(in srgb, var(--ui-background-panel) 74%, transparent) !important;
@@ -660,7 +662,7 @@
       0 18px 40px -34px color-mix(in srgb, var(--ui-primary-main) 48%, transparent);
   }
 
-  .dashboard-page :deep(.verification-step__button:hover),
+  .dashboard-page :deep(.verification-step:hover),
   .dashboard-page :deep(.mt4-card:hover),
   .dashboard-page :deep(.transaction-row:hover) {
     transform: translateY(-1px);

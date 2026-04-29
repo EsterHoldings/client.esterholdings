@@ -2,7 +2,7 @@
 import type Echo from "laravel-echo";
 import {useRoute} from "vue-router";
 import {navigateTo, useNuxtApp} from "nuxt/app";
-import {computed, ref, onMounted, onUnmounted, watch} from "vue";
+import {computed, nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import {useI18n} from "vue-i18n";
 import {useToast} from "vue-toastification";
 import useAppCore from "~/composables/useAppCore";
@@ -34,6 +34,7 @@ import UiIconLogoLight from "~/components/ui/UiIconLogoLight.vue";
 import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
 import UiSwitchToggle from "~/components/ui/UiSwitchToggle.vue";
 import UiBreadcrumb from "~/components/ui/UiBreadcrumb.vue";
+import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
 
 type BreadcrumbItem = {
   name: string;
@@ -56,6 +57,8 @@ type CabinetNotification = {
 const NOTIFICATIONS_POLL_MS = 120000;
 const NOTIFICATIONS_REALTIME_RETRY_MS = 30000;
 const NOTIFICATIONS_RESUME_SYNC_MIN_INTERVAL_MS = 60000;
+const NOTIFICATIONS_PAGE_SIZE = 10;
+const NOTIFICATIONS_VISIBLE_READ_DEBOUNCE_MS = 180;
 const CLIENT_NOTIFICATION_RECEIVED_EVENT = "client-notification-received";
 const CLIENT_NOTIFICATIONS_MARKED_EVENT = "client-notifications-marked";
 const NOTIFICATION_EVENT_NAMES = [
@@ -66,7 +69,6 @@ const NOTIFICATION_EVENT_NAMES = [
 ];
 const SUPPORT_USER_NOTIFICATION_TYPES = ["support.message"];
 const BILLING_USER_NOTIFICATION_TYPES = ["payments.withdrawal.status-updated", "payments.deposit.status-updated"];
-const CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT = "client-notifications-marked-by-types";
 
 const props = withDefaults(
     defineProps<{
@@ -98,14 +100,19 @@ const isOpen = computed({
 });
 
 const isLoading = ref(false);
+const isLoadingMoreNotifications = ref(false);
 const notificationsRef = ref<any>(null);
+const notificationsListRef = ref<HTMLElement | null>(null);
 const notifications = ref<CabinetNotification[]>([]);
+const notificationsPage = ref(1);
+const notificationsHasMore = ref(false);
 const unreadCount = computed(() => notificationsStore.unreadCount);
 const notificationsLoaded = ref(false);
 const activeNotificationsChannel = ref<any>(null);
 const currentNotificationsChannelName = ref("");
 const isMarkAllInProgress = ref(false);
 const knownNotificationIds = ref<Set<string>>(new Set());
+const notificationItemRefs = ref<Record<string, HTMLElement | null>>({});
 const unreadBadgeLabel = computed(() => (unreadCount.value > 99 ? "99+" : String(unreadCount.value)));
 const hasAccessToken = () => Boolean(String(authStore.accessToken ?? "").trim());
 let notificationsSocketStateHandler: ((states: any) => void) | null = null;
@@ -113,6 +120,9 @@ let notificationsRealtimeRetryTimer: ReturnType<typeof setInterval> | null = nul
 let notificationsPollTimer: ReturnType<typeof setInterval> | null = null;
 let notificationsResumeListenersAttached = false;
 let lastNotificationsResumeSyncAt = 0;
+let notificationsVisibilityObserver: IntersectionObserver | null = null;
+let notificationsVisibleReadTimer: ReturnType<typeof setTimeout> | null = null;
+const pendingVisibleReadIds = new Set<string>();
 
 const handleClickLogout = () => {
   authStore.setAccessToken("");
@@ -129,7 +139,6 @@ const handleToggleTheme = () => {
 
 const route = useRoute();
 const isSupportRoute = computed(() => String(route.path ?? "").includes("/support"));
-const isPaymentsRoute = computed(() => String(route.path ?? "").includes("/payments"));
 const isProfileRoute = computed(() => route.path.split("/").pop() === "profile");
 const isDashboardRoute = computed(() => {
   const segments = route.path.split("/").filter(Boolean);
@@ -530,6 +539,18 @@ const rememberNotifications = (items: CabinetNotification[]) => {
   knownNotificationIds.value = next;
 };
 
+const setNotificationItemRef = (id: string, element: Element | null) => {
+  const normalizedId = String(id ?? "").trim();
+  if (normalizedId === "") return;
+
+  if (!(element instanceof HTMLElement)) {
+    delete notificationItemRefs.value[normalizedId];
+    return;
+  }
+
+  notificationItemRefs.value[normalizedId] = element;
+};
+
 const upsertNotification = (notification: CabinetNotification, prepend = true) => {
   const idx = notifications.value.findIndex(item => item.id === notification.id);
   if (idx === -1) {
@@ -542,6 +563,69 @@ const upsertNotification = (notification: CabinetNotification, prepend = true) =
   }
 
   notifications.value.splice(idx, 1, notification);
+};
+
+const queueVisibleNotificationRead = (notificationId: string) => {
+  const normalizedId = String(notificationId ?? "").trim();
+  if (normalizedId === "") return;
+
+  const notification = notifications.value.find(item => item.id === normalizedId);
+  if (!notification || notification.wasRead) return;
+
+  pendingVisibleReadIds.add(normalizedId);
+  if (notificationsVisibleReadTimer) return;
+
+  notificationsVisibleReadTimer = setTimeout(async () => {
+    const idsToMark = Array.from(pendingVisibleReadIds);
+    pendingVisibleReadIds.clear();
+    if (notificationsVisibleReadTimer) {
+      clearTimeout(notificationsVisibleReadTimer);
+      notificationsVisibleReadTimer = null;
+    }
+
+    await Promise.allSettled(idsToMark.map(id => markNotificationRead(id, true)));
+  }, NOTIFICATIONS_VISIBLE_READ_DEBOUNCE_MS);
+};
+
+const disconnectNotificationsVisibilityObserver = () => {
+  if (notificationsVisibilityObserver) {
+    notificationsVisibilityObserver.disconnect();
+    notificationsVisibilityObserver = null;
+  }
+};
+
+const reconnectNotificationsVisibilityObserver = async () => {
+  if (typeof window === "undefined" || typeof IntersectionObserver === "undefined" || !isOpen.value) {
+    return;
+  }
+
+  await nextTick();
+
+  disconnectNotificationsVisibilityObserver();
+  const root = notificationsListRef.value;
+  if (!root) return;
+
+  notificationsVisibilityObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.6) return;
+        const notificationId = String((entry.target as HTMLElement)?.dataset?.notificationId ?? "").trim();
+        if (notificationId !== "") {
+          queueVisibleNotificationRead(notificationId);
+        }
+      });
+    },
+    {
+      root,
+      threshold: [0.6, 0.85],
+    }
+  );
+
+  Object.values(notificationItemRefs.value).forEach(element => {
+    if (element instanceof HTMLElement) {
+      notificationsVisibilityObserver?.observe(element);
+    }
+  });
 };
 
 const setAllLocalRead = () => {
@@ -557,18 +641,31 @@ const setAllLocalRead = () => {
   });
 };
 
-const loadNotifications = async (options: { showToastsForNew?: boolean } = {}): Promise<CabinetNotification[]> => {
+const loadNotifications = async (
+  options: { page?: number; append?: boolean; showToastsForNew?: boolean; preserveLoading?: boolean } = {}
+): Promise<CabinetNotification[]> => {
   if (!hasAccessToken()) {
     notifications.value = [];
     notificationsLoaded.value = false;
     knownNotificationIds.value = new Set();
     notificationsStore.reset();
+    notificationsPage.value = 1;
+    notificationsHasMore.value = false;
     return [];
   }
 
-  isLoading.value = true;
+  const page = Math.max(1, Number(options.page ?? 1) || 1);
+  const append = options.append === true && page > 1;
+
+  if (append) {
+    if (isLoadingMoreNotifications.value) return [];
+    isLoadingMoreNotifications.value = true;
+  } else if (!options.preserveLoading) {
+    isLoading.value = true;
+  }
+
   try {
-    const response = await appCore.notifications.get({page: 1, perPage: 30});
+    const response = await appCore.notifications.get({ page, perPage: NOTIFICATIONS_PAGE_SIZE });
     const payload = response?.data?.data ?? {};
     const incomingItems = Array.isArray(payload?.data) ? payload.data : [];
     const previousKnownIds = new Set(knownNotificationIds.value);
@@ -577,7 +674,15 @@ const loadNotifications = async (options: { showToastsForNew?: boolean } = {}): 
         .filter((item: CabinetNotification | null): item is CabinetNotification => Boolean(item));
     const newUnreadItems = normalizedItems.filter(item => !item.wasRead && !previousKnownIds.has(item.id));
 
-    notifications.value = normalizedItems;
+    notifications.value = append
+      ? [...notifications.value, ...normalizedItems].filter(
+          (item, index, items) => items.findIndex(candidate => candidate.id === item.id) === index
+        )
+      : normalizedItems;
+    notificationsPage.value = page;
+    const currentPage = Number(payload?.current_page ?? page);
+    const lastPage = Number(payload?.last_page ?? currentPage);
+    notificationsHasMore.value = Number.isFinite(lastPage) && currentPage < lastPage;
     rememberNotifications(normalizedItems);
 
     const unreadFromApi = Number(payload?.unread_count ?? NaN);
@@ -598,12 +703,20 @@ const loadNotifications = async (options: { showToastsForNew?: boolean } = {}): 
       useEventBus.emit(CLIENT_NOTIFICATION_RECEIVED_EVENT, {notification: item});
     });
 
+    void reconnectNotificationsVisibilityObserver();
+
     return newUnreadItems;
   } catch (error) {
-    notificationsLoaded.value = false;
+    if (!append) {
+      notificationsLoaded.value = false;
+    }
     return [];
   } finally {
-    isLoading.value = false;
+    if (append) {
+      isLoadingMoreNotifications.value = false;
+    } else if (!options.preserveLoading) {
+      isLoading.value = false;
+    }
   }
 };
 
@@ -670,30 +783,22 @@ const markNotificationRead = async (notificationId: string, syncWithApi = true) 
   }
 };
 
-const markNotificationsByTypes = async (types: string[]) => {
-  const normalizedTypes = types.map(item => String(item ?? "").trim()).filter(Boolean);
-  if (normalizedTypes.length === 0) return;
-
-  notifications.value = notifications.value.map(item =>
-      normalizedTypes.includes(item.type) ? {...item, wasRead: true} : item
-  );
-
-  try {
-    const response = await appCore.notifications.markReadByTypes(normalizedTypes);
-    notificationsStore.applySummary(response?.data?.data ?? {});
-  } catch {
-    await loadNotifications();
-  }
+const loadMoreNotifications = async () => {
+  if (!notificationsHasMore.value || isLoadingMoreNotifications.value) return;
+  await loadNotifications({
+    page: notificationsPage.value + 1,
+    append: true,
+    preserveLoading: true,
+  });
 };
 
-const markCurrentSectionNotificationsSeen = async () => {
-  if (isSupportRoute.value && notificationsStore.unreadSupportNotificationsCount > 0) {
-    await markNotificationsByTypes(SUPPORT_USER_NOTIFICATION_TYPES);
-    return;
-  }
+const handleNotificationsScroll = async (event: Event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
 
-  if (isPaymentsRoute.value && notificationsStore.unreadWithdrawalNotificationsCount > 0) {
-    await markNotificationsByTypes(BILLING_USER_NOTIFICATION_TYPES);
+  const remaining = target.scrollHeight - target.scrollTop - target.clientHeight;
+  if (remaining <= 48) {
+    await loadMoreNotifications();
   }
 };
 
@@ -738,17 +843,7 @@ const handleRealtimeNotification = async (payload: any) => {
   }
 
   if (isOpen.value) {
-    await markNotificationRead(normalized.id, true);
-    return;
-  }
-
-  if (isSupportRoute.value && SUPPORT_USER_NOTIFICATION_TYPES.includes(normalized.type)) {
-    await markNotificationRead(normalized.id, true);
-    return;
-  }
-
-  if (isPaymentsRoute.value && BILLING_USER_NOTIFICATION_TYPES.includes(normalized.type)) {
-    await markNotificationRead(normalized.id, true);
+    void reconnectNotificationsVisibilityObserver();
   }
 };
 
@@ -872,30 +967,7 @@ const startNotificationsPolling = () => {
     if (isNotificationsSocketConnected()) return;
 
     const canToastNewItems = notificationsLoaded.value;
-    const newUnreadItems = await loadNotifications({showToastsForNew: canToastNewItems});
-    if (isOpen.value && newUnreadItems.length > 0) {
-      await markAllRead();
-      return;
-    }
-
-    if (
-        isSupportRoute.value &&
-        newUnreadItems.some(
-            item => SUPPORT_USER_NOTIFICATION_TYPES.includes(String(item.type ?? "").trim()) && !item.wasRead
-        )
-    ) {
-      await markNotificationsByTypes(SUPPORT_USER_NOTIFICATION_TYPES);
-      return;
-    }
-
-    if (
-        isPaymentsRoute.value &&
-        newUnreadItems.some(
-            item => BILLING_USER_NOTIFICATION_TYPES.includes(String(item.type ?? "").trim()) && !item.wasRead
-        )
-    ) {
-      await markNotificationsByTypes(BILLING_USER_NOTIFICATION_TYPES);
-    }
+    await loadNotifications({ showToastsForNew: canToastNewItems, preserveLoading: true });
   }, NOTIFICATIONS_POLL_MS);
 };
 
@@ -918,20 +990,6 @@ const formatNotificationTime = (value: string | null): string => {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
-};
-
-const handleMarkedByTypes = (payload?: { types?: string[]; summary?: Record<string, unknown> }) => {
-  const types = Array.isArray(payload?.types)
-      ? payload.types.map(item => String(item ?? "").trim()).filter(Boolean)
-      : [];
-
-  if (types.length > 0) {
-    notifications.value = notifications.value.map(item =>
-        types.includes(item.type) ? {...item, wasRead: true} : item
-    );
-  }
-
-  notificationsStore.applySummary(payload?.summary ?? {});
 };
 
 const handleMarkedNotifications = (payload?: { ids?: string[]; summary?: Record<string, unknown> }) => {
@@ -958,13 +1016,9 @@ const syncNotificationsState = async (showToastsForNew = false) => {
   lastNotificationsResumeSyncAt = now;
 
   if (isOpen.value || !isNotificationsSocketConnected()) {
-    await loadNotifications({showToastsForNew: showToastsForNew && notificationsLoaded.value});
+    await loadNotifications({ showToastsForNew: showToastsForNew && notificationsLoaded.value, preserveLoading: true });
   } else {
     await loadUnreadSummary();
-  }
-
-  if (isOpen.value && unreadCount.value > 0) {
-    await markAllRead();
   }
 };
 
@@ -1005,22 +1059,17 @@ const detachNotificationsResumeListeners = () => {
 watch(
     () => isOpen.value,
     async opened => {
-      if (!opened) return;
+      if (!opened) {
+        disconnectNotificationsVisibilityObserver();
+        return;
+      }
 
       if (!notificationsLoaded.value) {
         await loadNotifications();
+      } else {
+        await nextTick();
+        void reconnectNotificationsVisibilityObserver();
       }
-
-      if (unreadCount.value > 0) {
-        await markAllRead();
-      }
-    }
-);
-
-watch(
-    () => [route.path, route.query?.tab],
-    () => {
-      void markCurrentSectionNotificationsSeen();
     }
 );
 
@@ -1044,7 +1093,6 @@ watch(
 
 onMounted(() => {
   document.addEventListener("click", handleClickOutside);
-  useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, handleMarkedByTypes);
   useEventBus.on(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
   attachNotificationsResumeListeners();
   void (async () => {
@@ -1057,7 +1105,6 @@ onMounted(() => {
     }
 
     await loadUnreadSummary();
-    await markCurrentSectionNotificationsSeen();
     const userId = String(authStore.user?.id ?? "").trim();
     if (userId !== "") {
       subscribeToNotifications(userId);
@@ -1070,13 +1117,18 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
-  useEventBus.off(CLIENT_NOTIFICATIONS_MARKED_BY_TYPES_EVENT, handleMarkedByTypes);
   useEventBus.off(CLIENT_NOTIFICATIONS_MARKED_EVENT, handleMarkedNotifications);
   detachNotificationsResumeListeners();
   unsubscribeFromNotifications();
   unbindNotificationsSocketStateListener();
   stopNotificationsRealtimeRetry();
   stopNotificationsPolling();
+  disconnectNotificationsVisibilityObserver();
+  pendingVisibleReadIds.clear();
+  if (notificationsVisibleReadTimer) {
+    clearTimeout(notificationsVisibleReadTimer);
+    notificationsVisibleReadTimer = null;
+  }
 });
 </script>
 
@@ -1124,7 +1176,8 @@ onUnmounted(() => {
           ref="notificationsRef"
           class="relative flex items-center justify-center">
         <button
-            class="relative"
+            class="header-bell-button relative"
+            :class="{ 'header-bell-button--has-unread': unreadCount > 0 }"
             @click="handleClickNotifications"
             :aria-label="t('cabinet.header.notifications')">
           <UiIconBell/>
@@ -1140,22 +1193,31 @@ onUnmounted(() => {
             class="fixed sm:absolute top-[80px] sm:top-9 left-5 right-5 sm:left-auto sm:right-0 z-50 sm:w-[320px] md:w-[360px] lg:w-[400px] max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] rounded-xl !bg-[var(--ui-background)] border border-[var(--color-stroke-ui-light)] flex flex-col">
           <div class="flex items-center justify-between p-3 sm:p-4 lg:p-5 flex-shrink-0">
             <span class="text-[var(--ui-text-main)]">{{ t("cabinet.header.notifications") }}</span>
-            <div>
+            <div class="flex items-center gap-2">
               <span
                   @click="markAllRead"
                   class="cursor-pointer text-xs hover:underline active:opacity-70 transition-all select-none"
+                  :class="{ 'pointer-events-none opacity-60': isMarkAllInProgress }"
               >
                 {{ t("cabinet.header.markAllRead") }}
               </span>
+              <UiIconSpinnerDefault
+                  v-if="isMarkAllInProgress"
+                  class="h-3.5 w-3.5 text-[var(--ui-text-secondary)]"/>
             </div>
           </div>
 
           <UiSpacer :heightNone="true"/>
 
-          <div class="p-3 sm:p-4 lg:p-5 overflow-y-auto flex-1">
+          <div
+              ref="notificationsListRef"
+              class="p-3 sm:p-4 lg:p-5 overflow-y-auto flex-1"
+              @scroll="handleNotificationsScroll">
             <div
                 v-for="notification in notifications"
                 :key="notification.id"
+                :ref="element => setNotificationItemRef(notification.id, element)"
+                :data-notification-id="notification.id"
                 :class="[
                 'relative mb-2.5 p-2 sm:p-3 rounded-xl bg-[var(--color-stroke-ui-light)] border border-[var(--color-stroke-ui-light)] cursor-pointer',
                 notification.tone === 'info' ? 'text-[var(--ui-text-main)]' : '',
@@ -1190,6 +1252,12 @@ onUnmounted(() => {
                   class="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-50 hover:opacity-100"
                   style="width: 14px; height: 14px"
                   @click="handleNotificationActionClick(notification, $event)"/>
+            </div>
+
+            <div
+                v-if="isLoadingMoreNotifications"
+                class="flex items-center justify-center py-3 text-[var(--ui-text-secondary)]">
+              <UiIconSpinnerDefault class="h-4 w-4"/>
             </div>
 
             <div
@@ -1328,5 +1396,52 @@ onUnmounted(() => {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.header-bell-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ui-text-main);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.header-bell-button--has-unread {
+  color: var(--color-warning);
+  animation: notification-bell-pulse 1.9s ease-in-out infinite, notification-bell-ring 5.8s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes notification-bell-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 color-mix(in srgb, var(--color-warning) 0%, transparent));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px color-mix(in srgb, var(--color-warning) 48%, transparent));
+  }
+}
+
+@keyframes notification-bell-ring {
+  0%,
+  82%,
+  100% {
+    transform: rotate(0deg);
+  }
+  85% {
+    transform: rotate(10deg);
+  }
+  88% {
+    transform: rotate(-8deg);
+  }
+  91% {
+    transform: rotate(6deg);
+  }
+  94% {
+    transform: rotate(-4deg);
+  }
+  97% {
+    transform: rotate(2deg);
+  }
 }
 </style>

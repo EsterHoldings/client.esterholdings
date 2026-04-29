@@ -17,6 +17,12 @@
   const triggerRef = ref<HTMLElement | null>(null);
   const tooltipStyle = ref<Record<string, string>>({});
 
+  const resolveTooltipWidth = () => {
+    const parsed = Number.parseInt(String(props.width).replace(/[^\d]/g, ""), 10);
+    const fallback = Number.isFinite(parsed) ? parsed : 320;
+    return Math.min(fallback, Math.max(220, window.innerWidth - 24));
+  };
+
   const positionTooltip = () => {
     const trigger = triggerRef.value;
     if (!trigger) return;
@@ -24,10 +30,11 @@
     const rect = trigger.getBoundingClientRect();
     const viewportPadding = 12;
     const tooltip = tooltipRef.value;
-    const tooltipWidth = tooltip?.offsetWidth || 320;
+    const tooltipWidth = Math.max(tooltip?.offsetWidth || 0, resolveTooltipWidth());
     const tooltipHeight = tooltip?.offsetHeight || 0;
     const maxLeft = Math.max(viewportPadding, window.innerWidth - tooltipWidth - viewportPadding);
-    const left = Math.min(Math.max(rect.left, viewportPadding), maxLeft);
+    const centeredLeft = rect.left + rect.width / 2 - tooltipWidth / 2;
+    const left = Math.min(Math.max(centeredLeft, viewportPadding), maxLeft);
     let top = rect.bottom + 10;
 
     if (tooltipHeight > 0 && top + tooltipHeight + viewportPadding > window.innerHeight) {
@@ -38,7 +45,8 @@
       position: "fixed",
       top: `${top}px`,
       left: `${left}px`,
-      width: `min(${props.width}, calc(100vw - ${viewportPadding * 2}px))`,
+      width: `${tooltipWidth}px`,
+      maxWidth: `calc(100vw - ${viewportPadding * 2}px)`,
     };
   };
 
@@ -174,13 +182,16 @@
   .info-hint__tooltip {
     z-index: 9999;
     border-radius: 12px;
-    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 24%, var(--color-stroke-ui-light) 76%);
-    background: color-mix(in srgb, var(--ui-background-panel) 94%, var(--ui-background-card) 6%);
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.14);
-    padding: 10px 12px;
+    border: 1px solid color-mix(in srgb, var(--ui-primary-main) 28%, var(--color-stroke-ui-light) 72%);
+    background: color-mix(in srgb, var(--ui-background-card) 98%, var(--ui-background-panel) 2%);
+    backdrop-filter: blur(20px) saturate(1.12);
+    box-shadow:
+      0 18px 42px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 color-mix(in srgb, white 28%, transparent);
+    padding: 11px 13px;
     color: var(--ui-text-main);
     font-size: 12px;
-    line-height: 1.45;
+    line-height: 1.5;
   }
 
   .info-hint-enter-active,
