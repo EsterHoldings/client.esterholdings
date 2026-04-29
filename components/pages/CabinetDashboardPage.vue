@@ -549,8 +549,8 @@
 
   .dashboard-summary-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
   }
 
   .dashboard-top-grid {
@@ -569,9 +569,9 @@
     min-width: 0;
   }
 
-  @media (min-width: 640px) {
+  @media (max-width: 639px) {
     .dashboard-summary-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
     }
   }
 

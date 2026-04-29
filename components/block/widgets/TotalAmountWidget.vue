@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed } from "vue";
+  import { computed, onBeforeUnmount, onMounted, ref } from "vue";
   import { useI18n } from "vue-i18n";
 
   import PanelDefault from "~/components/block/panels/PanelDefault.vue";
@@ -18,26 +18,74 @@
     }
   );
 
-  const { t } = useI18n({ useScope: "global" });
+  const { t, locale } = useI18n({ useScope: "global" });
   const resolveText = (key: string, fallback: string) => {
     const value = t(key);
     return value === key ? fallback : value;
   };
   const title = computed(() => resolveText("cabinet.dashboard.summary.totalAmount", "Total amount"));
+  const isCompactMobile = ref(false);
+  let compactMediaQuery: MediaQueryList | null = null;
+
+  const updateCompactMobile = () => {
+    isCompactMobile.value = compactMediaQuery?.matches ?? false;
+  };
+
+  const formatCompactAmount = (amount: number) => {
+    const absolute = Math.abs(amount);
+    const suffixes = [
+      { value: 1_000_000_000, suffix: "B" },
+      { value: 1_000_000, suffix: "M" },
+      { value: 1_000, suffix: "K" },
+    ];
+
+    const matched = suffixes.find(item => absolute >= item.value);
+    if (!matched) {
+      return new Intl.NumberFormat(locale.value || undefined, {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(amount);
+    }
+
+    const compactValue = amount / matched.value;
+    const fractionDigits = Math.abs(compactValue) >= 10 ? 0 : 1;
+    return `${new Intl.NumberFormat(locale.value || undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: fractionDigits,
+    }).format(compactValue)}${matched.suffix}`;
+  };
 
   const formattedAmount = computed(() => {
     if (props.isLoading) return " ";
 
+    const normalizedAmount = Number(props.amount ?? 0);
+
+    if (isCompactMobile.value) {
+      return `${formatCompactAmount(normalizedAmount)} $`;
+    }
+
     try {
-      return new Intl.NumberFormat(undefined, {
+      return new Intl.NumberFormat(locale.value || undefined, {
         style: "currency",
         currency: props.currency,
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-      }).format(Number(props.amount ?? 0));
+      }).format(normalizedAmount);
     } catch {
-      return `${props.currency} ${Number(props.amount ?? 0).toFixed(2)}`;
+      return `${props.currency} ${normalizedAmount.toFixed(2)}`;
     }
+  });
+
+  onMounted(() => {
+    if (typeof window === "undefined") return;
+
+    compactMediaQuery = window.matchMedia("(max-width: 639px)");
+    updateCompactMobile();
+    compactMediaQuery.addEventListener("change", updateCompactMobile);
+  });
+
+  onBeforeUnmount(() => {
+    compactMediaQuery?.removeEventListener("change", updateCompactMobile);
   });
 </script>
 

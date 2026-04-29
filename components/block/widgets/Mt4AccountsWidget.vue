@@ -792,7 +792,7 @@
   }
 
   .mt4-list-wrap {
-    min-height: 0;
+    min-height: auto;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -815,7 +815,7 @@
 
   .mt4-list--filled > .verification-item {
     flex: 1 1 0;
-    min-height: 0;
+    min-height: auto;
   }
 
   .mt4-empty-state {
@@ -1122,7 +1122,7 @@
 
   @media (max-width: 1023px) {
     .dashboard-side-widget {
-      min-height: 0;
+      min-height: auto;
       height: auto;
     }
 
