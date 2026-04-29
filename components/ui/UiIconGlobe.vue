@@ -1,60 +1,33 @@
 <template>
   <svg
-    width="24.000000"
-    height="24.000000"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-  >
-    <defs>
-      <clipPath id="clip172_1108">
-        <rect
-          id="globe"
-          rx="0.000000"
-          width="23.000000"
-          height="23.000000"
-          transform="translate(0.500000 0.500000)"
-          fill="white"
-          fill-opacity="0"
-        />
-      </clipPath>
-    </defs>
-    <rect
-      id="globe"
-      rx="0.000000"
-      width="23.000000"
-      height="23.000000"
-      transform="translate(0.500000 0.500000)"
-      fill="#FFFFFF"
-      fill-opacity="0"
-    />
-    <g clip-path="url(#clip172_1108)">
-      <path
-        id="Vector"
-        d="M12 22C6.47 22 2 17.52 2 12C2 6.47 6.47 2 12 2C17.52 2 22 6.47 22 12C22 17.52 17.52 22 12 22Z"
-        stroke="#FFFFFF"
-        stroke-opacity="1.000000"
-        stroke-width="1.500000"
-        stroke-linejoin="round"
-      />
-      <path
-        id="Vector"
-        d="M2 12L22 12"
-        stroke="#FFFFFF"
-        stroke-opacity="1.000000"
-        stroke-width="1.500000"
-        stroke-linejoin="round"
-        stroke-linecap="round"
-      />
-      <path
-        id="Vector"
-        d="M16 12C15.92 15.7 14.5 19.26 12 22C9.49 19.26 8.07 15.7 8 12C8.07 8.29 9.49 4.73 12 2C14.5 4.73 15.92 8.29 16 12Z"
-        stroke="#FFFFFF"
-        stroke-opacity="1.000000"
-        stroke-width="1.500000"
-        stroke-linejoin="round"
-      />
-    </g>
+    aria-hidden="true">
+    <path
+      d="M12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22Z"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linejoin="round" />
+    <path
+      d="M2 12H22"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round" />
+    <path
+      d="M16 12C15.923 15.705 14.503 19.265 12 22C9.497 19.265 8.077 15.705 8 12C8.077 8.295 9.497 4.735 12 2C14.503 4.735 15.923 8.295 16 12Z"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linejoin="round" />
   </svg>
 </template>
+
+<style lang="scss" scoped>
+svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+  color: currentColor;
+}
+</style>

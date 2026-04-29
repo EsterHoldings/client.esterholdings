@@ -11,11 +11,13 @@
       </NuxtLink>
 
       <div class="header__controls">
-        <LanguageSwitcher :isInvert="isThemeLight" />
+        <LanguageSwitcher
+          :isInvert="isThemeLight"
+          class="header__control header__control--language" />
 
         <button
           type="button"
-          class="header__theme-toggle"
+          class="header__theme-toggle header__control"
           :aria-label="toggleThemeText"
           @click="handleToggleTheme">
           <UiIconSun
@@ -102,32 +104,56 @@ const handleToggleTheme = () => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 10px;
 }
 
-.header__theme-toggle {
+.header__control {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
+  width: 40px;
+  height: 40px;
   color: var(--ui-text-main);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ui-background-panel) 82%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-stroke-ui-light) 74%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.header__theme-toggle {
+  border: 0;
   cursor: pointer;
   transition:
     transform 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .header__theme-toggle:hover {
   transform: translateY(-1px);
-  background: color-mix(in srgb, var(--ui-primary-main) 12%, transparent);
+  background: color-mix(in srgb, var(--ui-primary-main) 12%, var(--ui-background-panel));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ui-primary-main) 28%, transparent);
 }
 
 .svg-invert {
   filter: invert(1);
+}
+
+.header__controls :deep(.language-trigger) {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.header__controls :deep(.language-trigger:hover) {
+  background: color-mix(in srgb, var(--ui-primary-main) 12%, var(--ui-background-panel));
+}
+
+.header__controls :deep(.icon),
+.header__theme-toggle :deep(svg) {
+  width: 22px;
+  height: 22px;
 }
 
 @media (max-width: 767px) {
@@ -142,7 +168,7 @@ const handleToggleTheme = () => {
 
   .header__controls {
     margin-top: 20px;
-    gap: 12px;
+    gap: 8px;
   }
 
   :deep(svg) {
