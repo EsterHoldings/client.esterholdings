@@ -463,6 +463,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .transactions-widget-panel {
