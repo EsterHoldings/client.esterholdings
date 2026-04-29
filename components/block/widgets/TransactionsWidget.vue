@@ -243,7 +243,7 @@
 
 <template>
   <div class="transactions-widget-panel">
-    <div class="transactions-widget">
+    <div>
       <div class="transactions-widget__header">
         <div class="transactions-widget__title-wrap">
           <UiTextH5 class="!text-[var(--ui-text-main)]">{{ t("cabinet.dashboard.transactions.title") }}</UiTextH5>
