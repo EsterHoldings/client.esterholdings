@@ -242,7 +242,7 @@
 </script>
 
 <template>
-  <PanelDefault class="transactions-widget-panel">
+  <div class="transactions-widget-panel">
     <div class="transactions-widget">
       <div class="transactions-widget__header">
         <div class="transactions-widget__title-wrap">
@@ -455,7 +455,7 @@
         </div>
       </div>
     </div>
-  </PanelDefault>
+  </div>
 </template>
 
 <style scoped>
