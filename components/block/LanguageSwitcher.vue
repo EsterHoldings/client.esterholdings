@@ -15,7 +15,7 @@
         }" />
     </button>
 
-    <transition name="fade">
+    <transition name="dropdown-expand">
       <ul
         v-if="isOpen"
         class="dropdown"
@@ -156,6 +156,9 @@
       padding: 0;
       color: var(--ui-text-main);
       cursor: pointer;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
     }
 
     .icon {
@@ -167,8 +170,10 @@
       scrollbar-width: none;
       position: absolute;
       top: 40px;
-      right: 0;
-      width: min(720px, calc(100vw - 24px));
+      left: 50%;
+      transform: translateX(-50%);
+      transform-origin: top center;
+      width: min(520px, calc(100vw - 24px));
       background: color-mix(in srgb, var(--ui-background-panel) 88%, transparent);
       border: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 78%, transparent);
       border-radius: 16px;
@@ -179,7 +184,7 @@
       max-height: min(72vh, 520px);
       overflow-y: auto;
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
       list-style: none;
       margin: 0;
@@ -187,8 +192,8 @@
       &.top {
         height: max-content;
         top: 30px;
-        bottom: 0;
-        right: 0;
+        bottom: auto;
+        left: 50%;
       }
 
       .flag {
@@ -249,6 +254,19 @@
 
   .svg-invert {
     filter: invert(1);
+  }
+
+  .dropdown-expand-enter-active,
+  .dropdown-expand-leave-active {
+    transition:
+      opacity 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .dropdown-expand-enter-from,
+  .dropdown-expand-leave-to {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.96);
   }
 
   @media (max-width: 1023px) {
