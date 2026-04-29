@@ -15,6 +15,7 @@
   const isOpen = ref(false);
   const tooltipRef = ref<HTMLElement | null>(null);
   const triggerRef = ref<HTMLElement | null>(null);
+  const anchorRef = ref<HTMLElement | null>(null);
   const tooltipStyle = ref<Record<string, string>>({});
 
   const resolveTooltipWidth = () => {
@@ -24,13 +25,15 @@
   };
 
   const positionTooltip = () => {
-    const trigger = triggerRef.value;
+    const trigger = anchorRef.value ?? triggerRef.value;
     if (!trigger) return;
 
     const rect = trigger.getBoundingClientRect();
     const viewportPadding = 12;
     const tooltip = tooltipRef.value;
-    const tooltipWidth = Math.max(tooltip?.offsetWidth || 0, resolveTooltipWidth());
+    const maxTooltipWidth = resolveTooltipWidth();
+    const naturalTooltipWidth = tooltip?.getBoundingClientRect().width || 0;
+    const tooltipWidth = Math.min(maxTooltipWidth, Math.max(180, naturalTooltipWidth || maxTooltipWidth));
     const tooltipHeight = tooltip?.offsetHeight || 0;
     const maxLeft = Math.max(viewportPadding, window.innerWidth - tooltipWidth - viewportPadding);
     const centeredLeft = rect.left + rect.width / 2 - tooltipWidth / 2;
@@ -46,6 +49,7 @@
       top: `${top}px`,
       left: `${left}px`,
       width: `${tooltipWidth}px`,
+      minWidth: `${Math.min(180, tooltipWidth)}px`,
       maxWidth: `calc(100vw - ${viewportPadding * 2}px)`,
     };
   };
@@ -108,23 +112,27 @@
     class="info-hint"
     @mouseenter="open"
     @mouseleave="close">
-    <slot
-      name="trigger"
-      :is-open="isOpen"
-      :open="open"
-      :close="close"
-      :toggle="toggle">
-      <button
-        type="button"
-        class="info-hint__trigger"
-        :aria-label="props.label"
-        :aria-expanded="isOpen"
-        @click.stop="toggle"
-        @focus="open"
-        @blur="close">
-        <span aria-hidden="true">!</span>
-      </button>
-    </slot>
+    <span
+      ref="anchorRef"
+      class="info-hint__anchor">
+      <slot
+        name="trigger"
+        :is-open="isOpen"
+        :open="open"
+        :close="close"
+        :toggle="toggle">
+        <button
+          type="button"
+          class="info-hint__trigger"
+          :aria-label="props.label"
+          :aria-expanded="isOpen"
+          @click.stop="toggle"
+          @focus="open"
+          @blur="close">
+          <span aria-hidden="true">!</span>
+        </button>
+      </slot>
+    </span>
 
     <Teleport to="body">
       <transition name="info-hint">
@@ -146,6 +154,14 @@
     position: relative;
     display: inline-flex;
     align-items: center;
+    flex-shrink: 0;
+  }
+
+  .info-hint__anchor {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
     flex-shrink: 0;
   }
 
@@ -183,8 +199,8 @@
     z-index: 9999;
     border-radius: 12px;
     border: 1px solid color-mix(in srgb, var(--ui-primary-main) 28%, var(--color-stroke-ui-light) 72%);
-    background: color-mix(in srgb, var(--ui-background-card) 98%, var(--ui-background-panel) 2%);
-    backdrop-filter: blur(20px) saturate(1.12);
+    background: color-mix(in srgb, var(--ui-background-card) 92%, transparent);
+    backdrop-filter: blur(12px) saturate(1.08);
     box-shadow:
       0 18px 42px rgba(0, 0, 0, 0.18),
       inset 0 1px 0 color-mix(in srgb, white 28%, transparent);

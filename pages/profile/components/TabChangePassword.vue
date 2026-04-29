@@ -159,9 +159,10 @@
             </div>
 
             <UiFormControl :label="t('cabinet.profile.components.tab-change-password.two_fa.code_label')">
-              <UiInput
-                :placeholder="t('cabinet.profile.components.tab-change-password.two_fa.code_placeholder')"
+              <UiOtpInput
+                ref="twoFaOtpRef"
                 :value="otp"
+                :autofocus="twoFaSwitchOn && !twoFaEnabled && !qrIsLoading"
                 @input="handleInputOtp" />
             </UiFormControl>
 
@@ -182,7 +183,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { onMounted, ref, computed } from "vue";
+  import { computed, nextTick, onMounted, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
   import { extractApiErrorMessageWithTranslator, localizeApiErrorsWithTranslator } from "~/composables/useApiMessages";
@@ -201,6 +202,7 @@
   import UiFormControl from "~/components/ui/UiFormControl.vue";
   import UiInput from "~/components/ui/UiInput.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
+  import UiOtpInput from "~/components/ui/UiOtpInput.vue";
   import UiIconSuccess from "~/components/ui/UiIconSuccess.vue";
   import UiTextSmall from "~/components/ui/UiTextSmall.vue";
 
@@ -226,6 +228,7 @@
   const qrIsLoading = ref(false);
   const qrSvg = ref("");
   const twoFaSecret = ref("");
+  const twoFaOtpRef = ref<InstanceType<typeof UiOtpInput> | null>(null);
   const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
     return translated === key ? fallback : translated;
@@ -392,6 +395,19 @@
     await loadTwoFaQr();
     twoFaUiEnabled.value = twoFaEnabled.value;
   });
+
+  watch(
+    () => [twoFaSwitchOn.value, twoFaEnabled.value, qrIsLoading.value],
+    async ([switchOn, enabled, loadingQr]) => {
+      if (!switchOn || enabled || loadingQr) {
+        return;
+      }
+
+      await nextTick();
+      twoFaOtpRef.value?.focus?.();
+    },
+    { immediate: false }
+  );
 
   /* === Password rules highlighting (лише UI, логіку не змінює) === */
   const pwd = computed(() => (formData.newPassword ?? "") as string);

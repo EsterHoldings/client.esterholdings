@@ -26,7 +26,7 @@
     <div class="mt4-list-wrap">
       <div
         v-if="isLoading"
-        class="mt4-list">
+        class="mt4-list mt4-list--filled">
         <div
           v-for="idx in 3"
           :key="idx"
@@ -53,7 +53,7 @@
 
       <div
         v-else
-        class="mt4-list">
+        :class="['mt4-list', { 'mt4-list--filled': visibleAccounts.length > 0 }]">
         <div
           v-if="visibleAccounts.length === 0"
           class="mt4-empty-state">
@@ -809,6 +809,15 @@
     padding-right: 4px;
   }
 
+  .mt4-list--filled {
+    overflow: hidden;
+  }
+
+  .mt4-list--filled > .verification-item {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+
   .mt4-empty-state {
     min-height: 100%;
     flex: 1 1 auto;
@@ -820,8 +829,11 @@
     gap: 10px;
     padding: 20px 12px;
     border-radius: 12px;
-    background: transparent;
-    border: 0;
+    background:
+      linear-gradient(136deg, color-mix(in srgb, var(--ui-primary-main) 10%, transparent) 0%, transparent 74%),
+      color-mix(in srgb, var(--ui-background-panel) 74%, transparent);
+    backdrop-filter: blur(2px) saturate(1.04);
+    border: 1px solid transparent;
   }
 
   .mt4-empty-state__icon-wrap {
@@ -1002,7 +1014,8 @@
     width: 180px;
     border-radius: 10px;
     border: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 82%, var(--ui-text-main) 18%);
-    background: color-mix(in srgb, var(--ui-background-panel) 100%, var(--ui-background-card) 0%);
+    background: color-mix(in srgb, var(--ui-background-panel) 84%, transparent);
+    backdrop-filter: blur(20px) saturate(1.08);
     opacity: 1;
     pointer-events: auto;
     padding: 8px;
@@ -1119,6 +1132,10 @@
       height: auto;
       overflow: visible;
       padding-right: 0;
+    }
+
+    .mt4-list--filled {
+      overflow: visible;
     }
   }
 </style>

@@ -242,7 +242,7 @@
 </script>
 
 <template>
-  <PanelDefault>
+  <PanelDefault class="transactions-widget-panel">
     <div class="transactions-widget">
       <div class="transactions-widget__header">
         <div class="transactions-widget__title-wrap">
@@ -463,6 +463,13 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+
+  .transactions-widget-panel {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
   }
 
   .transactions-widget__header {

@@ -52,6 +52,18 @@ export function useSocialAuth() {
     }
   };
 
+  const shouldUseSameTabRedirect = (): boolean => {
+    if (!process.client) {
+      return false;
+    }
+
+    const isTouchDevice =
+      window.matchMedia("(pointer: coarse)").matches ||
+      /android|iphone|ipad|ipod|mobile/i.test(window.navigator.userAgent);
+
+    return isTouchDevice || window.matchMedia("(max-width: 767px)").matches;
+  };
+
   const resolveAllowedOrigins = (): Set<string> => {
     const origins = new Set<string>();
 
@@ -104,6 +116,11 @@ export function useSocialAuth() {
         throw new Error("Social login redirect URL is empty.");
       }
 
+      if (shouldUseSameTabRedirect()) {
+        window.location.assign(redirectUrl);
+        return;
+      }
+
       const popup = window.open(
         redirectUrl,
         `${provider}Login`,
@@ -111,7 +128,8 @@ export function useSocialAuth() {
       );
 
       if (!popup) {
-        throw new Error("Popup was blocked.");
+        window.location.assign(redirectUrl);
+        return;
       }
 
       const allowedOrigins = resolveAllowedOrigins();

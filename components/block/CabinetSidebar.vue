@@ -707,6 +707,14 @@
     height: 22px;
   }
 
+  :global(html[data-theme="light"]) .mobile-bottom-menu :deep(svg),
+  :global(html[data-theme="light"]) .mobile-bottom-menu :deep(.sidebar-menu-item--active svg),
+  :global(html[data-theme="light"]) .mobile-bottom-menu :deep([class*="text-"] svg) {
+    color: var(--ui-text-main) !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+  }
+
   .mobile-bottom-menu :deep(.w-full.flex.items-center.justify-center.h-\[40px\]),
   .mobile-bottom-menu :deep(.w-full.flex.items-center.justify-center.h-\[4px\]) {
     display: none !important;

@@ -35,12 +35,11 @@
       label="2Fa code"
       :errors="twoFaErrors"
       v-if="twoFaEnabled">
-      <UiInput
-        type="text"
-        placeholder="********"
+      <UiOtpInput
+        ref="twoFaOtpRef"
         :value="props.formData.twoFaCode"
-        :isDirty="twoFaErrors.length > 0"
         :isInvalid="twoFaErrors.length > 0"
+        :autofocus="twoFaEnabled"
         @input="handleTwoFaCodeInput" />
     </UiFormControl>
 
@@ -73,11 +72,12 @@
   import UiButtonDefault from "~/components/ui/UiButtonDefault.vue";
   import UiFormControl from "~/components/ui/UiFormControl.vue";
   import UiInput from "~/components/ui/UiInput.vue";
+  import UiOtpInput from "~/components/ui/UiOtpInput.vue";
   import UiTextH3 from "~/components/ui/UiTextH3.vue";
 
   import { navigateTo, useRoute } from "nuxt/app";
   import { useLocalePath } from "#imports";
-  import { reactive, ref } from "vue";
+  import { nextTick, reactive, ref, watch } from "vue";
   import { useAppCore } from "~/composables/useAppCore";
   import { useAuthStore } from "~/stores/authStore";
   import { useToast } from "vue-toastification";
@@ -106,6 +106,7 @@
   const emit = defineEmits(["input2Fa"]);
 
   const twoFaErrors = ref<string[]>([]);
+  const twoFaOtpRef = ref<InstanceType<typeof UiOtpInput> | null>(null);
 
   const handleTwoFaCodeInput = (value: string) => {
     twoFaErrors.value = [];
@@ -212,6 +213,15 @@
 
   // @ts-ignore
   onUnmounted(() => resetValidationLoginForm());
+
+  watch(twoFaEnabled, async value => {
+    if (!value) {
+      return;
+    }
+
+    await nextTick();
+    twoFaOtpRef.value?.focus?.();
+  });
 </script>
 
 <style lang="scss" scoped>

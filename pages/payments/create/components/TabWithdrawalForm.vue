@@ -120,10 +120,11 @@
               class="withdrawal-form__field"
               :label="twoFactorCodeLabel"
               :errors="errors.otp ? [errors.otp] : []">
-              <UiInput
+              <UiOtpInput
+                ref="otpInputRef"
                 :value="form.otp"
-                inputmode="numeric"
-                :placeholder="twoFactorCodePlaceholder"
+                :autofocus="isTwoFactorEnabled"
+                :isInvalid="Boolean(errors.otp)"
                 @input="handleOtpInput" />
             </UiFormControl>
           </Transition>
@@ -145,7 +146,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, inject, onMounted, reactive, ref } from "vue";
+  import { computed, inject, nextTick, onMounted, reactive, ref, watch } from "vue";
   import { navigateTo, useLocalePath } from "~/.nuxt/imports";
   import { useI18n } from "vue-i18n";
   import { useToast } from "vue-toastification";
@@ -154,6 +155,7 @@
   import UiFormControl from "~/components/ui/UiFormControl.vue";
   import UiIconSpinnerDefault from "~/components/ui/UiIconSpinnerDefault.vue";
   import UiInput from "~/components/ui/UiInput.vue";
+  import UiOtpInput from "~/components/ui/UiOtpInput.vue";
   import UiSelect from "~/components/ui/UiSelect.vue";
   import UiTextH5 from "~/components/ui/UiTextH5.vue";
   import UiTextarea from "~/components/ui/UiTextarea.vue";
@@ -204,6 +206,7 @@
   const forceTwoFactorChallenge = ref(false);
   const accounts = ref<AccountOption[]>([]);
   const paymentDetails = ref<PaymentDetailOption[]>([]);
+  const otpInputRef = ref<InstanceType<typeof UiOtpInput> | null>(null);
   const errors = reactive<Record<string, string>>({});
   const form = reactive({
     accountId: "",
@@ -665,6 +668,15 @@
     }
 
     await Promise.all([loadAccounts(), loadPaymentDetails()]);
+  });
+
+  watch(isTwoFactorEnabled, async value => {
+    if (!value) {
+      return;
+    }
+
+    await nextTick();
+    otpInputRef.value?.focus?.();
   });
 </script>
 
