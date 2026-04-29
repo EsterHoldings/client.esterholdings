@@ -6,7 +6,7 @@
     @click="handleClickMenuItem">
     <div class="text-[var(--ui-text-main)] flex items-center justify-center h-full w-[60px] max-sm:w-[50px] relative">
       <component
-        :class="{ 'text-[var(--ui-text-invert)]': isActive }"
+        :class="activeColorClass"
         :is="icon" />
       <span
         class="menu-notification-badge absolute top-1 right-2 min-h-[16px] min-w-[16px] bg-[var(--ui-sticker-danger)] flex items-center justify-center rounded-full text-sm"
@@ -17,7 +17,7 @@
 
     <div
       :class="{
-        '!text-[var(--ui-text-invert)]': isActive,
+        [activeColorClass]: isActive,
         'opacity-100': props.sideBarIsOpen,
         'opacity-0 lg:w-0': !props.sideBarIsOpen,
       }"
@@ -30,6 +30,7 @@
 <script lang="ts" setup>
   import { useRoute } from "vue-router";
   import { computed } from "vue";
+  import { useThemeStore } from "~/stores/themeStore";
 
   const emit = defineEmits(["click"]);
   const props = defineProps({
@@ -43,6 +44,8 @@
   });
 
   const route = useRoute();
+  const themeStore = useThemeStore();
+  const isLightTheme = computed(() => themeStore.currentTheme !== "dark");
   const isActive = computed(() => {
     const currentPath = String(route.path ?? "");
     const targetPath = String(props.to ?? "");
@@ -56,8 +59,11 @@
         : "sidebar-menu-item sidebar-menu-item--active sidebar-menu-item--active-solid";
     }
 
-    return "sidebar-menu-item hover:bg-[var(--color-stroke-ui-dark)] hover:opacity-80";
+    return "sidebar-menu-item hover:bg-[var(--color-stroke-ui-dark)]";
   });
+  const activeColorClass = computed(() =>
+    isActive.value ? (isLightTheme.value ? "!text-[var(--ui-text-main)]" : "!text-[var(--ui-text-invert)]") : ""
+  );
   const handleSetRootRef = (el: HTMLElement | null) => {
     props.registerItemRef?.(props.to, el);
   };
@@ -67,6 +73,10 @@
 <style scoped>
   .sidebar-menu-item--active {
     color: var(--ui-text-invert);
+  }
+
+  :global(html[data-theme="light"]) .sidebar-menu-item--active {
+    color: var(--ui-text-main);
   }
 
   .sidebar-menu-item--active-solid {

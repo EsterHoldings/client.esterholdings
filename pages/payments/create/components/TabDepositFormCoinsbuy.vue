@@ -11,11 +11,52 @@
       </div>
     </div>
 
-    <UiTextH5 class="mb-5 text-[var(--ui-text-main)]">
-      {{ paymentSystemTitle }}
-    </UiTextH5>
+    <template v-if="createdRedirectUrl">
+      <UiTextH5 class="mb-5 text-[var(--ui-text-main)]">
+        {{ invoiceReadyTitle }}
+      </UiTextH5>
 
-    <div class="flex flex-col gap-3">
+      <div
+        class="flex flex-col gap-4 rounded-2xl border border-[var(--ui-card-border)] bg-[var(--ui-bg-elevated)]/70 p-4 backdrop-blur-[8px]">
+        <p class="text-sm leading-6 text-[var(--ui-text-muted)]">
+          {{ invoiceReadyDescription }}
+        </p>
+
+        <UiFormControl
+          :label="invoiceLinkLabel"
+          :errors="[]">
+          <UiInput
+            type="text"
+            :value="createdRedirectUrl"
+            readonly
+            :isDirty="false"
+            :isInvalid="false" />
+        </UiFormControl>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a
+            :href="createdRedirectUrl"
+            target="_self"
+            class="inline-flex min-h-[48px] flex-1 items-center justify-center rounded-[999px] border border-[#57d36a] bg-[#57d36a] px-5 text-[15px] font-semibold text-[#06210c] transition hover:brightness-105">
+            {{ openInvoiceLabel }}
+          </a>
+
+          <UiButtonDefault
+            state="info--outline"
+            class="inline-flex min-h-[48px] items-center justify-center"
+            @click="copyInvoiceLink">
+            {{ copyInvoiceLabel }}
+          </UiButtonDefault>
+        </div>
+      </div>
+    </template>
+
+    <template v-else>
+      <UiTextH5 class="mb-5 text-[var(--ui-text-main)]">
+        {{ paymentSystemTitle }}
+      </UiTextH5>
+
+      <div class="flex flex-col gap-3">
       <UiFormControl
         :label="accountLabel"
         :errors="accountErrors">
@@ -63,7 +104,8 @@
         <span>{{ submitLabel }}</span>
         <UiIconSpinnerDefault v-if="isLoadingSubmitBtn" />
       </UiButtonDefault>
-    </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -117,6 +159,7 @@
   const isLoadingSubmitBtn = ref(false);
   const isLoadingAccounts = ref(false);
   const hasMoreAccounts = ref(true);
+  const createdRedirectUrl = ref("");
 
   const resolveText = (key: string, fallback: string): string => {
     const translated = t(key);
@@ -153,17 +196,37 @@
   );
   const formatMinimumAmount = (amount: number): string =>
     Number.isInteger(amount) ? String(amount) : String(amount).replace(/\.?0+$/, "");
-  const minimumAmountErrorLabel = computed(() =>
-    resolveText(
-      "cabinet.billing.depositForm.minimumAmount",
-      "Minimum deposit amount is {amount} USD."
-    ).replace("{amount}", formatMinimumAmount(minimumAmount.value))
-  );
+  const minimumAmountErrorLabel = computed(() => {
+    const amount = formatMinimumAmount(minimumAmount.value);
+    const translated = t("cabinet.billing.depositForm.minimumAmount", { amount });
+
+    return translated === "cabinet.billing.depositForm.minimumAmount"
+      ? `Minimum deposit amount is ${amount} USD.`
+      : translated;
+  });
   const commentLabel = computed(() => resolveText("cabinet.billing.depositForm.comment", "Comment"));
   const commentPlaceholder = computed(() =>
     resolveText("cabinet.billing.depositForm.commentPlaceholder", "Add a comment for the finance team")
   );
   const submitLabel = computed(() => resolveText("cabinet.billing.depositForm.submit", "Create deposit"));
+  const invoiceReadyTitle = computed(() =>
+    resolveText("cabinet.billing.depositForm.invoiceReadyTitle", "Invoice created")
+  );
+  const invoiceReadyDescription = computed(() =>
+    resolveText(
+      "cabinet.billing.depositForm.invoiceReadyDescription",
+      "Continue to the payment page in this tab. This avoids browser popup blocking and keeps the deposit flow stable."
+    )
+  );
+  const invoiceLinkLabel = computed(() =>
+    resolveText("cabinet.billing.depositForm.invoiceLink", "Invoice link")
+  );
+  const openInvoiceLabel = computed(() =>
+    resolveText("cabinet.billing.depositForm.openInvoice", "Open payment page")
+  );
+  const copyInvoiceLabel = computed(() =>
+    resolveText("cabinet.common.copy", "Copy")
+  );
   const createdLabel = computed(() =>
     resolveText("cabinet.billing.depositForm.created", "Deposit created successfully.")
   );
@@ -222,7 +285,9 @@
       const redirectUrl = String(response?.data?.data?.redirectUrl ?? "").trim();
 
       if (redirectUrl !== "") {
-        window.location.assign(redirectUrl);
+        createdRedirectUrl.value = redirectUrl;
+        toast.success(resolveApiMessage(response?.data?.message, createdLabel.value) ?? createdLabel.value);
+        useEventBus.emit("loadDataForPayments");
         return;
       }
 
@@ -234,6 +299,18 @@
       toast.error(extractApiErrorMessage(error, submitErrorLabel.value) ?? submitErrorLabel.value);
     } finally {
       isLoadingSubmitBtn.value = false;
+    }
+  };
+
+  const copyInvoiceLink = async () => {
+    const value = createdRedirectUrl.value.trim();
+    if (value === "") return;
+
+    try {
+      await navigator.clipboard.writeText(value);
+      toast.success(resolveText("cabinet.common.copied", "Copied."));
+    } catch {
+      toast.error(resolveText("cabinet.common.copyFailed", "Failed to copy."));
     }
   };
 
@@ -347,6 +424,7 @@
     loadAccountsPage.value = 1;
     loadAccountsPerPage.value = props.initialAccountId ? 100 : 10;
     hasMoreAccounts.value = true;
+    createdRedirectUrl.value = "";
 
     await loadAccounts(1);
     applyInitialAccount();

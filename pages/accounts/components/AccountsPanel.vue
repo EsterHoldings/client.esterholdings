@@ -175,7 +175,7 @@
                         <button
                           type="button"
                           @click.stop="toggleRowOptions(index)"
-                          class="table-account-action-btn relative flex items-center justify-center rounded-md hover:border-[var(--color-stroke-ui-light)] border border-transparent transition-colors transition-opacity cursor-pointer"
+                          class="table-account-action-btn table-account-action-btn--menu relative flex items-center justify-center rounded-md transition-colors transition-opacity cursor-pointer"
                           :ref="el => (triggerRefs[index] = el as HTMLElement)"
                           :aria-label="openMenuLabel">
                           <UiIconDotsVertical />
@@ -296,11 +296,12 @@
                       d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                   </svg>
                 </button>
-                <button
-                  class="menu-btn copy-btn"
-                  :aria-label="copyNumberLabel">
+                <span
+                  class="menu-btn copy-btn-shell"
+                  :aria-label="copyNumberLabel"
+                  @click.stop>
                   <UiIconCopy :text="account.number" />
-                </button>
+                </span>
                 <button
                   type="button"
                   class="menu-btn quick-deposit-btn"
@@ -381,24 +382,35 @@
                 </Teleport>
               </div>
 
-              <div class="cabinet-card__header">
-                <div class="cabinet-card__head-main">
-                  <UiTextSmall class="cabinet-card__eyebrow">
-                    {{ t("cabinet.accounts.columns.number") }}
-                  </UiTextSmall>
-                  <div class="cabinet-card__title cabinet-card__title--account">{{ account.number }}</div>
-                  <div class="cabinet-card__subtitle">{{ account.account_type.name }}</div>
-                </div>
+              <template v-if="viewMode === 'full'">
+                <div class="cabinet-card__row">
+                  <div class="cabinet-card__field cabinet-card__field--account">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.accounts.columns.number") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__value cabinet-card__value--account">{{ account.number }}</div>
+                  </div>
 
-                <div
-                  v-if="viewMode === 'full'"
-                  class="cabinet-card__head-side">
-                  <div class="account-balance-block">
-                    <UiTextSmall class="cabinet-card__eyebrow">
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.accounts.columns.type") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__value">{{ account.account_type.name }}</div>
+                  </div>
+
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.accounts.columns.leverage") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__value">{{ getLeverageDisplay(account) }}</div>
+                  </div>
+
+                  <div class="cabinet-card__field cabinet-card__field--balance">
+                    <UiTextSmall class="cabinet-card__label">
                       {{ t("cabinet.accounts.columns.balance") }}
                     </UiTextSmall>
-                    <div class="account-balance-block__value">
-                      <span :class="getBalanceHighlightClass(account.id)">${{ account.balance }}</span>
+                    <div class="cabinet-card__value cabinet-card__value--balance">
+                      <span :class="getBalanceHighlightClass(account.id)">$ {{ account.balance }}</span>
                       <button
                         type="button"
                         class="refresh-balance-btn"
@@ -412,44 +424,34 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </template>
 
-              <div
-                class="cabinet-card__grid"
-                :class="viewMode === 'full' ? 'cabinet-card__grid--full' : ''">
-                <div class="cabinet-card__field">
-                  <UiTextSmall class="cabinet-card__label">
-                    {{ t("cabinet.accounts.columns.type") }}
-                  </UiTextSmall>
-                  <div class="cabinet-card__value">{{ account.account_type.name }}</div>
-                </div>
-                <div class="cabinet-card__field">
-                  <UiTextSmall class="cabinet-card__label">
-                    {{ t("cabinet.accounts.columns.leverage") }}
-                  </UiTextSmall>
-                  <div class="cabinet-card__value">{{ getLeverageDisplay(account) }}</div>
-                </div>
-                <div
-                  v-if="viewMode === 'full'"
-                  class="cabinet-card__field">
-                  <UiTextSmall class="cabinet-card__label">
-                    {{ t("cabinet.accounts.columns.balance") }}
-                  </UiTextSmall>
-                  <div class="cabinet-card__value cabinet-card__value--balance">
-                    <span :class="getBalanceHighlightClass(account.id)">$ {{ account.balance }}</span>
-                    <button
-                      type="button"
-                      class="refresh-balance-btn"
-                      @click.stop="refreshAccountBalance(account)"
-                      :disabled="isBalanceRefreshing(account.id)"
-                      :title="refreshBalanceLabel">
-                      <UiIconUpdate
-                        class="h-[14px] w-[14px]"
-                        :spinning="isBalanceRefreshing(account.id)" />
-                    </button>
+              <template v-else>
+                <div class="cabinet-card__header">
+                  <div class="cabinet-card__head-main">
+                    <UiTextSmall class="cabinet-card__eyebrow">
+                      {{ t("cabinet.accounts.columns.number") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__title cabinet-card__title--account">{{ account.number }}</div>
+                    <div class="cabinet-card__subtitle">{{ account.account_type.name }}</div>
                   </div>
                 </div>
-              </div>
+
+                <div class="cabinet-card__grid">
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.accounts.columns.type") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__value">{{ account.account_type.name }}</div>
+                  </div>
+                  <div class="cabinet-card__field">
+                    <UiTextSmall class="cabinet-card__label">
+                      {{ t("cabinet.accounts.columns.leverage") }}
+                    </UiTextSmall>
+                    <div class="cabinet-card__value">{{ getLeverageDisplay(account) }}</div>
+                  </div>
+                </div>
+              </template>
 
               <div
                 v-if="viewMode !== 'full'"
@@ -1564,34 +1566,36 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .cabinet-card--full-row {
+  .cabinet-card__row {
     display: grid;
-    grid-template-columns: minmax(300px, 1.2fr) minmax(420px, 1.8fr);
+    grid-template-columns: minmax(180px, 1.35fr) minmax(120px, 0.9fr) minmax(120px, 0.8fr) minmax(170px, 1fr);
+    gap: 16px;
     align-items: center;
-    column-gap: 16px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    min-width: 0;
   }
 
-  .cabinet-card--full-row .cabinet-card__header {
+  .cabinet-card--full-row {
+    display: block;
     min-height: 0;
-    align-items: center;
+    padding: 20px;
+    padding-right: 184px;
   }
 
-  .cabinet-card--full-row .cabinet-card__head-side {
-    display: none;
-  }
-
-  .cabinet-card--full-row .account-balance-block {
-    align-items: flex-start;
-  }
-
-  .cabinet-card--full-row .cabinet-card__grid {
-    margin-top: 0;
+  .cabinet-card--full-row.card-with-actions {
+    min-height: auto;
   }
 
   .cabinet-card__field {
     min-width: 0;
+  }
+
+  .cabinet-card__field--account {
+    max-width: 100%;
+  }
+
+  .cabinet-card__field--balance {
+    justify-self: end;
+    text-align: right;
   }
 
   .cabinet-card__label {
@@ -1611,10 +1615,17 @@
     text-overflow: ellipsis;
   }
 
+  .cabinet-card__value--account {
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 700;
+  }
+
   .cabinet-card__value--balance {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    justify-content: flex-end;
   }
 
   .account-balance-block {
@@ -1708,12 +1719,17 @@
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    border: 1px solid transparent;
+    border: none;
     background: transparent;
+    box-shadow: none;
     transition:
       color 0.2s ease,
-      border-color 0.2s ease,
       background-color 0.2s ease;
+  }
+
+  .table-account-action-btn:hover,
+  .table-account-action-btn:focus-visible {
+    background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
   }
 
   .table-account-balance-head {
@@ -1747,8 +1763,12 @@
 
   @media (max-width: 1024px) {
     .cabinet-card--full-row {
-      grid-template-columns: 1fr;
-      row-gap: 10px;
+      padding-right: 20px;
+    }
+
+    .cabinet-card__row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
 
     .table-account-right-head,
@@ -1776,6 +1796,10 @@
       padding-right: 144px;
     }
 
+    .cabinet-card--full-row {
+      padding-right: 20px;
+    }
+
     .cabinet-card__header {
       flex-direction: column;
       align-items: flex-start;
@@ -1792,8 +1816,18 @@
     }
 
     .cabinet-card__grid,
-    .cabinet-card__grid--full {
+    .cabinet-card__grid--full,
+    .cabinet-card__row {
       grid-template-columns: 1fr;
+    }
+
+    .cabinet-card__field--balance {
+      justify-self: start;
+      text-align: left;
+    }
+
+    .cabinet-card__value--balance {
+      justify-content: flex-start;
     }
   }
 
@@ -1807,6 +1841,11 @@
     z-index: 2;
   }
 
+  .cabinet-card--full-row .card-actions {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
   .menu-btn,
   .copy-btn,
   .action-btn {
@@ -1817,21 +1856,24 @@
     justify-content: center;
     border-radius: 8px;
     background: transparent;
-    border: 1px solid transparent;
+    border: none;
+    box-shadow: none;
     color: var(--ui-text-secondary);
     transition:
       color 0.2s ease,
-      border-color 0.2s ease,
       background-color 0.2s ease,
       transform 0.15s ease;
     position: relative;
+  }
+
+  .copy-btn-shell {
+    padding: 0;
   }
 
   .menu-btn:hover,
   .copy-btn:hover,
   .action-btn:hover {
     color: var(--ui-text-main);
-    border-color: var(--color-stroke-ui-light);
     background: color-mix(in srgb, var(--color-stroke-ui-light) 40%, transparent);
     transform: translateY(-1px);
   }
@@ -1844,7 +1886,6 @@
 
   .quick-deposit-btn:hover,
   .quick-deposit-btn:focus-visible {
-    border-color: color-mix(in srgb, var(--ui-sticker-success) 48%, transparent);
     background: color-mix(in srgb, var(--ui-sticker-success) 12%, transparent);
   }
 
@@ -1867,6 +1908,13 @@
   .refresh-balance-btn:disabled {
     opacity: 0.6;
     cursor: default;
+  }
+
+  @media (max-width: 1024px) {
+    .cabinet-card--full-row .card-actions {
+      top: 10px;
+      transform: none;
+    }
   }
 
   .balance-highlight-up {

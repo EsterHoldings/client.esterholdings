@@ -829,11 +829,9 @@
     gap: 10px;
     padding: 20px 12px;
     border-radius: 12px;
-    background:
-      linear-gradient(136deg, color-mix(in srgb, var(--ui-primary-main) 10%, transparent) 0%, transparent 74%),
-      color-mix(in srgb, var(--ui-background-panel) 74%, transparent);
-    backdrop-filter: blur(2px) saturate(1.04);
-    border: 1px solid transparent;
+    background: transparent;
+    backdrop-filter: none;
+    border: 0;
   }
 
   .mt4-empty-state__icon-wrap {

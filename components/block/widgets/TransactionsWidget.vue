@@ -498,8 +498,8 @@
   .transactions-widget__empty {
     min-height: 160px;
     border-radius: 12px;
-    border: 1px solid var(--color-stroke-ui-light);
-    background: var(--ui-background-panel);
+    border: 0;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;

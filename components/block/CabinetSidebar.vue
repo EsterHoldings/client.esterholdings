@@ -4,7 +4,9 @@
     <div class="w-full flex flex-col items-start">
       <div class="h-[60px] flex items-center justify-center pl-5 mb-8">
         <NuxtLink :to="`/${locale}`">
-          <UiIconLogoLight v-if="isThemeLight" />
+          <UiIconLogoLight
+            v-if="isThemeLight"
+            class="cabinet-logo cabinet-logo--light" />
           <UiIconLogo v-else />
         </NuxtLink>
       </div>
@@ -657,6 +659,10 @@
 </script>
 
 <style scoped>
+  .cabinet-logo--light {
+    filter: brightness(0) saturate(100%);
+  }
+
   .logo :deep(svg),
   .logo :deep(img) {
     display: block;

@@ -11,10 +11,10 @@
   let timer: ReturnType<typeof setInterval> | null = null;
 
   const tick = () => {
-    const count = 8 + Math.floor(Math.random() * 10);
+    const count = 14 + Math.floor(Math.random() * 12);
     for (let i = 0; i < count; i++) {
       const el = animPaths[Math.floor(Math.random() * animPaths.length)];
-      if (Math.random() < 0.2) {
+      if (Math.random() < 0.28) {
         el.style.opacity = el.style.opacity === "0" ? "1" : "0";
       } else {
         el.style.fill = COLORS[Math.floor(Math.random() * COLORS.length)];
@@ -25,11 +25,11 @@
   onMounted(() => {
     if (!svgRef.value) return;
     const all = Array.from(svgRef.value.querySelectorAll<SVGElement>('path[fill="#888888"]'));
-    animPaths = all.sort(() => Math.random() - 0.5).slice(0, 200);
+    animPaths = all.sort(() => Math.random() - 0.5).slice(0, 260);
     animPaths.forEach(el => {
-      el.style.transition = "fill 0.5s ease, opacity 0.4s ease";
+      el.style.transition = "fill 0.42s ease, opacity 0.42s ease";
     });
-    timer = setInterval(tick, 300);
+    timer = setInterval(tick, 220);
   });
 
   onUnmounted(() => {

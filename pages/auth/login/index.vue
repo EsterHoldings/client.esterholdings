@@ -52,12 +52,10 @@ onMounted(() => {
       padding: clamp(24px, 3vw, 40px);
       max-width: 600px;
       width: min(100%, 600px);
-      background: color-mix(in srgb, var(--ui-background-card) 68%, transparent) !important;
-      border: 1px solid color-mix(in srgb, var(--color-stroke-ui-light) 82%, transparent) !important;
-      box-shadow:
-        inset 0 1px 0 color-mix(in srgb, white 10%, transparent),
-        0 16px 46px -30px color-mix(in srgb, var(--ui-primary-main) 22%, transparent) !important;
-      backdrop-filter: blur(18px) saturate(1.04);
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
     }
   }
 }

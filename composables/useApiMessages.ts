@@ -381,11 +381,16 @@ const API_MESSAGE_PATTERN_TRANSLATIONS: ApiPatternTranslation[] = [
     pattern: /^minimum deposit amount for .+ is ([0-9]+(?:\.[0-9]+)?) USD[.!?]*$/i,
     key: "apiMessages.minimumDepositAmount",
     fallback: "Minimum deposit amount is {amount} USD.",
-    format: (match, translate) =>
-      translate("apiMessages.minimumDepositAmount", "Minimum deposit amount is {amount} USD.").replace(
-        "{amount}",
-        String(match[1] ?? "")
-      ),
+    format: (match, translate) => {
+      const amount = String(match[1] ?? "");
+      const translated = translate("apiMessages.minimumDepositAmount", "Minimum deposit amount is {amount} USD.");
+
+      if (translated.includes("{amount}")) {
+        return translated.replace("{amount}", amount);
+      }
+
+      return amount !== "" ? translated.replace(/\s+USD\b/i, ` ${amount} USD`) : translated;
+    },
   },
   {
     pattern: /^the selected .+ is invalid[.!?]*$/i,

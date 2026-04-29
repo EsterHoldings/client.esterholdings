@@ -1,5 +1,60 @@
+<script setup lang="ts">
+  import { onMounted, onUnmounted, ref } from "vue";
+
+  const svgRef = ref<SVGSVGElement | null>(null);
+  let animatedWindows: SVGElement[] = [];
+  let timer: ReturnType<typeof setInterval> | null = null;
+
+  const animateWindows = () => {
+    if (animatedWindows.length === 0) {
+      return;
+    }
+
+    const count = 26 + Math.floor(Math.random() * 18);
+
+    for (let i = 0; i < count; i += 1) {
+      const el = animatedWindows[Math.floor(Math.random() * animatedWindows.length)];
+      const nextOpacity = 0.28 + Math.random() * 0.68;
+
+      el.style.opacity = nextOpacity.toFixed(2);
+      if (Math.random() < 0.22) {
+        el.style.fill = "var(--ui-primary-main)";
+      } else {
+        el.style.fill = "#FFFFFF";
+      }
+    }
+  };
+
+  onMounted(() => {
+    if (!svgRef.value) {
+      return;
+    }
+
+    animatedWindows = Array.from(svgRef.value.querySelectorAll<SVGElement>('[data-anim="true"]'))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 380);
+
+    animatedWindows.forEach(el => {
+      el.style.transition = "opacity 0.7s ease, fill 0.8s ease";
+    });
+
+    timer = setInterval(animateWindows, 220);
+  });
+
+  onUnmounted(() => {
+    if (timer) {
+      clearInterval(timer);
+    }
+
+    animatedWindows.forEach(el => {
+      el.style.opacity = "";
+      el.style.fill = "";
+    });
+  });
+</script>
+
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" width="548" height="664" viewBox="0 0 548 664" fill="none" class="cabinet-city-svg">
+  <svg ref="svgRef" xmlns="http://www.w3.org/2000/svg" width="548" height="664" viewBox="0 0 548 664" fill="none" class="cabinet-city-svg">
     <path d="M225.948 245.638L234.796 243.972V247.486L225.948 249.061V245.638Z" fill="white" fill-opacity="0.5" data-anim="true"/>
     <path d="M225.948 251.999L234.796 250.425V254.088L225.948 255.568V251.999Z" fill="white" fill-opacity="0.5" data-anim="true"/>
     <path d="M225.948 303.251L234.796 302.422V306.111L225.948 306.844V303.251Z" fill="white" fill-opacity="0.5" data-anim="true"/>

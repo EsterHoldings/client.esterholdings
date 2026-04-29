@@ -1138,7 +1138,9 @@ onUnmounted(() => {
     <div class="lg:absolute lg:top-[-100px]">
       <NuxtLink :to="`/${locale}`">
         <UiIconLogo v-if="!isThemeLight"/>
-        <UiIconLogoLight v-else/>
+        <UiIconLogoLight
+          v-else
+          class="cabinet-logo cabinet-logo--light" />
       </NuxtLink>
     </div>
 
@@ -1370,6 +1372,10 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+:deep(.cabinet-logo--light) {
+  filter: brightness(0) saturate(100%);
+}
+
 :deep(.dashboard-header-deposit-button) {
   min-height: 42px;
   border-radius: 999px !important;

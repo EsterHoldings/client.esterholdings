@@ -1036,7 +1036,7 @@
         "loadAccountsError": "Не вдалося завантажити торгові рахунки.",
         "amountRequired": "Вкажіть суму депозиту.",
         "amountInvalid": "Введіть коректну суму в USD, наприклад 15.25.",
-        "minimumAmount": "Мінімальна сума депозиту — {amount} USD."
+        "minimumAmount": "Мінімальна сума депозиту — {amount} $."
       },
       "withdrawalForm": {
         "title": "Заявка на виведення",
@@ -2505,7 +2505,7 @@
     "documentsSaved": "Документи успішно збережено.",
     "documentDeleted": "Документ успішно видалено.",
     "photoDeleted": "Фото успішно видалено.",
-    "minimumDepositAmount": "Мінімальна сума депозиту — {amount} USD."
+    "minimumDepositAmount": "Мінімальна сума депозиту — {amount} $."
   },
   "cabinetExtra": {
     "transactions": {
