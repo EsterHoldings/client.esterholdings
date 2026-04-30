@@ -278,6 +278,16 @@
         grid-template-columns: minmax(0, 1fr);
         padding: 10px;
       }
+
+      .dropdown.top {
+        position: fixed;
+        top: calc(env(safe-area-inset-top, 0px) + 72px);
+        left: 50vw;
+        right: auto;
+        transform: translateX(-50%);
+        width: min(380px, calc(100vw - 20px));
+        max-height: min(70vh, calc(100dvh - 96px));
+      }
     }
   }
 </style>
